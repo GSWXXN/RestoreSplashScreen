@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/adapter_layout"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/bg_permotion_round"
+              android:baselineAligned="false"
+              android:descendantFocusability="blocksDescendants"
+              android:gravity="center|start"
+              android:orientation="horizontal"
+              android:padding="15dp"
+              tools:ignore="HardcodedText">
+
+    <ImageView
+            android:id="@+id/adp_app_icon"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="8dp"
+            android:src="@mipmap/ic_about"
+            android:contentDescription="icon"/>
+    <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+
+        <TextView
+                android:id="@+id/adp_app_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="APP 名称"
+                android:textColor="@color/colorTextGray"
+                android:textSize="14sp"/>
+        <TextView
+                android:id="@+id/adp_app_pkg_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:alpha="0.75"
+                android:singleLine="true"
+                android:text="com.xxx.xxx"
+                android:textColor="@color/colorTextDark"
+                android:textSize="12sp"/>
+    </LinearLayout>
+
+    <CheckBox
+            android:id="@+id/adp_app_check_box"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+
+</LinearLayout>

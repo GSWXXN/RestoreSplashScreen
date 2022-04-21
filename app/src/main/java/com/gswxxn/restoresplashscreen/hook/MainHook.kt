@@ -1,4 +1,4 @@
-package com.gswxxn.restoresplashscreen
+package com.gswxxn.restoresplashscreen.hook
 
 import android.content.Context
 import android.graphics.drawable.BitmapDrawable
@@ -98,7 +98,14 @@ class MainHook : IXposedHookLoadPackage {
                             val context = XposedHelpers.getObjectField(param.thisObject, "mContext") as Context
                             val size = XposedHelpers.getIntField(param.thisObject, "mIconBitmapSize")
 
-                            param.args[0] = BitmapDrawable(Utils.roundBitmapByShader(bitmap, size,size,Utils.dp2px(context, r)))
+                            param.args[0] = BitmapDrawable(
+                                Utils.roundBitmapByShader(
+                                    bitmap,
+                                    size,
+                                    size,
+                                    Utils.dp2px(context, r)
+                                )
+                            )
                             param.args[1] = false
 
                         }

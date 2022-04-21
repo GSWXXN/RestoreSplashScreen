@@ -1,4 +1,4 @@
-package com.gswxxn.restoresplashscreen
+package com.gswxxn.restoresplashscreen.hook
 
 import android.content.Context
 import android.graphics.*

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/colorThemeBackground"
+              android:orientation="vertical"
+              tools:context=".ui.MainActivity"
+              tools:ignore="HardcodedText,UseCompoundDrawables,ContentDescription">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="0dp"
+            android:gravity="center|start"
+            android:paddingLeft="15dp"
+            android:paddingTop="13dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="5dp" android:orientation="horizontal">
+
+        <LinearLayout
+                android:id="@+id/title_back_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center">
+            <androidx.constraintlayout.utils.widget.ImageFilterView
+                style="?android:attr/selectableItemBackgroundBorderless"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="20dp"
+                android:src="@mipmap/ic_back"
+                android:tint="@color/colorTextGray"
+                android:tooltipText="返回" />
+        </LinearLayout>
+
+
+        <TextView
+                android:id="@+id/app_list_title"
+                android:gravity="center_vertical"
+                android:layout_width="280dp"
+                android:layout_height="45dp"
+                android:singleLine="true"
+                android:text="标题"
+                android:textColor="@color/colorTextGray"
+                android:textSize="24sp"
+                android:textStyle="bold"/>
+        <EditText
+                android:id="@+id/search_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:singleLine="true"
+                android:visibility="gone"
+                android:textSize="17sp"
+                android:textColor="@color/colorTextGray"
+                android:imeOptions="actionSearch"
+                android:nextFocusDown="@id/search_edit_text"
+                android:hint="可输入 APP 名称、包名"
+                android:inputType="text"
+                android:importantForAutofill="no"/>
+        <LinearLayout
+                android:id="@+id/config_title_filter"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+            <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@mipmap/ic_filter"
+                    android:tint="@color/colorTextGray"
+                    android:tooltipText="搜索"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/config_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/bg_permotion_round"
+            android:elevation="0dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="15dp">
+
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginEnd="10dp"
+                android:alpha="0.85"
+                android:src="@mipmap/ic_about"
+                android:tint="@color/colorTextDark" />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0.6"
+                android:lineSpacingExtra="5dp"
+                android:text="保存成功后请手动重启系统界面"
+                android:textColor="@color/colorTextGray"
+                android:textSize="11sp"
+                tools:ignore="SmallSp" />
+    </LinearLayout>
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+        <TextView
+                android:id="@+id/config_list_no_data_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:lineSpacingExtra="6dp"
+                android:text="正在加载..."
+                android:textColor="@color/colorTextDark"
+                android:textSize="17sp"
+                android:visibility="gone" />
+
+        <ListView
+                android:id="@+id/config_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@color/trans"
+                android:dividerHeight="15dp"
+                android:fadingEdgeLength="10dp"
+                android:listSelector="@color/trans"
+                android:padding="15dp"
+                android:requiresFadingEdge="vertical"
+                android:scrollbars="none" />
+
+    </FrameLayout>
+
+    <TextView
+            android:id="@+id/config_save_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/bg_button_round"
+            android:gravity="center"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:text="保存"
+            android:textColor="@color/colorTextGray"
+            android:textSize="15sp" />
+</LinearLayout>

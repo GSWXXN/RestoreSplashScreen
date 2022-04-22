@@ -3,10 +3,14 @@ package com.gswxxn.restoresplashscreen.ui
 import android.content.Context
 import android.content.Intent
 import android.view.View
+import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.Data.DataConst
+import com.gswxxn.restoresplashscreen.R
 import org.jetbrains.anko.alert
 import com.gswxxn.restoresplashscreen.databinding.ActivityMainBinding
+import com.highcapable.yukihookapi.hook.factory.isXposedModuleActive
 import com.highcapable.yukihookapi.hook.factory.modulePrefs
+import com.highcapable.yukihookapi.hook.xposed.YukiHookModuleStatus
 import com.topjohnwu.superuser.Shell
 
 const val EXTRA_MESSAGE = "com.gswxxn.MainActivity.MESSAGE"
@@ -17,97 +21,120 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onCreate() {
+        val intent = Intent(this, ConfigAppsActivity::class.java)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         appContext = applicationContext
 
-        // 重启UI
-        binding.titleRestartIcon.setOnClickListener {
-            alert( "你真的要重启系统界面吗？", "重启SystemUI") {
-                positiveButton("确定") { Shell.su("pkill -f com.android.systemui").exec() }
-                negativeButton("取消") {}
-            }.show()
-        }
+        binding.apply {
 
-        // 启用模块
-        binding.enableModel.apply {
-            isChecked = modulePrefs.get(DataConst.ENABLE_MODULE)
-            setOnCheckedChangeListener { _, isChecked ->
-                modulePrefs.put(DataConst.ENABLE_MODULE, isChecked)
+            mainTextVersion.text = "模块版本：${BuildConfig.VERSION_NAME}"
+
+            // 重启UI
+            titleRestartIcon.setOnClickListener {
+                alert("你真的要重启系统界面吗？", "重启SystemUI") {
+                    positiveButton("确定") { Shell.su("pkill -f com.android.systemui").exec() }
+                    negativeButton("取消") {}
+                }.show()
             }
-        }
 
-        // 启用日志
-        binding.enableLog.apply {
-            isChecked = modulePrefs.get(DataConst.ENABLE_LOG)
-            setOnCheckedChangeListener { _, isChecked ->
-                modulePrefs.put(DataConst.ENABLE_LOG, isChecked)
+            // 启用模块
+            enableModel.apply {
+                isChecked = modulePrefs.get(DataConst.ENABLE_MODULE)
+                setOnCheckedChangeListener { _, isChecked ->
+                    modulePrefs.put(DataConst.ENABLE_MODULE, isChecked)
+                }
             }
-        }
 
-        // 自定义模块作用域
-        binding.customScope.apply {
-            setOnCheckedChangeListener { _, isChecked ->
-                binding.customScopeLayout.visibility = if (isChecked) View.VISIBLE else View.GONE
-                modulePrefs.put(DataConst.ENABLE_CUSTOM_SCOPE, isChecked)
+            // 启用日志
+            enableLog.apply {
+                isChecked = modulePrefs.get(DataConst.ENABLE_LOG)
+                setOnCheckedChangeListener { _, isChecked ->
+                    modulePrefs.put(DataConst.ENABLE_LOG, isChecked)
+                }
             }
-            isChecked = modulePrefs.get(DataConst.ENABLE_CUSTOM_SCOPE)
-        }
 
-        // 排除模式
-        binding.customScopeExceptMode.apply {
-            setOnCheckedChangeListener { _, isChecked ->
-                binding.exceptModeStatusText.text = if (isChecked) "不会" else "仅会"
-                modulePrefs.put(DataConst.IS_CUSTOM_SCOPE_EXCEPTION_MODE, isChecked)
+            // 自定义模块作用域
+            customScope.apply {
+                setOnCheckedChangeListener { _, isChecked ->
+                    binding.customScopeLayout.visibility = if (isChecked) View.VISIBLE else View.GONE
+                    modulePrefs.put(DataConst.ENABLE_CUSTOM_SCOPE, isChecked)
+                }
+                isChecked = modulePrefs.get(DataConst.ENABLE_CUSTOM_SCOPE)
             }
-            isChecked = modulePrefs.get(DataConst.IS_CUSTOM_SCOPE_EXCEPTION_MODE)
-        }
 
-        // 作用域应用列表
-        binding.customScopeList.setOnClickListener {
-            val intent = Intent(this, ConfigAppsActivity::class.java).apply {
-                putExtra(EXTRA_MESSAGE, 1)
+            // 排除模式
+            customScopeExceptMode.apply {
+                setOnCheckedChangeListener { _, isChecked ->
+                    binding.exceptModeStatusText.text = if (isChecked) "不会" else "仅会"
+                    modulePrefs.put(DataConst.IS_CUSTOM_SCOPE_EXCEPTION_MODE, isChecked)
+                }
+                isChecked = modulePrefs.get(DataConst.IS_CUSTOM_SCOPE_EXCEPTION_MODE)
             }
-            startActivity(intent)
-        }
 
-        // 使用系统默认风格
-        binding.defaultStyle.apply {
-            isChecked = modulePrefs.get(DataConst.ENABLE_DEFAULT_STYLE)
-            setOnCheckedChangeListener { _, isChecked ->
-                binding.defaultStyleList.visibility = if (isChecked) View.VISIBLE else View.GONE
-                modulePrefs.put(DataConst.ENABLE_DEFAULT_STYLE, isChecked)
+            // 作用域应用列表
+            customScopeList.setOnClickListener {
+                intent.putExtra(EXTRA_MESSAGE, 1)
+                startActivity(intent)
             }
-        }
 
-        // 使用系统默认风格应用列表
-        binding.defaultStyleList.setOnClickListener {
-            val intent = Intent(this, ConfigAppsActivity::class.java).apply {
-                putExtra(EXTRA_MESSAGE, 2)
+            // 使用系统默认风格
+            defaultStyle.apply {
+                isChecked = modulePrefs.get(DataConst.ENABLE_DEFAULT_STYLE)
+                setOnCheckedChangeListener { _, isChecked ->
+                    binding.defaultStyleList.visibility = if (isChecked) View.VISIBLE else View.GONE
+                    modulePrefs.put(DataConst.ENABLE_DEFAULT_STYLE, isChecked)
+                }
             }
-            startActivity(intent)
-        }
 
-        // 自定义Splash Screen View
-        binding.customView.apply {
-            isChecked = modulePrefs.get(DataConst.ENABLE_CUSTOM_VIEW)
-            setOnCheckedChangeListener { _, isChecked ->
-                binding.customViewConfig.visibility = if (isChecked) View.VISIBLE else View.GONE
-                modulePrefs.put(DataConst.ENABLE_CUSTOM_VIEW, isChecked)
+            // 使用系统默认风格应用列表
+            defaultStyleList.setOnClickListener {
+                intent.putExtra(EXTRA_MESSAGE, 2)
+                startActivity(intent)
             }
+
+            // 自定义Splash Screen View
+            customView.apply {
+                isChecked = modulePrefs.get(DataConst.ENABLE_CUSTOM_VIEW)
+                setOnCheckedChangeListener { _, isChecked ->
+                    binding.customViewConfig.visibility = if (isChecked) View.VISIBLE else View.GONE
+                    modulePrefs.put(DataConst.ENABLE_CUSTOM_VIEW, isChecked)
+                }
+            }
+
+            // 配置自定义Splash Screen View按钮
+            customViewConfig.setOnClickListener {
+
+            }
+
+            // 模块状态
+            mainLinStatus.setBackgroundResource(
+                when {
+                    isXposedModuleActive && modulePrefs.get(DataConst.ENABLE_MODULE).not() -> R.drawable.bg_yellow_round
+                    isXposedModuleActive -> R.drawable.bg_green_round
+                    else -> R.drawable.bg_dark_round
+                }
+            )
+            mainImgStatus.setImageResource(
+                when {
+                    isXposedModuleActive -> R.mipmap.ic_success
+                    else -> R.mipmap.ic_warn
+                }
+            )
+            mainTextStatus.text =
+                when {
+                    isXposedModuleActive && modulePrefs.get(DataConst.ENABLE_MODULE).not() -> "模块已停用"
+                    isXposedModuleActive -> "模块已激活"
+                    else -> "模块未激活"
+                }
+            mainTextApiWay.visibility = if (isXposedModuleActive) View.VISIBLE else View.GONE
+            mainTextApiWay.text =
+                "Activated by ${YukiHookModuleStatus.executorName} API ${YukiHookModuleStatus.executorVersion}"
+
+            // 未开发功能
+            styleLayout.visibility = View.GONE
+            moreLayout.visibility = View.GONE
         }
-
-        // 配置自定义Splash Screen View按钮
-        binding.customViewConfig.setOnClickListener {
-
-        }
-
-        // 未开发功能
-        binding.styleLayout.visibility = View.GONE
-        binding.moreLayout.visibility = View.GONE
-
     }
-
-
 }

@@ -129,17 +129,6 @@
             </LinearLayout>
 
             <TextView
-                    android:id="@+id/main_text_miui_version"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:alpha="0.8"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:text="系统版本：%1"
-                    android:textColor="@color/white"
-                    android:textSize="13sp" />
-
-            <TextView
                     android:id="@+id/main_text_api_way"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

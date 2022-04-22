@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        package="com.gswxxn.restoresplashscreen">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.gswxxn.restoresplashscreen">
 
     <uses-permission
             android:name="android.permission.QUERY_ALL_PACKAGES"
-            tools:ignore="QueryAllPackagesPermission" />
+            tools:ignore="QueryAllPackagesPermission"/>
 
     <application
             android:allowBackup="false"
             android:label="RestoreSplashScreen"
             android:theme="@style/Theme.RestoreSplashScreen">
-
         <activity
-                android:parentActivityName=".ui.MainActivity"
-                android:name=".ui.ConfigAppsActivity"
-
+                android:name=".ui.AboutPageActivity"
                 android:exported="true"/>
+        <activity
+                android:name=".ui.ConfigAppsActivity"
+                android:exported="true"
+                android:parentActivityName=".ui.MainActivity"/>
         <activity
                 android:name=".ui.MainActivity"
                 android:exported="true">

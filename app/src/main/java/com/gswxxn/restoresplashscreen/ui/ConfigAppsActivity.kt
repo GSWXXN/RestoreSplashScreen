@@ -8,23 +8,36 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import com.gswxxn.restoresplashscreen.Data.DataConst
 import com.gswxxn.restoresplashscreen.databinding.ActivityConfigAppsBinding
 import com.gswxxn.restoresplashscreen.databinding.AdapterConfigBinding
+import com.highcapable.yukihookapi.hook.factory.modulePrefs
+import org.jetbrains.anko.toast
 
 
-class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>() {
+class ConfigAppsActivity : BaseActivity() {
+    private lateinit var binding: ActivityConfigAppsBinding
+    private lateinit var appInfo : AppInfoHelper
+    private var appInfoFilter = mutableListOf<AppInfoHelper.MyAppInfo>()
     private var onChanged: (() -> Unit)? = null
-    private var isCheckedMap = mutableListOf("com.eg.android.AlipayGphone")
+    private lateinit var isCheckedList : MutableSet<String>
+//    private var isCheckedList = mutableSetOf<String>()
 
     override fun onCreate() {
-        val appInfo = AppInfoHelper(isCheckedMap)
-        var appInfoFilter = appInfo.getAppInfoList()
+        binding = ActivityConfigAppsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        isCheckedList = modulePrefs.get(DataConst.CUSTOM_SCOPE_LIST).toMutableSet()
+        appInfo = AppInfoHelper(isCheckedList)
+
 
         val message = when (intent.getIntExtra(EXTRA_MESSAGE, 0)) {
             1 -> "作用域列表"
             2 -> "默认风格列表"
             else -> "标题"
         }
+
+        binding.configListLoadingView.visibility = View.VISIBLE
+        binding.configListView.visibility = View.GONE
 
         //返回按钮点击事件
         binding.titleBackIcon.setOnClickListener { onBackPressed() }
@@ -104,14 +117,14 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>() {
                         // 设置复选框
                         holder.adpAppCheckBox.apply {
                             setOnCheckedChangeListener(null)
-                            isChecked = it.packageName in isCheckedMap
+                            isChecked = it.packageName in isCheckedList
                             setOnCheckedChangeListener { _, isChecked ->
                                 appInfo.setChecked(it, isChecked)
                                 if (isChecked) {
-                                    isCheckedMap.add(it.packageName)
+                                    isCheckedList.add(it.packageName)
 
                                 } else {
-                                    isCheckedMap.remove(it.packageName)
+                                    isCheckedList.remove(it.packageName)
                                 }
                             }
                         }
@@ -128,8 +141,12 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>() {
 
         // 保存按钮点击事件
         binding.configSaveButton.setOnClickListener {
-
+            modulePrefs.put(DataConst.CUSTOM_SCOPE_LIST, isCheckedList)
+            toast("保存成功，请重启系统界面")
+            finish()
         }
+
+
     }
 
     override fun onBackPressed() {
@@ -144,6 +161,15 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>() {
             binding.configTitleFilter.visibility = View.VISIBLE
         }else {
             super.onBackPressed()
+        }
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        if (hasFocus) {
+            appInfoFilter = appInfo.getAppInfoList()
+            onChanged?.invoke()
+            binding.configListLoadingView.visibility = View.GONE
+            binding.configListView.visibility = View.VISIBLE
         }
     }
 }

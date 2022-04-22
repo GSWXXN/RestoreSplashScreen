@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.pm.ApplicationInfo
 import android.graphics.drawable.Drawable
 
-class AppInfoHelper(_checkedList : MutableList<String>) {
+class AppInfoHelper(_checkedList : Set<String>) {
     private val checkedList = _checkedList
     private lateinit var mAppInfoList: MutableList<MyAppInfo>
 

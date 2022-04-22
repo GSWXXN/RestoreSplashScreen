@@ -101,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:alpha="0.6"
                 android:lineSpacingExtra="5dp"
-                android:text="保存成功后请手动重启系统界面"
+                android:text="勾选完成后记得点击下方保存按钮"
                 android:textColor="@color/colorTextGray"
                 android:textSize="11sp"
                 tools:ignore="SmallSp" />
@@ -113,7 +113,7 @@
             android:layout_weight="1">
 
         <TextView
-                android:id="@+id/config_list_no_data_view"
+                android:id="@+id/config_list_loading_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -144,7 +144,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="25dp"
             android:background="@drawable/bg_button_round"
             android:gravity="center"
             android:padding="10dp"

@@ -27,13 +27,13 @@ object Utils {
     /**
      * Original code from: https://blog.csdn.net/xiaohanluo/article/details/52945791
      */
-     fun roundBitmapByShader(bitmap: Bitmap?, outWidth: Int, outHeight: Int, radius: Int): Bitmap? {
+     fun roundBitmapByShader(bitmap: Bitmap?, size: Int, radius: Int): Bitmap? {
         if (bitmap == null) {
             throw NullPointerException("Bitmap can't be null")
         }
         // 初始化缩放比
-        val widthScale = (outWidth * 1.0f) / bitmap.width
-        val heightScale = (outHeight * 1.0f) / bitmap.height
+        val widthScale = (size * 1.0f) / bitmap.width
+        val heightScale = (size * 1.0f) / bitmap.height
         val matrix = Matrix()
         matrix.setScale(widthScale, heightScale)
 
@@ -43,7 +43,7 @@ object Utils {
         bitmapShader.setLocalMatrix(matrix)
 
         // 初始化目标bitmap
-        val targetBitmap = Bitmap.createBitmap(outWidth, outHeight, Bitmap.Config.ARGB_8888)
+        val targetBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
 
         // 初始化目标画布
         val targetCanvas = Canvas(targetBitmap)
@@ -55,7 +55,7 @@ object Utils {
 
         // 利用画笔将纹理图绘制到画布上面
         targetCanvas.drawRoundRect(
-            RectF(0F, 0F, outWidth.toFloat(), outWidth.toFloat()),
+            RectF(0F, 0F, size.toFloat(), size.toFloat()),
             radius.toFloat(),
             radius.toFloat(),
             paint

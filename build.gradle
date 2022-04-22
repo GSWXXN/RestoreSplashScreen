@@ -3,11 +3,7 @@
 buildscript {
     repositories {
         google()
-
         mavenCentral()
-        maven { url "https://s01.oss.sonatype.org/content/repositories/releases" }
-        maven { url "https://api.xposed.info/" }
-
     }
     dependencies {
         classpath "com.android.tools.build:gradle:7.0.4"
@@ -19,6 +15,17 @@ buildscript {
 
 plugins {
     id 'org.jetbrains.kotlin.android' version '1.6.10' apply false
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+        maven { url "https://s01.oss.sonatype.org/content/repositories/releases" }
+        maven { url "https://api.xposed.info/" }
+        jcenter()
+    }
 }
 
 task clean(type: Delete) {

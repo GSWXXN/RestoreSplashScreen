@@ -181,7 +181,7 @@
                         android:layout_height="wrap_content"
                         android:alpha="0.6"
                         android:lineSpacingExtra="5dp"
-                        android:text="修改设置或开启关闭模块请点击右上角重启系统界面才能生效。"
+                        android:text="做出任何设置前，请确保模块已激活。\n修改设置后点击右上角按钮启系统界面。"
                         android:textColor="@color/colorTextGray"
                         android:textSize="11sp"
                         tools:ignore="SmallSp" />

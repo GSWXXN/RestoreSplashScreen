@@ -1,6 +1,7 @@
 package com.gswxxn.restoresplashscreen.hook
 
 import android.content.pm.ActivityInfo
+import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import com.gswxxn.restoresplashscreen.Data.DataConst
@@ -75,7 +76,12 @@ class MainHook : YukiHookXposedInitProxy {
 //                        }
 //                    })
 //            }
-                fun printLog (msg : String){ if (prefs.get(DataConst.ENABLE_LOG)) loggerI(msg = msg) }
+                fun printLog (vararg msg : String){
+                    if (prefs.get(DataConst.ENABLE_LOG))
+                        msg.forEach {
+                            loggerI(msg = it)
+                        }
+                    }
 
                 // 关闭MIUI优化
                 findClass("com.android.wm.shell.startingsurface.SplashscreenContentDrawer").hook {
@@ -94,9 +100,13 @@ class MainHook : YukiHookXposedInitProxy {
                                 || isException && !(packageName in list)
                                 || !isException && packageName in list
                             ) {
-                                printLog("${packageName}: set enable splash screen flag")
+                                printLog("***",
+                                        "${packageName}:",
+                                        "makeSplashScreenContentView(): set enable splash screen flag")
                                 XposedHelpers.setIntField(instance, "mContentSuggestType", 10)
-                            } else { printLog("${packageName}: not set enable splash screen flag") }
+                            } else { printLog("***",
+                                    "${packageName}:",
+                                    "makeSplashScreenContentView(): not set enable splash screen flag") }
                         }
                     }
 
@@ -108,15 +118,15 @@ class MainHook : YukiHookXposedInitProxy {
                         }
                         beforeHook {
                             if (XposedHelpers.getIntField(instance, "mContentSuggestType") == 10) {
-                                printLog("isCTS() return true")
+                                printLog("isCTS(): return true")
                                 result = true
-                            }
+                            }else { printLog("isCTS(): jump over hook") }
                         }
                     }
                 }
 
 
-                // 即使是自适应图标也按不自适应处理，防止使用第三方主题时出现方角
+                // 为自适应图标绘制圆角
                 findClass("com.android.wm.shell.startingsurface.SplashscreenContentDrawer\$StartingWindowViewBuilder")
                     .hook {
                         injectMember {
@@ -125,10 +135,26 @@ class MainHook : YukiHookXposedInitProxy {
                                 param(Drawable::class.java)
                             }
                             beforeHook {
-                                printLog("set adaptable icon not adapt")
-                                result = false
+//                                printLog("set adaptable icon not adapt")
+//                                result = false
+
+                                val drawable = args(0).cast<Drawable>()
+                                if (drawable is AdaptiveIconDrawable) {
+                                    val size = drawable.intrinsicWidth
+                                    args(0).set(BitmapDrawable(appContext.resources,
+                                            Utils.roundBitmapByShader(
+                                                drawable.let { Utils.drawable2Bitmap(it) },
+                                                size,
+                                                size / 4
+                                            )
+                                        )
+                                    )
+                                    printLog("processAdaptiveIcon(): argument is AdaptiveIcon, set round corner")
+                                } else { printLog("processAdaptiveIcon(): argument is not AdaptiveIcon, jump over hook") }
+
                             }
                         }
+
                     }
 
                 // 为图标绘制圆角
@@ -139,13 +165,15 @@ class MainHook : YukiHookXposedInitProxy {
                             param(Drawable::class.java, BooleanType)
                         }
                         beforeHook {
-                            args(0).set(
-                                BitmapDrawable(
-                                    appContext.resources,
+                            val drawable= args(0).cast<Drawable>()
+                            val size = drawable?.intrinsicWidth
+                            args(0).set(BitmapDrawable(appContext.resources,
                                     Utils.roundBitmapByShader(
-                                        args(0).cast<Drawable>()?.let { Utils.drawable2Bitmap(it) },
-                                        XposedHelpers.getIntField(instance, "mIconBitmapSize"),
-                                        Utils.dp2px(appContext, 45F)
+                                        drawable?.let { Utils.drawable2Bitmap(it) },
+//                                        XposedHelpers.getIntField(instance, "mIconBitmapSize"),
+//                                        Utils.dp2px(appContext, 45F)
+                                        size!!,
+                                        size / 4
                                     )
                                 )
                             )

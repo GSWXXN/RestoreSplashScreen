@@ -30,11 +30,11 @@
         <ImageView
                 android:id="@+id/title_restart_icon"
                 style="?android:attr/selectableItemBackgroundBorderless"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_marginEnd="15dp"
                 android:alpha="0.85"
-                android:src="@mipmap/ic_restart"
+                android:src="@drawable/ic_restart"
                 android:tint="@color/colorTextGray"
                 android:tooltipText="重启系统界面" />
 
@@ -45,9 +45,9 @@
                 android:layout_height="27dp"
                 android:layout_marginEnd="5dp"
                 android:alpha="0.85"
-                android:src="@mipmap/ic_github"
+                android:src="@drawable/ic_more"
                 android:tint="@color/colorTextGray"
-                android:tooltipText="项目地址" />
+                android:tooltipText="关于" />
     </LinearLayout>
 
     <LinearLayout
@@ -68,7 +68,7 @@
                 android:layout_height="25dp"
                 android:layout_marginStart="25dp"
                 android:layout_marginEnd="5dp"
-                android:src="@mipmap/ic_warn"
+                android:src="@drawable/ic_warn"
                 android:tint="@color/white" />
 
         <LinearLayout
@@ -173,7 +173,7 @@
                         android:layout_height="15dp"
                         android:layout_marginEnd="10dp"
                         android:alpha="0.85"
-                        android:src="@mipmap/ic_about"
+                        android:src="@drawable/ic_info"
                         android:tint="@color/colorTextDark" />
 
                 <TextView
@@ -211,7 +211,7 @@
                             android:layout_width="15dp"
                             android:layout_height="15dp"
                             android:layout_marginEnd="10dp"
-                            android:src="@mipmap/ic_basic" />
+                            android:src="@drawable/ic_setting" />
 
                     <TextView
                             android:layout_width="match_parent"
@@ -278,7 +278,7 @@
                             android:layout_width="15dp"
                             android:layout_height="15dp"
                             android:layout_marginEnd="10dp"
-                            android:src="@mipmap/ic_control" />
+                            android:src="@drawable/ic_app" />
 
                     <TextView
                             android:layout_width="match_parent"
@@ -410,7 +410,7 @@
                             android:layout_width="15dp"
                             android:layout_height="15dp"
                             android:layout_marginEnd="10dp"
-                            android:src="@mipmap/ic_modify" />
+                            android:src="@drawable/ic_style" />
 
                     <TextView
                             android:layout_width="match_parent"
@@ -485,7 +485,7 @@
                             android:layout_width="15dp"
                             android:layout_height="15dp"
                             android:layout_marginEnd="10dp"
-                            android:src="@mipmap/ic_notify" />
+                            android:src="@drawable/ic_more_setting" />
 
                     <TextView
                             android:layout_width="match_parent"

@@ -6,9 +6,8 @@ import android.net.Uri
 import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.databinding.ActivityAboutPageBinding
-import com.gswxxn.restoresplashscreen.hook.Utils
-import com.gswxxn.restoresplashscreen.hook.Utils.circleBitmapByShader
 import com.gswxxn.restoresplashscreen.hook.Utils.roundBitmapByShader
+import org.jetbrains.anko.toast
 
 class AboutPageActivity : BaseActivity() {
     private lateinit var binding : ActivityAboutPageBinding
@@ -19,13 +18,15 @@ class AboutPageActivity : BaseActivity() {
 
         binding.apply {
 
+            titleBackIcon.setOnClickListener { onBackPressed() }
+
             appIcon.setImageBitmap(roundBitmapByShader(
-                BitmapFactory.decodeResource(resources, R.mipmap.img_developer),
-                this.appIcon.layoutParams.width,
-                Utils.dp2px(this@AboutPageActivity, this.appIcon.layoutParams.width.toFloat()/10)
+                BitmapFactory.decodeResource(resources, R.mipmap.icon),
+                appIcon.layoutParams.width,
+                appIcon.layoutParams.width/4
                 ))
 
-            miluIcon.setImageBitmap(circleBitmapByShader(
+            miluIcon.setImageBitmap(roundBitmapByShader(
                 BitmapFactory.decodeResource(resources, R.mipmap.img_developer),
                 this.miluIcon.layoutParams.width,
                 this.miluIcon.layoutParams.width
@@ -34,10 +35,13 @@ class AboutPageActivity : BaseActivity() {
             version.text = "v${BuildConfig.VERSION_NAME}"
 
             developerMilu.setOnClickListener {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://www.coolapk.com/u/1189245")))
+                toast("点个关注，不迷路").show()
+                try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("coolmarket://u/1189245"))) }
+                catch (e: Exception){startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://www.coolapk.com/u/1189245")))}
             }
 
             githubRepo.setOnClickListener {
+                toast("点个小星星呗~").show()
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/GSWXXN/RestoreSplashScreen")))
             }
 
@@ -46,18 +50,22 @@ class AboutPageActivity : BaseActivity() {
             }
 
             MIUINativeNotifyIcon.setOnClickListener {
+                toast("感谢fankes").show()
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/fankes/MIUINativeNotifyIcon")))
             }
 
             YukiHookAPI.setOnClickListener {
+                toast("感谢fankes").show()
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/fankes/YukiHookAPI")))
             }
 
             HideMyApplist.setOnClickListener {
+                toast("感谢Dr-TSNG").show()
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Dr-TSNG/Hide-My-Applist")))
             }
 
             libsu.setOnClickListener {
+                toast("感谢topjohnwu").show()
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/topjohnwu/libsu")))
             }
 

@@ -18,21 +18,17 @@
             android:paddingBottom="5dp"
             android:orientation="horizontal">
 
-        <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center">
-            <androidx.constraintlayout.utils.widget.ImageFilterView
-                    android:id="@+id/title_back_icon"
-                    style="?android:attr/selectableItemBackgroundBorderless"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="20dp"
-                    android:src="@mipmap/ic_back"
-                    android:tint="@color/colorTextGray"
-                    android:tooltipText="返回"/>
-        </LinearLayout>
+
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+                android:id="@+id/title_back_icon"
+                style="?android:attr/selectableItemBackgroundBorderless"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="15dp"
+                android:src="@drawable/ic_back_button"
+                android:tint="@color/colorTextGray"
+                android:tooltipText="返回"/>
 
         <TextView
                 android:gravity="center_vertical"
@@ -56,8 +52,7 @@
         <ImageView
                 android:id="@+id/app_icon"
                 android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:src="@mipmap/img_developer"/>
+                android:layout_height="90dp"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -121,8 +116,7 @@
                     <ImageView
                             android:id="@+id/milu_icon"
                             android:layout_width="45dp"
-                            android:layout_height="45dp"
-                            android:src="@mipmap/img_developer"/>
+                            android:layout_height="45dp"/>
 
                     <TextView
                             android:layout_width="match_parent"

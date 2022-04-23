@@ -124,8 +124,8 @@ class MainActivity : BaseActivity() {
             )
             mainImgStatus.setImageResource(
                 when {
-                    isXposedModuleActive -> R.mipmap.ic_success
-                    else -> R.mipmap.ic_warn
+                    isXposedModuleActive -> R.drawable.ic_success
+                    else -> R.drawable.ic_warn
                 }
             )
             mainTextStatus.text =

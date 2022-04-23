@@ -8,6 +8,7 @@
             tools:ignore="QueryAllPackagesPermission"/>
 
     <application
+            android:icon="@mipmap/ic_launcher"
             android:allowBackup="false"
             android:label="RestoreSplashScreen"
             android:theme="@style/Theme.RestoreSplashScreen">

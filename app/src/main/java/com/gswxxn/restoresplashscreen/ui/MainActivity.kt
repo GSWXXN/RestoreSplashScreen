@@ -21,7 +21,6 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onCreate() {
-        val intent = Intent(this, ConfigAppsActivity::class.java)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -37,6 +36,11 @@ class MainActivity : BaseActivity() {
                     positiveButton("确定") { Shell.su("pkill -f com.android.systemui").exec() }
                     negativeButton("取消") {}
                 }.show()
+            }
+
+            titleAboutPage.setOnClickListener {
+                val intent = Intent(this@MainActivity, AboutPageActivity::class.java)
+                startActivity(intent)
             }
 
             // 启用模块
@@ -75,6 +79,7 @@ class MainActivity : BaseActivity() {
 
             // 作用域应用列表
             customScopeList.setOnClickListener {
+                val intent = Intent(this@MainActivity, ConfigAppsActivity::class.java)
                 intent.putExtra(EXTRA_MESSAGE, 1)
                 startActivity(intent)
             }
@@ -90,6 +95,7 @@ class MainActivity : BaseActivity() {
 
             // 使用系统默认风格应用列表
             defaultStyleList.setOnClickListener {
+                val intent = Intent(this@MainActivity, ConfigAppsActivity::class.java)
                 intent.putExtra(EXTRA_MESSAGE, 2)
                 startActivity(intent)
             }

@@ -3,7 +3,6 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/colorThemeBackground"
               android:orientation="vertical"
               tools:context=".ui.MainActivity"
               tools:ignore="HardcodedText,UseCompoundDrawables,ContentDescription,TooManyViews">
@@ -39,8 +38,8 @@
                 android:tint="@color/colorTextGray"
                 android:tooltipText="重启系统界面" />
 
-        <androidx.constraintlayout.utils.widget.ImageFilterView
-                android:id="@+id/title_github_icon"
+        <ImageView
+                android:id="@+id/title_about_page"
                 style="?android:attr/selectableItemBackgroundBorderless"
                 android:layout_width="27dp"
                 android:layout_height="27dp"
@@ -146,7 +145,7 @@
     <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="25dp"
             android:fadingEdgeLength="10dp"
             android:fillViewport="true"
             android:requiresFadingEdge="vertical">

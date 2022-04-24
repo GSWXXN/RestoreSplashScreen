@@ -33,7 +33,12 @@ class MainActivity : BaseActivity() {
             // 重启UI
             titleRestartIcon.setOnClickListener {
                 alert("你真的要重启系统界面吗？", "重启SystemUI") {
-                    positiveButton("确定") { Shell.su("pkill -f com.android.systemui").exec() }
+                    positiveButton("确定") {
+                        Shell.su("pkill -f com.android.systemui").exec()
+                        if (!isXposedModuleActive) {
+                            Shell.su("pkill -f com.gswxxn.restoresplashscreen").exec()
+                        }
+                    }
                     negativeButton("取消") {}
                 }.show()
             }
@@ -114,7 +119,14 @@ class MainActivity : BaseActivity() {
 
             }
 
-            // 模块状态
+            // 未开发功能
+            styleLayout.visibility = View.GONE
+            moreLayout.visibility = View.GONE
+        }
+    }
+
+    private fun refreshState(){
+        binding.apply {
             mainLinStatus.setBackgroundResource(
                 when {
                     isXposedModuleActive && modulePrefs.get(DataConst.ENABLE_MODULE).not() -> R.drawable.bg_yellow_round
@@ -137,10 +149,11 @@ class MainActivity : BaseActivity() {
             mainTextApiWay.visibility = if (isXposedModuleActive) View.VISIBLE else View.GONE
             mainTextApiWay.text =
                 "Activated by ${YukiHookModuleStatus.executorName} API ${YukiHookModuleStatus.executorVersion}"
-
-            // 未开发功能
-            styleLayout.visibility = View.GONE
-            moreLayout.visibility = View.GONE
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refreshState()
     }
 }

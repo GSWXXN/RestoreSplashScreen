@@ -1,5 +1,6 @@
 package com.gswxxn.restoresplashscreen.hook
 
+import android.content.Context
 import android.content.pm.ActivityInfo
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.BitmapDrawable
@@ -83,44 +84,17 @@ class MainHook : YukiHookXposedInitProxy {
                         }
                     }
 
-                // 关闭MIUI优化
+
                 findClass("com.android.wm.shell.startingsurface.SplashscreenContentDrawer").hook {
-                    // 借助 mContentSuggestType 传递作用域 flag
-                    injectMember {
-                        method {
-                            name = "makeSplashScreenContentView"
-                            paramCount = 3
-                        }
-                        beforeHook {
-                            val packageName = args(1).cast<ActivityInfo>()?.packageName
-                            val list = prefs.get(DataConst.CUSTOM_SCOPE_LIST)
-                            val isException = prefs.get(DataConst.IS_CUSTOM_SCOPE_EXCEPTION_MODE)
-
-                            if (!prefs.get(DataConst.ENABLE_CUSTOM_SCOPE)
-                                || isException && !(packageName in list)
-                                || !isException && packageName in list
-                            ) {
-                                printLog("***",
-                                        "${packageName}:",
-                                        "makeSplashScreenContentView(): set enable splash screen flag")
-                                XposedHelpers.setIntField(instance, "mContentSuggestType", 10)
-                            } else { printLog("***",
-                                    "${packageName}:",
-                                    "makeSplashScreenContentView(): not set enable splash screen flag") }
-                        }
-                    }
-
-                    // 主要 Hook 函数
+                    // 关闭MIUI优化
                     injectMember {
                         method {
                             name = "isCTS"
                             emptyParam()
                         }
                         beforeHook {
-                            if (XposedHelpers.getIntField(instance, "mContentSuggestType") == 10) {
-                                printLog("isCTS(): return true")
-                                result = true
-                            }else { printLog("isCTS(): jump over hook") }
+                            result = true
+                            printLog("isCTS(): return true")
                         }
                     }
                 }
@@ -152,6 +126,44 @@ class MainHook : YukiHookXposedInitProxy {
                                     printLog("processAdaptiveIcon(): argument is AdaptiveIcon, set round corner")
                                 } else { printLog("processAdaptiveIcon(): argument is not AdaptiveIcon, jump over hook") }
 
+                            }
+                        }
+
+                        injectMember {
+                            method {
+                                name = "build"
+                                emptyParam()
+                            }
+                            beforeHook {
+                                val packageName = (XposedHelpers.getObjectField(instance, "mActivityInfo") as ActivityInfo).packageName
+                                val list = prefs.get(DataConst.CUSTOM_SCOPE_LIST)
+                                val isException = prefs.get(DataConst.IS_CUSTOM_SCOPE_EXCEPTION_MODE)
+
+                                if (isException && (packageName in list)
+                                    || !isException && packageName !in list
+                                ) {
+                                    // 设置SuggestType
+                                    XposedHelpers.setIntField(instance, "mSuggestType", 5)
+                                    // 设置背景
+                                    if (XposedHelpers.getObjectField(instance, "mOverlayDrawable") == null){
+
+                                        // 睡着时候写的，待优化
+                                        val context = XposedHelpers.getObjectField(instance, "mContext") as Context
+
+                                        val clazz = XposedHelpers.getObjectField(instance, "this$0")
+                                        val mTmpAttrs = XposedHelpers.getObjectField(clazz, "mTmpAttrs")
+                                        val mWindowBgResId = XposedHelpers.getIntField(mTmpAttrs, "mWindowBgResId")
+
+                                        val drawable = context.getDrawable(mWindowBgResId)
+                                        XposedHelpers.setObjectField(instance, "mOverlayDrawable", drawable)
+                                    }
+
+                                    printLog("***",
+                                        "${packageName}:",
+                                        "build(): this app is in exception list, set mSuggestType 5")
+                                } else { printLog("***",
+                                    "${packageName}:",
+                                    "build(): mSuggestType is ${XposedHelpers.getIntField(instance, "mSuggestType")}") }
                             }
                         }
 

@@ -49,5 +49,4 @@ dependencies {
     implementation 'com.highcapable.yukihookapi:api:1.0.78'
     ksp 'com.highcapable.yukihookapi:ksp-xposed:1.0.78'
     implementation "com.github.topjohnwu.libsu:core:4.0.3"
-
 }

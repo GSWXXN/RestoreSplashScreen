@@ -37,9 +37,7 @@ class MainActivity : BaseActivity() {
                 alert("你真的要重启系统界面吗？", "重启SystemUI") {
                     positiveButton("确定") {
                         Shell.su("pkill -f com.android.systemui").exec()
-                        if (!isXposedModuleActive) {
-                            Shell.su("pkill -f com.gswxxn.restoresplashscreen").exec()
-                        }
+                        Shell.su("pkill -f com.gswxxn.restoresplashscreen").exec()
                     }
                     negativeButton("取消") {}
                 }.show()

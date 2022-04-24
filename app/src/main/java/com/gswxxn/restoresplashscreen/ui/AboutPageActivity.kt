@@ -21,16 +21,10 @@ class AboutPageActivity : BaseActivity() {
             titleBackIcon.setOnClickListener { onBackPressed() }
 
             appIcon.setImageBitmap(roundBitmapByShader(
-                BitmapFactory.decodeResource(resources, R.mipmap.icon),
-                appIcon.layoutParams.width,
-                appIcon.layoutParams.width/4
-                ))
+                BitmapFactory.decodeResource(resources, R.mipmap.icon), false))
 
             miluIcon.setImageBitmap(roundBitmapByShader(
-                BitmapFactory.decodeResource(resources, R.mipmap.img_developer),
-                this.miluIcon.layoutParams.width,
-                this.miluIcon.layoutParams.width
-            ))
+                BitmapFactory.decodeResource(resources, R.mipmap.img_developer), true))
 
             version.text = "v${BuildConfig.VERSION_NAME}"
 

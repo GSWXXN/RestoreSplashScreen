@@ -25,10 +25,23 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="de.robv.android.xposed.category.MODULE_SETTINGS" />
             </intent-filter>
         </activity>
+        <activity-alias
+            android:name=".Home"
+            android:enabled="true"
+            android:exported="true"
+            android:label="RestoreSplashScreen"
+            android:screenOrientation="behind"
+            android:targetActivity=".ui.MainActivity">
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
         <meta-data
                 android:name="xposedmodule"
                 android:value="true"/>

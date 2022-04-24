@@ -9,6 +9,7 @@ object DataConst {
     val IS_CUSTOM_SCOPE_EXCEPTION_MODE = PrefsData("is_custom_scope_exception_mode", true)
     val ENABLE_DEFAULT_STYLE = PrefsData("enable_default_style", false)
     val ENABLE_CUSTOM_VIEW = PrefsData("enable_custom_view", false)
+    val ENABLE_HIDE_ICON = PrefsData("enable_hide_icon", false)
 
     val CUSTOM_SCOPE_LIST = PrefsData("custom_scope_list", mutableSetOf<String>())
 

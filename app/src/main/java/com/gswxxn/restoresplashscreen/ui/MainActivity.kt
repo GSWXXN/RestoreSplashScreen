@@ -1,7 +1,9 @@
 package com.gswxxn.restoresplashscreen.ui
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.view.View
 import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.Data.DataConst
@@ -71,6 +73,19 @@ class MainActivity : BaseActivity() {
                     modulePrefs.put(DataConst.ENABLE_CUSTOM_SCOPE, isChecked)
                 }
                 isChecked = modulePrefs.get(DataConst.ENABLE_CUSTOM_SCOPE)
+            }
+
+            hideIconInLauncherSwitch.apply{
+                setOnCheckedChangeListener { btn, b ->
+                    if (btn.isPressed.not()) return@setOnCheckedChangeListener
+                    modulePrefs.put(DataConst.ENABLE_HIDE_ICON, b)
+                    packageManager.setComponentEnabledSetting(
+                        ComponentName(this@MainActivity, "${BuildConfig.APPLICATION_ID}.Home"),
+                        if (b) PackageManager.COMPONENT_ENABLED_STATE_DISABLED else PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                        PackageManager.DONT_KILL_APP
+                    )
+                }
+                isChecked = modulePrefs.get(DataConst.ENABLE_HIDE_ICON)
             }
 
             // 排除模式

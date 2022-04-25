@@ -13,6 +13,7 @@ import com.gswxxn.restoresplashscreen.Data.DataConst
 import com.gswxxn.restoresplashscreen.R
 import org.jetbrains.anko.alert
 import com.gswxxn.restoresplashscreen.databinding.ActivityMainBinding
+import com.gyf.immersionbar.ktx.immersionBar
 import com.highcapable.yukihookapi.hook.factory.isXposedModuleActive
 import com.highcapable.yukihookapi.hook.factory.modulePrefs
 import com.highcapable.yukihookapi.hook.xposed.YukiHookModuleStatus
@@ -157,6 +158,12 @@ class MainActivity : BaseActivity() {
             mainTextApiWay.text =
                 "Activated by ${YukiHookModuleStatus.executorName} API ${YukiHookModuleStatus.executorVersion}"
         }
+
+        immersionBar { statusBarColor(when{
+            isXposedModuleActive && modulePrefs.get(DataConst.ENABLE_MODULE).not() -> "#FF9800"
+            isXposedModuleActive -> "#228B22"
+            else -> "#661B1B1B"
+        }) }
     }
 
     override fun onResume() {

@@ -4,4 +4,6 @@
     <color name="colorTextDark">#FF777777</color>
     <color name="colorTextGray">#FF323B42</color>
     <color name="colorTextRed">#B22222</color>
+    <color name="colorDivider">#DADADA</color>
+
 </resources>

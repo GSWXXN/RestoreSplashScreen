@@ -85,6 +85,7 @@ class MainHook : YukiHookXposedInitProxy {
                                 // 使用系统默认样式
                                 if (isDefaultStyle) {
                                     XposedHelpers.setObjectField(mTmpAttrs, "mSplashScreenIcon", null)
+                                    printLog("build(): use system default icon style")
                                 }
                             }
                         }

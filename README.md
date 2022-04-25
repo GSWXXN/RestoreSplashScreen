@@ -37,11 +37,12 @@
 
 ## 无法使用
 
-请先检查模块是否正常激活，并且作用域是否勾选。如果排查后仍有错误，请提交issue，或联系酷安[@迷璐](http://www.coolapk.com/u/1189245)
+请先检查模块是否正常激活，并且作用域是否勾选。如果排查后仍有错误，请提交issue，附上Log，如有能力提取SystemUI, 最好一并提交。  
+酷安[@迷璐](http://www.coolapk.com/u/1189245)
 
 
 ## 致谢
-[MIUI 原生通知图标](https://github.com/fankes/MIUINativeNotifyIcon)  
-[Yuki Hook API](https://github.com/fankes/YukiHookAPI)  
-[Hide My Applist](https://github.com/Dr-TSNG/Hide-My-Applist)  
-[libsu](https://github.com/topjohnwu/libsu)  
+本模块UI界面改自 [MIUI 原生通知图标](https://github.com/fankes/MIUINativeNotifyIcon)  
+获取应用列表方式改自 [Hide My Applist](https://github.com/Dr-TSNG/Hide-My-Applist)  
+模块使用 [Yuki Hook API](https://github.com/fankes/YukiHookAPI) 构建  
+使用 [libsu](https://github.com/topjohnwu/libsu) 执行Shell命令

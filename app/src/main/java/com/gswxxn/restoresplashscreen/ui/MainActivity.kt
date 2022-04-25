@@ -6,6 +6,9 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.view.View
 import com.gswxxn.restoresplashscreen.BuildConfig
+import com.gswxxn.restoresplashscreen.Data.ConstValue.CUSTOM_SCOPE
+import com.gswxxn.restoresplashscreen.Data.ConstValue.DEFAULT_STYLE
+import com.gswxxn.restoresplashscreen.Data.ConstValue.EXTRA_MESSAGE
 import com.gswxxn.restoresplashscreen.Data.DataConst
 import com.gswxxn.restoresplashscreen.R
 import org.jetbrains.anko.alert
@@ -15,7 +18,6 @@ import com.highcapable.yukihookapi.hook.factory.modulePrefs
 import com.highcapable.yukihookapi.hook.xposed.YukiHookModuleStatus
 import com.topjohnwu.superuser.Shell
 
-const val EXTRA_MESSAGE = "com.gswxxn.MainActivity.MESSAGE"
 class MainActivity : BaseActivity() {
     private lateinit var binding: ActivityMainBinding
     companion object {
@@ -98,7 +100,7 @@ class MainActivity : BaseActivity() {
             // 作用域应用列表
             customScopeList.setOnClickListener {
                 val intent = Intent(this@MainActivity, ConfigAppsActivity::class.java)
-                intent.putExtra(EXTRA_MESSAGE, 1)
+                intent.putExtra(EXTRA_MESSAGE, CUSTOM_SCOPE)
                 startActivity(intent)
             }
 
@@ -114,27 +116,19 @@ class MainActivity : BaseActivity() {
             // 使用系统默认风格应用列表
             defaultStyleList.setOnClickListener {
                 val intent = Intent(this@MainActivity, ConfigAppsActivity::class.java)
-                intent.putExtra(EXTRA_MESSAGE, 2)
+                intent.putExtra(EXTRA_MESSAGE, DEFAULT_STYLE)
                 startActivity(intent)
             }
 
             // 自定义Splash Screen View
-            customView.apply {
-                isChecked = modulePrefs.get(DataConst.ENABLE_CUSTOM_VIEW)
+            replaceIcon.apply {
+                isChecked = modulePrefs.get(DataConst.ENABLE_REPLACE_ICON)
                 setOnCheckedChangeListener { _, isChecked ->
-                    binding.customViewConfig.visibility = if (isChecked) View.VISIBLE else View.GONE
-                    modulePrefs.put(DataConst.ENABLE_CUSTOM_VIEW, isChecked)
+                    modulePrefs.put(DataConst.ENABLE_REPLACE_ICON, isChecked)
                 }
             }
 
-            // 配置自定义Splash Screen View按钮
-            customViewConfig.setOnClickListener {
-
-            }
-
             // 未开发功能
-            styleLayout.visibility = View.GONE
-            moreLayout.visibility = View.GONE
         }
     }
 

@@ -8,6 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import com.gswxxn.restoresplashscreen.Data.ConstValue.CUSTOM_SCOPE
+import com.gswxxn.restoresplashscreen.Data.ConstValue.DEFAULT_STYLE
+import com.gswxxn.restoresplashscreen.Data.ConstValue.EXTRA_MESSAGE
 import com.gswxxn.restoresplashscreen.Data.DataConst
 import com.gswxxn.restoresplashscreen.databinding.ActivityConfigAppsBinding
 import com.gswxxn.restoresplashscreen.databinding.AdapterConfigBinding
@@ -26,15 +29,15 @@ class ConfigAppsActivity : BaseActivity() {
     override fun onCreate() {
         binding = ActivityConfigAppsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        isCheckedList = modulePrefs.get(DataConst.CUSTOM_SCOPE_LIST).toMutableSet()
+        val message = intent.getIntExtra(EXTRA_MESSAGE, 0)
+
+        isCheckedList = modulePrefs.get(
+            when (message) {
+                CUSTOM_SCOPE -> DataConst.CUSTOM_SCOPE_LIST
+                DEFAULT_STYLE -> DataConst.DEFAULT_STYLE_LIST
+                else -> DataConst.UNDEFINED_LIST
+            }).toMutableSet()
         appInfo = AppInfoHelper(isCheckedList)
-
-
-        val message = when (intent.getIntExtra(EXTRA_MESSAGE, 0)) {
-            1 -> "作用域列表"
-            2 -> "默认风格列表"
-            else -> "标题"
-        }
 
         binding.configListLoadingView.visibility = View.VISIBLE
         binding.configListView.visibility = View.GONE
@@ -43,7 +46,11 @@ class ConfigAppsActivity : BaseActivity() {
         binding.titleBackIcon.setOnClickListener { onBackPressed() }
 
         // 标题名称
-        binding.appListTitle.text = message
+        binding.appListTitle.text = when (message) {
+            CUSTOM_SCOPE -> "作用域列表"
+            DEFAULT_STYLE -> "默认风格列表"
+            else -> "标题"
+        }
 
         // 搜索栏事件监听
         binding.searchEditText.apply {
@@ -141,7 +148,12 @@ class ConfigAppsActivity : BaseActivity() {
 
         // 保存按钮点击事件
         binding.configSaveButton.setOnClickListener {
-            modulePrefs.put(DataConst.CUSTOM_SCOPE_LIST, isCheckedList)
+            modulePrefs.put(
+                when (message) {
+                    CUSTOM_SCOPE -> DataConst.CUSTOM_SCOPE_LIST
+                    DEFAULT_STYLE -> DataConst.DEFAULT_STYLE_LIST
+                    else -> DataConst.UNDEFINED_LIST
+                }, isCheckedList)
             toast("保存成功，请重启系统界面")
             finish()
         }

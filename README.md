@@ -49,7 +49,7 @@
 ## 捐赠支持
 如果你想支持我，觉得这个模块好用的不得了，不捐赠就浑身难受，我会非常感谢你的！！！如果这个模块对你来说只要还差一点点意思，就不用捐赠啦
 
-![donate](Doc/donate.png)
+<img src="Doc/donate.png" width = "250" alt="donate" align=center />
 
 
 ## 致谢

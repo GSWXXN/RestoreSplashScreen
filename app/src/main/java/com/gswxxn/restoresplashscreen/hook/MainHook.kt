@@ -27,7 +27,6 @@ class MainHook : YukiHookXposedInitProxy {
         when {
             prefs.get(DataConst.ENABLE_MODULE).not() -> loggerW(msg = "Aborted Hook -> Hook Closed")
             else -> loadApp("com.android.systemui") {
-                var bgColor : Int
                 fun printLog (vararg msg : String){ if (prefs.get(DataConst.ENABLE_LOG)) msg.forEach { loggerI(msg = it) } }
 
                 // 关闭MIUI优化
@@ -103,11 +102,13 @@ class MainHook : YukiHookXposedInitProxy {
                                 val enableChangeBgColor = prefs.get(DataConst.ENABLE_CHANG_BG_COLOR)
                                 val isDarkMode = appContext.resources
                                     .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+                                val isInExceptList = (XposedHelpers.getObjectField(instance, "mActivityInfo") as ActivityInfo).packageName in prefs.get(DataConst.BG_EXCEPT_LIST)
 
-                                if (enableChangeBgColor && !isDarkMode) {
+                                if (enableChangeBgColor && !isInExceptList && !isDarkMode) {
                                     val drawable = args(0).cast<Drawable>()
                                     val color = Utils.getBgColor(Utils.drawable2Bitmap(drawable!!)!!)
                                     XposedHelpers.setIntField(instance, "mThemeColor", color)
+                                    printLog("createIconDrawable(): change background color")
                                 }
                             }
                         }

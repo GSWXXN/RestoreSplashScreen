@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import com.gswxxn.restoresplashscreen.Data.ConstValue
 import com.gswxxn.restoresplashscreen.Data.ConstValue.CUSTOM_SCOPE
 import com.gswxxn.restoresplashscreen.Data.ConstValue.DEFAULT_STYLE
 import com.gswxxn.restoresplashscreen.Data.ConstValue.EXTRA_MESSAGE
@@ -35,6 +36,7 @@ class ConfigAppsActivity : BaseActivity() {
             when (message) {
                 CUSTOM_SCOPE -> DataConst.CUSTOM_SCOPE_LIST
                 DEFAULT_STYLE -> DataConst.DEFAULT_STYLE_LIST
+                ConstValue.BACKGROUND_EXCEPT -> DataConst.BG_EXCEPT_LIST
                 else -> DataConst.UNDEFINED_LIST
             }).toMutableSet()
         appInfo = AppInfoHelper(isCheckedList)
@@ -49,6 +51,7 @@ class ConfigAppsActivity : BaseActivity() {
         binding.appListTitle.text = when (message) {
             CUSTOM_SCOPE -> "作用域列表"
             DEFAULT_STYLE -> "默认风格列表"
+            ConstValue.BACKGROUND_EXCEPT -> "排除列表"
             else -> "标题"
         }
 
@@ -152,6 +155,7 @@ class ConfigAppsActivity : BaseActivity() {
                 when (message) {
                     CUSTOM_SCOPE -> DataConst.CUSTOM_SCOPE_LIST
                     DEFAULT_STYLE -> DataConst.DEFAULT_STYLE_LIST
+                    ConstValue.BACKGROUND_EXCEPT -> DataConst.BG_EXCEPT_LIST
                     else -> DataConst.UNDEFINED_LIST
                 }, isCheckedList)
             toast("保存成功，请重启系统界面")

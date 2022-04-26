@@ -121,7 +121,7 @@ class MainActivity : BaseActivity() {
                 startActivity(intent)
             }
 
-            // 自定义Splash Screen View
+            // 替换获取图标方式
             replaceIcon.apply {
                 isChecked = modulePrefs.get(DataConst.ENABLE_REPLACE_ICON)
                 setOnCheckedChangeListener { _, isChecked ->
@@ -129,7 +129,13 @@ class MainActivity : BaseActivity() {
                 }
             }
 
-            // 未开发功能
+            // 自适应背景颜色
+            replaceBg.apply {
+                isChecked = modulePrefs.get(DataConst.ENABLE_CHANG_BG_COLOR)
+                setOnCheckedChangeListener { _, isChecked ->
+                    modulePrefs.put(DataConst.ENABLE_CHANG_BG_COLOR, isChecked)
+                }
+            }
         }
     }
 

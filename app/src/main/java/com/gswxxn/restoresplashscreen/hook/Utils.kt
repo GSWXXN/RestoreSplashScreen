@@ -4,6 +4,7 @@ import android.graphics.*
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import androidx.palette.graphics.Palette
 
 
 object Utils {
@@ -38,7 +39,6 @@ object Utils {
         // 初始化目标bitmap
         val targetBitmap = Bitmap.createBitmap(bitmap.width, bitmap.width, Bitmap.Config.ARGB_8888)
 
-
         // 初始化目标画布
         val targetCanvas = Canvas(targetBitmap)
 
@@ -56,5 +56,7 @@ object Utils {
         )
         return targetBitmap
     }
+
+    fun getBgColor(bitmap: Bitmap):Int = Palette.from(bitmap).generate().getLightVibrantColor(Color.parseColor("#F8F8FF"))
 
 }

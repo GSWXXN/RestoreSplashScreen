@@ -594,13 +594,28 @@
                         android:textSize="15sp"/>
 
                 <TextView
+                        android:id="@+id/bg_except_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginRight="3dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/bg_button_round"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:singleLine="true"
+                        android:text="配置排除列表"
+                        android:textColor="@color/colorTextGray"
+                        android:textSize="15sp" />
+
+                <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:layout_marginBottom="10dp"
                         android:alpha="0.6"
-                        android:text="开启此选项后，Splash Screen背景颜色将根据图标颜色更改。"
+                        android:text="开启此选项后，Splash Screen背景颜色将根据图标颜色更改。如有应用背景取色异常，请配置排除列表使用默认背景颜色。"
                         android:lineSpacingExtra="6dp"
                         android:textColor="@color/colorTextDark"
                         android:textSize="12sp" />

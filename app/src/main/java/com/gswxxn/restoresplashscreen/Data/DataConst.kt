@@ -16,6 +16,7 @@ object DataConst {
     val UNDEFINED_LIST = PrefsData("undefined_list", mutableSetOf<String>())
     val CUSTOM_SCOPE_LIST = PrefsData("custom_scope_list", mutableSetOf<String>())
     val DEFAULT_STYLE_LIST = PrefsData("default_style_list", mutableSetOf<String>())
+    val BG_EXCEPT_LIST =PrefsData("bg_except_list", mutableSetOf<String>())
 
 
 }

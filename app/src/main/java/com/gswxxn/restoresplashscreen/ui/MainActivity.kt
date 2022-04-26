@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.view.View
 import com.gswxxn.restoresplashscreen.BuildConfig
+import com.gswxxn.restoresplashscreen.Data.ConstValue.BACKGROUND_EXCEPT
 import com.gswxxn.restoresplashscreen.Data.ConstValue.CUSTOM_SCOPE
 import com.gswxxn.restoresplashscreen.Data.ConstValue.DEFAULT_STYLE
 import com.gswxxn.restoresplashscreen.Data.ConstValue.EXTRA_MESSAGE
@@ -134,7 +135,15 @@ class MainActivity : BaseActivity() {
                 isChecked = modulePrefs.get(DataConst.ENABLE_CHANG_BG_COLOR)
                 setOnCheckedChangeListener { _, isChecked ->
                     modulePrefs.put(DataConst.ENABLE_CHANG_BG_COLOR, isChecked)
+                    binding.bgExceptList.visibility = if (isChecked) View.VISIBLE else View.GONE
                 }
+            }
+
+            // 自适应背景颜色排除列表
+            bgExceptList.setOnClickListener {
+                val intent = Intent(this@MainActivity, ConfigAppsActivity::class.java)
+                intent.putExtra(EXTRA_MESSAGE, BACKGROUND_EXCEPT)
+                startActivity(intent)
             }
         }
     }

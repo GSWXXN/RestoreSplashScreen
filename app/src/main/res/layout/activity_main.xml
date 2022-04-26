@@ -226,7 +226,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
-                        android:text="在桌面隐藏模块图标"
+                        android:text="隐藏桌面图标"
                         android:textColor="@color/colorTextGray"
                         android:textSize="15sp"/>
                 <Switch
@@ -462,7 +462,7 @@
                         android:layout_marginBottom="10dp"
                         android:alpha="0.6"
                         android:lineSpacingExtra="6dp"
-                        android:text="开启此选项并后，选中的应用即使主动适配Splash Screen, 也按照静态图标处理。开启此选项可以解决一下问题：\n1. 使用第三方图标依然出现方角问题\n2. 部分应用没有将图标背景设置成透明导致方角问题。"
+                        android:text="开启此选项并后，选中的应用即使主动适配Splash Screen, 也按照静态图标处理。开启此选项可以解决以下问题：\n1. 使用第三方图标依然出现方角问题。\n2. 部分应用没有将图标背景设置成透明导致方角问题。"
                         android:textColor="@color/colorTextDark"
                         android:textSize="12sp"/>
             </LinearLayout>
@@ -475,7 +475,7 @@
                     android:background="@color/colorDivider"/>
 
             <LinearLayout
-                    android:id="@+id/more_layout"
+                    android:id="@+id/icon_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
@@ -501,14 +501,14 @@
                             android:layout_width="15dp"
                             android:layout_height="15dp"
                             android:layout_marginEnd="10dp"
-                            android:src="@drawable/ic_more_setting" />
+                            android:src="@drawable/ic_picture" />
 
                     <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:alpha="0.85"
                             android:singleLine="true"
-                            android:text="更多"
+                            android:text="图标"
                             android:textColor="@color/colorTextGray"
                             android:textSize="12sp" />
                 </LinearLayout>
@@ -531,7 +531,77 @@
                         android:layout_marginBottom="10dp"
                         android:alpha="0.6"
                         android:lineSpacingExtra="6dp"
-                        android:text="开启此选项后，Splash Screen 的图标可以跟随主题设定。但是通常获取到的主题图标分辨率较低，经过放大后图标可能会比较模糊。"
+                        android:text="开启此选项后，Splash Screen的图标可以跟随主题设定。但是通常获取到的主题图标分辨率较低，经过放大后图标可能会比较模糊。"
+                        android:textColor="@color/colorTextDark"
+                        android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@color/colorDivider"/>
+
+            <LinearLayout
+                    android:id="@+id/bg_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="15dp"
+                    android:animateLayoutChanges="true"
+                    android:elevation="0dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="15dp"
+                    android:paddingRight="10dp">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:gravity="center|start">
+
+                    <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_marginEnd="10dp"
+                            android:src="@drawable/ic_color" />
+
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:alpha="0.85"
+                            android:singleLine="true"
+                            android:text="背景"
+                            android:textColor="@color/colorTextGray"
+                            android:textSize="12sp" />
+                </LinearLayout>
+
+                <Switch
+                        android:id="@+id/replace_bg"
+                        android:layout_width="match_parent"
+                        android:checked="true"
+                        android:layout_height="35dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="自适应背景颜色"
+                        android:textColor="@color/colorTextGray"
+                        android:textSize="15sp"/>
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:alpha="0.6"
+                        android:text="开启此选项后，Splash Screen背景颜色将根据图标颜色更改。"
+                        android:lineSpacingExtra="6dp"
                         android:textColor="@color/colorTextDark"
                         android:textSize="12sp" />
 

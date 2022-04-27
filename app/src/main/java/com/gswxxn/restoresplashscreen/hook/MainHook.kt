@@ -64,17 +64,26 @@ class MainHook : YukiHookXposedInitProxy {
                                 val clazz = XposedHelpers.getObjectField(instance, "this$0")
                                 val mTmpAttrs = XposedHelpers.getObjectField(clazz, "mTmpAttrs")
 
+                                var drawable : Drawable? = null
+
                                 // 是否在作用域外
                                 if (isException) {
-                                    // 设置SuggestType
-                                    XposedHelpers.setIntField(instance, "mSuggestType", 5)
-                                    // 设置背景
-                                    if (XposedHelpers.getObjectField(instance, "mOverlayDrawable") == null){
+                                    // 设置无图标SuggestType
+                                    if (XposedHelpers.getIntField(mTmpAttrs, "mWindowBgResId") != 0
+                                        && XposedHelpers.getObjectField(mTmpAttrs, "mSplashScreenIcon") == null
+                                        && XposedHelpers.getObjectField(mTmpAttrs, "mBrandingImage") == null
+                                        && XposedHelpers.getIntField(mTmpAttrs, "mIconBgColor") == 0
+                                        && XposedHelpers.getIntField(mTmpAttrs, "mAnimationDuration") == 0) {
 
+                                        XposedHelpers.setIntField(instance, "mSuggestType", 5)
                                         val context = XposedHelpers.getObjectField(instance, "mContext") as Context
                                         val mWindowBgResId = XposedHelpers.getIntField(mTmpAttrs, "mWindowBgResId")
 
-                                        val drawable = context.getDrawable(mWindowBgResId)
+                                        drawable = context.getDrawable(mWindowBgResId)
+                                    }
+                                    // 设置默认背景
+                                    if (XposedHelpers.getObjectField(instance, "mOverlayDrawable") == null){
+
                                         XposedHelpers.setObjectField(instance, "mOverlayDrawable", drawable)
                                     }
 

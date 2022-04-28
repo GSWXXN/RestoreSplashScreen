@@ -148,6 +148,7 @@ class MainHook : YukiHookXposedInitProxy {
                         afterHook {
                             val enableReplaceIcon = prefs.get(DataConst.ENABLE_REPLACE_ICON)
                             val isCircle = prefs.get(DataConst.IS_CIRCLE_ICON)
+                            val enableShrinkIcon = prefs.get(DataConst.ENABLE_SHRINK_ICON)
 
                             // 替换获取图标方式
                             val drawable = if (enableReplaceIcon) {
@@ -161,7 +162,7 @@ class MainHook : YukiHookXposedInitProxy {
                             // 绘制图标圆角
                             printLog("IconProvider(): draw round corner")
                             result = BitmapDrawable(appContext.resources,
-                                Utils.roundBitmapByShader(drawable?.let { Utils.drawable2Bitmap(it) }, isCircle))
+                                Utils.roundBitmapByShader(drawable?.let { Utils.drawable2Bitmap(it) }, isCircle, enableShrinkIcon))
 
                         }
                     }

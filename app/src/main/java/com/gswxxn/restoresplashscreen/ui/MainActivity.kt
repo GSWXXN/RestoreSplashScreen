@@ -62,10 +62,10 @@ class MainActivity : BaseActivity() {
 
             // 启用日志
             enableLog.apply {
-                isChecked = modulePrefs.get(DataConst.ENABLE_LOG)
                 setOnCheckedChangeListener { _, isChecked ->
                     modulePrefs.put(DataConst.ENABLE_LOG, isChecked)
                 }
+                isChecked = modulePrefs.get(DataConst.ENABLE_LOG)
             }
 
             // 自定义模块作用域
@@ -108,11 +108,11 @@ class MainActivity : BaseActivity() {
 
             // 使用系统默认风格
             defaultStyle.apply {
-                isChecked = modulePrefs.get(DataConst.ENABLE_DEFAULT_STYLE)
                 setOnCheckedChangeListener { _, isChecked ->
                     binding.defaultStyleList.visibility = if (isChecked) View.VISIBLE else View.GONE
                     modulePrefs.put(DataConst.ENABLE_DEFAULT_STYLE, isChecked)
                 }
+                isChecked = modulePrefs.get(DataConst.ENABLE_DEFAULT_STYLE)
             }
 
             // 使用系统默认风格应用列表
@@ -123,20 +123,28 @@ class MainActivity : BaseActivity() {
             }
 
             // 替换获取图标方式
+            shrinkIcon.apply {
+                setOnCheckedChangeListener { _, isChecked ->
+                    modulePrefs.put(DataConst.ENABLE_SHRINK_ICON, isChecked)
+                }
+                isChecked = modulePrefs.get(DataConst.ENABLE_SHRINK_ICON)
+            }
+
+            // 替换获取图标方式
             replaceIcon.apply {
-                isChecked = modulePrefs.get(DataConst.ENABLE_REPLACE_ICON)
                 setOnCheckedChangeListener { _, isChecked ->
                     modulePrefs.put(DataConst.ENABLE_REPLACE_ICON, isChecked)
                 }
+                isChecked = modulePrefs.get(DataConst.ENABLE_REPLACE_ICON)
             }
 
             // 自适应背景颜色
             replaceBg.apply {
-                isChecked = modulePrefs.get(DataConst.ENABLE_CHANG_BG_COLOR)
                 setOnCheckedChangeListener { _, isChecked ->
                     modulePrefs.put(DataConst.ENABLE_CHANG_BG_COLOR, isChecked)
                     binding.bgExceptList.visibility = if (isChecked) View.VISIBLE else View.GONE
                 }
+                isChecked = modulePrefs.get(DataConst.ENABLE_CHANG_BG_COLOR)
             }
 
             // 自适应背景颜色排除列表

@@ -5,6 +5,7 @@ import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import androidx.palette.graphics.Palette
+import com.highcapable.yukihookapi.hook.log.loggerW
 
 
 object Utils {
@@ -15,8 +16,8 @@ object Utils {
         if (drawable is BitmapDrawable) {
             return drawable.bitmap
         }
-        val w = if (drawable is AdaptiveIconDrawable) drawable.intrinsicWidth * 2 else drawable.intrinsicWidth
-        val h = if (drawable is AdaptiveIconDrawable) drawable.intrinsicHeight * 2 else drawable.intrinsicHeight
+        val w = if (drawable is AdaptiveIconDrawable) drawable.intrinsicWidth * 3 else drawable.intrinsicWidth
+        val h = if (drawable is AdaptiveIconDrawable) drawable.intrinsicHeight * 3 else drawable.intrinsicHeight
         val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         drawable.setBounds(0, 0, w, h)
@@ -27,7 +28,7 @@ object Utils {
     /**
      * Original code from: https://blog.csdn.net/xiaohanluo/article/details/52945791
      */
-     fun roundBitmapByShader(bitmap: Bitmap?, isCircle: Boolean): Bitmap? {
+     fun roundBitmapByShader(bitmap: Bitmap?, isCircle: Boolean, isShrink: Boolean = true): Bitmap? {
         if (bitmap == null) {
             return null
         }
@@ -54,7 +55,22 @@ object Utils {
             radius.toFloat(),
             paint
         )
-        return targetBitmap
+
+        // 增加背景
+        if (isShrink && bitmap.width < 200) {
+            val targetBitmap2 = Bitmap.createBitmap((bitmap.width * 1.5).toInt(), (bitmap.width * 1.5).toInt(), Bitmap.Config.ARGB_8888)
+            val targetCanvas2 = Canvas(targetBitmap2)
+
+            targetCanvas2.drawRGB(245, 245, 245)
+            targetCanvas2.drawBitmap(
+                targetBitmap,
+                (targetBitmap2.width * 0.5 - bitmap.width * 0.5).toFloat(),
+                (targetBitmap2.height * 0.5 - bitmap.height * 0.5).toFloat(),
+                null
+            )
+            return roundBitmapByShader(targetBitmap2, false, isShrink = false)
+        }
+        return  targetBitmap
     }
 
     fun getBgColor(bitmap: Bitmap):Int = Palette.from(bitmap).maximumColorCount(8).generate()

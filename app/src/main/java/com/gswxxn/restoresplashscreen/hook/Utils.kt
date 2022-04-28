@@ -57,14 +57,7 @@ object Utils {
         return targetBitmap
     }
 
-    fun getBgColor(bitmap: Bitmap, isDark : Boolean):Int {
-        val palette = Palette.from(bitmap).maximumColorCount(8).generate()
-
-        if (isDark){
-            return palette.getDarkVibrantColor(Color.parseColor("#000000"))
-        }
-        return palette.getLightVibrantColor(Color.parseColor("#F8F8FF"))
-
-    }
+    fun getBgColor(bitmap: Bitmap):Int = Palette.from(bitmap).maximumColorCount(8).generate()
+        .getLightVibrantColor(Color.parseColor("#F8F8FF"))
 
 }

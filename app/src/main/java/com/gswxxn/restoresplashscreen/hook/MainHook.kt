@@ -113,9 +113,9 @@ class MainHook : YukiHookXposedInitProxy {
                                     .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
                                 val isInExceptList = (XposedHelpers.getObjectField(instance, "mActivityInfo") as ActivityInfo).packageName in prefs.get(DataConst.BG_EXCEPT_LIST)
 
-                                if (enableChangeBgColor && !isInExceptList) {
+                                if (enableChangeBgColor && !isInExceptList && !isDarkMode) {
                                     val drawable = args(0).cast<Drawable>()
-                                    val color = Utils.getBgColor(Utils.drawable2Bitmap(drawable!!)!!, isDarkMode)
+                                    val color = Utils.getBgColor(Utils.drawable2Bitmap(drawable!!)!!)
                                     XposedHelpers.setIntField(instance, "mThemeColor", color)
                                     printLog("createIconDrawable(): change background color")
                                 }

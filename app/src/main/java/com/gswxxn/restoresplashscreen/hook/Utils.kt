@@ -2,6 +2,7 @@ package com.gswxxn.restoresplashscreen.hook
 
 import android.graphics.*
 import android.graphics.drawable.AdaptiveIconDrawable
+import android.graphics.drawable.Animatable
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import androidx.palette.graphics.Palette
@@ -28,7 +29,7 @@ object Utils {
     /**
      * Original code from: https://blog.csdn.net/xiaohanluo/article/details/52945791
      */
-     fun roundBitmapByShader(bitmap: Bitmap?, isCircle: Boolean, isShrink: Boolean = true): Bitmap? {
+     fun roundBitmapByShader(bitmap: Bitmap?, isCircle: Boolean, isShrink: Boolean = false): Bitmap? {
         if (bitmap == null) {
             return null
         }
@@ -56,19 +57,18 @@ object Utils {
             paint
         )
 
-        // 增加背景
+        // 缩小图标
         if (isShrink && bitmap.width < 200) {
             val targetBitmap2 = Bitmap.createBitmap((bitmap.width * 1.5).toInt(), (bitmap.width * 1.5).toInt(), Bitmap.Config.ARGB_8888)
             val targetCanvas2 = Canvas(targetBitmap2)
 
-            targetCanvas2.drawRGB(245, 245, 245)
             targetCanvas2.drawBitmap(
                 targetBitmap,
                 (targetBitmap2.width * 0.5 - bitmap.width * 0.5).toFloat(),
                 (targetBitmap2.height * 0.5 - bitmap.height * 0.5).toFloat(),
                 null
             )
-            return roundBitmapByShader(targetBitmap2, false, isShrink = false)
+            return targetBitmap2
         }
         return  targetBitmap
     }

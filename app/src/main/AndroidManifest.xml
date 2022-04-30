@@ -10,7 +10,7 @@
     <application
             android:icon="@mipmap/ic_launcher"
             android:allowBackup="false"
-            android:label="RestoreSplashScreen"
+            android:label="MIUI遮罩进化"
             android:theme="@style/Theme.RestoreSplashScreen">
         <activity
                 android:name=".ui.AboutPageActivity"
@@ -32,7 +32,7 @@
             android:name=".Home"
             android:enabled="true"
             android:exported="true"
-            android:label="RestoreSplashScreen"
+            android:label="MIUI遮罩进化"
             android:screenOrientation="behind"
             android:targetActivity=".ui.MainActivity">
 
@@ -53,7 +53,7 @@
                 android:value="com.android.systemui"/>
         <meta-data
                 android:name="xposeddescription"
-                android:value="尝试恢复被MIUI阉割的SplashScreen\n酷安@迷璐"/>
+                android:value="自定义MIUI的SplashScreen\n酷安@迷璐"/>
     </application>
 
 </manifest>

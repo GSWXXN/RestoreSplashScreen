@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:singleLine="true"
-                android:text="RestoreSplashScreen"
+                android:text="MIUI遮罩进化"
                 android:textColor="@color/white"
                 android:textSize="25sp"
                 android:textStyle="bold" />
@@ -462,7 +462,7 @@
                         android:layout_marginBottom="10dp"
                         android:alpha="0.6"
                         android:lineSpacingExtra="6dp"
-                        android:text="开启此选项并后，选中的应用即使主动适配Splash Screen, 也按照静态图标处理。开启此选项可以解决以下问题：\n1. 使用第三方图标依然出现方角问题。\n2. 部分应用没有将图标背景设置成透明导致方角问题。"
+                        android:text="开启此选项并后，选中的应用即使主动适配Splash Screen, 也按照静态图标处理。开启此选项也可以解决以下问题：\n1. 使用第三方图标依然出现方角问题。\n2. 部分应用没有将图标背景设置成透明导致方角问题。"
                         android:textColor="@color/colorTextDark"
                         android:textSize="12sp"/>
             </LinearLayout>

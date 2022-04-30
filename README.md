@@ -1,4 +1,4 @@
-# RestoreSplashScreen
+# MIUI遮罩进化
 
 ~~尝试恢复被MIUI阉割的SplashScreen~~   
 自定义MIUI的Splash Screen

@@ -3,6 +3,7 @@ package com.gswxxn.restoresplashscreen.hook
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import com.gswxxn.restoresplashscreen.Data.DataConst
@@ -112,13 +113,24 @@ class MainHook : YukiHookXposedInitProxy {
                                 val isDarkMode = appContext.resources
                                     .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
                                 val isInExceptList = (XposedHelpers.getObjectField(instance, "mActivityInfo") as ActivityInfo).packageName in prefs.get(DataConst.BG_EXCEPT_LIST)
+                                val packageName = (XposedHelpers.getObjectField(instance, "mActivityInfo") as ActivityInfo).packageName
 
-                                if (enableChangeBgColor && !isInExceptList && !isDarkMode) {
-                                    val drawable = args(0).cast<Drawable>()
-                                    val color = Utils.getBgColor(Utils.drawable2Bitmap(drawable!!)!!)
-                                    XposedHelpers.setIntField(instance, "mThemeColor", color)
-                                    printLog("createIconDrawable(): change background color")
+                                when {
+
+                                    // 设置微信背景色为黑色
+                                    packageName == "com.tencent.mm" && prefs.get(DataConst.INDEPENDENT_COLOR_WECHAT) -> {
+                                        XposedHelpers.setIntField(instance, "mThemeColor", Color.parseColor("#010C15"))
+                                    }
+
+                                    // 自适应背景色
+                                    enableChangeBgColor && !isInExceptList && !isDarkMode -> {
+                                        val drawable = args(0).cast<Drawable>()
+                                        val color = Utils.getBgColor(Utils.drawable2Bitmap(drawable!!)!!)
+                                        XposedHelpers.setIntField(instance, "mThemeColor", color)
+                                        printLog("createIconDrawable(): change background color")
+                                    }
                                 }
+
                             }
                         }
 

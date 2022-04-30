@@ -138,6 +138,14 @@ class MainActivity : BaseActivity() {
                 isChecked = modulePrefs.get(DataConst.ENABLE_REPLACE_ICON)
             }
 
+            // 设置微信背景为黑色
+            independentColorWechat.apply {
+                setOnCheckedChangeListener { _, isChecked ->
+                    modulePrefs.put(DataConst.INDEPENDENT_COLOR_WECHAT, isChecked)
+                }
+                isChecked = modulePrefs.get(DataConst.INDEPENDENT_COLOR_WECHAT)
+            }
+
             // 自适应背景颜色
             replaceBg.apply {
                 setOnCheckedChangeListener { _, isChecked ->

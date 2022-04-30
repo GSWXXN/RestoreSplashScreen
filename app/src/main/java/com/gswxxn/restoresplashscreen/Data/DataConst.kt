@@ -14,6 +14,8 @@ object DataConst {
     val ENABLE_CHANG_BG_COLOR = PrefsData("enable_change_bg_color", false)
     val ENABLE_SHRINK_ICON = PrefsData("enable_shrink_icon", true)
 
+    val INDEPENDENT_COLOR_WECHAT = PrefsData("independent_color_wechat", false)
+
     val UNDEFINED_LIST = PrefsData("undefined_list", mutableSetOf<String>())
     val CUSTOM_SCOPE_LIST = PrefsData("custom_scope_list", mutableSetOf<String>())
     val DEFAULT_STYLE_LIST = PrefsData("default_style_list", mutableSetOf<String>())

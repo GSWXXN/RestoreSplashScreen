@@ -594,6 +594,16 @@
                 </LinearLayout>
 
                 <Switch
+                        android:id="@+id/independent_color_wechat"
+                        android:layout_width="match_parent"
+                        android:checked="true"
+                        android:layout_height="35dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="设置微信启动背景为深色"
+                        android:textColor="@color/colorTextGray"
+                        android:textSize="15sp"/>
+
+                <Switch
                         android:id="@+id/replace_bg"
                         android:layout_width="match_parent"
                         android:checked="true"

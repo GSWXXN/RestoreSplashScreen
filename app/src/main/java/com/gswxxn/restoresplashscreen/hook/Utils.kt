@@ -13,15 +13,14 @@ object Utils {
     /**
      * Original code from: https://www.jianshu.com/p/956f666eff96
      */
-     fun drawable2Bitmap(drawable: Drawable): Bitmap? {
+     fun drawable2Bitmap(drawable: Drawable, _size : Int): Bitmap? {
         if (drawable is BitmapDrawable) {
             return drawable.bitmap
         }
-        val w = if (drawable is AdaptiveIconDrawable) drawable.intrinsicWidth * 3 else drawable.intrinsicWidth
-        val h = if (drawable is AdaptiveIconDrawable) drawable.intrinsicHeight * 3 else drawable.intrinsicHeight
-        val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+        val size = if (drawable is AdaptiveIconDrawable) _size else drawable.intrinsicHeight
+        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
-        drawable.setBounds(0, 0, w, h)
+        drawable.setBounds(0, 0, size, size)
         drawable.draw(canvas)
         return bitmap
     }

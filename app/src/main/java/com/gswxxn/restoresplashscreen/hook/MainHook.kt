@@ -125,7 +125,7 @@ class MainHook : YukiHookXposedInitProxy {
                                     // 自适应背景色
                                     enableChangeBgColor && !isInExceptList && !isDarkMode -> {
                                         val drawable = args(0).cast<Drawable>()
-                                        val color = Utils.getBgColor(Utils.drawable2Bitmap(drawable!!)!!)
+                                        val color = Utils.getBgColor(Utils.drawable2Bitmap(drawable!!, 100)!!)
                                         XposedHelpers.setIntField(instance, "mThemeColor", color)
                                         printLog("createIconDrawable(): change background color")
                                     }
@@ -173,8 +173,12 @@ class MainHook : YukiHookXposedInitProxy {
 
                             // 绘制图标圆角
                             printLog("IconProvider(): draw round corner")
-                            result = BitmapDrawable(appContext.resources,
-                                Utils.roundBitmapByShader(drawable?.let { Utils.drawable2Bitmap(it) }, isCircle, enableShrinkIcon))
+                            result = BitmapDrawable(
+                                appContext.resources,
+                                Utils.roundBitmapByShader(
+                                    drawable?.let { Utils.drawable2Bitmap(it, args(1).cast<Int>()!!) },
+                                    isCircle,
+                                    enableShrinkIcon))
 
                         }
                     }

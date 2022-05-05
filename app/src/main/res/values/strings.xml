@@ -1,2 +1,6 @@
 <resources>
+    <dimen name="switch_height">20dp</dimen>
+    <dimen name="switch_width">30dp</dimen>
+    <dimen name="switch_radius">10dp</dimen>
+    <dimen name="switch_stroke">3dp</dimen>
 </resources>

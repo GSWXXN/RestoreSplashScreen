@@ -219,13 +219,19 @@
                         android:layout_height="35dp"
                         android:layout_marginBottom="5dp"
                         android:text="启用模块"
+                        android:switchMinWidth="@dimen/switch_width"
+                        android:thumb="@drawable/switch_thumb"
+                        android:track="@drawable/switch_track"
                         android:textColor="@color/colorTextGray"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"/>
                 <Switch
                         android:id="@+id/hide_icon_in_launcher_switch"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="35dp"
                         android:layout_marginBottom="5dp"
+                        android:switchMinWidth="@dimen/switch_width"
+                        android:thumb="@drawable/switch_thumb"
+                        android:track="@drawable/switch_track"
                         android:text="隐藏桌面图标"
                         android:textColor="@color/colorTextGray"
                         android:textSize="15sp"/>
@@ -234,6 +240,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="35dp"
                         android:layout_marginBottom="5dp"
+                        android:switchMinWidth="@dimen/switch_width"
+                        android:thumb="@drawable/switch_thumb"
+                        android:track="@drawable/switch_track"
                         android:text="启用日志"
                         android:textColor="@color/colorTextGray"
                         android:textSize="15sp" />
@@ -299,6 +308,9 @@
                         android:checked="true"
                         android:layout_height="35dp"
                         android:layout_marginBottom="5dp"
+                        android:switchMinWidth="@dimen/switch_width"
+                        android:thumb="@drawable/switch_thumb"
+                        android:track="@drawable/switch_track"
                         android:text="自定义模块作用域"
                         android:textColor="@color/colorTextGray"
                         android:textSize="15sp" />
@@ -315,6 +327,9 @@
                             android:checked="true"
                             android:layout_height="35dp"
                             android:layout_marginBottom="5dp"
+                            android:switchMinWidth="@dimen/switch_width"
+                            android:thumb="@drawable/switch_thumb"
+                            android:track="@drawable/switch_track"
                             android:text="排除模式"
                             android:textColor="@color/colorTextGray"
                             android:textSize="15sp" />
@@ -437,6 +452,9 @@
                         android:checked="true"
                         android:layout_height="35dp"
                         android:layout_marginBottom="5dp"
+                        android:switchMinWidth="@dimen/switch_width"
+                        android:thumb="@drawable/switch_thumb"
+                        android:track="@drawable/switch_track"
                         android:text="使用系统默认风格"
                         android:textColor="@color/colorTextGray"
                         android:textSize="15sp" />
@@ -519,6 +537,9 @@
                         android:checked="true"
                         android:layout_height="35dp"
                         android:layout_marginBottom="5dp"
+                        android:switchMinWidth="@dimen/switch_width"
+                        android:thumb="@drawable/switch_thumb"
+                        android:track="@drawable/switch_track"
                         android:text="缩小分辨率较低的图标"
                         android:textColor="@color/colorTextGray"
                         android:textSize="15sp"/>
@@ -529,6 +550,9 @@
                         android:checked="true"
                         android:layout_height="35dp"
                         android:layout_marginBottom="5dp"
+                        android:switchMinWidth="@dimen/switch_width"
+                        android:thumb="@drawable/switch_thumb"
+                        android:track="@drawable/switch_track"
                         android:text="替换获取图标方式"
                         android:textColor="@color/colorTextGray"
                         android:textSize="15sp"/>
@@ -599,6 +623,9 @@
                         android:checked="true"
                         android:layout_height="35dp"
                         android:layout_marginBottom="5dp"
+                        android:switchMinWidth="@dimen/switch_width"
+                        android:thumb="@drawable/switch_thumb"
+                        android:track="@drawable/switch_track"
                         android:text="设置微信启动背景为深色"
                         android:textColor="@color/colorTextGray"
                         android:textSize="15sp"/>
@@ -609,6 +636,9 @@
                         android:checked="true"
                         android:layout_height="35dp"
                         android:layout_marginBottom="5dp"
+                        android:switchMinWidth="@dimen/switch_width"
+                        android:thumb="@drawable/switch_thumb"
+                        android:track="@drawable/switch_track"
                         android:text="自适应背景颜色"
                         android:textColor="@color/colorTextGray"
                         android:textSize="15sp"/>

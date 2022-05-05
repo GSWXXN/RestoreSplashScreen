@@ -46,8 +46,8 @@ dependencies {
     implementation 'com.geyifeng.immersionbar:immersionbar:3.2.2'
     implementation 'com.geyifeng.immersionbar:immersionbar-ktx:3.2.2'
     implementation "org.jetbrains.anko:anko:0.10.8"
-    implementation 'com.highcapable.yukihookapi:api:1.0.78'
-    ksp 'com.highcapable.yukihookapi:ksp-xposed:1.0.78'
+    implementation 'com.highcapable.yukihookapi:api:1.0.80'
+    ksp 'com.highcapable.yukihookapi:ksp-xposed:1.0.80'
     implementation "com.github.topjohnwu.libsu:core:4.0.3"
     implementation 'androidx.palette:palette-ktx:1.0.0'
 }

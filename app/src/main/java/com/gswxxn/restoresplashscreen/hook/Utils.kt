@@ -58,7 +58,7 @@ object Utils {
 
         // 缩小图标
         if (isShrink && bitmap.width < 200) {
-            val targetBitmap2 = Bitmap.createBitmap((bitmap.width * 1.5).toInt(), (bitmap.width * 1.5).toInt(), Bitmap.Config.ARGB_8888)
+            val targetBitmap2 = Bitmap.createBitmap(bitmap.width * 2, bitmap.width * 2, Bitmap.Config.ARGB_8888)
             val targetCanvas2 = Canvas(targetBitmap2)
 
             targetCanvas2.drawBitmap(

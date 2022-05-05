@@ -8,4 +8,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="trans">#00000000</color>
+    <color name="switch_on">#228B22</color>
+    <color name="switch_off">#9E9E9E</color>
 </resources>

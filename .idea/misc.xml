@@ -10,6 +10,9 @@
         <entry key="..\:/Project/Java/RestoreSplashScreen/app/src/main/res/drawable/bg_orange_round.xml" value="0.2520833333333333" />
         <entry key="..\:/Project/Java/RestoreSplashScreen/app/src/main/res/drawable/bg_permotion_round.xml" value="0.2520833333333333" />
         <entry key="..\:/Project/Java/RestoreSplashScreen/app/src/main/res/drawable/bg_yellow_round.xml" value="0.2520833333333333" />
+        <entry key="..\:/Project/Java/RestoreSplashScreen/app/src/main/res/drawable/gray_thumb.xml" value="0.11197916666666667" />
+        <entry key="..\:/Project/Java/RestoreSplashScreen/app/src/main/res/drawable/green_thumb.xml" value="0.11197916666666667" />
+        <entry key="..\:/Project/Java/RestoreSplashScreen/app/src/main/res/drawable/green_track.xml" value="0.11197916666666667" />
         <entry key="..\:/Project/Java/RestoreSplashScreen/app/src/main/res/drawable/ic_home.xml" value="0.2520833333333333" />
         <entry key="..\:/Project/Java/RestoreSplashScreen/app/src/main/res/drawable/ic_more.xml" value="0.2520833333333333" />
         <entry key="..\:/Project/Java/RestoreSplashScreen/app/src/main/res/drawable/ic_nf_icon_update.xml" value="0.2520833333333333" />
@@ -17,6 +20,14 @@
         <entry key="..\:/Project/Java/RestoreSplashScreen/app/src/main/res/drawable/ic_restart.xml" value="0.2520833333333333" />
         <entry key="..\:/Project/Java/RestoreSplashScreen/app/src/main/res/drawable/ic_system_clock.xml" value="0.2520833333333333" />
         <entry key="..\:/Project/Java/RestoreSplashScreen/app/src/main/res/drawable/img_github.xml" value="0.6" />
+        <entry key="..\:/Project/Java/RestoreSplashScreen/app/src/main/res/drawable/switch_off_thumb.xml" value="0.2520833333333333" />
+        <entry key="..\:/Project/Java/RestoreSplashScreen/app/src/main/res/drawable/switch_off_track.xml" value="0.11197916666666667" />
+        <entry key="..\:/Project/Java/RestoreSplashScreen/app/src/main/res/drawable/switch_on_thumb.xml" value="0.2520833333333333" />
+        <entry key="..\:/Project/Java/RestoreSplashScreen/app/src/main/res/drawable/switch_on_track.xml" value="0.11197916666666667" />
+        <entry key="..\:/Project/Java/RestoreSplashScreen/app/src/main/res/drawable/switch_thumb.xml" value="0.2520833333333333" />
+        <entry key="..\:/Project/Java/RestoreSplashScreen/app/src/main/res/drawable/switch_track.xml" value="0.2520833333333333" />
+        <entry key="..\:/Project/Java/RestoreSplashScreen/app/src/main/res/drawable/thumb.xml" value="0.11197916666666667" />
+        <entry key="..\:/Project/Java/RestoreSplashScreen/app/src/main/res/drawable/track.xml" value="0.11197916666666667" />
         <entry key="..\:/Project/Java/RestoreSplashScreen/app/src/main/res/layout/activity_about_page.xml" value="0.2" />
         <entry key="..\:/Project/Java/RestoreSplashScreen/app/src/main/res/layout/activity_config_apps.xml" value="0.536" />
         <entry key="..\:/Project/Java/RestoreSplashScreen/app/src/main/res/layout/activity_main.xml" value="0.2" />

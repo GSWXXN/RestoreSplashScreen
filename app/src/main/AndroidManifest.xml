@@ -8,10 +8,11 @@
             tools:ignore="QueryAllPackagesPermission"/>
 
     <application
-            android:icon="@mipmap/ic_launcher"
             android:allowBackup="false"
+            android:icon="@mipmap/ic_launcher"
             android:label="MIUI遮罩进化"
             android:theme="@style/Theme.RestoreSplashScreen">
+
         <activity
                 android:name=".ui.AboutPageActivity"
                 android:exported="true"/>
@@ -25,23 +26,24 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="de.robv.android.xposed.category.MODULE_SETTINGS" />
+                <category android:name="de.robv.android.xposed.category.MODULE_SETTINGS"/>
             </intent-filter>
         </activity>
+
         <activity-alias
-            android:name=".Home"
-            android:enabled="true"
-            android:exported="true"
-            android:label="MIUI遮罩进化"
-            android:screenOrientation="behind"
-            android:targetActivity=".ui.MainActivity">
-
+                android:name=".Home"
+                android:enabled="true"
+                android:exported="true"
+                android:label="MIUI遮罩进化"
+                android:screenOrientation="behind"
+                android:targetActivity=".ui.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity-alias>
+
         <meta-data
                 android:name="xposedmodule"
                 android:value="true"/>

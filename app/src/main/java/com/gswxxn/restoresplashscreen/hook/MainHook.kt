@@ -14,11 +14,11 @@ import com.highcapable.yukihookapi.hook.log.loggerI
 import com.highcapable.yukihookapi.hook.log.loggerW
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
 import com.highcapable.yukihookapi.hook.type.java.IntType
-import com.highcapable.yukihookapi.hook.xposed.proxy.YukiHookXposedInitProxy
+import com.highcapable.yukihookapi.hook.xposed.proxy.IYukiHookXposedInit
 import de.robv.android.xposed.XposedHelpers
 
 @InjectYukiHookWithXposed
-class MainHook : YukiHookXposedInitProxy {
+class MainHook : IYukiHookXposedInit {
     override fun onInit() = configs {
         debugTag = "RestoreSplashScreen"
         isDebug = false

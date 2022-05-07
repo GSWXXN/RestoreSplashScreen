@@ -689,6 +689,30 @@
                         android:textColor="@color/colorTextDark"
                         android:textSize="12sp" />
 
+                <Switch
+                        android:id="@+id/ignore_dark_mode"
+                        android:layout_width="match_parent"
+                        android:checked="true"
+                        android:layout_height="35dp"
+                        android:layout_marginBottom="5dp"
+                        android:switchMinWidth="@dimen/switch_width"
+                        android:thumb="@drawable/switch_thumb"
+                        android:track="@drawable/switch_track"
+                        android:text="忽略深色模式"
+                        android:textColor="@color/colorTextGray"
+                        android:textSize="15sp"/>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:alpha="0.6"
+                        android:text="开启此选项后，Splash Screen的背景颜色将不受深色模式的影响。"
+                        android:lineSpacingExtra="6dp"
+                        android:textColor="@color/colorTextDark"
+                        android:textSize="12sp" />
+
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

@@ -28,7 +28,9 @@ class MainHook : IYukiHookXposedInit {
         when {
             prefs.get(DataConst.ENABLE_MODULE).not() -> loggerW(msg = "Aborted Hook -> Hook Closed")
             else -> loadApp("com.android.systemui") {
-                fun printLog (vararg msg : String){ if (prefs.get(DataConst.ENABLE_LOG)) msg.forEach { loggerI(msg = it) } }
+                fun printLog(vararg msg: String) {
+                    if (prefs.get(DataConst.ENABLE_LOG)) msg.forEach { loggerI(msg = it) }
+                }
 
                 // 关闭MIUI优化
                 findClass("com.android.wm.shell.startingsurface.SplashscreenContentDrawer").hook {
@@ -52,7 +54,10 @@ class MainHook : IYukiHookXposedInit {
                                 emptyParam()
                             }
                             beforeHook {
-                                val packageName = (XposedHelpers.getObjectField(instance, "mActivityInfo") as ActivityInfo).packageName
+                                val packageName = (XposedHelpers.getObjectField(
+                                    instance,
+                                    "mActivityInfo"
+                                ) as ActivityInfo).packageName
                                 val list = prefs.get(DataConst.CUSTOM_SCOPE_LIST)
                                 val isExceptionMode = prefs.get(DataConst.IS_CUSTOM_SCOPE_EXCEPTION_MODE)
                                 val enableCustomScope = prefs.get(DataConst.ENABLE_CUSTOM_SCOPE)
@@ -65,7 +70,7 @@ class MainHook : IYukiHookXposedInit {
                                 val clazz = XposedHelpers.getObjectField(instance, "this$0")
                                 val mTmpAttrs = XposedHelpers.getObjectField(clazz, "mTmpAttrs")
 
-                                var drawable : Drawable? = null
+                                var drawable: Drawable? = null
 
                                 // 是否在作用域外
                                 if (isException) {
@@ -74,7 +79,8 @@ class MainHook : IYukiHookXposedInit {
                                         && XposedHelpers.getObjectField(mTmpAttrs, "mSplashScreenIcon") == null
                                         && XposedHelpers.getObjectField(mTmpAttrs, "mBrandingImage") == null
                                         && XposedHelpers.getIntField(mTmpAttrs, "mIconBgColor") == 0
-                                        && XposedHelpers.getIntField(mTmpAttrs, "mAnimationDuration") == 0) {
+                                        && XposedHelpers.getIntField(mTmpAttrs, "mAnimationDuration") == 0
+                                    ) {
 
                                         XposedHelpers.setIntField(instance, "mSuggestType", 5)
                                         val context = XposedHelpers.getObjectField(instance, "mContext") as Context
@@ -83,15 +89,26 @@ class MainHook : IYukiHookXposedInit {
                                         drawable = context.getDrawable(mWindowBgResId)
                                     }
                                     // 设置默认背景
-                                    if (XposedHelpers.getObjectField(instance, "mOverlayDrawable") == null){
+                                    if (XposedHelpers.getObjectField(instance, "mOverlayDrawable") == null) {
 
                                         XposedHelpers.setObjectField(instance, "mOverlayDrawable", drawable)
                                     }
 
-                                    printLog("${packageName}:",
-                                        "build(): this app is in exception list, set mSuggestType 5")
-                                } else { printLog("${packageName}:",
-                                    "build(): mSuggestType is ${XposedHelpers.getIntField(instance, "mSuggestType")}") }
+                                    printLog(
+                                        "${packageName}:",
+                                        "build(): this app is in exception list, set mSuggestType 5"
+                                    )
+                                } else {
+                                    printLog(
+                                        "${packageName}:",
+                                        "build(): mSuggestType is ${
+                                            XposedHelpers.getIntField(
+                                                instance,
+                                                "mSuggestType"
+                                            )
+                                        }"
+                                    )
+                                }
 
                                 // 使用系统默认样式
                                 if (isDefaultStyle) {
@@ -110,20 +127,31 @@ class MainHook : IYukiHookXposedInit {
                             }
                             beforeHook {
                                 val enableChangeBgColor = prefs.get(DataConst.ENABLE_CHANG_BG_COLOR)
+                                val ignoreDarkMode = prefs.get(DataConst.IGNORE_DARK_MODE)
                                 val isDarkMode = appContext.resources
                                     .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
-                                val isInExceptList = (XposedHelpers.getObjectField(instance, "mActivityInfo") as ActivityInfo).packageName in prefs.get(DataConst.BG_EXCEPT_LIST)
-                                val packageName = (XposedHelpers.getObjectField(instance, "mActivityInfo") as ActivityInfo).packageName
+                                val isInExceptList = (XposedHelpers.getObjectField(
+                                    instance,
+                                    "mActivityInfo"
+                                ) as ActivityInfo).packageName in prefs.get(DataConst.BG_EXCEPT_LIST)
+                                val packageName = (XposedHelpers.getObjectField(
+                                    instance,
+                                    "mActivityInfo"
+                                ) as ActivityInfo).packageName
 
                                 when {
 
                                     // 设置微信背景色为黑色
                                     packageName == "com.tencent.mm" && prefs.get(DataConst.INDEPENDENT_COLOR_WECHAT) -> {
-                                        XposedHelpers.setIntField(instance, "mThemeColor", Color.parseColor("#010C15"))
+                                        XposedHelpers.setIntField(
+                                            instance,
+                                            "mThemeColor",
+                                            Color.parseColor("#010C15")
+                                        )
                                     }
 
                                     // 自适应背景色
-                                    enableChangeBgColor && !isInExceptList && !isDarkMode -> {
+                                    enableChangeBgColor && !isInExceptList && (!isDarkMode || ignoreDarkMode) -> {
                                         val drawable = args(0).cast<Drawable>()
                                         val color = Utils.getBgColor(Utils.drawable2Bitmap(drawable!!, 100)!!)
                                         XposedHelpers.setIntField(instance, "mThemeColor", color)
@@ -165,19 +193,19 @@ class MainHook : IYukiHookXposedInit {
 
                             // 替换获取图标方式
                             var drawable = if (enableReplaceIcon) {
-                                    printLog("IconProvider(): replace Icon")
-                                    args(0).cast<ActivityInfo>()?.packageName
-                                        ?.let { appContext.packageManager.getApplicationIcon(it) }!!
-                                }else {
-                                    result<Drawable>()
-                                }
+                                printLog("IconProvider(): replace Icon")
+                                args(0).cast<ActivityInfo>()?.packageName
+                                    ?.let { appContext.packageManager.getApplicationIcon(it) }!!
+                            } else {
+                                result<Drawable>()
+                            }
 
                             // 使用图标包
                             if (iconPack != "None") {
                                 val icon = IconPackManager()
-                                    .apply{setContext(appContext)}
+                                    .apply { setContext(appContext) }
                                     .IconPack()
-                                    .apply { packageName =  iconPack }
+                                    .apply { packageName = iconPack }
                                     .getIconForPackage(args(0).cast<ActivityInfo>()?.packageName)
                                 if (icon != null) {
                                     drawable = BitmapDrawable(appResources, icon)
@@ -191,14 +219,31 @@ class MainHook : IYukiHookXposedInit {
                                 Utils.roundBitmapByShader(
                                     drawable?.let { Utils.drawable2Bitmap(it, args(1).cast<Int>()!!) },
                                     isCircle,
-                                    enableShrinkIcon))
+                                    enableShrinkIcon
+                                )
+                            )
 
+                        }
+                    }
+
+                }
+
+                // 忽略深色模式
+                findClass("android.window.SplashScreenView\$Builder").hook {
+                    injectMember {
+                        method {
+                            name = "isStaringWindowUnderNightMode"
+                            emptyParam()
+                        }
+                        beforeHook {
+                            if (prefs.get(DataConst.IGNORE_DARK_MODE)) {
+                                result = false
+                            }
                         }
                     }
                 }
 
             }
-
         }
     }
 }

@@ -1,10 +1,14 @@
 package com.gswxxn.restoresplashscreen.ui
 
+import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.provider.ContactsContract.Data
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.Data.ConstValue.BACKGROUND_EXCEPT
 import com.gswxxn.restoresplashscreen.Data.ConstValue.CUSTOM_SCOPE
@@ -14,10 +18,12 @@ import com.gswxxn.restoresplashscreen.Data.DataConst
 import com.gswxxn.restoresplashscreen.R
 import org.jetbrains.anko.alert
 import com.gswxxn.restoresplashscreen.databinding.ActivityMainBinding
+import com.gswxxn.restoresplashscreen.hook.IconPackManager
 import com.gyf.immersionbar.ktx.immersionBar
 import com.highcapable.yukihookapi.hook.factory.isXposedModuleActive
 import com.highcapable.yukihookapi.hook.factory.modulePrefs
 import com.highcapable.yukihookapi.hook.xposed.YukiHookModuleStatus
+import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 import com.topjohnwu.superuser.Shell
 
 class MainActivity : BaseActivity() {
@@ -122,7 +128,7 @@ class MainActivity : BaseActivity() {
                 startActivity(intent)
             }
 
-            // 替换获取图标方式
+            // 缩小图标
             shrinkIcon.apply {
                 setOnCheckedChangeListener { _, isChecked ->
                     modulePrefs.put(DataConst.ENABLE_SHRINK_ICON, isChecked)
@@ -136,6 +142,29 @@ class MainActivity : BaseActivity() {
                     modulePrefs.put(DataConst.ENABLE_REPLACE_ICON, isChecked)
                 }
                 isChecked = modulePrefs.get(DataConst.ENABLE_REPLACE_ICON)
+            }
+
+            // 使用图标包
+            iconPackList.apply {
+                val item = arrayListOf<String>()
+                val availableIconPacks = IconPackManager.getAvailableIconPacks(this@MainActivity)
+                availableIconPacks.forEach {
+                    item.add(it.key)
+                }
+                adapter = ArrayAdapter(this@MainActivity, android.R.layout.simple_spinner_dropdown_item, item)
+
+                onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                        modulePrefs.put(DataConst.ICON_PACK_PACKAGE_NAME, availableIconPacks.values.elementAt(position))
+                    }
+                    override fun onNothingSelected(parent: AdapterView<*>?) { }
+                }
+
+                availableIconPacks.forEach {
+                    if (it.key.equals(modulePrefs.get(DataConst.ICON_PACK_PACKAGE_NAME))){
+                        setSelection(item.indexOf(it.key))
+                    }
+                }
             }
 
             // 设置微信背景为黑色
@@ -164,6 +193,7 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun refreshState(){
         binding.apply {
             mainLinStatus.setBackgroundResource(

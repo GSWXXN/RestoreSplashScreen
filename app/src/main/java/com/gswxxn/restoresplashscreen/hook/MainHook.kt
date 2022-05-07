@@ -161,14 +161,27 @@ class MainHook : IYukiHookXposedInit {
                             val enableReplaceIcon = prefs.get(DataConst.ENABLE_REPLACE_ICON)
                             val isCircle = prefs.get(DataConst.IS_CIRCLE_ICON)
                             val enableShrinkIcon = prefs.get(DataConst.ENABLE_SHRINK_ICON)
+                            val iconPack = prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)
 
                             // 替换获取图标方式
-                            val drawable = if (enableReplaceIcon) {
-                                printLog("IconProvider(): replace Icon")
-                                args(0).cast<ActivityInfo>()?.packageName
-                                    ?.let { appContext.packageManager.getApplicationIcon(it) }!!
-                            }else {
-                                result<Drawable>()
+                            var drawable = if (enableReplaceIcon) {
+                                    printLog("IconProvider(): replace Icon")
+                                    args(0).cast<ActivityInfo>()?.packageName
+                                        ?.let { appContext.packageManager.getApplicationIcon(it) }!!
+                                }else {
+                                    result<Drawable>()
+                                }
+
+                            // 使用图标包
+                            if (iconPack != "None") {
+                                val icon = IconPackManager()
+                                    .apply{setContext(appContext)}
+                                    .IconPack()
+                                    .apply { packageName =  iconPack }
+                                    .getIconForPackage(args(0).cast<ActivityInfo>()?.packageName)
+                                if (icon != null) {
+                                    drawable = BitmapDrawable(appResources, icon)
+                                }
                             }
 
                             // 绘制图标圆角

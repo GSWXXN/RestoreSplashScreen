@@ -10,7 +10,8 @@ object DataConst {
     val ENABLE_DEFAULT_STYLE = PrefsData("enable_default_style", false)
     val ENABLE_HIDE_ICON = PrefsData("enable_hide_icon", false)
     val ENABLE_REPLACE_ICON = PrefsData("enable_replace_icon", false)
-    val IS_CIRCLE_ICON = PrefsData("is_circle_icon", false)
+    val ICON_PACK_PACKAGE_NAME = PrefsData("icon_pack_package_name", "None")
+    val IS_CIRCLE_ICON = PrefsData("is_circle_icon", false) //未使用
     val ENABLE_CHANG_BG_COLOR = PrefsData("enable_change_bg_color", false)
     val ENABLE_SHRINK_ICON = PrefsData("enable_shrink_icon", true)
 

@@ -190,6 +190,14 @@ class MainActivity : BaseActivity() {
                 intent.putExtra(EXTRA_MESSAGE, BACKGROUND_EXCEPT)
                 startActivity(intent)
             }
+
+            // 忽略深色模式
+            ignoreDarkMode.apply {
+                setOnCheckedChangeListener { _, isChecked ->
+                    modulePrefs.put(DataConst.IGNORE_DARK_MODE, isChecked)
+                }
+                isChecked = modulePrefs.get(DataConst.IGNORE_DARK_MODE)
+            }
         }
     }
 

@@ -13,6 +13,7 @@ import com.gswxxn.restoresplashscreen.Data.ConstValue.CUSTOM_SCOPE
 import com.gswxxn.restoresplashscreen.Data.ConstValue.DEFAULT_STYLE
 import com.gswxxn.restoresplashscreen.Data.ConstValue.EXTRA_MESSAGE
 import com.gswxxn.restoresplashscreen.Data.DataConst
+import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.databinding.ActivityConfigAppsBinding
 import com.gswxxn.restoresplashscreen.databinding.AdapterConfigBinding
 import com.highcapable.yukihookapi.hook.factory.modulePrefs
@@ -24,22 +25,21 @@ class ConfigAppsActivity : BaseActivity() {
     private lateinit var appInfo : AppInfoHelper
     private var appInfoFilter = mutableListOf<AppInfoHelper.MyAppInfo>()
     private var onChanged: (() -> Unit)? = null
-    private lateinit var isCheckedList : MutableSet<String>
-//    private var isCheckedList = mutableSetOf<String>()
+    private lateinit var checkedList : MutableSet<String>
 
     override fun onCreate() {
         binding = ActivityConfigAppsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val message = intent.getIntExtra(EXTRA_MESSAGE, 0)
 
-        isCheckedList = modulePrefs.get(
+        checkedList = modulePrefs.get(
             when (message) {
                 CUSTOM_SCOPE -> DataConst.CUSTOM_SCOPE_LIST
                 DEFAULT_STYLE -> DataConst.DEFAULT_STYLE_LIST
                 ConstValue.BACKGROUND_EXCEPT -> DataConst.BG_EXCEPT_LIST
                 else -> DataConst.UNDEFINED_LIST
             }).toMutableSet()
-        appInfo = AppInfoHelper(isCheckedList)
+        appInfo = AppInfoHelper(checkedList)
 
         binding.configListLoadingView.visibility = View.VISIBLE
         binding.configListView.visibility = View.GONE
@@ -127,14 +127,14 @@ class ConfigAppsActivity : BaseActivity() {
                         // 设置复选框
                         holder.adpAppCheckBox.apply {
                             setOnCheckedChangeListener(null)
-                            isChecked = it.packageName in isCheckedList
+                            isChecked = it.packageName in checkedList
                             setOnCheckedChangeListener { _, isChecked ->
                                 appInfo.setChecked(it, isChecked)
                                 if (isChecked) {
-                                    isCheckedList.add(it.packageName)
+                                    checkedList.add(it.packageName)
 
                                 } else {
-                                    isCheckedList.remove(it.packageName)
+                                    checkedList.remove(it.packageName)
                                 }
                             }
                         }
@@ -157,9 +157,39 @@ class ConfigAppsActivity : BaseActivity() {
                     DEFAULT_STYLE -> DataConst.DEFAULT_STYLE_LIST
                     ConstValue.BACKGROUND_EXCEPT -> DataConst.BG_EXCEPT_LIST
                     else -> DataConst.UNDEFINED_LIST
-                }, isCheckedList)
+                }, checkedList)
             toast("保存成功，请重启系统界面")
             finish()
+        }
+
+        binding.moreOptions.setOnClickListener { it ->
+            PopupMenu(this, it).apply {
+                setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        R.id.select_system_apps -> {
+                            appInfo.getAppInfoList().forEach{
+                                if (it.isSystemApp) {
+                                    appInfo.setChecked(it, true)
+                                    checkedList.add(it.packageName)
+                                }
+                            }
+                            onChanged?.invoke()
+                            true
+                        }
+                        R.id.clear_slection -> {
+                            appInfo.getAppInfoList().forEach{
+                                appInfo.setChecked(it, false)
+                                checkedList.remove(it.packageName)
+                            }
+                            onChanged?.invoke()
+                            true
+                        }
+                        else -> false
+                    }
+                }
+                inflate(R.menu.more_options_menu)
+                show()
+            }
         }
 
 

@@ -5,7 +5,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.provider.ContactsContract.Data
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -23,7 +22,6 @@ import com.gyf.immersionbar.ktx.immersionBar
 import com.highcapable.yukihookapi.hook.factory.isXposedModuleActive
 import com.highcapable.yukihookapi.hook.factory.modulePrefs
 import com.highcapable.yukihookapi.hook.xposed.YukiHookModuleStatus
-import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 import com.topjohnwu.superuser.Shell
 
 class MainActivity : BaseActivity() {
@@ -32,6 +30,7 @@ class MainActivity : BaseActivity() {
         lateinit var appContext: Context
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -46,8 +45,8 @@ class MainActivity : BaseActivity() {
             titleRestartIcon.setOnClickListener {
                 alert("你真的要重启系统界面吗？", "重启SystemUI") {
                     positiveButton("确定") {
-                        Shell.su("pkill -f com.android.systemui").exec()
-                        Shell.su("pkill -f com.gswxxn.restoresplashscreen").exec()
+                        Shell.su("pkill -f com.android.systemui",
+                            "pkill -f com.gswxxn.restoresplashscreen").exec()
                     }
                     negativeButton("取消") {}
                 }.show()

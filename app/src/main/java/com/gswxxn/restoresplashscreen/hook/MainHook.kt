@@ -40,7 +40,7 @@ class MainHook : IYukiHookXposedInit {
                             emptyParam()
                         }
                         beforeHook {
-                            result = true
+                            resultTrue()
                             printLog("**********", "isCTS(): return true")
                         }
                     }
@@ -237,7 +237,7 @@ class MainHook : IYukiHookXposedInit {
                         }
                         beforeHook {
                             if (prefs.get(DataConst.IGNORE_DARK_MODE)) {
-                                result = false
+                                resultFalse()
                             }
                         }
                     }

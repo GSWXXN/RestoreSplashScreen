@@ -1,4 +1,4 @@
-package com.gswxxn.restoresplashscreen.Data
+package com.gswxxn.restoresplashscreen.data
 
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 
@@ -16,11 +16,13 @@ object DataConst {
     val ENABLE_SHRINK_ICON = PrefsData("enable_shrink_icon", true)
     val INDEPENDENT_COLOR_WECHAT = PrefsData("independent_color_wechat", false)
     val IGNORE_DARK_MODE = PrefsData("ignore_dark_mode", false)
+    val REMOVE_BG_DRAWABLE = PrefsData("remove_bg_drawable", false)
+
 
     val UNDEFINED_LIST = PrefsData("undefined_list", mutableSetOf<String>())
     val CUSTOM_SCOPE_LIST = PrefsData("custom_scope_list", mutableSetOf<String>())
     val DEFAULT_STYLE_LIST = PrefsData("default_style_list", mutableSetOf<String>())
-    val BG_EXCEPT_LIST =PrefsData("bg_except_list", mutableSetOf<String>())
+    val BG_EXCEPT_LIST =PrefsData("bg_except_list", mutableSetOf<String>()) //自适应背景颜色排除列表
 
 
 }

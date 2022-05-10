@@ -9,11 +9,11 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.gswxxn.restoresplashscreen.BuildConfig
-import com.gswxxn.restoresplashscreen.Data.ConstValue.BACKGROUND_EXCEPT
-import com.gswxxn.restoresplashscreen.Data.ConstValue.CUSTOM_SCOPE
-import com.gswxxn.restoresplashscreen.Data.ConstValue.DEFAULT_STYLE
-import com.gswxxn.restoresplashscreen.Data.ConstValue.EXTRA_MESSAGE
-import com.gswxxn.restoresplashscreen.Data.DataConst
+import com.gswxxn.restoresplashscreen.data.ConstValue.BACKGROUND_EXCEPT
+import com.gswxxn.restoresplashscreen.data.ConstValue.CUSTOM_SCOPE
+import com.gswxxn.restoresplashscreen.data.ConstValue.DEFAULT_STYLE
+import com.gswxxn.restoresplashscreen.data.ConstValue.EXTRA_MESSAGE
+import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.R
 import org.jetbrains.anko.alert
 import com.gswxxn.restoresplashscreen.databinding.ActivityMainBinding
@@ -160,7 +160,7 @@ class MainActivity : BaseActivity() {
                 }
 
                 availableIconPacks.forEach {
-                    if (it.key.equals(modulePrefs.get(DataConst.ICON_PACK_PACKAGE_NAME))){
+                    if (it.value.equals(modulePrefs.get(DataConst.ICON_PACK_PACKAGE_NAME))){
                         setSelection(item.indexOf(it.key))
                     }
                 }
@@ -197,6 +197,15 @@ class MainActivity : BaseActivity() {
                 }
                 isChecked = modulePrefs.get(DataConst.IGNORE_DARK_MODE)
             }
+
+            // 移除背景图片
+            removeBgDrawable.apply {
+                setOnCheckedChangeListener { _, isChecked ->
+                    modulePrefs.put(DataConst.REMOVE_BG_DRAWABLE, isChecked)
+                }
+                isChecked = modulePrefs.get(DataConst.REMOVE_BG_DRAWABLE)
+            }
+
         }
     }
 

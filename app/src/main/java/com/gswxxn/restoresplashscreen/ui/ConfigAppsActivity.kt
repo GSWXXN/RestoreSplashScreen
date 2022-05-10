@@ -8,11 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import com.gswxxn.restoresplashscreen.Data.ConstValue
-import com.gswxxn.restoresplashscreen.Data.ConstValue.CUSTOM_SCOPE
-import com.gswxxn.restoresplashscreen.Data.ConstValue.DEFAULT_STYLE
-import com.gswxxn.restoresplashscreen.Data.ConstValue.EXTRA_MESSAGE
-import com.gswxxn.restoresplashscreen.Data.DataConst
+import com.gswxxn.restoresplashscreen.data.ConstValue.BACKGROUND_EXCEPT
+import com.gswxxn.restoresplashscreen.data.ConstValue.CUSTOM_SCOPE
+import com.gswxxn.restoresplashscreen.data.ConstValue.DEFAULT_STYLE
+import com.gswxxn.restoresplashscreen.data.ConstValue.EXTRA_MESSAGE
+import com.gswxxn.restoresplashscreen.data.DataConst.BG_EXCEPT_LIST
+import com.gswxxn.restoresplashscreen.data.DataConst.CUSTOM_SCOPE_LIST
+import com.gswxxn.restoresplashscreen.data.DataConst.DEFAULT_STYLE_LIST
+import com.gswxxn.restoresplashscreen.data.DataConst.UNDEFINED_LIST
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.databinding.ActivityConfigAppsBinding
 import com.gswxxn.restoresplashscreen.databinding.AdapterConfigBinding
@@ -34,10 +37,10 @@ class ConfigAppsActivity : BaseActivity() {
 
         checkedList = modulePrefs.get(
             when (message) {
-                CUSTOM_SCOPE -> DataConst.CUSTOM_SCOPE_LIST
-                DEFAULT_STYLE -> DataConst.DEFAULT_STYLE_LIST
-                ConstValue.BACKGROUND_EXCEPT -> DataConst.BG_EXCEPT_LIST
-                else -> DataConst.UNDEFINED_LIST
+                CUSTOM_SCOPE -> CUSTOM_SCOPE_LIST
+                DEFAULT_STYLE -> DEFAULT_STYLE_LIST
+                BACKGROUND_EXCEPT -> BG_EXCEPT_LIST
+                else -> UNDEFINED_LIST
             }).toMutableSet()
         appInfo = AppInfoHelper(checkedList)
 
@@ -51,7 +54,7 @@ class ConfigAppsActivity : BaseActivity() {
         binding.appListTitle.text = when (message) {
             CUSTOM_SCOPE -> "作用域列表"
             DEFAULT_STYLE -> "默认风格列表"
-            ConstValue.BACKGROUND_EXCEPT -> "排除列表"
+            BACKGROUND_EXCEPT -> "排除列表"
             else -> "标题"
         }
 
@@ -153,10 +156,10 @@ class ConfigAppsActivity : BaseActivity() {
         binding.configSaveButton.setOnClickListener {
             modulePrefs.put(
                 when (message) {
-                    CUSTOM_SCOPE -> DataConst.CUSTOM_SCOPE_LIST
-                    DEFAULT_STYLE -> DataConst.DEFAULT_STYLE_LIST
-                    ConstValue.BACKGROUND_EXCEPT -> DataConst.BG_EXCEPT_LIST
-                    else -> DataConst.UNDEFINED_LIST
+                    CUSTOM_SCOPE -> CUSTOM_SCOPE_LIST
+                    DEFAULT_STYLE -> DEFAULT_STYLE_LIST
+                    BACKGROUND_EXCEPT -> BG_EXCEPT_LIST
+                    else -> UNDEFINED_LIST
                 }, checkedList)
             toast("保存成功，请重启系统界面")
             finish()

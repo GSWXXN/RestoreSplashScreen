@@ -6,7 +6,7 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import com.gswxxn.restoresplashscreen.Data.DataConst
+import com.gswxxn.restoresplashscreen.data.DataConst
 import com.highcapable.yukihookapi.YukiHookAPI.configs
 import com.highcapable.yukihookapi.annotation.xposed.InjectYukiHookWithXposed
 import com.highcapable.yukihookapi.hook.factory.encase
@@ -14,6 +14,7 @@ import com.highcapable.yukihookapi.hook.log.loggerI
 import com.highcapable.yukihookapi.hook.log.loggerW
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
 import com.highcapable.yukihookapi.hook.type.java.IntType
+import com.highcapable.yukihookapi.hook.type.java.StringType
 import com.highcapable.yukihookapi.hook.xposed.proxy.IYukiHookXposedInit
 import de.robv.android.xposed.XposedHelpers
 
@@ -239,6 +240,20 @@ class MainHook : IYukiHookXposedInit {
                             if (prefs.get(DataConst.IGNORE_DARK_MODE)) {
                                 resultFalse()
                             }
+                        }
+                    }
+                }
+
+                // 移除截图背景
+                findClass("android.app.TaskSnapshotHelperImpl").hook {
+                    injectMember {
+                        method {
+                            name = "isMiuiHome"
+                            param(StringType)
+                        }
+                        beforeHook {
+                            if (prefs.get(DataConst.REMOVE_BG_DRAWABLE))
+                                resultFalse()
                         }
                     }
                 }

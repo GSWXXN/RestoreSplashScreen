@@ -584,7 +584,7 @@
                             android:text="使用图标包"/>
                     <Spinner
                             android:id="@+id/icon_pack_list"
-                            android:layout_width="120dp"
+                            android:layout_width="150dp"
                             android:layout_height="wrap_content"/>
                 </LinearLayout>
 

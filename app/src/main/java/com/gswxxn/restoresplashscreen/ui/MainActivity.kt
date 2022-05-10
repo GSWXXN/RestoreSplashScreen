@@ -150,7 +150,8 @@ class MainActivity : BaseActivity() {
                 availableIconPacks.forEach {
                     item.add(it.key)
                 }
-                adapter = ArrayAdapter(this@MainActivity, android.R.layout.simple_spinner_dropdown_item, item)
+                adapter = ArrayAdapter(this@MainActivity, R.layout.spinner_item, item)
+                    .apply { setDropDownViewResource(R.layout.spinner_dropdown) }
 
                 onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {

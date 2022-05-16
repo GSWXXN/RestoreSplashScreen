@@ -58,7 +58,7 @@ class ConfigAppsActivity : BaseActivity() {
         // 标题名称
         binding.appListTitle.text = when (message) {
             ConstValue.CUSTOM_SCOPE -> "作用域列表"
-            ConstValue.DEFAULT_STYLE -> "默认风格列表"
+            ConstValue.DEFAULT_STYLE -> "忽略图标列表"
             ConstValue.BACKGROUND_EXCEPT -> "排除列表"
             else -> "标题"
         }

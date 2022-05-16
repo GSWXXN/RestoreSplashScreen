@@ -8,6 +8,4 @@
         android:gravity="end"
         android:textSize="15sp"
         android:padding="10dp"
-        android:singleLine="true"
-        android:text="None"
-        android:id="@+id/textView32" />
+        android:singleLine="true"/>

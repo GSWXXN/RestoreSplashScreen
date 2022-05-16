@@ -1,23 +1,19 @@
 package com.gswxxn.restoresplashscreen.ui
 
+import android.app.Activity
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.gswxxn.restoresplashscreen.R
-import com.gyf.immersionbar.ktx.immersionBar
 
-
-
-abstract class BaseActivity : AppCompatActivity() {
-
+abstract class BaseActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar?.hide()
-        immersionBar {
-            statusBarColor(R.color.colorThemeBackground)
-            autoDarkModeEnable(true)
-            navigationBarColor(R.color.colorThemeBackground)
-            fitsSystemWindows(true)
+        actionBar?.hide()
+        window.apply {
+            statusBarColor = getColor(R.color.colorThemeBackground)
+            navigationBarColor = getColor(R.color.colorThemeBackground)
+            setDecorFitsSystemWindows(true)
         }
+
         onCreate()
     }
     abstract fun onCreate()

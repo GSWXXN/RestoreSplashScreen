@@ -1,158 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              tools:context=".ui.MainActivity"
-              tools:ignore="HardcodedText,UseCompoundDrawables,ContentDescription">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorThemeBackground"
+    android:orientation="vertical"
+    tools:context=".ui.MainActivity"
+    tools:ignore="HardcodedText,UseCompoundDrawables,ContentDescription">
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="0dp"
-            android:gravity="center|start"
-            android:paddingStart="15dp"
-            android:paddingTop="13dp"
-            android:paddingEnd="10dp"
-            android:paddingBottom="5dp"
-            android:orientation="horizontal">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="0dp"
+        android:gravity="center|start"
+        android:paddingStart="15dp"
+        android:paddingTop="13dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="5dp"
+        android:orientation="horizontal">
 
 
-            <androidx.constraintlayout.utils.widget.ImageFilterView
-                style="?android:attr/selectableItemBackgroundBorderless"
-                android:id="@+id/title_back_icon"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="15dp"
-                android:src="@drawable/ic_back_button"
-                android:tint="@color/colorTextGray"
-                android:tooltipText="返回" />
+        <ImageView
+            style="?android:attr/selectableItemBackgroundBorderless"
+            android:id="@+id/title_back_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="15dp"
+            android:src="@drawable/ic_back_button"
+            android:tint="@color/colorTextGray"
+            android:tooltipText="返回" />
 
 
         <TextView
-                android:id="@+id/app_list_title"
-                android:gravity="center_vertical"
-                android:layout_width="0dp"
-                android:layout_height="45dp"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
-                android:singleLine="true"
-                android:text="标题"
-                android:textColor="@color/colorTextGray"
-                android:textSize="24sp"
-                android:textStyle="bold"/>
+            android:id="@+id/app_list_title"
+            android:gravity="center_vertical"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:text="标题"
+            android:textColor="@color/colorTextGray"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
         <EditText
-                android:id="@+id/search_edit_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
-                android:singleLine="true"
-                android:visibility="gone"
-                android:textSize="17sp"
-                android:textColor="@color/colorTextGray"
-                android:imeOptions="actionSearch"
-                android:nextFocusDown="@id/search_edit_text"
-                android:hint="可输入 APP 名称、包名"
-                android:inputType="text"
-                android:importantForAutofill="no"/>
+            android:id="@+id/search_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:visibility="gone"
+            android:textSize="17sp"
+            android:textColor="@color/colorTextGray"
+            android:imeOptions="actionSearch"
+            android:nextFocusDown="@id/search_edit_text"
+            android:hint="可输入 APP 名称、包名"
+            android:inputType="text"
+            android:importantForAutofill="no" />
 
         <ImageView
-                android:id="@+id/config_title_filter"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_search"
-                android:tint="@color/colorTextGray"
-                android:tooltipText="搜索"/>
+            android:id="@+id/config_title_filter"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_search"
+            android:tint="@color/colorTextGray"
+            android:tooltipText="搜索" />
 
         <ImageView
-                android:id="@+id/more_options"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_more_options"
-                android:tint="@color/colorTextGray"
-                android:tooltipText="搜索"/>
+            android:id="@+id/more_options"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_more_options"
+            android:tint="@color/colorTextGray"
+            android:tooltipText="搜索" />
     </LinearLayout>
 
     <LinearLayout
-            android:id="@+id/config_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="15dp"
-            android:background="@drawable/bg_permotion_round"
-            android:elevation="0dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="15dp">
+        android:id="@+id/config_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/bg_permotion_round"
+        android:elevation="0dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="15dp">
 
-        <androidx.constraintlayout.utils.widget.ImageFilterView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginEnd="10dp"
-                android:alpha="0.85"
-                android:src="@drawable/ic_info"
-                android:tint="@color/colorTextDark" />
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginEnd="10dp"
+            android:alpha="0.85"
+            android:src="@drawable/ic_info"
+            android:tint="@color/colorTextDark" />
 
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:alpha="0.6"
-                android:lineSpacingExtra="5dp"
-                android:text="勾选完成后记得点击下方保存按钮"
-                android:textColor="@color/colorTextGray"
-                android:textSize="11sp"
-                tools:ignore="SmallSp" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.6"
+            android:lineSpacingExtra="5dp"
+            android:text="勾选完成后记得点击下方保存按钮，保存成功后立即生效"
+            android:textColor="@color/colorTextGray"
+            android:textSize="11sp"
+            tools:ignore="SmallSp" />
     </LinearLayout>
 
     <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <TextView
-                android:id="@+id/config_list_loading_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:lineSpacingExtra="6dp"
-                android:text="正在加载..."
-                android:textColor="@color/colorTextDark"
-                android:textSize="17sp"
-                android:visibility="gone" />
+            android:id="@+id/config_list_loading_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:lineSpacingExtra="6dp"
+            android:text="正在加载..."
+            android:textColor="@color/colorTextDark"
+            android:textSize="17sp"
+            android:visibility="gone" />
 
         <ListView
-                android:id="@+id/config_list_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:divider="@color/trans"
-                android:dividerHeight="15dp"
-                android:fadingEdgeLength="10dp"
-                android:listSelector="@color/trans"
-                android:padding="15dp"
-                android:requiresFadingEdge="vertical"
-                android:scrollbars="none" />
+            android:id="@+id/config_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/trans"
+            android:dividerHeight="15dp"
+            android:fadingEdgeLength="10dp"
+            android:listSelector="@color/trans"
+            android:padding="15dp"
+            android:requiresFadingEdge="vertical"
+            android:scrollbars="none" />
 
     </FrameLayout>
 
     <TextView
-            android:id="@+id/config_save_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginBottom="25dp"
-            android:background="@drawable/bg_button_round"
-            android:gravity="center"
-            android:padding="10dp"
-            android:singleLine="true"
-            android:text="保存"
-            android:textColor="@color/colorTextGray"
-            android:textSize="15sp" />
+        android:id="@+id/config_save_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/bg_button_round"
+        android:gravity="center"
+        android:padding="10dp"
+        android:singleLine="true"
+        android:text="保存"
+        android:textColor="@color/colorTextGray"
+        android:textSize="15sp" />
 </LinearLayout>

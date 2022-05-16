@@ -6,41 +6,46 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import com.gswxxn.restoresplashscreen.data.ConstValue.BACKGROUND_EXCEPT
-import com.gswxxn.restoresplashscreen.data.ConstValue.CUSTOM_SCOPE
-import com.gswxxn.restoresplashscreen.data.ConstValue.DEFAULT_STYLE
-import com.gswxxn.restoresplashscreen.data.ConstValue.EXTRA_MESSAGE
-import com.gswxxn.restoresplashscreen.data.DataConst.BG_EXCEPT_LIST
-import com.gswxxn.restoresplashscreen.data.DataConst.CUSTOM_SCOPE_LIST
-import com.gswxxn.restoresplashscreen.data.DataConst.DEFAULT_STYLE_LIST
-import com.gswxxn.restoresplashscreen.data.DataConst.UNDEFINED_LIST
+import com.gswxxn.restoresplashscreen.data.ConstValue
+import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.databinding.ActivityConfigAppsBinding
 import com.gswxxn.restoresplashscreen.databinding.AdapterConfigBinding
+import com.gswxxn.restoresplashscreen.utils.Utils.toast
 import com.highcapable.yukihookapi.hook.factory.modulePrefs
-import org.jetbrains.anko.toast
 
 
 class ConfigAppsActivity : BaseActivity() {
     private lateinit var binding: ActivityConfigAppsBinding
+
+    // AppInfoHelper 实例
     private lateinit var appInfo : AppInfoHelper
+    // 在列表中的条目
     private var appInfoFilter = mutableListOf<AppInfoHelper.MyAppInfo>()
-    private var onChanged: (() -> Unit)? = null
+    // 已勾选的应用包名 Set
     private lateinit var checkedList : MutableSet<String>
 
+    private var onRefreshList: (() -> Unit)? = null
+
     override fun onCreate() {
+        window.insetsController?.setSystemBarsAppearance(
+            APPEARANCE_LIGHT_STATUS_BARS,
+            APPEARANCE_LIGHT_STATUS_BARS
+        )
+
         binding = ActivityConfigAppsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val message = intent.getIntExtra(EXTRA_MESSAGE, 0)
+        val message = intent.getIntExtra(ConstValue.EXTRA_MESSAGE, 0)
 
         checkedList = modulePrefs.get(
             when (message) {
-                CUSTOM_SCOPE -> CUSTOM_SCOPE_LIST
-                DEFAULT_STYLE -> DEFAULT_STYLE_LIST
-                BACKGROUND_EXCEPT -> BG_EXCEPT_LIST
-                else -> UNDEFINED_LIST
+                ConstValue.CUSTOM_SCOPE -> DataConst.CUSTOM_SCOPE_LIST
+                ConstValue.DEFAULT_STYLE -> DataConst.DEFAULT_STYLE_LIST
+                ConstValue.BACKGROUND_EXCEPT -> DataConst.BG_EXCEPT_LIST
+                else -> DataConst.UNDEFINED_LIST
             }).toMutableSet()
         appInfo = AppInfoHelper(checkedList)
 
@@ -52,9 +57,9 @@ class ConfigAppsActivity : BaseActivity() {
 
         // 标题名称
         binding.appListTitle.text = when (message) {
-            CUSTOM_SCOPE -> "作用域列表"
-            DEFAULT_STYLE -> "默认风格列表"
-            BACKGROUND_EXCEPT -> "排除列表"
+            ConstValue.CUSTOM_SCOPE -> "作用域列表"
+            ConstValue.DEFAULT_STYLE -> "默认风格列表"
+            ConstValue.BACKGROUND_EXCEPT -> "排除列表"
             else -> "标题"
         }
 
@@ -71,7 +76,7 @@ class ConfigAppsActivity : BaseActivity() {
                             if ((content in it.appName) or (content in it.packageName)) appInfoFilter.add(it)
                         }
                     }
-                    onChanged?.invoke()
+                    onRefreshList?.invoke()
                 }
                 override fun afterTextChanged(s: Editable?) {}
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -148,23 +153,23 @@ class ConfigAppsActivity : BaseActivity() {
                     }
                     return cView
                 }
-            }.apply{ onChanged = { notifyDataSetChanged() } }
-
+            }.apply{ onRefreshList = { notifyDataSetChanged() } }
         }
 
         // 保存按钮点击事件
         binding.configSaveButton.setOnClickListener {
             modulePrefs.put(
                 when (message) {
-                    CUSTOM_SCOPE -> CUSTOM_SCOPE_LIST
-                    DEFAULT_STYLE -> DEFAULT_STYLE_LIST
-                    BACKGROUND_EXCEPT -> BG_EXCEPT_LIST
-                    else -> UNDEFINED_LIST
+                    ConstValue.CUSTOM_SCOPE -> DataConst.CUSTOM_SCOPE_LIST
+                    ConstValue.DEFAULT_STYLE -> DataConst.DEFAULT_STYLE_LIST
+                    ConstValue.BACKGROUND_EXCEPT -> DataConst.BG_EXCEPT_LIST
+                    else -> DataConst.UNDEFINED_LIST
                 }, checkedList)
-            toast("保存成功，请重启系统界面")
+            toast("保存成功")
             finish()
         }
 
+        // 菜单栏事件
         binding.moreOptions.setOnClickListener { it ->
             PopupMenu(this, it).apply {
                 setOnMenuItemClickListener { item ->
@@ -176,7 +181,7 @@ class ConfigAppsActivity : BaseActivity() {
                                     checkedList.add(it.packageName)
                                 }
                             }
-                            onChanged?.invoke()
+                            onRefreshList?.invoke()
                             true
                         }
                         R.id.clear_slection -> {
@@ -184,7 +189,7 @@ class ConfigAppsActivity : BaseActivity() {
                                 appInfo.setChecked(it, false)
                                 checkedList.remove(it.packageName)
                             }
-                            onChanged?.invoke()
+                            onRefreshList?.invoke()
                             true
                         }
                         else -> false
@@ -194,8 +199,6 @@ class ConfigAppsActivity : BaseActivity() {
                 show()
             }
         }
-
-
     }
 
     override fun onBackPressed() {
@@ -213,10 +216,12 @@ class ConfigAppsActivity : BaseActivity() {
         }
     }
 
+    // 获取到焦点后向 appInfoFilter 存完整数据，并刷新列表，防止卡在上一个 Activity
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         if (hasFocus) {
             appInfoFilter = appInfo.getAppInfoList()
-            onChanged?.invoke()
+            onRefreshList?.invoke()
+
             binding.configListLoadingView.visibility = View.GONE
             binding.configListView.visibility = View.VISIBLE
         }

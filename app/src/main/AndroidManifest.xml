@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="com.gswxxn.restoresplashscreen">
+          xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission
             android:name="android.permission.QUERY_ALL_PACKAGES"
             tools:ignore="QueryAllPackagesPermission"/>
 
     <application
-            android:allowBackup="false"
             android:icon="@mipmap/ic_launcher"
-            android:label="MIUI遮罩进化"
-            android:theme="@style/Theme.RestoreSplashScreen">
+            android:label="MIUI遮罩进化">
 
         <activity
                 android:name=".ui.AboutPageActivity"

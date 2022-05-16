@@ -116,22 +116,6 @@ class MainActivity : BaseActivity() {
                 startActivity(intent)
             }
 
-            // 使用系统默认风格
-            defaultStyle.apply {
-                setOnCheckedChangeListener { _, isChecked ->
-                    binding.defaultStyleList.visibility = if (isChecked) View.VISIBLE else View.GONE
-                    modulePrefs.put(DataConst.ENABLE_DEFAULT_STYLE, isChecked)
-                }
-                isChecked = modulePrefs.get(DataConst.ENABLE_DEFAULT_STYLE)
-            }
-
-            // 使用系统默认风格应用列表
-            defaultStyleList.setOnClickListener {
-                val intent = Intent(this@MainActivity, ConfigAppsActivity::class.java)
-                intent.putExtra(EXTRA_MESSAGE, DEFAULT_STYLE)
-                startActivity(intent)
-            }
-
             // 缩小图标
             shrinkIcon.apply {
                 setOnCheckedChangeListener { _, isChecked ->
@@ -179,6 +163,22 @@ class MainActivity : BaseActivity() {
                         setSelection(item.indexOf(it.key))
                     }
                 }
+            }
+
+            // 忽略应用主动设置的图标
+            defaultStyle.apply {
+                setOnCheckedChangeListener { _, isChecked ->
+                    binding.defaultStyleList.visibility = if (isChecked) View.VISIBLE else View.GONE
+                    modulePrefs.put(DataConst.ENABLE_DEFAULT_STYLE, isChecked)
+                }
+                isChecked = modulePrefs.get(DataConst.ENABLE_DEFAULT_STYLE)
+            }
+
+            // 忽略应用主动设置的图标 应用列表
+            defaultStyleList.setOnClickListener {
+                val intent = Intent(this@MainActivity, ConfigAppsActivity::class.java)
+                intent.putExtra(EXTRA_MESSAGE, DEFAULT_STYLE)
+                startActivity(intent)
             }
 
             // 设置微信背景为黑色

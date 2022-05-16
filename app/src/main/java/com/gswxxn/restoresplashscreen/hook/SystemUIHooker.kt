@@ -47,7 +47,7 @@ class SystemUIHooker : YukiBaseHooker() {
         /**
          * 此处实现功能：
          * - 自定义作用域
-         * - 使用系统默认样式
+         * - 忽略应用主动设置的图标
          * - 自适应背景颜色
          * - 设置微信背景色为黑色
          */
@@ -57,7 +57,7 @@ class SystemUIHooker : YukiBaseHooker() {
                 /**
                  * 此处实现功能：
                  * - 自定义作用域
-                 * - 使用系统默认样式
+                 * - 忽略应用主动设置的图标
                  */
                 injectMember {
                     method {
@@ -117,7 +117,7 @@ class SystemUIHooker : YukiBaseHooker() {
                         }
 
                         /**
-                         * 使用系统默认样式
+                         * 忽略应用主动设置的图标
                          *
                          * 干预 build() 中的 if 判断
                          */

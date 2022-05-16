@@ -7,7 +7,7 @@ object DataConst {
     val ENABLE_LOG = PrefsData("enable_log", false)
     val ENABLE_CUSTOM_SCOPE = PrefsData("enable_custom_scope", false)
     val IS_CUSTOM_SCOPE_EXCEPTION_MODE = PrefsData("is_custom_scope_exception_mode", true)
-    val ENABLE_DEFAULT_STYLE = PrefsData("enable_default_style", false)
+    val ENABLE_DEFAULT_STYLE = PrefsData("enable_default_style", false) // 忽略应用主动设置的图标
     val ENABLE_HIDE_ICON = PrefsData("enable_hide_icon", false)
     val ENABLE_REPLACE_ICON = PrefsData("enable_replace_icon", false)
     val ICON_PACK_PACKAGE_NAME = PrefsData("icon_pack_package_name", "None")
@@ -20,7 +20,7 @@ object DataConst {
 
     val UNDEFINED_LIST = PrefsData("undefined_list", mutableSetOf<String>())
     val CUSTOM_SCOPE_LIST = PrefsData("custom_scope_list", mutableSetOf<String>())
-    val DEFAULT_STYLE_LIST = PrefsData("default_style_list", mutableSetOf<String>())
+    val DEFAULT_STYLE_LIST = PrefsData("default_style_list", mutableSetOf<String>()) // 忽略应用主动设置的图标 应用列表
     val BG_EXCEPT_LIST =PrefsData("bg_except_list", mutableSetOf<String>()) //自适应背景颜色排除列表
 
 

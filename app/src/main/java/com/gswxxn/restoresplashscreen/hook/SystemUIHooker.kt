@@ -12,6 +12,7 @@ import com.gswxxn.restoresplashscreen.utils.Utils
 import com.gswxxn.restoresplashscreen.utils.Utils.getField
 import com.gswxxn.restoresplashscreen.utils.Utils.setField
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
+import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.log.loggerI
 import com.highcapable.yukihookapi.hook.type.android.ActivityInfoClass
 import com.highcapable.yukihookapi.hook.type.android.DrawableClass
@@ -20,33 +21,45 @@ import com.highcapable.yukihookapi.hook.type.java.IntType
 import com.highcapable.yukihookapi.hook.type.java.StringType
 
 class SystemUIHooker : YukiBaseHooker() {
+    val enableLog = prefs.get(DataConst.ENABLE_LOG)
+
     private fun printLog(vararg msg: String) {
-        if (prefs.get(DataConst.ENABLE_LOG)) msg.forEach { loggerI(msg = it) }
+        if (enableLog) msg.forEach { loggerI(msg = it) }
     }
 
     override fun onHook() {
 
         /**
-         * 局部关闭 MIUI 优化
+         * 自定义作用域
          *
-         * 若此处无法正常运行，则模块大部分功能将无法使用
+         * 干预 makeSplashScreenContentView() 中的 if 判断
          */
         findClass("com.android.wm.shell.startingsurface.SplashscreenContentDrawer").hook {
+
             injectMember {
                 method {
-                    name = "isCTS"
-                    emptyParam()
+                    name = "getBGColorFromCache"
+                    paramCount(2)
                 }
                 beforeHook {
-                    resultTrue()
-                    printLog("**********", "isCTS(): return true")
+                    val pkgName = args(0).cast<ActivityInfo>()?.packageName
+                    val mIconBgColor = instance.getField("mTmpAttrs").any()!!
+                        .getField("mIconBgColor").int()
+                    val list = prefs.get(DataConst.CUSTOM_SCOPE_LIST)
+                    val isExceptionMode = prefs.get(DataConst.IS_CUSTOM_SCOPE_EXCEPTION_MODE)
+                    val enableCustomScope = prefs.get(DataConst.ENABLE_CUSTOM_SCOPE)
+                    val isException = enableCustomScope &&
+                            ((isExceptionMode && (pkgName in list))
+                                    || (!isExceptionMode && pkgName !in list))
+
+                    if (mIconBgColor == 0 && !isException)
+                        instance.getField("mTmpAttrs").any()!!.setField("mIconBgColor", 1)
                 }
             }
         }
 
         /**
          * 此处实现功能：
-         * - 自定义作用域
          * - 忽略应用主动设置的图标
          * - 自适应背景颜色
          * - 设置微信背景色为黑色
@@ -56,7 +69,6 @@ class SystemUIHooker : YukiBaseHooker() {
 
                 /**
                  * 此处实现功能：
-                 * - 自定义作用域
                  * - 忽略应用主动设置的图标
                  */
                 injectMember {
@@ -66,54 +78,18 @@ class SystemUIHooker : YukiBaseHooker() {
                     }
                     beforeHook {
                         val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName
-                        val list = prefs.get(DataConst.CUSTOM_SCOPE_LIST)
-                        val isExceptionMode = prefs.get(DataConst.IS_CUSTOM_SCOPE_EXCEPTION_MODE)
-                        val enableCustomScope = prefs.get(DataConst.ENABLE_CUSTOM_SCOPE)
-                        val isException = enableCustomScope &&
-                                ((isExceptionMode && (pkgName in list))
-                                        || (!isExceptionMode && pkgName !in list))
-
                         val isDefaultStyle = prefs.get(DataConst.ENABLE_DEFAULT_STYLE)
                                 && pkgName in prefs.get(DataConst.DEFAULT_STYLE_LIST)
-
-                        val mTmpAttrs = instance.getField("this\$0").any()!!
+                        val mSplashscreenContentDrawer = instance.getField("this\$0").any()!!
+                        val mTmpAttrs = mSplashscreenContentDrawer
                             .getField("mTmpAttrs").any()!!
 
-                        var drawable: Drawable? = null
-
-                        /**
-                         * 自定义作用域
-                         *
-                         * 在执行 build() 前重写
-                         *   com.android.wm.shell.startingsurface.SplashscreenContentDrawer
-                         *     .makeSplashScreenContentView() 传递的参数
-                         */
-                        if (isException) {
-                            // 设置无图标SuggestType
-                            if (mTmpAttrs.getField("mWindowBgResId").int() != 0
-                                && mTmpAttrs.getField("mSplashScreenIcon").any() == null
-                                && mTmpAttrs.getField("mBrandingImage").any() == null
-                                && mTmpAttrs.getField("mIconBgColor").int() == 0
-                                && mTmpAttrs.getField("mAnimationDuration").int() == 0
-                            ) {
-                                drawable = instance.getField("mContext").cast<Context>()
-                                    ?.getDrawable(mTmpAttrs.getField("mWindowBgResId").int())
-                                instance.setField("mSuggestType", 5)
-                            }
-                            // 设置默认背景
-                            if (instance.getField("mOverlayDrawable").any() == null) {
-                                instance.setField("mOverlayDrawable", drawable)
-                            }
-
-                            printLog(
-                                "${pkgName}:",
-                                "build(): this app is in exception list, set mSuggestType 5"
-                            )
-                        } else {
-                            printLog(
-                                "${pkgName}:",
-                                "build(): mSuggestType is ${instance.getField("mSuggestType").int()}"
-                            )
+                        // 重置因实现自定义作用域而影响到的 mTmpAttrs
+                        mSplashscreenContentDrawer.current {
+                            method {
+                                name = "getWindowAttrs"
+                                paramCount(2)
+                            }.call(instance.getField("mContext").cast<Context>(), mTmpAttrs)
                         }
 
                         /**

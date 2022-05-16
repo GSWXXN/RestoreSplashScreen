@@ -1,6 +1,7 @@
 package com.gswxxn.restoresplashscreen.ui
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -9,16 +10,14 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.gswxxn.restoresplashscreen.BuildConfig
+import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.ConstValue.BACKGROUND_EXCEPT
 import com.gswxxn.restoresplashscreen.data.ConstValue.CUSTOM_SCOPE
 import com.gswxxn.restoresplashscreen.data.ConstValue.DEFAULT_STYLE
 import com.gswxxn.restoresplashscreen.data.ConstValue.EXTRA_MESSAGE
 import com.gswxxn.restoresplashscreen.data.DataConst
-import com.gswxxn.restoresplashscreen.R
-import org.jetbrains.anko.alert
 import com.gswxxn.restoresplashscreen.databinding.ActivityMainBinding
-import com.gswxxn.restoresplashscreen.hook.IconPackManager
-import com.gyf.immersionbar.ktx.immersionBar
+import com.gswxxn.restoresplashscreen.utils.IconPackManager
 import com.highcapable.yukihookapi.hook.factory.isXposedModuleActive
 import com.highcapable.yukihookapi.hook.factory.modulePrefs
 import com.highcapable.yukihookapi.hook.xposed.YukiHookModuleStatus
@@ -26,6 +25,7 @@ import com.topjohnwu.superuser.Shell
 
 class MainActivity : BaseActivity() {
     private lateinit var binding: ActivityMainBinding
+
     companion object {
         lateinit var appContext: Context
     }
@@ -43,13 +43,17 @@ class MainActivity : BaseActivity() {
 
             // 重启UI
             titleRestartIcon.setOnClickListener {
-                alert("你真的要重启系统界面吗？", "重启SystemUI") {
-                    positiveButton("确定") {
-                        Shell.su("pkill -f com.android.systemui",
-                            "pkill -f com.gswxxn.restoresplashscreen").exec()
+                AlertDialog.Builder(this@MainActivity)
+                    .setTitle("重启SystemUI")
+                    .setMessage("你真的要重启系统界面吗？")
+                    .setPositiveButton("确定") { _, _ ->
+                        Shell.cmd(
+                            "pkill -f com.android.systemui",
+                            "pkill -f com.gswxxn.restoresplashscreen"
+                        ).exec()
                     }
-                    negativeButton("取消") {}
-                }.show()
+                    .setNegativeButton("取消") { _, _ -> }
+                    .show()
             }
 
             titleAboutPage.setOnClickListener {
@@ -76,13 +80,14 @@ class MainActivity : BaseActivity() {
             // 自定义模块作用域
             customScope.apply {
                 setOnCheckedChangeListener { _, isChecked ->
-                    binding.customScopeLayout.visibility = if (isChecked) View.VISIBLE else View.GONE
+                    binding.customScopeLayout.visibility =
+                        if (isChecked) View.VISIBLE else View.GONE
                     modulePrefs.put(DataConst.ENABLE_CUSTOM_SCOPE, isChecked)
                 }
                 isChecked = modulePrefs.get(DataConst.ENABLE_CUSTOM_SCOPE)
             }
 
-            hideIconInLauncherSwitch.apply{
+            hideIconInLauncherSwitch.apply {
                 setOnCheckedChangeListener { btn, b ->
                     if (btn.isPressed.not()) return@setOnCheckedChangeListener
                     modulePrefs.put(DataConst.ENABLE_HIDE_ICON, b)
@@ -146,7 +151,7 @@ class MainActivity : BaseActivity() {
             // 使用图标包
             iconPackList.apply {
                 val item = arrayListOf<String>()
-                val availableIconPacks = IconPackManager.getAvailableIconPacks(this@MainActivity)
+                val availableIconPacks = IconPackManager(this@MainActivity).getAvailableIconPacks()
                 availableIconPacks.forEach {
                     item.add(it.key)
                 }
@@ -154,14 +159,23 @@ class MainActivity : BaseActivity() {
                     .apply { setDropDownViewResource(R.layout.spinner_dropdown) }
 
                 onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                        modulePrefs.put(DataConst.ICON_PACK_PACKAGE_NAME, availableIconPacks.values.elementAt(position))
+                    override fun onItemSelected(
+                        parent: AdapterView<*>?,
+                        view: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                        modulePrefs.put(
+                            DataConst.ICON_PACK_PACKAGE_NAME,
+                            availableIconPacks.values.elementAt(position)
+                        )
                     }
-                    override fun onNothingSelected(parent: AdapterView<*>?) { }
+
+                    override fun onNothingSelected(parent: AdapterView<*>?) {}
                 }
 
                 availableIconPacks.forEach {
-                    if (it.value.equals(modulePrefs.get(DataConst.ICON_PACK_PACKAGE_NAME))){
+                    if (it.value == modulePrefs.get(DataConst.ICON_PACK_PACKAGE_NAME)) {
                         setSelection(item.indexOf(it.key))
                     }
                 }
@@ -211,11 +225,12 @@ class MainActivity : BaseActivity() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun refreshState(){
+    private fun refreshState() {
         binding.apply {
             mainLinStatus.setBackgroundResource(
                 when {
-                    isXposedModuleActive && modulePrefs.get(DataConst.ENABLE_MODULE).not() -> R.drawable.bg_yellow_round
+                    isXposedModuleActive && modulePrefs.get(DataConst.ENABLE_MODULE)
+                        .not() -> R.drawable.bg_yellow_round
                     isXposedModuleActive -> R.drawable.bg_green_round
                     else -> R.drawable.bg_dark_round
                 }
@@ -228,7 +243,7 @@ class MainActivity : BaseActivity() {
             )
             mainTextStatus.text =
                 when {
-                    isXposedModuleActive && modulePrefs.get(DataConst.ENABLE_MODULE).not() -> "模块已停用"
+                    isXposedModuleActive && !modulePrefs.get(DataConst.ENABLE_MODULE) -> "模块已停用"
                     isXposedModuleActive -> "模块已激活"
                     else -> "模块未激活"
                 }
@@ -237,11 +252,14 @@ class MainActivity : BaseActivity() {
                 "Activated by ${YukiHookModuleStatus.executorName} API ${YukiHookModuleStatus.executorVersion}"
         }
 
-        immersionBar { statusBarColor(when{
-            isXposedModuleActive && modulePrefs.get(DataConst.ENABLE_MODULE).not() -> "#FF9800"
-            isXposedModuleActive -> "#228B22"
-            else -> "#661B1B1B"
-        }) }
+        window.statusBarColor = getColor(
+            when {
+                isXposedModuleActive && modulePrefs.get(DataConst.ENABLE_MODULE)
+                    .not() -> R.color.yellow
+                isXposedModuleActive -> R.color.green
+                else -> R.color.gray
+            }
+        )
     }
 
     override fun onResume() {

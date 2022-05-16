@@ -1,30 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              tools:context=".ui.MainActivity"
-              tools:ignore="HardcodedText,UseCompoundDrawables,ContentDescription,TooManyViews">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorThemeBackground"
+    android:orientation="vertical"
+    tools:context=".ui.MainActivity"
+    tools:ignore="HardcodedText,UseCompoundDrawables,ContentDescription">
 
     <LinearLayout
-            android:id="@+id/main_lin_status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:elevation="0dp"
-            android:gravity="center|start"
-            android:background="@drawable/bg_dark_round"
-            android:paddingLeft="15dp"
-            android:paddingTop="13dp"
-            android:paddingRight="15dp"
-            android:paddingBottom="5dp">
+        android:id="@+id/main_lin_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:elevation="0dp"
+        android:gravity="center|start"
+        android:background="@drawable/bg_dark_round"
+        android:paddingLeft="15dp"
+        android:paddingTop="13dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="5dp">
 
         <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -34,7 +37,7 @@
                 android:textSize="25sp"
                 android:textStyle="bold" />
 
-        <ImageView
+            <ImageView
                 android:id="@+id/title_restart_icon"
                 style="?android:attr/selectableItemBackgroundBorderless"
                 android:layout_width="25dp"
@@ -43,9 +46,9 @@
                 android:alpha="0.85"
                 android:src="@drawable/ic_restart"
                 android:tint="@color/white"
-                android:tooltipText="重启系统界面" />
+                android:tooltipText="重启系统界面"/>
 
-        <ImageView
+            <ImageView
                 android:id="@+id/title_about_page"
                 style="?android:attr/selectableItemBackgroundBorderless"
                 android:layout_width="27dp"
@@ -59,251 +62,274 @@
 
 
         <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="5dp"
-                android:elevation="0dp"
-                android:gravity="center">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:elevation="0dp"
+            android:gravity="center">
 
-            <androidx.constraintlayout.utils.widget.ImageFilterView
-                    android:id="@+id/main_img_status"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_marginStart="25dp"
-                    android:layout_marginEnd="5dp"
-                    android:src="@drawable/ic_warn"
-                    android:tint="@color/white" />
+            <ImageView
+                android:id="@+id/main_img_status"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/ic_warn"
+                android:tint="@color/white" />
 
             <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingLeft="20dp"
-                    android:paddingTop="10dp"
-                    android:paddingRight="20dp"
-                    android:paddingBottom="10dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="20dp"
+                android:paddingTop="10dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="10dp">
 
                 <TextView
-                        android:id="@+id/main_text_status"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:ellipsize="end"
-                        android:singleLine="true"
-                        android:text="模块状态未知"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
+                    android:id="@+id/main_text_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="模块状态未知"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
 
                 <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:gravity="center|start"
-                        android:orientation="horizontal">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center|start"
+                    android:orientation="horizontal">
 
                     <TextView
-                            android:id="@+id/main_text_version"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:alpha="0.8"
-                            android:ellipsize="end"
-                            android:singleLine="true"
-                            android:text="模块版本：%1"
-                            android:textColor="@color/white"
-                            android:textSize="13sp" />
+                        android:id="@+id/main_text_version"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:alpha="0.8"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="模块版本：%1"
+                        android:textColor="@color/white"
+                        android:textSize="13sp" />
                 </LinearLayout>
 
                 <TextView
-                        android:id="@+id/main_text_api_way"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:alpha="0.6"
-                        android:ellipsize="end"
-                        android:singleLine="true"
-                        android:text="%1"
-                        android:textColor="@color/white"
-                        android:textSize="11sp"
-                        android:visibility="gone" />
+                    android:id="@+id/main_text_api_way"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:alpha="0.6"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="%1"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:visibility="gone" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="25dp"
-            android:fadingEdgeLength="10dp"
-            android:fillViewport="true"
-            android:requiresFadingEdge="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="25dp"
+        android:fadingEdgeLength="10dp"
+        android:fillViewport="true"
+        android:requiresFadingEdge="vertical">
 
         <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="5dp"
-                android:animateLayoutChanges="true"
-                android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="5dp"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical">
 
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="15dp"
+                android:elevation="0dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="15dp">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:alpha="0.85"
+                    android:src="@drawable/ic_info"
+                    android:tint="@color/colorTextDark" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.6"
+                    android:lineSpacingExtra="5dp"
+                    android:text="做出任何设置前，请确保模块已激活。\n修改设置后点击右上角按钮启系统界面。"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="11sp"
+                    tools:ignore="SmallSp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="5dp"
+                android:animateLayoutChanges="true"
+                android:elevation="0dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingLeft="15dp"
+                android:paddingTop="15dp"
+                android:paddingRight="15dp">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="15dp"
-                    android:elevation="0dp"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="15dp">
+                    android:gravity="center|start">
 
-                <androidx.constraintlayout.utils.widget.ImageFilterView
+                    <ImageView
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:layout_marginEnd="10dp"
-                        android:alpha="0.85"
-                        android:src="@drawable/ic_info"
-                        android:tint="@color/colorTextDark" />
-
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:alpha="0.6"
-                        android:lineSpacingExtra="5dp"
-                        android:text="做出任何设置前，请确保模块已激活。\n修改设置后点击右上角按钮启系统界面。"
-                        android:textColor="@color/colorTextGray"
-                        android:textSize="11sp"
-                        tools:ignore="SmallSp" />
-            </LinearLayout>
-
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginBottom="5dp"
-                    android:animateLayoutChanges="true"
-                    android:elevation="0dp"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingTop="15dp"
-                    android:paddingRight="15dp">
-
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center|start">
-
-                    <ImageView
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:layout_marginEnd="10dp"
-                            android:src="@drawable/ic_setting" />
+                        android:src="@drawable/ic_setting" />
 
                     <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:alpha="0.85"
-                            android:singleLine="true"
-                            android:text="基础设置"
-                            android:textColor="@color/colorTextGray"
-                            android:textSize="12sp" />
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:alpha="0.85"
+                        android:singleLine="true"
+                        android:text="基础设置"
+                        android:textColor="@color/colorTextGray"
+                        android:textSize="12sp" />
                 </LinearLayout>
 
                 <Switch
-                        android:id="@+id/enable_model"
-                        android:layout_width="match_parent"
-                        android:checked="true"
-                        android:layout_height="35dp"
-                        android:layout_marginBottom="5dp"
-                        android:text="启用模块"
-                        android:switchMinWidth="@dimen/switch_width"
-                        android:thumb="@drawable/switch_thumb"
-                        android:track="@drawable/switch_track"
-                        android:textColor="@color/colorTextGray"
-                        android:textSize="15sp"/>
+                    android:id="@+id/enable_model"
+                    android:layout_width="match_parent"
+                    android:checked="true"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="启用模块"
+                    android:switchMinWidth="@dimen/switch_width"
+                    android:thumb="@drawable/switch_thumb"
+                    android:track="@drawable/switch_track"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="15sp" />
+
                 <Switch
-                        android:id="@+id/hide_icon_in_launcher_switch"
-                        android:layout_width="match_parent"
-                        android:layout_height="35dp"
-                        android:layout_marginBottom="5dp"
-                        android:switchMinWidth="@dimen/switch_width"
-                        android:thumb="@drawable/switch_thumb"
-                        android:track="@drawable/switch_track"
-                        android:text="隐藏桌面图标"
-                        android:textColor="@color/colorTextGray"
-                        android:textSize="15sp"/>
+                    android:id="@+id/hide_icon_in_launcher_switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="5dp"
+                    android:switchMinWidth="@dimen/switch_width"
+                    android:thumb="@drawable/switch_thumb"
+                    android:track="@drawable/switch_track"
+                    android:text="隐藏桌面图标"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="15sp" />
+
                 <Switch
-                        android:id="@+id/enable_log"
-                        android:layout_width="match_parent"
-                        android:layout_height="35dp"
-                        android:layout_marginBottom="5dp"
-                        android:switchMinWidth="@dimen/switch_width"
-                        android:thumb="@drawable/switch_thumb"
-                        android:track="@drawable/switch_track"
-                        android:text="启用日志"
-                        android:textColor="@color/colorTextGray"
-                        android:textSize="15sp" />
+                    android:id="@+id/enable_log"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="5dp"
+                    android:switchMinWidth="@dimen/switch_width"
+                    android:thumb="@drawable/switch_thumb"
+                    android:track="@drawable/switch_track"
+                    android:text="启用日志"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="15sp" />
+
                 <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:alpha="0.6"
-                        android:lineSpacingExtra="6dp"
-                        android:text="模块关闭后一切功能都将彻底停止工作。"
-                        android:textColor="@color/colorTextDark"
-                        android:textSize="12sp" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:alpha="0.6"
+                    android:lineSpacingExtra="6dp"
+                    android:text="模块关闭后一切功能都将彻底停止工作。"
+                    android:textColor="@color/colorTextDark"
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:background="@color/colorDivider"/>
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@color/colorDivider" />
 
             <LinearLayout
-                    android:id="@+id/status_icon_count_item"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginBottom="5dp"
-                    android:animateLayoutChanges="true"
-                    android:elevation="0dp"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingTop="15dp"
-                    android:paddingRight="15dp"
-                    android:paddingBottom="10dp">
+                android:id="@+id/status_icon_count_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="5dp"
+                android:animateLayoutChanges="true"
+                android:elevation="0dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingLeft="15dp"
+                android:paddingTop="15dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="10dp">
 
                 <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center|start">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|start">
 
                     <ImageView
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:layout_marginEnd="10dp"
-                            android:src="@drawable/ic_app" />
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/ic_app" />
 
                     <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:alpha="0.85"
-                            android:singleLine="true"
-                            android:text="作用域"
-                            android:textColor="@color/colorTextGray"
-                            android:textSize="12sp" />
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:alpha="0.85"
+                        android:singleLine="true"
+                        android:text="作用域"
+                        android:textColor="@color/colorTextGray"
+                        android:textSize="12sp" />
                 </LinearLayout>
 
                 <Switch
-                        android:id="@+id/custom_scope"
+                    android:id="@+id/custom_scope"
+                    android:layout_width="match_parent"
+                    android:checked="true"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="5dp"
+                    android:switchMinWidth="@dimen/switch_width"
+                    android:thumb="@drawable/switch_thumb"
+                    android:track="@drawable/switch_track"
+                    android:text="自定义模块作用域"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="15sp" />
+
+                <LinearLayout
+                    android:id="@+id/custom_scope_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <Switch
+                        android:id="@+id/custom_scope_except_mode"
                         android:layout_width="match_parent"
                         android:checked="true"
                         android:layout_height="35dp"
@@ -311,37 +337,19 @@
                         android:switchMinWidth="@dimen/switch_width"
                         android:thumb="@drawable/switch_thumb"
                         android:track="@drawable/switch_track"
-                        android:text="自定义模块作用域"
+                        android:text="排除模式"
                         android:textColor="@color/colorTextGray"
                         android:textSize="15sp" />
 
-                <LinearLayout
-                        android:id="@+id/custom_scope_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical">
-                    <Switch
-                            android:id="@+id/custom_scope_except_mode"
-                            android:layout_width="match_parent"
-                            android:checked="true"
-                            android:layout_height="35dp"
-                            android:layout_marginBottom="5dp"
-                            android:switchMinWidth="@dimen/switch_width"
-                            android:thumb="@drawable/switch_thumb"
-                            android:track="@drawable/switch_track"
-                            android:text="排除模式"
-                            android:textColor="@color/colorTextGray"
-                            android:textSize="15sp" />
-
 
                     <LinearLayout
-                            android:id="@+id/exception_mode_status_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:gravity="center">
-                    <TextView
+                        android:id="@+id/exception_mode_status_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center">
+
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
@@ -353,115 +361,31 @@
                             android:textSize="12sp" />
 
                         <TextView
-                                android:id="@+id/except_mode_status_text"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="1dp"
-                                android:ellipsize="end"
-                                android:gravity="center"
-                                android:singleLine="true"
-                                android:text="不会"
-                                android:textColor="@color/colorTextRed"
-                                android:textSize="12sp" />
+                            android:id="@+id/except_mode_status_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="1dp"
+                            android:ellipsize="end"
+                            android:gravity="center"
+                            android:singleLine="true"
+                            android:text="不会"
+                            android:textColor="@color/colorTextRed"
+                            android:textSize="12sp" />
 
                         <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="1dp"
-                                android:ellipsize="end"
-                                android:gravity="center"
-                                android:singleLine="true"
-                                android:text="作用在列表中的应用"
-                                android:textColor="@color/colorTextGray"
-                                android:textSize="12sp" />
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="1dp"
+                            android:ellipsize="end"
+                            android:gravity="center"
+                            android:singleLine="true"
+                            android:text="作用在列表中的应用"
+                            android:textColor="@color/colorTextGray"
+                            android:textSize="12sp" />
                     </LinearLayout>
 
                     <TextView
-                            android:id="@+id/custom_scope_list"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="3dp"
-                            android:layout_marginRight="3dp"
-                            android:layout_marginBottom="10dp"
-                            android:background="@drawable/bg_button_round"
-                            android:gravity="center"
-                            android:padding="10dp"
-                            android:singleLine="true"
-                            android:text="配置应用列表"
-                            android:textColor="@color/colorTextGray"
-                            android:textSize="15sp" />
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:alpha="0.6"
-                            android:lineSpacingExtra="6dp"
-                            android:text="在Xposed管理器中的作用域只需要勾选系统界面"
-                            android:textColor="@color/colorTextDark"
-                            android:textSize="12sp"/>
-                </LinearLayout>
-            </LinearLayout>
-
-            <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:background="@color/colorDivider"/>
-
-            <LinearLayout
-                    android:id="@+id/style_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:animateLayoutChanges="true"
-                    android:elevation="0dp"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingTop="15dp"
-                    android:paddingRight="15dp">
-
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center|start">
-
-                    <ImageView
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:layout_marginEnd="10dp"
-                            android:src="@drawable/ic_style" />
-
-                    <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:alpha="0.85"
-                            android:singleLine="true"
-                            android:text="风格"
-                            android:textColor="@color/colorTextGray"
-                            android:textSize="12sp" />
-                </LinearLayout>
-
-                <Switch
-                        android:id="@+id/default_style"
-                        android:layout_width="match_parent"
-                        android:checked="true"
-                        android:layout_height="35dp"
-                        android:layout_marginBottom="5dp"
-                        android:switchMinWidth="@dimen/switch_width"
-                        android:thumb="@drawable/switch_thumb"
-                        android:track="@drawable/switch_track"
-                        android:text="使用系统默认风格"
-                        android:textColor="@color/colorTextGray"
-                        android:textSize="15sp" />
-
-
-                <TextView
-                        android:id="@+id/default_style_list"
+                        android:id="@+id/custom_scope_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="3dp"
@@ -474,269 +398,358 @@
                         android:text="配置应用列表"
                         android:textColor="@color/colorTextGray"
                         android:textSize="15sp" />
-                <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:alpha="0.6"
-                        android:lineSpacingExtra="6dp"
-                        android:text="开启此选项并后，选中的应用即使主动适配Splash Screen, 也按照静态图标处理。开启此选项也可以解决以下问题：\n1. 使用第三方图标依然出现方角问题。\n2. 部分应用没有将图标背景设置成透明导致方角问题。"
-                        android:textColor="@color/colorTextDark"
-                        android:textSize="12sp"/>
-            </LinearLayout>
-
-            <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:background="@color/colorDivider"/>
-
-            <LinearLayout
-                    android:id="@+id/icon_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginRight="15dp"
-                    android:animateLayoutChanges="true"
-                    android:elevation="0dp"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="15dp"
-                    android:paddingRight="10dp">
-
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:gravity="center|start">
-
-                    <ImageView
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:layout_marginEnd="10dp"
-                            android:src="@drawable/ic_picture" />
 
                     <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:alpha="0.85"
-                            android:singleLine="true"
-                            android:text="图标"
-                            android:textColor="@color/colorTextGray"
-                            android:textSize="12sp" />
-                </LinearLayout>
-
-                <Switch
-                        android:id="@+id/shrink_icon"
-                        android:layout_width="match_parent"
-                        android:checked="true"
-                        android:layout_height="35dp"
-                        android:layout_marginBottom="5dp"
-                        android:switchMinWidth="@dimen/switch_width"
-                        android:thumb="@drawable/switch_thumb"
-                        android:track="@drawable/switch_track"
-                        android:text="缩小分辨率较低的图标"
-                        android:textColor="@color/colorTextGray"
-                        android:textSize="15sp"/>
-
-                <Switch
-                        android:id="@+id/replace_icon"
-                        android:layout_width="match_parent"
-                        android:checked="true"
-                        android:layout_height="35dp"
-                        android:layout_marginBottom="5dp"
-                        android:switchMinWidth="@dimen/switch_width"
-                        android:thumb="@drawable/switch_thumb"
-                        android:track="@drawable/switch_track"
-                        android:text="替换获取图标方式"
-                        android:textColor="@color/colorTextGray"
-                        android:textSize="15sp"/>
-
-                <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
                         android:layout_marginBottom="10dp"
                         android:alpha="0.6"
                         android:lineSpacingExtra="6dp"
-                        android:text="开启此选项后，Splash Screen的图标可以跟随主题设定。但是通常获取到的主题图标分辨率较低，经过放大后图标可能会比较模糊。"
+                        android:text="在Xposed管理器中的作用域只需要勾选系统界面"
                         android:textColor="@color/colorTextDark"
                         android:textSize="12sp" />
-
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:gravity="center_vertical">
-                    <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="35dp"
-                            android:layout_weight="1"
-                            android:gravity="center|start"
-                            android:textSize="15sp"
-                            android:textColor="@color/colorTextGray"
-                            android:text="使用图标包"/>
-                    <Spinner
-                            android:id="@+id/icon_pack_list"
-                            android:layout_width="150dp"
-                            android:layout_height="wrap_content"/>
                 </LinearLayout>
-
             </LinearLayout>
 
             <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:background="@color/colorDivider"/>
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@color/colorDivider" />
 
             <LinearLayout
-                    android:id="@+id/bg_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginRight="15dp"
-                    android:animateLayoutChanges="true"
-                    android:elevation="0dp"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="15dp"
-                    android:paddingRight="10dp">
+                android:id="@+id/style_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:animateLayoutChanges="true"
+                android:elevation="0dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingLeft="15dp"
+                android:paddingTop="15dp"
+                android:paddingRight="15dp">
 
                 <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:gravity="center|start">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|start">
 
                     <ImageView
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:layout_marginEnd="10dp"
-                            android:src="@drawable/ic_color" />
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/ic_style" />
 
                     <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:alpha="0.85"
-                            android:singleLine="true"
-                            android:text="背景"
-                            android:textColor="@color/colorTextGray"
-                            android:textSize="12sp" />
-                </LinearLayout>
-
-                <Switch
-                        android:id="@+id/independent_color_wechat"
-                        android:layout_width="match_parent"
-                        android:checked="true"
-                        android:layout_height="35dp"
-                        android:layout_marginBottom="5dp"
-                        android:switchMinWidth="@dimen/switch_width"
-                        android:thumb="@drawable/switch_thumb"
-                        android:track="@drawable/switch_track"
-                        android:text="设置微信启动背景为深色"
-                        android:textColor="@color/colorTextGray"
-                        android:textSize="15sp"/>
-
-                <Switch
-                        android:id="@+id/replace_bg"
-                        android:layout_width="match_parent"
-                        android:checked="true"
-                        android:layout_height="35dp"
-                        android:layout_marginBottom="5dp"
-                        android:switchMinWidth="@dimen/switch_width"
-                        android:thumb="@drawable/switch_thumb"
-                        android:track="@drawable/switch_track"
-                        android:text="自适应背景颜色"
-                        android:textColor="@color/colorTextGray"
-                        android:textSize="15sp"/>
-
-                <TextView
-                        android:id="@+id/bg_except_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="3dp"
-                        android:layout_marginRight="3dp"
-                        android:layout_marginBottom="10dp"
-                        android:background="@drawable/bg_button_round"
-                        android:gravity="center"
-                        android:padding="10dp"
+                        android:alpha="0.85"
                         android:singleLine="true"
-                        android:text="配置排除列表"
+                        android:text="风格"
                         android:textColor="@color/colorTextGray"
-                        android:textSize="15sp" />
-
-                <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginBottom="10dp"
-                        android:alpha="0.6"
-                        android:text="开启此选项后，Splash Screen背景颜色将根据图标颜色更改。如有应用背景取色异常，请配置排除列表使用默认背景颜色。"
-                        android:lineSpacingExtra="6dp"
-                        android:textColor="@color/colorTextDark"
                         android:textSize="12sp" />
+                </LinearLayout>
 
                 <Switch
-                        android:id="@+id/ignore_dark_mode"
-                        android:layout_width="match_parent"
-                        android:checked="true"
-                        android:layout_height="35dp"
-                        android:layout_marginBottom="5dp"
-                        android:switchMinWidth="@dimen/switch_width"
-                        android:thumb="@drawable/switch_thumb"
-                        android:track="@drawable/switch_track"
-                        android:text="忽略深色模式"
-                        android:textColor="@color/colorTextGray"
-                        android:textSize="15sp"/>
+                    android:id="@+id/default_style"
+                    android:layout_width="match_parent"
+                    android:checked="true"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="5dp"
+                    android:switchMinWidth="@dimen/switch_width"
+                    android:thumb="@drawable/switch_thumb"
+                    android:track="@drawable/switch_track"
+                    android:text="使用系统默认风格"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="15sp" />
+
+
                 <TextView
+                    android:id="@+id/default_style_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_button_round"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="配置应用列表"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:alpha="0.6"
+                    android:lineSpacingExtra="6dp"
+                    android:text="开启此选项并后，选中的应用即使主动适配Splash Screen, 也按照静态图标处理。开启此选项也可以解决以下问题：\n1. 使用第三方图标依然出现方角问题。\n2. 部分应用没有将图标背景设置成透明导致方角问题。"
+                    android:textColor="@color/colorTextDark"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@color/colorDivider" />
+
+            <LinearLayout
+                android:id="@+id/icon_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="15dp"
+                android:animateLayoutChanges="true"
+                android:elevation="0dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingTop="15dp"
+                android:paddingRight="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center|start">
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/ic_picture" />
+
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginBottom="10dp"
-                        android:alpha="0.6"
-                        android:text="开启此选项后，Splash Screen的背景颜色将不受深色模式的影响。"
-                        android:lineSpacingExtra="6dp"
-                        android:textColor="@color/colorTextDark"
+                        android:alpha="0.85"
+                        android:singleLine="true"
+                        android:text="图标"
+                        android:textColor="@color/colorTextGray"
                         android:textSize="12sp" />
+                </LinearLayout>
 
                 <Switch
-                        android:id="@+id/remove_bg_drawable"
-                        android:layout_width="match_parent"
-                        android:checked="true"
-                        android:layout_height="35dp"
-                        android:layout_marginBottom="5dp"
-                        android:switchMinWidth="@dimen/switch_width"
-                        android:thumb="@drawable/switch_thumb"
-                        android:track="@drawable/switch_track"
-                        android:text="移除截图背景"
-                        android:textColor="@color/colorTextGray"
-                        android:textSize="15sp"/>
+                    android:id="@+id/shrink_icon"
+                    android:layout_width="match_parent"
+                    android:checked="true"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="5dp"
+                    android:switchMinWidth="@dimen/switch_width"
+                    android:thumb="@drawable/switch_thumb"
+                    android:track="@drawable/switch_track"
+                    android:text="缩小分辨率较低的图标"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="15sp" />
+
+                <Switch
+                    android:id="@+id/replace_icon"
+                    android:layout_width="match_parent"
+                    android:checked="true"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="5dp"
+                    android:switchMinWidth="@dimen/switch_width"
+                    android:thumb="@drawable/switch_thumb"
+                    android:track="@drawable/switch_track"
+                    android:text="替换获取图标方式"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="15sp" />
 
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:alpha="0.6"
+                    android:lineSpacingExtra="6dp"
+                    android:text="开启此选项后，Splash Screen的图标可以跟随主题设定。但是通常获取到的主题图标分辨率较低，经过放大后图标可能会比较模糊。"
+                    android:textColor="@color/colorTextDark"
+                    android:textSize="12sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="35dp"
+                        android:layout_weight="1"
+                        android:gravity="center|start"
+                        android:textSize="15sp"
+                        android:textColor="@color/colorTextGray"
+                        android:text="使用图标包" />
+
+                    <Spinner
+                        android:id="@+id/icon_pack_list"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@color/colorDivider" />
+
+            <LinearLayout
+                android:id="@+id/bg_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="15dp"
+                android:animateLayoutChanges="true"
+                android:elevation="0dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingTop="15dp"
+                android:paddingRight="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center|start">
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/ic_color" />
+
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginBottom="10dp"
-                        android:alpha="0.6"
-                        android:text="如果Splash Screen的背景为应用内截图，可开启此选项移除。"
-                        android:lineSpacingExtra="6dp"
-                        android:textColor="@color/colorTextDark"
+                        android:alpha="0.85"
+                        android:singleLine="true"
+                        android:text="背景"
+                        android:textColor="@color/colorTextGray"
                         android:textSize="12sp" />
+                </LinearLayout>
+
+                <Switch
+                    android:id="@+id/independent_color_wechat"
+                    android:layout_width="match_parent"
+                    android:checked="true"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="5dp"
+                    android:switchMinWidth="@dimen/switch_width"
+                    android:thumb="@drawable/switch_thumb"
+                    android:track="@drawable/switch_track"
+                    android:text="设置微信启动背景为深色"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="15sp" />
+
+                <Switch
+                    android:id="@+id/replace_bg"
+                    android:layout_width="match_parent"
+                    android:checked="true"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="5dp"
+                    android:switchMinWidth="@dimen/switch_width"
+                    android:thumb="@drawable/switch_thumb"
+                    android:track="@drawable/switch_track"
+                    android:text="自适应背景颜色"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/bg_except_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_button_round"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="配置排除列表"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:alpha="0.6"
+                    android:text="开启此选项后，Splash Screen背景颜色将根据图标颜色更改。如有应用背景取色异常，请配置排除列表使用默认背景颜色。"
+                    android:lineSpacingExtra="6dp"
+                    android:textColor="@color/colorTextDark"
+                    android:textSize="12sp" />
+
+                <Switch
+                    android:id="@+id/ignore_dark_mode"
+                    android:layout_width="match_parent"
+                    android:checked="true"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="5dp"
+                    android:switchMinWidth="@dimen/switch_width"
+                    android:thumb="@drawable/switch_thumb"
+                    android:track="@drawable/switch_track"
+                    android:text="忽略深色模式"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:alpha="0.6"
+                    android:text="开启此选项后，Splash Screen的背景颜色将不受深色模式的影响。"
+                    android:lineSpacingExtra="6dp"
+                    android:textColor="@color/colorTextDark"
+                    android:textSize="12sp" />
+
+                <Switch
+                    android:id="@+id/remove_bg_drawable"
+                    android:layout_width="match_parent"
+                    android:checked="true"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="5dp"
+                    android:switchMinWidth="@dimen/switch_width"
+                    android:thumb="@drawable/switch_thumb"
+                    android:track="@drawable/switch_track"
+                    android:text="移除截图背景"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:alpha="0.6"
+                    android:text="如果Splash Screen的背景为应用内截图，可开启此选项移除。"
+                    android:lineSpacingExtra="6dp"
+                    android:textColor="@color/colorTextDark"
+                    android:textSize="12sp" />
 
             </LinearLayout>
         </LinearLayout>

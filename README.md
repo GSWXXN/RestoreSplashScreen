@@ -1,8 +1,8 @@
 # MIUI遮罩进化
-![Xposed](https://img.shields.io/badge/-Xposed-green?style=flat&logo=Android&logoColor=white)
-![GitHub](https://img.shields.io/github/license/GSWXXN/RestoreSplashScreen)
+[![Xposed](https://img.shields.io/badge/-Xposed-green?style=flat&logo=Android&logoColor=white)](#)
+[![GitHub](https://img.shields.io/github/license/GSWXXN/RestoreSplashScreen)](https://github.com/GSWXXN/RestoreSplashScreen/blob/master/LICENSE)
 [![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/GSWXXN/RestoreSplashScreen?label=version)](https://github.com/Xposed-Modules-Repo/com.gswxxn.restoresplashscreen/releases)
-[![GitHub all releases](https://img.shields.io/github/downloads/Xposed-Modules-Repo/com.gswxxn.restoresplashscreen/total?label=Release)](https://github.com/Xposed-Modules-Repo/com.gswxxn.restoresplashscreen/releases)
+[![GitHub all releases](https://img.shields.io/github/downloads/Xposed-Modules-Repo/com.gswxxn.restoresplashscreen/total?label=Downloads)](https://github.com/Xposed-Modules-Repo/com.gswxxn.restoresplashscreen/releases)
 
 ~~尝试恢复被MIUI阉割的SplashScreen~~   
 自定义MIUI的Splash Screen
@@ -35,7 +35,7 @@
 
 - 开启模块后出现启动应用卡顿可能与调度模块同时开启有关，这个我也在想办法优化
 
-- 部分机型 (如Redemi Note 10 Pro、小米12Pro) 的系统版本 (如稳定版、开发版) 可能无法使用本模块，请等待系统更新
+- 部分机型 (如Redmi Note 10 Pro、小米12Pro) 的系统版本 (如稳定版、开发版) 可能无法使用本模块，请等待系统更新
 
 
 
@@ -48,9 +48,9 @@
 ## 捐赠支持
 点个 **Star** 也是对我的支持。
 
-如果你想捐赠，觉得这个模块好用的不得了，我会非常感谢你的！！！如果这个模块对你来说只要还差一点点意思，就不用捐赠啦
+如果你想捐赠，觉得这个模块好用的不得了，我会非常感谢你的！！！如果这个模块对你来说只要还差一点点意思，就不要捐赠啦
 
-<img src="Doc/donate.png" width = "250" alt="donate" align=center />
+<img src="https://raw.githubusercontent.com/GSWXXN/RestoreSplashScreen/master/Doc/donate.png" width = "250" alt="donate" align=center />
 
 
 ## 致谢

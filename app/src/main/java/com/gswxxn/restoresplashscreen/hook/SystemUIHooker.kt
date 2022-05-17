@@ -21,7 +21,7 @@ import com.highcapable.yukihookapi.hook.type.java.IntType
 import com.highcapable.yukihookapi.hook.type.java.StringType
 
 class SystemUIHooker : YukiBaseHooker() {
-    val enableLog = prefs.get(DataConst.ENABLE_LOG)
+    private val enableLog = prefs.get(DataConst.ENABLE_LOG)
 
     private fun printLog(vararg msg: String) {
         if (enableLog) msg.forEach { loggerI(msg = it) }
@@ -32,8 +32,10 @@ class SystemUIHooker : YukiBaseHooker() {
         /**
          * 自定义作用域
          *
-         * 干预 makeSplashScreenContentView() 中的 if 判断
-         * - 核心功能， 如此处无法正常运行，则模块大部分功能将失效
+         * 此处在 makeSplashScreenContentView() 中调用
+         *
+         * 原理：干预 makeSplashScreenContentView() 中的 if 判断
+         * - 核心功能， 若此处无法正常运行，则模块大部分功能将失效
          */
         findClass("com.android.wm.shell.startingsurface.SplashscreenContentDrawer").hook {
 
@@ -44,8 +46,8 @@ class SystemUIHooker : YukiBaseHooker() {
                 }
                 beforeHook {
                     val pkgName = args(0).cast<ActivityInfo>()?.packageName
-                    val mIconBgColor = instance.getField("mTmpAttrs").any()!!
-                        .getField("mIconBgColor").int()
+//                    val mIconBgColor = instance.getField("mTmpAttrs").any()!!
+//                        .getField("mIconBgColor").int()
                     val list = prefs.get(DataConst.CUSTOM_SCOPE_LIST)
                     val isExceptionMode = prefs.get(DataConst.IS_CUSTOM_SCOPE_EXCEPTION_MODE)
                     val enableCustomScope = prefs.get(DataConst.ENABLE_CUSTOM_SCOPE)
@@ -53,8 +55,15 @@ class SystemUIHooker : YukiBaseHooker() {
                             ((isExceptionMode && (pkgName in list))
                                     || (!isExceptionMode && pkgName !in list))
 
-                    if (mIconBgColor == 0 && !isException)
+                    if (!isException)
                         instance.getField("mTmpAttrs").any()!!.setField("mIconBgColor", 1)
+
+                    printLog(
+                        "****** ${pkgName}:",
+                        "1. getBGColorFromCache(): ${
+                            if (isException) "Except this app" else "Not Except, Set mIconBgColor 1"
+                        }"
+                    )
                 }
             }
         }
@@ -89,6 +98,9 @@ class SystemUIHooker : YukiBaseHooker() {
                         val mTmpAttrs = mSplashscreenContentDrawer
                             .getField("mTmpAttrs").any()!!
 
+                        // 打印日志
+                        printLog("info: build(): mSuggestType is ${instance.getField("mSuggestType").int()}")
+
                         // 重置因实现自定义作用域而影响到的 mTmpAttrs
                         mSplashscreenContentDrawer.current {
                             method {
@@ -96,6 +108,7 @@ class SystemUIHooker : YukiBaseHooker() {
                                 paramCount(2)
                             }.call(instance.getField("mContext").cast<Context>(), mTmpAttrs)
                         }
+                        printLog("2. build(): call getWindowAttrs() to reset mTmpAttrs")
 
                         /**
                          * 忽略应用主动设置的图标
@@ -104,8 +117,10 @@ class SystemUIHooker : YukiBaseHooker() {
                          */
                         if (isDefaultStyle) {
                             mTmpAttrs.setField("mSplashScreenIcon", null)
-                            printLog("build(): use system default icon style")
                         }
+                        printLog(
+                            "3. build(): ${if (isDefaultStyle) "" else "Not"} ignore set icon"
+                        )
 
                         /**
                          * 移除品牌图标
@@ -115,6 +130,9 @@ class SystemUIHooker : YukiBaseHooker() {
                         if (isRemoveBrandingImage) {
                             mTmpAttrs.setField("mBrandingImage", null)
                         }
+                        printLog(
+                            "4. build(): ${if (isRemoveBrandingImage) "" else "Not"} remove Branding Image"
+                        )
                     }
                 }
 
@@ -144,6 +162,7 @@ class SystemUIHooker : YukiBaseHooker() {
                             // 设置微信背景色为深色
                             pkgName == "com.tencent.mm" && prefs.get(DataConst.INDEPENDENT_COLOR_WECHAT) -> {
                                 instance.setField("mThemeColor", Color.parseColor("#010C15"))
+                                printLog("9. createIconDrawable(): set WeChat background color")
                             }
 
                             // 自适应背景色
@@ -151,37 +170,16 @@ class SystemUIHooker : YukiBaseHooker() {
                                 val drawable = args(0).cast<Drawable>()
                                 val color = Utils.getBgColor(Utils.drawable2Bitmap(drawable!!, 100)!!)
                                 instance.setField("mThemeColor", color)
-                                printLog("createIconDrawable(): change background color")
+                                printLog("9. createIconDrawable(): set adaptive background color")
                             }
+
+                            else -> printLog("9. createIconDrawable(): Not set background color")
                         }
 
                     }
                 }
 
             }
-
-        /**
-         * 设置图标不缩小
-         *
-         * 此处在 com.android.wm.shell.startingsurface.SplashscreenContentDrawer
-         *   .$StartingWindowViewBuilder.build() 中被调用
-         *
-         * createScaledBitmapWithoutShadow() 的第二个参数在 Android 源代码中被称为 shrinkNonAdaptiveIcons
-         * 若将此参数设置为 true 时，在 MIUI 中的非自适应图标将会错位显示
-         * 若将此参数设置为 false 时，非自适应图标不会缩小而且显示较模糊，我们可以在后续方法中将图标缩小绘制
-         */
-        findClass("com.android.launcher3.icons.BaseIconFactory").hook {
-            injectMember {
-                method {
-                    name = "createScaledBitmapWithoutShadow"
-                    param(DrawableClass, BooleanType)
-                }
-                beforeHook {
-                    args(1).set(false)
-                    printLog("BaseIconFactory(): set icon large")
-                }
-            }
-        }
 
         /**
          * 图标处理
@@ -212,23 +210,24 @@ class SystemUIHooker : YukiBaseHooker() {
                      * 使用 Context.packageManager.getApplicationIcon() 的方式获取图标
                      */
                     var drawable = if (enableReplaceIcon) {
-                        printLog("IconProvider(): replace Icon")
                         pkgName?.let { appContext.packageManager.getApplicationIcon(it) }!!
                     } else {
                         result<Drawable>()
                     }
+                    printLog("5. getIcon(): ${if (enableReplaceIcon) "" else "Not"} replace Icon")
 
                     // 使用图标包
                     if (iconPackPackageName != "None")
                         IconPackManager(appContext, iconPackPackageName).getIconForPackage(pkgName)
                             ?.let { drawable = it }
+                    printLog("6. getIcon(): ${if (iconPackPackageName != "None") "" else "Not"} use Icon Pack")
+
 
                     /**
                      * 绘制图标圆角
                      *
                      * - 默认开启，不提供手动设置
                      */
-                    printLog("IconProvider(): draw round corner")
                     result = BitmapDrawable(
                         appContext.resources,
                         Utils.roundBitmapByShader(
@@ -237,16 +236,43 @@ class SystemUIHooker : YukiBaseHooker() {
                             enableShrinkIcon
                         )
                     )
-
+                    printLog("7. getIcon(): draw round corner")
                 }
             }
 
+        }
+
+
+        /**
+         * 设置图标不缩小
+         *
+         * 此处在 com.android.wm.shell.startingsurface.SplashscreenContentDrawer
+         *   .$StartingWindowViewBuilder.build() 中被调用
+         *
+         * createScaledBitmapWithoutShadow() 的第二个参数在 Android 源代码中被称为 shrinkNonAdaptiveIcons
+         * 若将此参数设置为 true 时，在 MIUI 中的非自适应图标将会错位显示
+         * 若将此参数设置为 false 时，非自适应图标不会缩小而且显示较模糊，我们可以在后续方法中将图标缩小绘制
+         */
+        findClass("com.android.launcher3.icons.BaseIconFactory").hook {
+            injectMember {
+                method {
+                    name = "createScaledBitmapWithoutShadow"
+                    param(DrawableClass, BooleanType)
+                }
+                beforeHook {
+                    args(1).set(false)
+                    printLog("8. BaseIconFactory(): set shrinkNonAdaptiveIcons false")
+                }
+            }
         }
 
         /**
          * 忽略深色模式
          *
          * 类原始位置在 framework.jar 中
+         *
+         * 此处在 com.android.wm.shell.startingsurface.SplashscreenContentDrawer
+         *   .$StartingWindowViewBuilder.fillViewWithIcon() 中被调用
          */
         findClass("android.window.SplashScreenView\$Builder").hook {
             injectMember {
@@ -255,9 +281,10 @@ class SystemUIHooker : YukiBaseHooker() {
                     emptyParam()
                 }
                 beforeHook {
-                    if (prefs.get(DataConst.IGNORE_DARK_MODE)) {
-                        resultFalse()
-                    }
+                    val isIgnoreDarkMode = prefs.get(DataConst.IGNORE_DARK_MODE)
+                    if (isIgnoreDarkMode) resultFalse()
+                    printLog("10. isStaringWindowUnderNightMode(): " +
+                            "${if (isIgnoreDarkMode) "" else "Not"} ignore dark mode")
                 }
             }
         }
@@ -279,8 +306,10 @@ class SystemUIHooker : YukiBaseHooker() {
                     param(StringType)
                 }
                 beforeHook {
-                    if (prefs.get(DataConst.REMOVE_BG_DRAWABLE))
-                        resultFalse()
+                    val isRemoveBGDrawable = prefs.get(DataConst.REMOVE_BG_DRAWABLE)
+                    if (isRemoveBGDrawable) resultFalse()
+                    printLog("11. isMiuiHome(): " +
+                            "${if (isRemoveBGDrawable) "" else "Not"} set isMiuiHome() false")
                 }
             }
         }

@@ -46,8 +46,6 @@ class SystemUIHooker : YukiBaseHooker() {
                 }
                 beforeHook {
                     val pkgName = args(0).cast<ActivityInfo>()?.packageName
-//                    val mIconBgColor = instance.getField("mTmpAttrs").any()!!
-//                        .getField("mIconBgColor").int()
                     val list = prefs.get(DataConst.CUSTOM_SCOPE_LIST)
                     val isExceptionMode = prefs.get(DataConst.IS_CUSTOM_SCOPE_EXCEPTION_MODE)
                     val enableCustomScope = prefs.get(DataConst.ENABLE_CUSTOM_SCOPE)
@@ -203,6 +201,7 @@ class SystemUIHooker : YukiBaseHooker() {
                     val enableShrinkIcon = prefs.get(DataConst.ENABLE_SHRINK_ICON)
                     val iconPackPackageName = prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)
                     val pkgName = args(0).cast<ActivityInfo>()?.packageName
+                    val iconSize = args(1).cast<Int>()!!
 
                     /**
                      * 替换获取图标方式
@@ -231,9 +230,9 @@ class SystemUIHooker : YukiBaseHooker() {
                     result = BitmapDrawable(
                         appContext.resources,
                         Utils.roundBitmapByShader(
-                            drawable?.let { Utils.drawable2Bitmap(it, args(1).cast<Int>()!!) },
+                            drawable?.let { Utils.drawable2Bitmap(it, iconSize)},
                             false,
-                            enableShrinkIcon
+                            if (enableShrinkIcon) iconSize / 4 else 0
                         )
                     )
                     printLog("7. getIcon(): draw round corner")

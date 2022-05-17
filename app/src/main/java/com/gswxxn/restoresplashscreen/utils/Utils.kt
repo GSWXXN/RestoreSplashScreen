@@ -37,10 +37,10 @@ object Utils {
      *
      * @param bitmap 待绘制圆角的 Bitmap
      * @param isCircle 是否绘制圆形图标
-     * @param isShrink 是否缩小图标
+     * @param shrinkTrigger 若图标尺寸小于此数值则缩小图标；留空不缩小图标
      * @return [Bitmap]
      */
-     fun roundBitmapByShader(bitmap: Bitmap?, isCircle: Boolean, isShrink: Boolean = false): Bitmap? {
+     fun roundBitmapByShader(bitmap: Bitmap?, isCircle: Boolean, shrinkTrigger: Int = 0): Bitmap? {
         if (bitmap == null)  return null
 
         val radius = if (isCircle) bitmap.width / 2 else  bitmap.width / 4
@@ -62,10 +62,10 @@ object Utils {
         )
 
         // 缩小图标
-        if (isShrink && bitmap.width < 200) {
+        if (bitmap.width < shrinkTrigger) {
             val shrankBitmap = Bitmap.createBitmap(
-                bitmap.width * 2,
-                bitmap.width * 2,
+                (bitmap.width * 1.7).toInt(),
+                (bitmap.width * 1.7).toInt(),
                 Bitmap.Config.ARGB_8888
             )
             Canvas(shrankBitmap).drawBitmap(

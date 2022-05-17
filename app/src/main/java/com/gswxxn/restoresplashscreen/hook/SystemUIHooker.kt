@@ -33,6 +33,7 @@ class SystemUIHooker : YukiBaseHooker() {
          * 自定义作用域
          *
          * 干预 makeSplashScreenContentView() 中的 if 判断
+         * - 核心功能， 如此处无法正常运行，则模块大部分功能将失效
          */
         findClass("com.android.wm.shell.startingsurface.SplashscreenContentDrawer").hook {
 
@@ -61,6 +62,7 @@ class SystemUIHooker : YukiBaseHooker() {
         /**
          * 此处实现功能：
          * - 忽略应用主动设置的图标
+         * - 移除品牌图标
          * - 自适应背景颜色
          * - 设置微信背景色为黑色
          */
@@ -70,6 +72,7 @@ class SystemUIHooker : YukiBaseHooker() {
                 /**
                  * 此处实现功能：
                  * - 忽略应用主动设置的图标
+                 * - 移除品牌图标
                  */
                 injectMember {
                     method {
@@ -80,6 +83,8 @@ class SystemUIHooker : YukiBaseHooker() {
                         val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName
                         val isDefaultStyle = prefs.get(DataConst.ENABLE_DEFAULT_STYLE)
                                 && pkgName in prefs.get(DataConst.DEFAULT_STYLE_LIST)
+                        val isRemoveBrandingImage = prefs.get(DataConst.REMOVE_BRANDING_IMAGE)
+                                && pkgName in prefs.get(DataConst.REMOVE_BRANDING_IMAGE_LIST)
                         val mSplashscreenContentDrawer = instance.getField("this\$0").any()!!
                         val mTmpAttrs = mSplashscreenContentDrawer
                             .getField("mTmpAttrs").any()!!
@@ -102,6 +107,14 @@ class SystemUIHooker : YukiBaseHooker() {
                             printLog("build(): use system default icon style")
                         }
 
+                        /**
+                         * 移除品牌图标
+                         *
+                         * 干预 fillViewWithIcon() 中的 if 判断
+                         */
+                        if (isRemoveBrandingImage) {
+                            mTmpAttrs.setField("mBrandingImage", null)
+                        }
                     }
                 }
 

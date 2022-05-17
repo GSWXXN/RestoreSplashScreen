@@ -45,8 +45,10 @@ class ConfigAppsActivity : BaseActivity() {
                 ConstValue.CUSTOM_SCOPE -> DataConst.CUSTOM_SCOPE_LIST
                 ConstValue.DEFAULT_STYLE -> DataConst.DEFAULT_STYLE_LIST
                 ConstValue.BACKGROUND_EXCEPT -> DataConst.BG_EXCEPT_LIST
+                ConstValue.BRANDING_IMAGE -> DataConst.REMOVE_BRANDING_IMAGE_LIST
                 else -> DataConst.UNDEFINED_LIST
             }).toMutableSet()
+
         appInfo = AppInfoHelper(checkedList)
 
         binding.configListLoadingView.visibility = View.VISIBLE
@@ -60,6 +62,7 @@ class ConfigAppsActivity : BaseActivity() {
             ConstValue.CUSTOM_SCOPE -> "作用域列表"
             ConstValue.DEFAULT_STYLE -> "忽略图标列表"
             ConstValue.BACKGROUND_EXCEPT -> "排除列表"
+            ConstValue.BRANDING_IMAGE -> "移除列表"
             else -> "标题"
         }
 
@@ -163,6 +166,7 @@ class ConfigAppsActivity : BaseActivity() {
                     ConstValue.CUSTOM_SCOPE -> DataConst.CUSTOM_SCOPE_LIST
                     ConstValue.DEFAULT_STYLE -> DataConst.DEFAULT_STYLE_LIST
                     ConstValue.BACKGROUND_EXCEPT -> DataConst.BG_EXCEPT_LIST
+                    ConstValue.BRANDING_IMAGE -> DataConst.REMOVE_BRANDING_IMAGE_LIST
                     else -> DataConst.UNDEFINED_LIST
                 }, checkedList)
             toast("保存成功")

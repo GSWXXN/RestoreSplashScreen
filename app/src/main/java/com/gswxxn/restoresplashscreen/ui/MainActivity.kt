@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter
 import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.ConstValue.BACKGROUND_EXCEPT
+import com.gswxxn.restoresplashscreen.data.ConstValue.BRANDING_IMAGE
 import com.gswxxn.restoresplashscreen.data.ConstValue.CUSTOM_SCOPE
 import com.gswxxn.restoresplashscreen.data.ConstValue.DEFAULT_STYLE
 import com.gswxxn.restoresplashscreen.data.ConstValue.EXTRA_MESSAGE
@@ -178,6 +179,22 @@ class MainActivity : BaseActivity() {
             defaultStyleList.setOnClickListener {
                 val intent = Intent(this@MainActivity, ConfigAppsActivity::class.java)
                 intent.putExtra(EXTRA_MESSAGE, DEFAULT_STYLE)
+                startActivity(intent)
+            }
+
+            // 移除底部图片
+            removeBrandingImage.apply {
+                setOnCheckedChangeListener { _, isChecked ->
+                    modulePrefs.put(DataConst.REMOVE_BRANDING_IMAGE, isChecked)
+                    binding.removeBrandingImageList.visibility = if (isChecked) View.VISIBLE else View.GONE
+                }
+                isChecked = modulePrefs.get(DataConst.REMOVE_BRANDING_IMAGE)
+            }
+
+            // 移除底部图片 配置列表
+            removeBrandingImageList.setOnClickListener {
+                val intent = Intent(this@MainActivity, ConfigAppsActivity::class.java)
+                intent.putExtra(EXTRA_MESSAGE, BRANDING_IMAGE)
                 startActivity(intent)
             }
 

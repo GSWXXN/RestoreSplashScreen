@@ -11,8 +11,8 @@ android {
         applicationId "com.gswxxn.restoresplashscreen"
         minSdk 31
         targetSdk 31
-        versionCode 171
-        versionName "1.8-Preview.1"
+        versionCode 180
+        versionName "1.8"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

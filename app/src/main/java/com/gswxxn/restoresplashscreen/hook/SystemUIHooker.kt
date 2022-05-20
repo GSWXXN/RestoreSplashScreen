@@ -27,6 +27,13 @@ class SystemUIHooker : YukiBaseHooker() {
         if (enableLog) msg.forEach { loggerI(msg = it) }
     }
 
+    private fun isExcept(pkgName : String) : Boolean {
+        val list = prefs.get(DataConst.CUSTOM_SCOPE_LIST)
+        val isExceptionMode = prefs.get(DataConst.IS_CUSTOM_SCOPE_EXCEPTION_MODE)
+        return prefs.get(DataConst.ENABLE_CUSTOM_SCOPE)
+                && ((isExceptionMode && (pkgName in list)) || (!isExceptionMode && pkgName !in list))
+    }
+
     override fun onHook() {
 
         /**
@@ -45,29 +52,25 @@ class SystemUIHooker : YukiBaseHooker() {
                     paramCount(2)
                 }
                 beforeHook {
-                    val pkgName = args(0).cast<ActivityInfo>()?.packageName
-                    val list = prefs.get(DataConst.CUSTOM_SCOPE_LIST)
-                    val isExceptionMode = prefs.get(DataConst.IS_CUSTOM_SCOPE_EXCEPTION_MODE)
-                    val enableCustomScope = prefs.get(DataConst.ENABLE_CUSTOM_SCOPE)
-                    val isException = enableCustomScope &&
-                            ((isExceptionMode && (pkgName in list))
-                                    || (!isExceptionMode && pkgName !in list))
-
-                    if (!isException)
-                        instance.getField("mTmpAttrs").any()!!.setField("mIconBgColor", 1)
-
-                    printLog(
-                        "****** ${pkgName}:",
-                        "1. getBGColorFromCache(): ${
-                            if (isException) "Except this app" else "Not Except, Set mIconBgColor 1"
-                        }"
-                    )
+                    if (!prefs.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)) {
+                        val pkgName = args(0).cast<ActivityInfo>()?.packageName!!
+                        val isExcept = isExcept(pkgName)
+                        if (!isExcept)
+                            instance.getField("mTmpAttrs").any()!!.setField("mIconBgColor", 1)
+                        printLog(
+                            "****** ${pkgName}:",
+                            "1. getBGColorFromCache(): ${
+                                if (isExcept) "Except this app" else "Not Except, Set mIconBgColor 1"
+                            }"
+                        )
+                    }
                 }
             }
         }
 
         /**
          * 此处实现功能：
+         * - 强制开启启动遮罩
          * - 忽略应用主动设置的图标
          * - 移除品牌图标
          * - 自适应背景颜色
@@ -87,14 +90,35 @@ class SystemUIHooker : YukiBaseHooker() {
                         emptyParam()
                     }
                     beforeHook {
-                        val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName
+                        val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
                         val isDefaultStyle = prefs.get(DataConst.ENABLE_DEFAULT_STYLE)
                                 && pkgName in prefs.get(DataConst.DEFAULT_STYLE_LIST)
                         val isRemoveBrandingImage = prefs.get(DataConst.REMOVE_BRANDING_IMAGE)
                                 && pkgName in prefs.get(DataConst.REMOVE_BRANDING_IMAGE_LIST)
+                        val isExcept = isExcept(pkgName)
+                        val forceEnableSplashScreen = prefs.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)
                         val mSplashscreenContentDrawer = instance.getField("this\$0").any()!!
                         val mTmpAttrs = mSplashscreenContentDrawer
                             .getField("mTmpAttrs").any()!!
+
+                        /**
+                         * 强制开启启动遮罩
+                         *
+                         * 直接干预 build() 中的 if 判断
+                         */
+                        if (forceEnableSplashScreen) {
+                            if (!isExcept) {
+                                instance.setField("mSuggestType", 1)
+                                instance.setField("mOverlayDrawable", null)
+                            }
+                            printLog(
+                                "****** ${pkgName}(forceEnableSplashScreen):",
+                                "1. build(): ${
+                                    if (isExcept) "Except this app"
+                                    else "set mSuggestType to 1; set mOverlayDrawable to null"}"
+                            )
+                        }
+
 
                         // 打印日志
                         printLog("info: build(): mSuggestType is ${instance.getField("mSuggestType").int()}")

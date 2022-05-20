@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.text.Html
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -237,6 +238,23 @@ class MainActivity : BaseActivity() {
                 }
                 isChecked = modulePrefs.get(DataConst.REMOVE_BG_DRAWABLE)
             }
+
+            // 强制开启启动遮罩
+            forceEnableSplashScreen.apply {
+                setOnCheckedChangeListener { _, isChecked ->
+                    modulePrefs.put(DataConst.FORCE_ENABLE_SPLASH_SCREEN, isChecked)
+                }
+                isChecked = modulePrefs.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)
+            }
+
+            // 强制开启启动遮罩描述
+            forceEnableDetail.text = Html.fromHtml(
+                "你应该尝试各种办法，模块依然显示成功激活但是不起作用后，才尝试开启此选项。<br>" +
+                "如果模块可以正常运行，请<font color = \"#B22222\">不要</font>开启此选项。<br>" +
+                "开启此选项可能导致的问题：<br>" +
+                "1. 可能会在不需要显示Splash Screen的场景显示启动遮罩。<br>" +
+                "2. 如果应用主动设置了Splash Screen的背景图片，可能将无法显示。",
+                Html.FROM_HTML_MODE_LEGACY)
 
         }
     }

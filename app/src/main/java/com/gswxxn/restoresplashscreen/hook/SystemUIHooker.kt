@@ -234,10 +234,10 @@ class SystemUIHooker : YukiBaseHooker() {
                      * 使用 Context.packageManager.getApplicationIcon() 的方式获取图标
                      */
                     var drawable = if (enableReplaceIcon) {
-                        if (pkgActivity == "com.android.contacts.activities.PeopleActivity") {
-                            appContext.packageManager.getApplicationIcon("com.android.phone")
-                        } else pkgName?.let {
-                            appContext.packageManager.getApplicationIcon(it)
+                        pkgName?.let {
+                            if (pkgName == "com.android.contacts" && pkgActivity == "com.android.contacts.activities.PeopleActivity") {
+                                appContext.packageManager.getApplicationIcon("com.android.phone")
+                            } else appContext.packageManager.getApplicationIcon(it)
                         }!!
                     } else {
                         result<Drawable>()

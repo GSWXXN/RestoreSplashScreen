@@ -273,20 +273,21 @@ class SystemUIHooker : YukiBaseHooker() {
          * 此处在 com.android.wm.shell.startingsurface.SplashscreenContentDrawer
          *   .$StartingWindowViewBuilder.fillViewWithIcon() 中被调用
          */
-        findClass("android.window.SplashScreenView\$Builder").hook {
-            injectMember {
-                method {
-                    name = "isStaringWindowUnderNightMode"
-                    emptyParam()
-                }
-                beforeHook {
-                    val isIgnoreDarkMode = prefs.get(DataConst.IGNORE_DARK_MODE)
-                    if (isIgnoreDarkMode) resultFalse()
-                    printLog("10. isStaringWindowUnderNightMode(): " +
-                            "${if (isIgnoreDarkMode) "" else "Not"} ignore dark mode")
+        if (prefs.get(DataConst.IGNORE_DARK_MODE))
+            findClass("android.window.SplashScreenView\$Builder").hook {
+                injectMember {
+                    method {
+                        name = "isStaringWindowUnderNightMode"
+                        emptyParam()
+                    }
+                    beforeHook {
+                        resultFalse()
+                        printLog(
+                            "10. isStaringWindowUnderNightMode(): ignore dark mode"
+                        )
+                    }
                 }
             }
-        }
 
         /**
          * 移除截图背景
@@ -298,19 +299,20 @@ class SystemUIHooker : YukiBaseHooker() {
          *
          * 原理为干预 fillViewWithIcon() 中的 if 判断，使其将启动器判断为不是 MIUI 桌面
          */
-        findClass("android.app.TaskSnapshotHelperImpl").hook {
-            injectMember {
-                method {
-                    name = "isMiuiHome"
-                    param(StringType)
-                }
-                beforeHook {
-                    val isRemoveBGDrawable = prefs.get(DataConst.REMOVE_BG_DRAWABLE)
-                    if (isRemoveBGDrawable) resultFalse()
-                    printLog("11. isMiuiHome(): " +
-                            "${if (isRemoveBGDrawable) "" else "Not"} set isMiuiHome() false")
+        if (prefs.get(DataConst.REMOVE_BG_DRAWABLE))
+            findClass("android.app.TaskSnapshotHelperImpl").hook {
+                injectMember {
+                    method {
+                        name = "isMiuiHome"
+                        param(StringType)
+                    }
+                    beforeHook {
+                        resultFalse()
+                        printLog(
+                            "11. isMiuiHome(): set isMiuiHome() false"
+                        )
+                    }
                 }
             }
-        }
     }
 }

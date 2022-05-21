@@ -17,6 +17,7 @@ import com.gswxxn.restoresplashscreen.data.ConstValue.BRANDING_IMAGE
 import com.gswxxn.restoresplashscreen.data.ConstValue.CUSTOM_SCOPE
 import com.gswxxn.restoresplashscreen.data.ConstValue.DEFAULT_STYLE
 import com.gswxxn.restoresplashscreen.data.ConstValue.EXTRA_MESSAGE
+import com.gswxxn.restoresplashscreen.data.ConstValue.FORCE_SHOW_SPLASH_SCREEN
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.databinding.ActivityMainBinding
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
@@ -238,6 +239,29 @@ class MainActivity : BaseActivity() {
                 }
                 isChecked = modulePrefs.get(DataConst.REMOVE_BG_DRAWABLE)
             }
+
+            // 强制显示启动遮罩
+            forceShowSplashScreen.apply {
+                setOnCheckedChangeListener { _, isChecked ->
+                    modulePrefs.put(DataConst.FORCE_SHOW_SPLASH_SCREEN, isChecked)
+                    forceShowSplashScreenList.visibility = if (isChecked) View.VISIBLE else View.GONE
+                }
+                isChecked = modulePrefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN)
+            }
+
+            // 强制显示启动遮罩 应用列表
+            forceShowSplashScreenList.setOnClickListener {
+                val intent = Intent(this@MainActivity, ConfigAppsActivity::class.java)
+                intent.putExtra(EXTRA_MESSAGE, FORCE_SHOW_SPLASH_SCREEN)
+                startActivity(intent)
+            }
+
+            // 强制显示启动遮罩 描述
+            forceShowSplashScreenDetail.text = Html.fromHtml(
+                "如果有部分应用没有显示Splash Screen, 请尝试开启此选项并将其加入到应用列表。<br>" +
+                "<b>注意</b>：开启此选项需要在Xposed管理器的作用域中勾选<font color = \"#B22222\">系统框架</font>，并重启手机。",
+                Html.FROM_HTML_MODE_LEGACY
+            )
 
             // 强制开启启动遮罩
             forceEnableSplashScreen.apply {

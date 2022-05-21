@@ -6,4 +6,5 @@ object ConstValue {
     const val DEFAULT_STYLE = 200
     const val BACKGROUND_EXCEPT = 300
     const val BRANDING_IMAGE = 400
+    const val FORCE_SHOW_SPLASH_SCREEN = 500
 }

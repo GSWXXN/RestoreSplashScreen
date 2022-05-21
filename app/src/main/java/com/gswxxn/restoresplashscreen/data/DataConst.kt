@@ -18,10 +18,12 @@ object DataConst {
     val REMOVE_BG_DRAWABLE = PrefsData("remove_bg_drawable", false)
     val REMOVE_BRANDING_IMAGE = PrefsData("remove_branding_image", false)
     val FORCE_ENABLE_SPLASH_SCREEN = PrefsData("force_enable_splash_screen", false)
+    val FORCE_SHOW_SPLASH_SCREEN = PrefsData("force_show_splash_screen", false)
 
     val UNDEFINED_LIST = PrefsData("undefined_list", mutableSetOf<String>())
     val CUSTOM_SCOPE_LIST = PrefsData("custom_scope_list", mutableSetOf<String>())
     val DEFAULT_STYLE_LIST = PrefsData("default_style_list", mutableSetOf<String>()) // 忽略应用主动设置的图标 应用列表
     val BG_EXCEPT_LIST =PrefsData("bg_except_list", mutableSetOf<String>()) //自适应背景颜色排除列表
     val REMOVE_BRANDING_IMAGE_LIST = PrefsData("remove_branding_image_list", mutableSetOf<String>())
+    val FORCE_SHOW_SPLASH_SCREEN_LIST = PrefsData("force_show_splash_screen_list", mutableSetOf<String>())
 }

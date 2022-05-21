@@ -27,7 +27,7 @@ class SystemUIHooker : YukiBaseHooker() {
         if (enableLog) msg.forEach { loggerI(msg = it) }
     }
 
-    private fun isExcept(pkgName : String) : Boolean {
+    private fun isExcept(pkgName: String): Boolean {
         val list = prefs.get(DataConst.CUSTOM_SCOPE_LIST)
         val isExceptionMode = prefs.get(DataConst.IS_CUSTOM_SCOPE_EXCEPTION_MODE)
         return prefs.get(DataConst.ENABLE_CUSTOM_SCOPE)
@@ -91,15 +91,12 @@ class SystemUIHooker : YukiBaseHooker() {
                     }
                     beforeHook {
                         val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
-                        val isDefaultStyle = prefs.get(DataConst.ENABLE_DEFAULT_STYLE)
-                                && pkgName in prefs.get(DataConst.DEFAULT_STYLE_LIST)
-                        val isRemoveBrandingImage = prefs.get(DataConst.REMOVE_BRANDING_IMAGE)
-                                && pkgName in prefs.get(DataConst.REMOVE_BRANDING_IMAGE_LIST)
+                        val isDefaultStyle = prefs.get(DataConst.ENABLE_DEFAULT_STYLE) && pkgName in prefs.get(DataConst.DEFAULT_STYLE_LIST)
+                        val isRemoveBrandingImage = prefs.get(DataConst.REMOVE_BRANDING_IMAGE) && pkgName in prefs.get(DataConst.REMOVE_BRANDING_IMAGE_LIST)
                         val isExcept = isExcept(pkgName)
                         val forceEnableSplashScreen = prefs.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)
                         val mSplashscreenContentDrawer = instance.getField("this\$0").any()!!
-                        val mTmpAttrs = mSplashscreenContentDrawer
-                            .getField("mTmpAttrs").any()!!
+                        val mTmpAttrs = mSplashscreenContentDrawer.getField("mTmpAttrs").any()!!
 
                         /**
                          * 强制开启启动遮罩
@@ -115,13 +112,18 @@ class SystemUIHooker : YukiBaseHooker() {
                                 "****** ${pkgName}(forceEnableSplashScreen):",
                                 "1. build(): ${
                                     if (isExcept) "Except this app"
-                                    else "set mSuggestType to 1; set mOverlayDrawable to null"}"
+                                    else "set mSuggestType to 1; set mOverlayDrawable to null"
+                                }"
                             )
                         }
 
 
                         // 打印日志
-                        printLog("info: build(): mSuggestType is ${instance.getField("mSuggestType").int()}")
+                        printLog(
+                            "info: build(): mSuggestType is ${
+                                instance.getField("mSuggestType").int()
+                            }"
+                        )
 
                         // 重置因实现自定义作用域而影响到的 mTmpAttrs
                         mSplashscreenContentDrawer.current {
@@ -175,8 +177,7 @@ class SystemUIHooker : YukiBaseHooker() {
                     beforeHook {
                         val enableChangeBgColor = prefs.get(DataConst.ENABLE_CHANG_BG_COLOR)
                         val ignoreDarkMode = prefs.get(DataConst.IGNORE_DARK_MODE)
-                        val isDarkMode = appContext.resources
-                            .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+                        val isDarkMode = appContext.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
                         val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName
                         val isInExceptList = pkgName in prefs.get(DataConst.BG_EXCEPT_LIST)
 
@@ -225,6 +226,7 @@ class SystemUIHooker : YukiBaseHooker() {
                     val enableShrinkIcon = prefs.get(DataConst.ENABLE_SHRINK_ICON)
                     val iconPackPackageName = prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)
                     val pkgName = args(0).cast<ActivityInfo>()?.packageName
+                    val pkgActivity = args(0).cast<ActivityInfo>()?.targetActivity
                     val iconSize = args(1).cast<Int>()!!
 
                     /**
@@ -233,7 +235,11 @@ class SystemUIHooker : YukiBaseHooker() {
                      * 使用 Context.packageManager.getApplicationIcon() 的方式获取图标
                      */
                     var drawable = if (enableReplaceIcon) {
-                        pkgName?.let { appContext.packageManager.getApplicationIcon(it) }!!
+                        pkgName?.let {
+                            if (pkgActivity == "com.android.contacts.activities.PeopleActivity") {
+                                appContext.packageManager.getApplicationIcon("com.android.phone")
+                            } else appContext.packageManager.getApplicationIcon(it)
+                        }!!
                     } else {
                         result<Drawable>()
                     }
@@ -254,7 +260,7 @@ class SystemUIHooker : YukiBaseHooker() {
                     result = BitmapDrawable(
                         appContext.resources,
                         Utils.roundBitmapByShader(
-                            drawable?.let { Utils.drawable2Bitmap(it, iconSize)},
+                            drawable?.let { Utils.drawable2Bitmap(it, iconSize) },
                             false,
                             if (enableShrinkIcon) iconSize / 4 else 0
                         )

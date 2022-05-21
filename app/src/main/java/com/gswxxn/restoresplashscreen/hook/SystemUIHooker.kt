@@ -225,6 +225,7 @@ class SystemUIHooker : YukiBaseHooker() {
                     val enableShrinkIcon = prefs.get(DataConst.ENABLE_SHRINK_ICON)
                     val iconPackPackageName = prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)
                     val pkgName = args(0).cast<ActivityInfo>()?.packageName
+                    val pkgActivity = args(0).cast<ActivityInfo>()?.targetActivity
                     val iconSize = args(1).cast<Int>()!!
 
                     /**
@@ -233,7 +234,11 @@ class SystemUIHooker : YukiBaseHooker() {
                      * 使用 Context.packageManager.getApplicationIcon() 的方式获取图标
                      */
                     var drawable = if (enableReplaceIcon) {
-                        pkgName?.let { appContext.packageManager.getApplicationIcon(it) }!!
+                        pkgName?.let {
+                            if (pkgName == "com.android.contacts" && pkgActivity == "com.android.contacts.activities.PeopleActivity") {
+                                appContext.packageManager.getApplicationIcon("com.android.phone")
+                            } else appContext.packageManager.getApplicationIcon(it)
+                        }!!
                     } else {
                         result<Drawable>()
                     }

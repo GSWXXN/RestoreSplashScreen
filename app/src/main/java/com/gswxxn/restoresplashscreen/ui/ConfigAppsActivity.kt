@@ -46,6 +46,7 @@ class ConfigAppsActivity : BaseActivity() {
                 ConstValue.DEFAULT_STYLE -> DataConst.DEFAULT_STYLE_LIST
                 ConstValue.BACKGROUND_EXCEPT -> DataConst.BG_EXCEPT_LIST
                 ConstValue.BRANDING_IMAGE -> DataConst.REMOVE_BRANDING_IMAGE_LIST
+                ConstValue.FORCE_SHOW_SPLASH_SCREEN -> DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST
                 else -> DataConst.UNDEFINED_LIST
             }).toMutableSet()
 
@@ -63,6 +64,7 @@ class ConfigAppsActivity : BaseActivity() {
             ConstValue.DEFAULT_STYLE -> "忽略图标列表"
             ConstValue.BACKGROUND_EXCEPT -> "排除列表"
             ConstValue.BRANDING_IMAGE -> "移除列表"
+            ConstValue.FORCE_SHOW_SPLASH_SCREEN -> "应用列表"
             else -> "标题"
         }
 
@@ -167,6 +169,7 @@ class ConfigAppsActivity : BaseActivity() {
                     ConstValue.DEFAULT_STYLE -> DataConst.DEFAULT_STYLE_LIST
                     ConstValue.BACKGROUND_EXCEPT -> DataConst.BG_EXCEPT_LIST
                     ConstValue.BRANDING_IMAGE -> DataConst.REMOVE_BRANDING_IMAGE_LIST
+                    ConstValue.FORCE_SHOW_SPLASH_SCREEN -> DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST
                     else -> DataConst.UNDEFINED_LIST
                 }, checkedList)
             toast("保存成功")

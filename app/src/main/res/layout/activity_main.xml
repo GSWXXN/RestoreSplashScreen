@@ -228,17 +228,17 @@
                     android:textColor="@color/colorTextGray"
                     android:textSize="15sp" />
 
-                <Switch
-                    android:id="@+id/hide_icon_in_launcher_switch"
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:layout_marginBottom="5dp"
-                    android:switchMinWidth="@dimen/switch_width"
-                    android:thumb="@drawable/switch_thumb"
-                    android:track="@drawable/switch_track"
-                    android:text="隐藏桌面图标"
-                    android:textColor="@color/colorTextGray"
-                    android:textSize="15sp" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:alpha="0.6"
+                    android:lineSpacingExtra="6dp"
+                    android:text="模块关闭后一切功能都将彻底停止工作。"
+                    android:textColor="@color/colorTextDark"
+                    android:textSize="12sp" />
 
                 <Switch
                     android:id="@+id/enable_log"
@@ -252,6 +252,30 @@
                     android:textColor="@color/colorTextGray"
                     android:textSize="15sp" />
 
+                <Switch
+                    android:id="@+id/hide_icon_in_launcher_switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="5dp"
+                    android:switchMinWidth="@dimen/switch_width"
+                    android:thumb="@drawable/switch_thumb"
+                    android:track="@drawable/switch_track"
+                    android:text="隐藏桌面图标"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="15sp" />
+
+                <Switch
+                    android:id="@+id/hide_describe"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="5dp"
+                    android:switchMinWidth="@dimen/switch_width"
+                    android:thumb="@drawable/switch_thumb"
+                    android:track="@drawable/switch_track"
+                    android:text="隐藏功能描述"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="15sp" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -260,7 +284,7 @@
                     android:layout_marginBottom="10dp"
                     android:alpha="0.6"
                     android:lineSpacingExtra="6dp"
-                    android:text="模块关闭后一切功能都将彻底停止工作。"
+                    android:text="在关闭前请完全理解每个功能的作用，长按条目可临时显示对应描述。"
                     android:textColor="@color/colorTextDark"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -842,6 +866,47 @@
                         android:textColor="@color/colorTextGray"
                         android:textSize="12sp"/>
                 </LinearLayout>
+
+                <Switch
+                    android:id="@+id/force_show_splash_screen"
+                    android:layout_width="match_parent"
+                    android:checked="true"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="5dp"
+                    android:switchMinWidth="@dimen/switch_width"
+                    android:thumb="@drawable/switch_thumb"
+                    android:track="@drawable/switch_track"
+                    android:text="强制显示遮罩"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/force_show_splash_screen_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_button_round"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:text="配置应用列表"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/force_show_splash_screen_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:alpha="0.6"
+                    android:text="描述"
+                    android:lineSpacingExtra="6dp"
+                    android:textColor="@color/colorTextDark"
+                    android:textSize="12sp" />
 
                 <Switch
                     android:id="@+id/force_enable_splash_screen"

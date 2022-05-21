@@ -16,11 +16,11 @@ class HookEntry : IYukiHookXposedInit {
     }
 
     override fun onHook() = encase {
-        loadApp("com.android.systemui") {
-            when {
-                !prefs.get(DataConst.ENABLE_MODULE) -> loggerW(msg = "Aborted Hook -> Hook Closed")
-                else -> loadHooker(SystemUIHooker())
-            }
+        if (!prefs.get(DataConst.ENABLE_MODULE)) {
+            loggerW(msg = "Aborted Hook -> Hook Closed")
+        } else {
+            loadApp("com.android.systemui", SystemUIHooker())
+            loadSystem(AndroidHooker())
         }
     }
 }

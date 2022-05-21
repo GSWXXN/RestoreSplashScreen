@@ -86,7 +86,7 @@ object Utils {
      * @return [Int]
      */
     fun getBgColor(bitmap: Bitmap):Int = Palette.from(bitmap).maximumColorCount(8).generate()
-        .getLightVibrantColor(Color.parseColor("#F8F8FF"))
+        .getDominantColor(Color.parseColor("#F8F8FF"))
 
     /**
      * 根据名称获取实例 的 Filed 实例处理类

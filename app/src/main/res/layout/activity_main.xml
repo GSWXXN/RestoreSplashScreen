@@ -220,7 +220,6 @@
                     android:layout_width="match_parent"
                     android:checked="true"
                     android:layout_height="35dp"
-                    android:layout_marginBottom="5dp"
                     android:text="启用模块"
                     android:switchMinWidth="@dimen/switch_width"
                     android:thumb="@drawable/switch_thumb"
@@ -228,23 +227,10 @@
                     android:textColor="@color/colorTextGray"
                     android:textSize="15sp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginBottom="10dp"
-                    android:alpha="0.6"
-                    android:lineSpacingExtra="6dp"
-                    android:text="模块关闭后一切功能都将彻底停止工作。"
-                    android:textColor="@color/colorTextDark"
-                    android:textSize="12sp" />
-
                 <Switch
                     android:id="@+id/enable_log"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
-                    android:layout_marginBottom="5dp"
                     android:switchMinWidth="@dimen/switch_width"
                     android:thumb="@drawable/switch_thumb"
                     android:track="@drawable/switch_track"
@@ -256,7 +242,6 @@
                     android:id="@+id/hide_icon_in_launcher_switch"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
-                    android:layout_marginBottom="5dp"
                     android:switchMinWidth="@dimen/switch_width"
                     android:thumb="@drawable/switch_thumb"
                     android:track="@drawable/switch_track"
@@ -268,7 +253,6 @@
                     android:id="@+id/hide_describe"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
-                    android:layout_marginBottom="5dp"
                     android:switchMinWidth="@dimen/switch_width"
                     android:thumb="@drawable/switch_thumb"
                     android:track="@drawable/switch_track"
@@ -277,6 +261,7 @@
                     android:textSize="15sp" />
 
                 <TextView
+                    android:id="@+id/hide_describe_describe"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -284,7 +269,7 @@
                     android:layout_marginBottom="10dp"
                     android:alpha="0.6"
                     android:lineSpacingExtra="6dp"
-                    android:text="在关闭前请完全理解每个功能的作用，长按条目可临时显示对应描述。"
+                    android:text="在关闭前请完全理解每个功能的作用，长按条目可临时显示对应的描述。"
                     android:textColor="@color/colorTextDark"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -338,13 +323,25 @@
                     android:layout_width="match_parent"
                     android:checked="true"
                     android:layout_height="35dp"
-                    android:layout_marginBottom="5dp"
                     android:switchMinWidth="@dimen/switch_width"
                     android:thumb="@drawable/switch_thumb"
                     android:track="@drawable/switch_track"
                     android:text="自定义模块作用域"
                     android:textColor="@color/colorTextGray"
                     android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/custom_scope_describe"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:alpha="0.6"
+                    android:lineSpacingExtra="6dp"
+                    android:text="在Xposed管理器中的作用域只需要勾选系统界面"
+                    android:textColor="@color/colorTextDark"
+                    android:textSize="12sp" />
 
                 <LinearLayout
                     android:id="@+id/custom_scope_layout"
@@ -358,7 +355,6 @@
                         android:layout_width="match_parent"
                         android:checked="true"
                         android:layout_height="35dp"
-                        android:layout_marginBottom="5dp"
                         android:switchMinWidth="@dimen/switch_width"
                         android:thumb="@drawable/switch_thumb"
                         android:track="@drawable/switch_track"
@@ -413,8 +409,8 @@
                         android:id="@+id/custom_scope_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="3dp"
-                        android:layout_marginRight="3dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/bg_button_round"
                         android:gravity="center"
@@ -423,16 +419,6 @@
                         android:text="配置应用列表"
                         android:textColor="@color/colorTextGray"
                         android:textSize="15sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:alpha="0.6"
-                        android:lineSpacingExtra="6dp"
-                        android:text="在Xposed管理器中的作用域只需要勾选系统界面"
-                        android:textColor="@color/colorTextDark"
-                        android:textSize="12sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -487,7 +473,6 @@
                     android:layout_width="match_parent"
                     android:checked="true"
                     android:layout_height="35dp"
-                    android:layout_marginBottom="5dp"
                     android:switchMinWidth="@dimen/switch_width"
                     android:thumb="@drawable/switch_thumb"
                     android:track="@drawable/switch_track"
@@ -500,7 +485,6 @@
                     android:layout_width="match_parent"
                     android:checked="true"
                     android:layout_height="35dp"
-                    android:layout_marginBottom="5dp"
                     android:switchMinWidth="@dimen/switch_width"
                     android:thumb="@drawable/switch_thumb"
                     android:track="@drawable/switch_track"
@@ -509,6 +493,7 @@
                     android:textSize="15sp" />
 
                 <TextView
+                    android:id="@+id/replace_icon_describe"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -546,7 +531,6 @@
                     android:layout_width="match_parent"
                     android:checked="true"
                     android:layout_height="35dp"
-                    android:layout_marginBottom="5dp"
                     android:switchMinWidth="@dimen/switch_width"
                     android:thumb="@drawable/switch_thumb"
                     android:track="@drawable/switch_track"
@@ -559,8 +543,8 @@
                     android:id="@+id/default_style_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:layout_marginRight="3dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:layout_marginBottom="10dp"
                     android:background="@drawable/bg_button_round"
                     android:gravity="center"
@@ -571,6 +555,7 @@
                     android:textSize="15sp" />
 
                 <TextView
+                    android:id="@+id/default_style_describe"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -634,7 +619,6 @@
                     android:layout_width="match_parent"
                     android:checked="true"
                     android:layout_height="35dp"
-                    android:layout_marginBottom="5dp"
                     android:switchMinWidth="@dimen/switch_width"
                     android:thumb="@drawable/switch_thumb"
                     android:track="@drawable/switch_track"
@@ -646,8 +630,8 @@
                     android:id="@+id/remove_branding_image_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:layout_marginRight="3dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:layout_marginBottom="10dp"
                     android:background="@drawable/bg_button_round"
                     android:gravity="center"
@@ -658,6 +642,7 @@
                     android:textSize="15sp" />
 
                 <TextView
+                    android:id="@+id/remove_branding_image_describe"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -721,7 +706,6 @@
                     android:layout_width="match_parent"
                     android:checked="true"
                     android:layout_height="35dp"
-                    android:layout_marginBottom="5dp"
                     android:switchMinWidth="@dimen/switch_width"
                     android:thumb="@drawable/switch_thumb"
                     android:track="@drawable/switch_track"
@@ -734,7 +718,6 @@
                     android:layout_width="match_parent"
                     android:checked="true"
                     android:layout_height="35dp"
-                    android:layout_marginBottom="5dp"
                     android:switchMinWidth="@dimen/switch_width"
                     android:thumb="@drawable/switch_thumb"
                     android:track="@drawable/switch_track"
@@ -746,8 +729,8 @@
                     android:id="@+id/bg_except_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:layout_marginRight="3dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:layout_marginBottom="10dp"
                     android:background="@drawable/bg_button_round"
                     android:gravity="center"
@@ -758,6 +741,7 @@
                     android:textSize="15sp" />
 
                 <TextView
+                    android:id="@+id/replace_bg_describe"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -774,7 +758,6 @@
                     android:layout_width="match_parent"
                     android:checked="true"
                     android:layout_height="35dp"
-                    android:layout_marginBottom="5dp"
                     android:switchMinWidth="@dimen/switch_width"
                     android:thumb="@drawable/switch_thumb"
                     android:track="@drawable/switch_track"
@@ -783,6 +766,7 @@
                     android:textSize="15sp" />
 
                 <TextView
+                    android:id="@+id/ignore_dark_mode_describe"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -799,7 +783,6 @@
                     android:layout_width="match_parent"
                     android:checked="true"
                     android:layout_height="35dp"
-                    android:layout_marginBottom="5dp"
                     android:switchMinWidth="@dimen/switch_width"
                     android:thumb="@drawable/switch_thumb"
                     android:track="@drawable/switch_track"
@@ -808,6 +791,7 @@
                     android:textSize="15sp" />
 
                 <TextView
+                    android:id="@+id/remove_bg_drawable_describe"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -872,7 +856,6 @@
                     android:layout_width="match_parent"
                     android:checked="true"
                     android:layout_height="35dp"
-                    android:layout_marginBottom="5dp"
                     android:switchMinWidth="@dimen/switch_width"
                     android:thumb="@drawable/switch_thumb"
                     android:track="@drawable/switch_track"
@@ -884,8 +867,8 @@
                     android:id="@+id/force_show_splash_screen_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:layout_marginRight="3dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:layout_marginBottom="10dp"
                     android:background="@drawable/bg_button_round"
                     android:gravity="center"
@@ -896,7 +879,7 @@
                     android:textSize="15sp" />
 
                 <TextView
-                    android:id="@+id/force_show_splash_screen_detail"
+                    android:id="@+id/force_show_splash_screen_describe"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -913,7 +896,6 @@
                     android:layout_width="match_parent"
                     android:checked="true"
                     android:layout_height="35dp"
-                    android:layout_marginBottom="5dp"
                     android:switchMinWidth="@dimen/switch_width"
                     android:thumb="@drawable/switch_thumb"
                     android:track="@drawable/switch_track"
@@ -922,7 +904,7 @@
                     android:textSize="15sp"/>
 
                 <TextView
-                    android:id="@+id/force_enable_detail"
+                    android:id="@+id/force_enable_describe"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"

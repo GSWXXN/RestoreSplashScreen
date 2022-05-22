@@ -5,6 +5,7 @@ import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 object DataConst {
     val ENABLE_MODULE = PrefsData("enable_module", true)
     val ENABLE_LOG = PrefsData("enable_log", false)
+    val ENABLE_HIDE_DESCRIBE = PrefsData("enable_hide_describe", false)
     val ENABLE_CUSTOM_SCOPE = PrefsData("enable_custom_scope", false)
     val IS_CUSTOM_SCOPE_EXCEPTION_MODE = PrefsData("is_custom_scope_exception_mode", true)
     val ENABLE_DEFAULT_STYLE = PrefsData("enable_default_style", false) // 忽略应用主动设置的图标

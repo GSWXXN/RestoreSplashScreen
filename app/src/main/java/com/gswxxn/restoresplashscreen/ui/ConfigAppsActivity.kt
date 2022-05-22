@@ -52,8 +52,8 @@ class ConfigAppsActivity : BaseActivity() {
 
         appInfo = AppInfoHelper(checkedList)
 
-        binding.configListLoadingView.visibility = View.VISIBLE
-        binding.configListView.visibility = View.GONE
+        showView(true, binding.configListLoadingView)
+        showView(false, binding.configListView)
 
         //返回按钮点击事件
         binding.titleBackIcon.setOnClickListener { onBackPressed() }
@@ -91,9 +91,7 @@ class ConfigAppsActivity : BaseActivity() {
             setOnFocusChangeListener { v, hasFocus ->
                 val imm = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 if (hasFocus) {
-                    binding.appListTitle.visibility = View.GONE
-                    binding.configDescription.visibility = View.GONE
-                    binding.configTitleFilter.visibility = View.GONE
+                    showView(false, binding.appListTitle, binding.configDescription, binding.configTitleFilter)
                     // 弹出软键盘
                     imm.showSoftInput(binding.searchEditText, InputMethodManager.SHOW_FORCED)
                 }else {
@@ -215,9 +213,7 @@ class ConfigAppsActivity : BaseActivity() {
                 visibility = View.GONE
                 text = null
             }
-            binding.appListTitle.visibility = View.VISIBLE
-            binding.configDescription.visibility = View.VISIBLE
-            binding.configTitleFilter.visibility = View.VISIBLE
+            showView(true, binding.appListTitle, binding.configDescription, binding.configTitleFilter)
         }else {
             super.onBackPressed()
         }
@@ -229,8 +225,8 @@ class ConfigAppsActivity : BaseActivity() {
             appInfoFilter = appInfo.getAppInfoList()
             onRefreshList?.invoke()
 
-            binding.configListLoadingView.visibility = View.GONE
-            binding.configListView.visibility = View.VISIBLE
+            showView(false, binding.configListLoadingView)
+            showView(true, binding.configListView)
         }
     }
 }

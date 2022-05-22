@@ -80,12 +80,35 @@ class MainActivity : BaseActivity() {
                 isChecked = modulePrefs.get(DataConst.ENABLE_LOG)
             }
 
+            hideDescribe.apply {
+                setOnCheckedChangeListener { _, isChecked ->
+                    showView(
+                        !isChecked,
+                        forceShowSplashScreenDescribe,
+                        forceEnableDescribe,
+                        defaultStyleDescribe,
+                        customScopeDescribe,
+                        ignoreDarkModeDescribe,
+                        removeBgDrawableDescribe,
+                        removeBrandingImageDescribe,
+                        replaceBgDescribe,
+                        replaceIconDescribe,
+                        hideDescribeDescribe
+                    )
+                    modulePrefs.put(DataConst.ENABLE_HIDE_DESCRIBE, isChecked)
+                }
+                isChecked = modulePrefs.get(DataConst.ENABLE_HIDE_DESCRIBE)
+            }
+
             // 自定义模块作用域
             customScope.apply {
                 setOnCheckedChangeListener { _, isChecked ->
-                    binding.customScopeLayout.visibility =
-                        if (isChecked) View.VISIBLE else View.GONE
+                    showView(isChecked, customScopeLayout)
                     modulePrefs.put(DataConst.ENABLE_CUSTOM_SCOPE, isChecked)
+                }
+                setOnLongClickListener {
+                    showView(true, customScopeDescribe)
+                    true
                 }
                 isChecked = modulePrefs.get(DataConst.ENABLE_CUSTOM_SCOPE)
             }
@@ -132,6 +155,10 @@ class MainActivity : BaseActivity() {
                 setOnCheckedChangeListener { _, isChecked ->
                     modulePrefs.put(DataConst.ENABLE_REPLACE_ICON, isChecked)
                 }
+                setOnLongClickListener {
+                    showView(true, replaceIconDescribe)
+                    true
+                }
                 isChecked = modulePrefs.get(DataConst.ENABLE_REPLACE_ICON)
             }
 
@@ -171,8 +198,12 @@ class MainActivity : BaseActivity() {
             // 忽略应用主动设置的图标
             defaultStyle.apply {
                 setOnCheckedChangeListener { _, isChecked ->
-                    binding.defaultStyleList.visibility = if (isChecked) View.VISIBLE else View.GONE
+                    showView(isChecked, defaultStyleList)
                     modulePrefs.put(DataConst.ENABLE_DEFAULT_STYLE, isChecked)
+                }
+                setOnLongClickListener {
+                    showView(true, defaultStyleDescribe)
+                    true
                 }
                 isChecked = modulePrefs.get(DataConst.ENABLE_DEFAULT_STYLE)
             }
@@ -188,7 +219,11 @@ class MainActivity : BaseActivity() {
             removeBrandingImage.apply {
                 setOnCheckedChangeListener { _, isChecked ->
                     modulePrefs.put(DataConst.REMOVE_BRANDING_IMAGE, isChecked)
-                    binding.removeBrandingImageList.visibility = if (isChecked) View.VISIBLE else View.GONE
+                    showView(isChecked, removeBrandingImageList)
+                }
+                setOnLongClickListener {
+                    showView(true, removeBrandingImageDescribe)
+                    true
                 }
                 isChecked = modulePrefs.get(DataConst.REMOVE_BRANDING_IMAGE)
             }
@@ -212,7 +247,11 @@ class MainActivity : BaseActivity() {
             replaceBg.apply {
                 setOnCheckedChangeListener { _, isChecked ->
                     modulePrefs.put(DataConst.ENABLE_CHANG_BG_COLOR, isChecked)
-                    binding.bgExceptList.visibility = if (isChecked) View.VISIBLE else View.GONE
+                    showView(isChecked, bgExceptList)
+                }
+                setOnLongClickListener {
+                    showView(true, replaceBgDescribe)
+                    true
                 }
                 isChecked = modulePrefs.get(DataConst.ENABLE_CHANG_BG_COLOR)
             }
@@ -229,6 +268,10 @@ class MainActivity : BaseActivity() {
                 setOnCheckedChangeListener { _, isChecked ->
                     modulePrefs.put(DataConst.IGNORE_DARK_MODE, isChecked)
                 }
+                setOnLongClickListener {
+                    showView(true, ignoreDarkModeDescribe)
+                    true
+                }
                 isChecked = modulePrefs.get(DataConst.IGNORE_DARK_MODE)
             }
 
@@ -237,6 +280,10 @@ class MainActivity : BaseActivity() {
                 setOnCheckedChangeListener { _, isChecked ->
                     modulePrefs.put(DataConst.REMOVE_BG_DRAWABLE, isChecked)
                 }
+                setOnLongClickListener {
+                    showView(true, removeBgDrawableDescribe)
+                    true
+                }
                 isChecked = modulePrefs.get(DataConst.REMOVE_BG_DRAWABLE)
             }
 
@@ -244,7 +291,11 @@ class MainActivity : BaseActivity() {
             forceShowSplashScreen.apply {
                 setOnCheckedChangeListener { _, isChecked ->
                     modulePrefs.put(DataConst.FORCE_SHOW_SPLASH_SCREEN, isChecked)
-                    forceShowSplashScreenList.visibility = if (isChecked) View.VISIBLE else View.GONE
+                    showView(isChecked, forceShowSplashScreenList)
+                }
+                setOnLongClickListener {
+                    showView(true, forceShowSplashScreenDescribe)
+                    true
                 }
                 isChecked = modulePrefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN)
             }
@@ -257,7 +308,7 @@ class MainActivity : BaseActivity() {
             }
 
             // 强制显示启动遮罩 描述
-            forceShowSplashScreenDetail.text = Html.fromHtml(
+            forceShowSplashScreenDescribe.text = Html.fromHtml(
                 "如果有部分应用没有显示Splash Screen, 请尝试开启此选项并将其加入到应用列表。<br>" +
                 "<b>注意</b>：开启此选项需要在Xposed管理器的作用域中勾选<font color = \"#B22222\">系统框架</font>，并重启手机。",
                 Html.FROM_HTML_MODE_LEGACY
@@ -268,13 +319,17 @@ class MainActivity : BaseActivity() {
                 setOnCheckedChangeListener { _, isChecked ->
                     modulePrefs.put(DataConst.FORCE_ENABLE_SPLASH_SCREEN, isChecked)
                 }
+                setOnLongClickListener {
+                    showView(true, forceEnableDescribe)
+                    true
+                }
                 isChecked = modulePrefs.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)
             }
 
             // 强制开启启动遮罩描述
-            forceEnableDetail.text = Html.fromHtml(
-                "你应该尝试各种办法，模块依然显示成功激活但是不起作用后，才尝试开启此选项。<br>" +
-                "如果模块可以正常运行，请<font color = \"#B22222\">不要</font>开启此选项。<br>" +
+            forceEnableDescribe.text = Html.fromHtml(
+                "如果模块显示成功激活但是不起作用，请先尝试 卸载模块 -> 重启系统界面 -> 安装模块 -> 在Xposed管理器中激活 -> 重启系统界面；如果问题依然存在，请尝试开启此选项。<br>" +
+                "<i>如果模块可以正常运行，请<font color = \"#B22222\">不要</font>开启此选项。</i><br>" +
                 "开启此选项可能导致的问题：<br>" +
                 "1. 可能会在不需要显示Splash Screen的场景显示启动遮罩。<br>" +
                 "2. 如果应用主动设置了Splash Screen的背景图片，可能将无法显示。",
@@ -306,7 +361,7 @@ class MainActivity : BaseActivity() {
                     isXposedModuleActive -> "模块已激活"
                     else -> "模块未激活"
                 }
-            mainTextApiWay.visibility = if (isXposedModuleActive) View.VISIBLE else View.GONE
+            showView(isXposedModuleActive, mainTextApiWay)
             mainTextApiWay.text =
                 "Activated by ${YukiHookModuleStatus.executorName} API ${YukiHookModuleStatus.executorVersion}"
         }

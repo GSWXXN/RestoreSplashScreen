@@ -22,6 +22,10 @@ import com.highcapable.yukihookapi.hook.type.java.StringType
 
 class SystemUIHooker : YukiBaseHooker() {
     private val enableLog = prefs.get(DataConst.ENABLE_LOG)
+    private val iconPackManager by lazy { IconPackManager(
+        appContext,
+        prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)
+    ) }
 
     private fun printLog(vararg msg: String) {
         if (enableLog) msg.forEach { loggerI(msg = it) }
@@ -245,9 +249,13 @@ class SystemUIHooker : YukiBaseHooker() {
                     printLog("5. getIcon(): ${if (enableReplaceIcon) "" else "Not"} replace Icon")
 
                     // 使用图标包
-                    if (iconPackPackageName != "None")
-                        IconPackManager(appContext, iconPackPackageName).getIconForPackage(pkgName)
-                            ?.let { drawable = it }
+                    if (iconPackPackageName != "None") {
+                        when {
+                            pkgName == "com.android.contacts" && pkgActivity == "com.android.contacts.activities.PeopleActivity" ->
+                                iconPackManager.getIconFromComponentName("ComponentInfo{com.android.contacts/com.android.contacts.activities.TwelveKeyDialer}")
+                            else ->  iconPackManager.getIconFromPackageName(pkgName)
+                        }?.let { drawable = it }
+                    }
                     printLog("6. getIcon(): ${if (iconPackPackageName != "None") "" else "Not"} use Icon Pack")
 
 

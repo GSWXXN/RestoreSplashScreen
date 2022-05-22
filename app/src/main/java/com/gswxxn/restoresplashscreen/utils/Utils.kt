@@ -7,8 +7,8 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.widget.Toast
 import androidx.palette.graphics.Palette
-import com.highcapable.yukihookapi.hook.factory.field
 import com.highcapable.yukihookapi.hook.core.finder.FieldFinder.Result.Instance
+import com.highcapable.yukihookapi.hook.factory.field
 
 
 object Utils {
@@ -85,8 +85,15 @@ object Utils {
      * @param bitmap 从中获取颜色的图片
      * @return [Int]
      */
-    fun getBgColor(bitmap: Bitmap):Int = Palette.from(bitmap).maximumColorCount(8).generate()
-        .getDominantColor(Color.parseColor("#F8F8FF"))
+    fun getBgColor(bitmap: Bitmap):Int {
+        val hsv = FloatArray(3)
+        val color = Palette.from(bitmap).maximumColorCount(8).generate()
+            .getDominantColor(Color.parseColor("#F5F5F5"))
+        Color.colorToHSV(color, hsv)
+        hsv[1] = hsv[1] - 0.4f // 减小饱和度
+        hsv[2] = hsv[2] + 0.2f // 增大明度
+        return Color.HSVToColor(hsv)
+    }
 
     /**
      * 根据名称获取实例 的 Filed 实例处理类

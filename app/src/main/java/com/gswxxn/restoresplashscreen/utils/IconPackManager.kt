@@ -95,7 +95,7 @@ class IconPackManager(private val mContext: Context, private val packageName: St
      * @param appPackageName 需要获取图标的应用包名
      * @return [Drawable]
      */
-    fun getIconForPackage(appPackageName: String?): Drawable? {
+    fun getIconFromPackageName(appPackageName: String?): Drawable? {
         if (!mLoaded) load()
         val pm = mContext.packageManager
         val launchIntent = pm.getLaunchIntentForPackage(appPackageName!!)
@@ -124,6 +124,12 @@ class IconPackManager(private val mContext: Context, private val packageName: St
             }
         }
         return null
+    }
+
+    fun getIconFromComponentName (componentName : String?) : Drawable? {
+        if (!mLoaded) load()
+        val drawableName = mPackagesDrawables[componentName]
+        return if (drawableName != null) loadDrawable(drawableName) else null
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.gswxxn.restoresplashscreen.hook
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
@@ -240,7 +241,7 @@ class SystemUIHooker : YukiBaseHooker() {
                     var drawable = if (enableReplaceIcon) {
                         pkgName?.let {
                             if (pkgName == "com.android.contacts" && pkgActivity == "com.android.contacts.activities.PeopleActivity") {
-                                appContext.packageManager.getApplicationIcon("com.android.phone")
+                                appContext.packageManager.getActivityIcon(ComponentName("com.android.contacts","com.android.contacts.activities.TwelveKeyDialer"))
                             } else appContext.packageManager.getApplicationIcon(it)
                         }!!
                     } else {

@@ -137,8 +137,6 @@ class ConfigAppsActivity : BaseActivity() {
                         holder.adpAppPkgName.text = it.packageName
                         // 设置复选框
                         holder.adpAppCheckBox.apply {
-                            setOnCheckedChangeListener(null)
-                            isChecked = it.packageName in checkedList
                             setOnCheckedChangeListener { _, isChecked ->
                                 appInfo.setChecked(it, isChecked)
                                 if (isChecked) {
@@ -148,6 +146,7 @@ class ConfigAppsActivity : BaseActivity() {
                                     checkedList.remove(it.packageName)
                                 }
                             }
+                            isChecked = it.packageName in checkedList
                         }
                         // 设置LinearLayout
                         holder.adapterLayout.setOnClickListener {

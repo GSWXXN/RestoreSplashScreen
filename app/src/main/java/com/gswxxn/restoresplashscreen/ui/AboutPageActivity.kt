@@ -2,12 +2,12 @@ package com.gswxxn.restoresplashscreen.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
 import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.databinding.ActivityAboutPageBinding
+import com.gswxxn.restoresplashscreen.utils.Utils.drawable2Bitmap
 import com.gswxxn.restoresplashscreen.utils.Utils.roundBitmapByShader
 import com.gswxxn.restoresplashscreen.utils.Utils.toast
 
@@ -29,10 +29,10 @@ class AboutPageActivity : BaseActivity() {
             titleBackIcon.setOnClickListener { onBackPressed() }
 
             appIcon.setImageBitmap(roundBitmapByShader(
-                BitmapFactory.decodeResource(resources, R.mipmap.icon), false))
+                getDrawable(R.mipmap.ic_launcher)?.let { drawable2Bitmap(it, it.intrinsicHeight) } , false))
 
             miluIcon.setImageBitmap(roundBitmapByShader(
-                BitmapFactory.decodeResource(resources, R.mipmap.img_developer), true))
+                getDrawable(R.mipmap.img_developer)?.let { drawable2Bitmap(it, it.intrinsicHeight) }, true))
 
             version.text = "v${BuildConfig.VERSION_NAME}"
 

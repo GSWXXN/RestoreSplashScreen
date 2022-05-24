@@ -127,8 +127,7 @@
             android:lineSpacingExtra="6dp"
             android:text="正在加载..."
             android:textColor="@color/colorTextDark"
-            android:textSize="17sp"
-            android:visibility="gone" />
+            android:textSize="17sp" />
 
         <ListView
             android:id="@+id/config_list_view"
@@ -140,7 +139,8 @@
             android:listSelector="@color/trans"
             android:padding="15dp"
             android:requiresFadingEdge="vertical"
-            android:scrollbars="none" />
+            android:scrollbars="none"
+            android:visibility="gone" />
 
     </FrameLayout>
 

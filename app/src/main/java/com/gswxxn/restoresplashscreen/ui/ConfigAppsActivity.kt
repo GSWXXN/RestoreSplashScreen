@@ -8,27 +8,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
+import android.widget.BaseAdapter
+import android.widget.PopupMenu
 import com.gswxxn.restoresplashscreen.data.ConstValue
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.databinding.ActivityConfigAppsBinding
 import com.gswxxn.restoresplashscreen.databinding.AdapterConfigBinding
+import com.gswxxn.restoresplashscreen.utils.AppInfoHelper
 import com.gswxxn.restoresplashscreen.utils.Utils.toast
 import com.highcapable.yukihookapi.hook.factory.modulePrefs
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.withContext
 
-
-class ConfigAppsActivity : BaseActivity() {
+class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
     private lateinit var binding: ActivityConfigAppsBinding
-
-    // AppInfoHelper 实例
-    private lateinit var appInfo : AppInfoHelper
-    // 在列表中的条目
-    private var appInfoFilter = mutableListOf<AppInfoHelper.MyAppInfo>()
-    // 已勾选的应用包名 Set
-    private lateinit var checkedList : MutableSet<String>
-
-    private var onRefreshList: (() -> Unit)? = null
 
     override fun onCreate() {
         window.insetsController?.setSystemBarsAppearance(
@@ -38,9 +36,11 @@ class ConfigAppsActivity : BaseActivity() {
 
         binding = ActivityConfigAppsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         val message = intent.getIntExtra(ConstValue.EXTRA_MESSAGE, 0)
 
-        checkedList = modulePrefs.get(
+        // 已勾选的应用包名 Set
+        val checkedList : MutableSet<String> = modulePrefs.get(
             when (message) {
                 ConstValue.CUSTOM_SCOPE -> DataConst.CUSTOM_SCOPE_LIST
                 ConstValue.DEFAULT_STYLE -> DataConst.DEFAULT_STYLE_LIST
@@ -49,11 +49,27 @@ class ConfigAppsActivity : BaseActivity() {
                 ConstValue.FORCE_SHOW_SPLASH_SCREEN -> DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST
                 else -> DataConst.UNDEFINED_LIST
             }).toMutableSet()
+        // AppInfoHelper 实例
+        val appInfo = AppInfoHelper(checkedList)
+        // 在列表中的条目
+        var appInfoFilter =  listOf<AppInfoHelper.MyAppInfo>()
 
-        appInfo = AppInfoHelper(checkedList)
+        var onRefreshList: (() -> Unit)? = null
 
-        showView(true, binding.configListLoadingView)
-        showView(false, binding.configListView)
+        launch {
+            appInfoFilter = withContext(Dispatchers.Default) { appInfo.getAppInfoList() }
+
+            showView(false, binding.configListLoadingView)
+            showView(true, binding.configListView)
+
+            // 搜索按钮点击事件
+            binding.configTitleFilter.setOnClickListener {
+                binding.searchEditText.apply {
+                    visibility = View.VISIBLE
+                    requestFocus()
+                }
+            }
+        }
 
         //返回按钮点击事件
         binding.titleBackIcon.setOnClickListener { onBackPressed() }
@@ -73,13 +89,10 @@ class ConfigAppsActivity : BaseActivity() {
             addTextChangedListener(object : TextWatcher {
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     val content = binding.searchEditText.text.toString()
-                    if (content.isBlank()) {
-                        appInfoFilter = appInfo.getAppInfoList()
+                    appInfoFilter = if (content.isBlank()) {
+                        appInfo.getAppInfoList()
                     } else {
-                        appInfoFilter.clear()
-                        appInfo.getAppInfoList().forEach {
-                            if ((content in it.appName) or (content in it.packageName)) appInfoFilter.add(it)
-                        }
+                        appInfo.getAppInfoList().filter { it.appName.contains(content) or it.packageName.contains(content) }
                     }
                     onRefreshList?.invoke()
                 }
@@ -98,14 +111,6 @@ class ConfigAppsActivity : BaseActivity() {
                     // 隐藏软键盘
                     imm.hideSoftInputFromWindow(this.windowToken, 0)
                 }
-            }
-        }
-
-        // 搜索按钮点击事件
-        binding.configTitleFilter.setOnClickListener {
-            binding.searchEditText.apply {
-                visibility = View.VISIBLE
-                requestFocus()
             }
         }
 
@@ -185,6 +190,7 @@ class ConfigAppsActivity : BaseActivity() {
                                     checkedList.add(it.packageName)
                                 }
                             }
+                            appInfoFilter = appInfo.getAppInfoList()
                             onRefreshList?.invoke()
                             true
                         }
@@ -193,6 +199,7 @@ class ConfigAppsActivity : BaseActivity() {
                                 appInfo.setChecked(it, false)
                                 checkedList.remove(it.packageName)
                             }
+                            appInfoFilter = appInfo.getAppInfoList()
                             onRefreshList?.invoke()
                             true
                         }
@@ -214,18 +221,8 @@ class ConfigAppsActivity : BaseActivity() {
             }
             showView(true, binding.appListTitle, binding.configDescription, binding.configTitleFilter)
         }else {
+            cancel()
             super.onBackPressed()
-        }
-    }
-
-    // 获取到焦点后向 appInfoFilter 存完整数据，并刷新列表，防止卡在上一个 Activity
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        if (hasFocus) {
-            appInfoFilter = appInfo.getAppInfoList()
-            onRefreshList?.invoke()
-
-            showView(false, binding.configListLoadingView)
-            showView(true, binding.configListView)
         }
     }
 }

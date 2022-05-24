@@ -1,7 +1,8 @@
-package com.gswxxn.restoresplashscreen.ui
+package com.gswxxn.restoresplashscreen.utils
 
 import android.content.pm.ApplicationInfo
 import android.graphics.drawable.Drawable
+import com.gswxxn.restoresplashscreen.ui.MainActivity
 
 class AppInfoHelper(private val checkedList : Set<String>) {
     private lateinit var appInfoList: MutableList<MyAppInfo>

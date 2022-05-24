@@ -253,8 +253,8 @@ class SystemUIHooker : YukiBaseHooker() {
                     if (iconPackPackageName != "None") {
                         when {
                             pkgName == "com.android.contacts" && pkgActivity == "com.android.contacts.activities.PeopleActivity" ->
-                                iconPackManager.getIconFromComponentName("ComponentInfo{com.android.contacts/com.android.contacts.activities.TwelveKeyDialer}")
-                            else ->  iconPackManager.getIconFromPackageName(pkgName)
+                                iconPackManager.getIconByComponentName("ComponentInfo{com.android.contacts/com.android.contacts.activities.TwelveKeyDialer}")
+                            else ->  iconPackManager.getIconByPackageName(pkgName)
                         }?.let { drawable = it }
                     }
                     printLog("6. getIcon(): ${if (iconPackPackageName != "None") "" else "Not"} use Icon Pack")

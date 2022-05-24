@@ -95,7 +95,7 @@ class IconPackManager(private val mContext: Context, private val packageName: St
      * @param appPackageName 需要获取图标的应用包名
      * @return [Drawable]
      */
-    fun getIconFromPackageName(appPackageName: String?): Drawable? {
+    fun getIconByPackageName(appPackageName: String?): Drawable? {
         if (!mLoaded) load()
         val pm = mContext.packageManager
         val launchIntent = pm.getLaunchIntentForPackage(appPackageName!!)
@@ -126,7 +126,7 @@ class IconPackManager(private val mContext: Context, private val packageName: St
         return null
     }
 
-    fun getIconFromComponentName (componentName : String?) : Drawable? {
+    fun getIconByComponentName (componentName : String?) : Drawable? {
         if (!mLoaded) load()
         val drawableName = mPackagesDrawables[componentName]
         return if (drawableName != null) loadDrawable(drawableName) else null
@@ -135,11 +135,10 @@ class IconPackManager(private val mContext: Context, private val packageName: St
     /**
      * 获取可用的图标包列表
      *
-     * @return [HashMap] key: 图标包应用名; value: 图标包包名. 默认添加一个键值均为 None 的键值对
+     * @return [Map] key: 图标包应用名; value: 图标包包名. 默认添加一个键值均为 None 的键值对
      */
-    fun getAvailableIconPacks(): HashMap<String, String> {
-        val iconPacks = HashMap<String, String>()
-        iconPacks["None"] = "None"
+    fun getAvailableIconPacks(): Map<String, String> {
+        val iconPacks = mutableMapOf("None" to "None")
 
         // find apps with intent-filter "com.gau.go.launcherex.theme" and return build the HashMap
         val pm = mContext.packageManager
@@ -160,7 +159,7 @@ class IconPackManager(private val mContext: Context, private val packageName: St
             try {
                 val ai = pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
                 val appName = mContext.packageManager.getApplicationLabel(ai).toString()
-                iconPacks[appName] = packageName
+                iconPacks += appName to packageName
             } catch (e: PackageManager.NameNotFoundException) {
                 // shouldn't happen
                 e.printStackTrace()

@@ -164,11 +164,9 @@ class MainActivity : BaseActivity() {
 
             // 使用图标包
             iconPackList.apply {
-                val item = arrayListOf<String>()
                 val availableIconPacks = IconPackManager(this@MainActivity).getAvailableIconPacks()
-                availableIconPacks.forEach {
-                    item.add(it.key)
-                }
+                val item = availableIconPacks.keys.toList()
+
                 adapter = ArrayAdapter(this@MainActivity, R.layout.spinner_item, item)
                     .apply { setDropDownViewResource(R.layout.spinner_dropdown) }
 

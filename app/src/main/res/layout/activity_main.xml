@@ -269,7 +269,7 @@
                     android:layout_marginBottom="10dp"
                     android:alpha="0.6"
                     android:lineSpacingExtra="6dp"
-                    android:text="在关闭前请完全理解每个功能的作用，长按条目可临时显示对应的描述。"
+                    android:text="在隐藏描述前请完全理解每个功能的作用，长按条目可临时显示对应的描述。"
                     android:textColor="@color/colorTextDark"
                     android:textSize="12sp" />
             </LinearLayout>

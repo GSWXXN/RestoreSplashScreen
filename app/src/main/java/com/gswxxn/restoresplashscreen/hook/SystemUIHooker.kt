@@ -22,14 +22,13 @@ import com.highcapable.yukihookapi.hook.type.java.IntType
 import com.highcapable.yukihookapi.hook.type.java.StringType
 
 class SystemUIHooker : YukiBaseHooker() {
-    private val enableLog = prefs.get(DataConst.ENABLE_LOG)
     private val iconPackManager by lazy { IconPackManager(
         appContext,
         prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)
     ) }
 
     private fun printLog(vararg msg: String) {
-        if (enableLog) msg.forEach { loggerI(msg = it) }
+        if (prefs.get(DataConst.ENABLE_LOG)) msg.forEach { loggerI(msg = it) }
     }
 
     private fun isExcept(pkgName : String) : Boolean {

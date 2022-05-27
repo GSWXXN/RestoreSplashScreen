@@ -5,11 +5,6 @@ import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.loggerI
 
 class AndroidHooker : YukiBaseHooker() {
-    private val enableLog = prefs.get(DataConst.ENABLE_LOG)
-
-    private fun printLog(vararg msg: String) {
-        if (enableLog) msg.forEach { loggerI(msg = it) }
-    }
 
     override fun onHook() {
         /**
@@ -27,10 +22,10 @@ class AndroidHooker : YukiBaseHooker() {
                 }
                 beforeHook {
                     val pkgName = args(1).string()
-                    if (prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN) && pkgName in prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST)) {
-                        resultTrue()
-                        printLog("validateStartingWindowTheme(): force show $pkgName splash screen")
-                    }
+                    val isForceShowSS = prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN) && pkgName in prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST)
+                    if (isForceShowSS) resultTrue()
+                    if (prefs.get(DataConst.ENABLE_LOG))
+                        loggerI(msg = "!!! validateStartingWindowTheme():${if (isForceShowSS) " " else "Not "}force show $pkgName splash screen")
                 }
             }
         }

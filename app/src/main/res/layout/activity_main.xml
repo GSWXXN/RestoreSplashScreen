@@ -563,7 +563,7 @@
                     android:layout_marginBottom="10dp"
                     android:alpha="0.6"
                     android:lineSpacingExtra="6dp"
-                    android:text="开启此选项并后，选中的应用即使主动适配Splash Screen, 也按未设置图标处理。开启此选项也可以解决以下问题：\n1. 使用第三方图标依然出现方角问题。\n2. 部分应用没有将图标背景设置成透明导致方角问题。"
+                    android:text="开启此选项并后，选中的应用即使主动适配Splash Screen, 也按未设置图标处理。开启此选项也可以解决以下问题：\n1. 使用第三方主题会出现图标方角问题。\n2. 部分应用没有将图标背景设置成透明导致图标方角问题。"
                     android:textColor="@color/colorTextDark"
                     android:textSize="12sp" />
 
@@ -912,6 +912,31 @@
                     android:layout_marginBottom="10dp"
                     android:alpha="0.6"
                     android:text="强制开启启动遮罩 描述"
+                    android:lineSpacingExtra="6dp"
+                    android:textColor="@color/colorTextDark"
+                    android:textSize="12sp" />
+
+                <Switch
+                    android:id="@+id/disable_splash_screen"
+                    android:layout_width="match_parent"
+                    android:checked="true"
+                    android:layout_height="35dp"
+                    android:switchMinWidth="@dimen/switch_width"
+                    android:thumb="@drawable/switch_thumb"
+                    android:track="@drawable/switch_track"
+                    android:text="彻底关闭Splash Screen"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:id="@+id/disable_splash_screen_describe"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:alpha="0.6"
+                    android:text="描述"
                     android:lineSpacingExtra="6dp"
                     android:textColor="@color/colorTextDark"
                     android:textSize="12sp" />

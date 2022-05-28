@@ -93,7 +93,8 @@ class MainActivity : BaseActivity() {
                         removeBrandingImageDescribe,
                         replaceBgDescribe,
                         replaceIconDescribe,
-                        hideDescribeDescribe
+                        hideDescribeDescribe,
+                        disableSplashScreenDescribe
                     )
                     modulePrefs.put(DataConst.ENABLE_HIDE_DESCRIBE, isChecked)
                 }
@@ -331,6 +332,24 @@ class MainActivity : BaseActivity() {
                 "开启此选项可能导致的问题：<br>" +
                 "1. 可能会在不需要显示Splash Screen的场景显示启动遮罩。<br>" +
                 "2. 如果应用主动设置了Splash Screen的背景图片，可能将无法显示。",
+                Html.FROM_HTML_MODE_LEGACY)
+
+            // 彻底关闭 Splash Screen
+            disableSplashScreen.apply {
+                setOnCheckedChangeListener { _, isChecked ->
+                    modulePrefs.put(DataConst.DISABLE_SPLASH_SCREEN, isChecked)
+                }
+                setOnLongClickListener {
+                    showView(true, disableSplashScreenDescribe)
+                    true
+                }
+                isChecked = modulePrefs.get(DataConst.DISABLE_SPLASH_SCREEN)
+            }
+
+            // 彻底关闭 Splash Screen 描述
+            disableSplashScreenDescribe.text = Html.fromHtml(
+                "开启此选项需要在Xposed作用域中勾选<font color = \"#B22222\">系统框架</font>并重启手机; " +
+                        "由于开启了此选项，模块其他设置将成为摆设，所以没有必要在作用域中勾选系统界面。",
                 Html.FROM_HTML_MODE_LEGACY)
 
         }

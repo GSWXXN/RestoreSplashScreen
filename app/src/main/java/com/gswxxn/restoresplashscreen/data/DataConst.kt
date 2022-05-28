@@ -20,6 +20,7 @@ object DataConst {
     val REMOVE_BRANDING_IMAGE = PrefsData("remove_branding_image", false)
     val FORCE_ENABLE_SPLASH_SCREEN = PrefsData("force_enable_splash_screen", false)
     val FORCE_SHOW_SPLASH_SCREEN = PrefsData("force_show_splash_screen", false)
+    val DISABLE_SPLASH_SCREEN = PrefsData("disable_splash_screen", false)
 
     val UNDEFINED_LIST = PrefsData("undefined_list", mutableSetOf<String>())
     val CUSTOM_SCOPE_LIST = PrefsData("custom_scope_list", mutableSetOf<String>())

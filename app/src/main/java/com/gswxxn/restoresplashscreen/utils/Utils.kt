@@ -2,7 +2,6 @@ package com.gswxxn.restoresplashscreen.utils
 
 import android.content.Context
 import android.graphics.*
-import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.widget.Toast
@@ -20,15 +19,16 @@ object Utils {
      * @param _size 如果图标为自适应图标，则生成此大小的 Bitmap；否则，此项无用
      * @return [Bitmap]
      */
-     fun drawable2Bitmap(drawable: Drawable, _size : Int): Bitmap? {
+    fun drawable2Bitmap(drawable: Drawable, _size : Int): Bitmap? {
         if (drawable is BitmapDrawable) {
             return drawable.bitmap
         }
-        val size = if (drawable is AdaptiveIconDrawable) _size else drawable.intrinsicHeight
+        val size = _size / 2
         val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
+        val canvas = Canvas().apply { setBitmap(bitmap) }
         drawable.setBounds(0, 0, size, size)
         drawable.draw(canvas)
+        canvas.setBitmap(null)
         return bitmap
     }
 

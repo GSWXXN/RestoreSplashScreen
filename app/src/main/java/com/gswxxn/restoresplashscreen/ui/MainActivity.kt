@@ -21,9 +21,10 @@ import com.gswxxn.restoresplashscreen.data.ConstValue.FORCE_SHOW_SPLASH_SCREEN
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.databinding.ActivityMainBinding
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
-import com.highcapable.yukihookapi.hook.factory.isXposedModuleActive
+import com.highcapable.yukihookapi.YukiHookAPI.Status.executorName
+import com.highcapable.yukihookapi.YukiHookAPI.Status.executorVersion
+import com.highcapable.yukihookapi.YukiHookAPI.Status.isXposedModuleActive
 import com.highcapable.yukihookapi.hook.factory.modulePrefs
-import com.highcapable.yukihookapi.hook.xposed.YukiHookModuleStatus
 import com.topjohnwu.superuser.Shell
 
 class MainActivity : BaseActivity() {
@@ -380,7 +381,7 @@ class MainActivity : BaseActivity() {
                 }
             showView(isXposedModuleActive, mainTextApiWay)
             mainTextApiWay.text =
-                "Activated by ${YukiHookModuleStatus.executorName} API ${YukiHookModuleStatus.executorVersion}"
+                "Activated by $executorName API $executorVersion"
         }
 
         window.statusBarColor = getColor(

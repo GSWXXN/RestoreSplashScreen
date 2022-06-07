@@ -238,11 +238,13 @@ class SystemUIHooker : YukiBaseHooker() {
                      * 使用 Context.packageManager.getApplicationIcon() 的方式获取图标
                      */
                     var drawable = if (enableReplaceIcon) {
-                        pkgName?.let {
-                            if (pkgName == "com.android.contacts" && pkgActivity == "com.android.contacts.activities.PeopleActivity") {
+                        when {
+                            pkgName == "com.android.contacts" && pkgActivity == "com.android.contacts.activities.PeopleActivity" ->
                                 appContext.packageManager.getActivityIcon(ComponentName("com.android.contacts","com.android.contacts.activities.TwelveKeyDialer"))
-                            } else appContext.packageManager.getApplicationIcon(it)
-                        }!!
+                            pkgName == "com.android.settings" && pkgActivity == "com.android.settings.BackgroundApplicationsManager" ->
+                                appContext.packageManager.getApplicationIcon("com.android.settings")
+                            else -> pkgName?.let { appContext.packageManager.getApplicationIcon(it) }
+                        }
                     } else {
                         result<Drawable>()
                     }

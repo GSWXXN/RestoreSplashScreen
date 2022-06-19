@@ -56,19 +56,25 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
 
         var onRefreshList: (() -> Unit)? = null
 
+        fun searchEvent() = run {
+            val content = binding.searchEditText.text.toString()
+            appInfoFilter = if (content.isBlank()) {
+                appInfo.getAppInfoList()
+            } else {
+                appInfo.getAppInfoList().filter { it.appName.contains(content) or it.packageName.contains(content) }
+            }
+            onRefreshList?.invoke()
+        }
+
+
+
         launch {
             appInfoFilter = withContext(Dispatchers.Default) { appInfo.getAppInfoList() }
 
             showView(false, binding.configListLoadingView)
             showView(true, binding.configListView)
 
-            // 搜索按钮点击事件
-            binding.configTitleFilter.setOnClickListener {
-                binding.searchEditText.apply {
-                    visibility = View.VISIBLE
-                    requestFocus()
-                }
-            }
+            searchEvent()
         }
 
         //返回按钮点击事件
@@ -84,17 +90,19 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
             else -> "标题"
         }
 
+        // 搜索按钮点击事件
+        binding.configTitleFilter.setOnClickListener {
+            binding.searchEditText.apply {
+                visibility = View.VISIBLE
+                requestFocus()
+            }
+        }
+
         // 搜索栏事件监听
         binding.searchEditText.apply {
             addTextChangedListener(object : TextWatcher {
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    val content = binding.searchEditText.text.toString()
-                    appInfoFilter = if (content.isBlank()) {
-                        appInfo.getAppInfoList()
-                    } else {
-                        appInfo.getAppInfoList().filter { it.appName.contains(content) or it.packageName.contains(content) }
-                    }
-                    onRefreshList?.invoke()
+                    searchEvent()
                 }
                 override fun afterTextChanged(s: Editable?) {}
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

@@ -48,18 +48,22 @@ class MainActivity : BaseActivity() {
             // 重启UI
             titleRestartIcon.setOnClickListener {
                 AlertDialog.Builder(this@MainActivity)
-                    .setTitle("重启SystemUI")
-                    .setMessage("你真的要重启系统界面吗？")
-                    .setPositiveButton("确定") { _, _ ->
+                    .setTitle("重启提示")
+                    .setMessage("配置修改后需要重启系统界面才能生效\n\n如果您LSPosed框架中的作用域包含系统框架，则需要重启手机")
+                    .setNeutralButton("取消") { _, _ -> }
+                    .setNegativeButton("重启手机") { _, _ ->
+                        Shell.cmd("reboot").exec()
+                    }
+                    .setPositiveButton("重启系统界面") { _, _ ->
                         Shell.cmd(
                             "pkill -f com.android.systemui",
                             "pkill -f com.gswxxn.restoresplashscreen"
                         ).exec()
                     }
-                    .setNegativeButton("取消") { _, _ -> }
                     .show()
             }
 
+            // 关于页面
             titleAboutPage.setOnClickListener {
                 val intent = Intent(this@MainActivity, AboutPageActivity::class.java)
                 startActivity(intent)
@@ -81,6 +85,7 @@ class MainActivity : BaseActivity() {
                 isChecked = modulePrefs.get(DataConst.ENABLE_LOG)
             }
 
+            // 隐藏功能描述
             hideDescribe.apply {
                 setOnCheckedChangeListener { _, isChecked ->
                     showView(
@@ -115,6 +120,7 @@ class MainActivity : BaseActivity() {
                 isChecked = modulePrefs.get(DataConst.ENABLE_CUSTOM_SCOPE)
             }
 
+            // 隐藏桌面图标
             hideIconInLauncherSwitch.apply {
                 setOnCheckedChangeListener { btn, b ->
                     if (btn.isPressed.not()) return@setOnCheckedChangeListener

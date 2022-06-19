@@ -146,10 +146,22 @@ class MainActivity : BaseActivity() {
 
             // 缩小图标
             shrinkIcon.apply {
-                setOnCheckedChangeListener { _, isChecked ->
-                    modulePrefs.put(DataConst.ENABLE_SHRINK_ICON, isChecked)
+                val item = DataConst.SHRINK_ICON_ITEMS.values.toList()
+
+                adapter = ArrayAdapter(this@MainActivity, R.layout.spinner_item, item)
+                    .apply { setDropDownViewResource(R.layout.spinner_dropdown) }
+
+                onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>?,
+                        view: View?,
+                        position: Int,
+                        id: Long
+                    ) { modulePrefs.put(DataConst.SHRINK_ICON, position) }
+
+                    override fun onNothingSelected(parent: AdapterView<*>?) {}
                 }
-                isChecked = modulePrefs.get(DataConst.ENABLE_SHRINK_ICON)
+                setSelection(modulePrefs.get(DataConst.SHRINK_ICON))
             }
 
             // 替换获取图标方式

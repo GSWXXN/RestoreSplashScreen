@@ -226,7 +226,7 @@ class SystemUIHooker : YukiBaseHooker() {
                 }
                 afterHook {
                     val enableReplaceIcon = prefs.get(DataConst.ENABLE_REPLACE_ICON)
-                    val enableShrinkIcon = prefs.get(DataConst.ENABLE_SHRINK_ICON)
+                    val shrinkIconType = prefs.get(DataConst.SHRINK_ICON)
                     val iconPackPackageName = prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)
                     val pkgName = args(0).cast<ActivityInfo>()?.packageName
                     val pkgActivity = args(0).cast<ActivityInfo>()?.targetActivity
@@ -271,7 +271,12 @@ class SystemUIHooker : YukiBaseHooker() {
                         Utils.roundBitmapByShader(
                             drawable?.let { Utils.drawable2Bitmap(it, iconSize)},
                             false,
-                            if (enableShrinkIcon) iconSize / 4 else 0
+                            when (shrinkIconType) {
+                                0 -> 0               // 不缩小图标
+                                1 -> iconSize / 4    // 仅缩小分辨率较低的图标
+                                else -> 5000         // 缩小全部图标
+                            }
+
                         )
                     )
                     printLog("7. getIcon(): draw round corner")

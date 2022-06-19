@@ -6,9 +6,11 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.widget.Toast
 import androidx.palette.graphics.Palette
+import com.gswxxn.restoresplashscreen.data.DataConst
 import com.highcapable.yukihookapi.hook.core.finder.FieldFinder.Result.Instance
+import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.field
-
+import com.highcapable.yukihookapi.hook.log.loggerI
 
 object Utils {
 
@@ -124,4 +126,8 @@ object Utils {
     fun Context.toast(message: CharSequence): Toast = Toast
         .makeText(this, message, Toast.LENGTH_SHORT)
         .apply { show() }
+
+    fun YukiBaseHooker.printLog(vararg msg: String) {
+        if (this.prefs.get(DataConst.ENABLE_LOG)) msg.forEach { loggerI(msg = it) }
+    }
 }

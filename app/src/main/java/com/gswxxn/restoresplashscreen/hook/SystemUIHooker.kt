@@ -11,10 +11,10 @@ import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
 import com.gswxxn.restoresplashscreen.utils.Utils
 import com.gswxxn.restoresplashscreen.utils.Utils.getField
+import com.gswxxn.restoresplashscreen.utils.Utils.printLog
 import com.gswxxn.restoresplashscreen.utils.Utils.setField
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.current
-import com.highcapable.yukihookapi.hook.log.loggerI
 import com.highcapable.yukihookapi.hook.type.android.ActivityInfoClass
 import com.highcapable.yukihookapi.hook.type.android.DrawableClass
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
@@ -26,10 +26,6 @@ class SystemUIHooker : YukiBaseHooker() {
         appContext,
         prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)
     ) }
-
-    private fun printLog(vararg msg: String) {
-        if (prefs.get(DataConst.ENABLE_LOG)) msg.forEach { loggerI(msg = it) }
-    }
 
     private fun isExcept(pkgName : String) : Boolean {
         val list = prefs.get(DataConst.CUSTOM_SCOPE_LIST)

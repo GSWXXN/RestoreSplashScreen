@@ -21,6 +21,8 @@ object DataConst {
     val FORCE_ENABLE_SPLASH_SCREEN = PrefsData("force_enable_splash_screen", false)
     val FORCE_SHOW_SPLASH_SCREEN = PrefsData("force_show_splash_screen", false)
     val DISABLE_SPLASH_SCREEN = PrefsData("disable_splash_screen", false)
+    val SHRINK_ICON = PrefsData("shrink_icon", 0)
+    val SHRINK_ICON_ITEMS = mapOf(0 to "不缩小图标", 1 to "仅缩小分辨率较低的图标", 2 to "缩小全部图标")
 
     val UNDEFINED_LIST = PrefsData("undefined_list", mutableSetOf<String>())
     val CUSTOM_SCOPE_LIST = PrefsData("custom_scope_list", mutableSetOf<String>())

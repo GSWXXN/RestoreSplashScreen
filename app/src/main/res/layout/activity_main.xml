@@ -812,6 +812,17 @@
                     android:textColor="@color/colorTextDark"
                     android:textSize="12sp" />
 
+                <Switch
+                    android:id="@+id/remove_bg_color"
+                    android:layout_width="match_parent"
+                    android:checked="true"
+                    android:layout_height="35dp"
+                    android:switchMinWidth="@dimen/switch_width"
+                    android:thumb="@drawable/switch_thumb"
+                    android:track="@drawable/switch_track"
+                    android:text="移除背景颜色"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="15sp" />
             </LinearLayout>
 
             <ImageView

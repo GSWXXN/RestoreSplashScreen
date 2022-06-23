@@ -257,8 +257,10 @@ class MainActivity : BaseActivity() {
             independentColorWechat.apply {
                 setOnCheckedChangeListener { _, isChecked ->
                     modulePrefs.put(DataConst.INDEPENDENT_COLOR_WECHAT, isChecked)
+                    if (isChecked) removeBgColor.isChecked = false
                 }
-                isChecked = modulePrefs.get(DataConst.INDEPENDENT_COLOR_WECHAT)
+                isChecked = modulePrefs.get(DataConst.INDEPENDENT_COLOR_WECHAT) &&
+                        !modulePrefs.get(DataConst.REMOVE_BG_COLOR)
             }
 
             // 自适应背景颜色
@@ -266,12 +268,14 @@ class MainActivity : BaseActivity() {
                 setOnCheckedChangeListener { _, isChecked ->
                     modulePrefs.put(DataConst.ENABLE_CHANG_BG_COLOR, isChecked)
                     showView(isChecked, bgExceptList)
+                    if (isChecked) removeBgColor.isChecked = false
                 }
                 setOnLongClickListener {
                     showView(true, replaceBgDescribe)
                     true
                 }
-                isChecked = modulePrefs.get(DataConst.ENABLE_CHANG_BG_COLOR)
+                isChecked = modulePrefs.get(DataConst.ENABLE_CHANG_BG_COLOR) &&
+                        !modulePrefs.get(DataConst.REMOVE_BG_COLOR)
             }
 
             // 自适应背景颜色排除列表
@@ -302,7 +306,21 @@ class MainActivity : BaseActivity() {
                     showView(true, removeBgDrawableDescribe)
                     true
                 }
-                isChecked = modulePrefs.get(DataConst.REMOVE_BG_DRAWABLE)
+                isChecked = modulePrefs.get(DataConst.REMOVE_BG_DRAWABLE)&&
+                        !modulePrefs.get(DataConst.INDEPENDENT_COLOR_WECHAT) &&
+                        !modulePrefs.get(DataConst.ENABLE_CHANG_BG_COLOR)
+            }
+
+            // 移除背景颜色
+            removeBgColor.apply {
+                setOnCheckedChangeListener { _, isChecked ->
+                    modulePrefs.put(DataConst.REMOVE_BG_COLOR, isChecked)
+                    if (isChecked) {
+                        independentColorWechat.isChecked = false
+                        replaceBg.isChecked = false
+                    }
+                }
+                isChecked = modulePrefs.get(DataConst.REMOVE_BG_COLOR)
             }
 
             // 强制显示启动遮罩

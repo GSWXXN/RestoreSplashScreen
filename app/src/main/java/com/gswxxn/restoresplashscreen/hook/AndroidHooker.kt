@@ -39,7 +39,7 @@ class AndroidHooker : YukiBaseHooker() {
                 beforeHook {
                     val isDisableSS = prefs.get(DataConst.DISABLE_SPLASH_SCREEN)
                     if (isDisableSS) resultFalse()
-                    printLog("!!! validateStartingWindowTheme():${if (isDisableSS) "" else "Not"} disable ${args(0).string()} splash screen")
+                    printLog("!!! addStartingWindow():${if (isDisableSS) "" else "Not"} disable ${args(0).string()} splash screen")
                 }
             }
         }

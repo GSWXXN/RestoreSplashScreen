@@ -95,11 +95,14 @@ class SystemUIHooker : YukiBaseHooker() {
                                 && pkgName in prefs.get(DataConst.DEFAULT_STYLE_LIST)
                         val isRemoveBrandingImage = prefs.get(DataConst.REMOVE_BRANDING_IMAGE)
                                 && pkgName in prefs.get(DataConst.REMOVE_BRANDING_IMAGE_LIST)
+                        val isRemoveBGColor = prefs.get(DataConst.REMOVE_BG_COLOR)
                         val isExcept = isExcept(pkgName)
                         val forceEnableSplashScreen = prefs.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)
                         val mSplashscreenContentDrawer = instance.getField("this\$0").any()!!
                         val mTmpAttrs = mSplashscreenContentDrawer
                             .getField("mTmpAttrs").any()!!
+
+                        if (isExcept) return@beforeHook
 
                         /**
                          * 强制开启启动遮罩
@@ -155,6 +158,16 @@ class SystemUIHooker : YukiBaseHooker() {
                         printLog(
                             "4. build(): ${if (isRemoveBrandingImage) "" else "Not"} remove Branding Image"
                         )
+
+                        /**
+                         * 移除背景颜色
+                         */
+                        if (isRemoveBGColor) {
+                            instance.setField("mThemeColor", Color.parseColor("#F5F5F5"))
+                        }
+                        printLog(
+                            "5. build(): ${if (isRemoveBGColor) "" else "Not"} remove BG Color"
+                        )
                     }
                 }
 
@@ -184,7 +197,7 @@ class SystemUIHooker : YukiBaseHooker() {
                             // 设置微信背景色为深色
                             pkgName == "com.tencent.mm" && prefs.get(DataConst.INDEPENDENT_COLOR_WECHAT) -> {
                                 instance.setField("mThemeColor", Color.parseColor("#010C15"))
-                                printLog("9. createIconDrawable(): set WeChat background color")
+                                printLog("10. createIconDrawable(): set WeChat background color")
                             }
 
                             // 自适应背景色
@@ -192,10 +205,10 @@ class SystemUIHooker : YukiBaseHooker() {
                                 val drawable = args(0).cast<Drawable>()
                                 val color = Utils.getBgColor(Utils.drawable2Bitmap(drawable!!, 100)!!)
                                 instance.setField("mThemeColor", color)
-                                printLog("9. createIconDrawable(): set adaptive background color")
+                                printLog("10. createIconDrawable(): set adaptive background color")
                             }
 
-                            else -> printLog("9. createIconDrawable(): Not set background color")
+                            else -> printLog("10. createIconDrawable(): Not set background color")
                         }
 
                     }
@@ -244,7 +257,7 @@ class SystemUIHooker : YukiBaseHooker() {
                     } else {
                         result<Drawable>()
                     }
-                    printLog("5. getIcon(): ${if (enableReplaceIcon) "" else "Not"} replace Icon")
+                    printLog("6. getIcon(): ${if (enableReplaceIcon) "" else "Not"} replace Icon")
 
                     // 使用图标包
                     if (iconPackPackageName != "None") {
@@ -254,7 +267,7 @@ class SystemUIHooker : YukiBaseHooker() {
                             else ->  iconPackManager.getIconByPackageName(pkgName)
                         }?.let { drawable = it }
                     }
-                    printLog("6. getIcon(): ${if (iconPackPackageName != "None") "" else "Not"} use Icon Pack")
+                    printLog("7. getIcon(): ${if (iconPackPackageName != "None") "" else "Not"} use Icon Pack")
 
 
                     /**
@@ -275,7 +288,7 @@ class SystemUIHooker : YukiBaseHooker() {
 
                         )
                     )
-                    printLog("7. getIcon(): draw round corner")
+                    printLog("8. getIcon(): draw round corner")
                 }
             }
 
@@ -300,7 +313,7 @@ class SystemUIHooker : YukiBaseHooker() {
                 }
                 beforeHook {
                     args(1).set(false)
-                    printLog("8. BaseIconFactory(): set shrinkNonAdaptiveIcons false")
+                    printLog("9. BaseIconFactory(): set shrinkNonAdaptiveIcons false")
                 }
             }
         }
@@ -323,7 +336,7 @@ class SystemUIHooker : YukiBaseHooker() {
                     beforeHook {
                         resultFalse()
                         printLog(
-                            "10. isStaringWindowUnderNightMode(): ignore dark mode"
+                            "11. isStaringWindowUnderNightMode(): ignore dark mode"
                         )
                     }
                 }
@@ -349,7 +362,7 @@ class SystemUIHooker : YukiBaseHooker() {
                     beforeHook {
                         resultFalse()
                         printLog(
-                            "11. isMiuiHome(): set isMiuiHome() false"
+                            "12. isMiuiHome(): set isMiuiHome() false"
                         )
                     }
                 }

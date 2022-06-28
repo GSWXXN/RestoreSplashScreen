@@ -92,7 +92,8 @@ class MainActivity : BaseActivity() {
                         replaceBgDescribe,
                         replaceIconDescribe,
                         hideDescribeDescribe,
-                        disableSplashScreenDescribe
+                        disableSplashScreenDescribe,
+                        enableHotStartCompatibleDescribe
                     )
                     modulePrefs.put(DataConst.ENABLE_HIDE_DESCRIBE, isChecked)
                 }
@@ -346,6 +347,7 @@ class MainActivity : BaseActivity() {
             forceEnableSplashScreen.apply {
                 setOnCheckedChangeListener { _, isChecked ->
                     modulePrefs.put(DataConst.FORCE_ENABLE_SPLASH_SCREEN, isChecked)
+                    if (!isChecked) enableHotStartCompatible.isChecked = false
                 }
                 setOnLongClickListener {
                     showView(true, forceEnableDescribe)
@@ -361,6 +363,25 @@ class MainActivity : BaseActivity() {
                 "开启此选项可能导致的问题：<br>" +
                 "1. 可能会在不需要显示Splash Screen的场景显示启动遮罩。<br>" +
                 "2. 如果应用主动设置了Splash Screen的背景图片，可能将无法显示。",
+                Html.FROM_HTML_MODE_LEGACY)
+
+            // 将启动遮罩适用于热启动
+            enableHotStartCompatible.apply {
+                setOnCheckedChangeListener { _, isChecked ->
+                    modulePrefs.put(DataConst.ENABLE_HOT_START_COMPATIBLE, isChecked)
+                    if (isChecked) forceEnableSplashScreen.isChecked = true
+                }
+                setOnLongClickListener {
+                    showView(true, enableHotStartCompatibleDescribe)
+                    true
+                }
+                isChecked = modulePrefs.get(DataConst.ENABLE_HOT_START_COMPATIBLE)
+            }
+
+            // 将启动遮罩适用于热启动 描述
+            enableHotStartCompatibleDescribe.text = Html.fromHtml(
+                "<b>注意</b>：开启此选项需要在Xposed管理器的作用域中勾选<font color = \"#B22222\">系统框架</font>，并重启手机；" +
+                        "此选项需要与 \"强制开启启动遮罩\" 同时开启",
                 Html.FROM_HTML_MODE_LEGACY)
 
             // 彻底关闭 Splash Screen

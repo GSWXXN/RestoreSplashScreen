@@ -925,6 +925,31 @@
                     android:textSize="12sp" />
 
                 <Switch
+                    android:id="@+id/enable_hot_start_compatible"
+                    android:layout_width="match_parent"
+                    android:checked="true"
+                    android:layout_height="35dp"
+                    android:switchMinWidth="@dimen/switch_width"
+                    android:thumb="@drawable/switch_thumb"
+                    android:track="@drawable/switch_track"
+                    android:text="将启动遮罩适用于热启动"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:id="@+id/enable_hot_start_compatible_describe"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:alpha="0.6"
+                    android:text="描述"
+                    android:lineSpacingExtra="6dp"
+                    android:textColor="@color/colorTextDark"
+                    android:textSize="12sp" />
+
+                <Switch
                     android:id="@+id/disable_splash_screen"
                     android:layout_width="match_parent"
                     android:checked="true"

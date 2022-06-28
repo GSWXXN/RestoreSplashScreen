@@ -26,8 +26,8 @@ class AndroidHooker : YukiBaseHooker() {
                     val pkgName = args(1).string()
                     val isForceShowSS = prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN) && pkgName in prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST)
 
-                    if (isForceShowSS && !prefs.get(DataConst.DISABLE_SPLASH_SCREEN)) resultTrue()
-                    printLog("!!! validateStartingWindowTheme():${if (isForceShowSS) "" else "Not"} force show $pkgName splash screen")
+                    if (isForceShowSS) resultTrue()
+                    printLog("[Android] validateStartingWindowTheme():${if (isForceShowSS) "" else "Not"} force show $pkgName splash screen")
                    }
             }
 
@@ -40,7 +40,20 @@ class AndroidHooker : YukiBaseHooker() {
                 beforeHook {
                     val isDisableSS = prefs.get(DataConst.DISABLE_SPLASH_SCREEN)
                     if (isDisableSS) resultFalse()
-                    printLog("!!! addStartingWindow():${if (isDisableSS) "" else "Not"} disable ${args(0).string()} splash screen")
+                    printLog("[Android] addStartingWindow():${if (isDisableSS) "" else "Not"} disable ${args(0).string()} splash screen")
+                }
+            }
+
+            // 热启动时生成启动遮罩
+            injectMember {
+                method {
+                    name = "getStartingWindowType"
+                    paramCount(6)
+                }
+                beforeHook {
+                    val isHotStartCompatible = prefs.get(DataConst.ENABLE_HOT_START_COMPATIBLE)
+                    if (isHotStartCompatible) result = 2
+                    printLog("[Android] getStartingWindowType():${if (isHotStartCompatible) "" else "Not"} set result to 2")
                 }
             }
         }.onHookClassNotFoundFailure {

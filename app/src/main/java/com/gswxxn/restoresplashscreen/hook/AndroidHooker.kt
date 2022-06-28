@@ -3,6 +3,7 @@ package com.gswxxn.restoresplashscreen.hook
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.utils.Utils.printLog
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
+import com.highcapable.yukihookapi.hook.log.loggerE
 
 class AndroidHooker : YukiBaseHooker() {
 
@@ -42,6 +43,8 @@ class AndroidHooker : YukiBaseHooker() {
                     printLog("!!! addStartingWindow():${if (isDisableSS) "" else "Not"} disable ${args(0).string()} splash screen")
                 }
             }
+        }.onHookClassNotFoundFailure {
+            loggerE(msg = "[Android] Class Not Found: com.android.server.wm.ActivityRecord")
         }
     }
 }

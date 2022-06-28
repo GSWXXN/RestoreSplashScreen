@@ -216,18 +216,6 @@
                 </LinearLayout>
 
                 <Switch
-                    android:id="@+id/enable_model"
-                    android:layout_width="match_parent"
-                    android:checked="true"
-                    android:layout_height="35dp"
-                    android:text="启用模块"
-                    android:switchMinWidth="@dimen/switch_width"
-                    android:thumb="@drawable/switch_thumb"
-                    android:track="@drawable/switch_track"
-                    android:textColor="@color/colorTextGray"
-                    android:textSize="15sp" />
-
-                <Switch
                     android:id="@+id/enable_log"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"

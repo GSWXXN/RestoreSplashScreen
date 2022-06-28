@@ -98,7 +98,7 @@ object Utils {
     }
 
     /**
-     * 根据名称获取实例 的 Filed 实例处理类
+     * 根据名称获取实例 的 Field 实例处理类
      *
      * 需要获取 Field 的实例
      * @param fieldName Field 名称
@@ -107,7 +107,7 @@ object Utils {
     fun Any.getField(fieldName : String) = this.javaClass.field { name = fieldName }.get(this)
 
     /**
-     * 根据名称设置实例 的 Filed 实例内容
+     * 根据名称设置实例 的 Field 实例内容
      *
      * 需要设置 Field 的实例
      * @param fieldName Field 名称
@@ -127,6 +127,11 @@ object Utils {
         .makeText(this, message, Toast.LENGTH_SHORT)
         .apply { show() }
 
+    /**
+     *  根据 [DataConst.ENABLE_LOG] 标志向 XPosed 框架打印日志
+     *
+     *  @param msg 打印日志的内容
+     */
     fun YukiBaseHooker.printLog(vararg msg: String) {
         if (this.prefs.get(DataConst.ENABLE_LOG)) msg.forEach { loggerI(msg = it) }
     }

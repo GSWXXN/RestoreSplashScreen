@@ -69,14 +69,6 @@ class MainActivity : BaseActivity() {
                 startActivity(intent)
             }
 
-            // 启用模块
-            enableModel.apply {
-                isChecked = modulePrefs.get(DataConst.ENABLE_MODULE)
-                setOnCheckedChangeListener { _, isChecked ->
-                    modulePrefs.put(DataConst.ENABLE_MODULE, isChecked)
-                }
-            }
-
             // 启用日志
             enableLog.apply {
                 setOnCheckedChangeListener { _, isChecked ->
@@ -397,8 +389,6 @@ class MainActivity : BaseActivity() {
         binding.apply {
             mainLinStatus.setBackgroundResource(
                 when {
-                    isXposedModuleActive && modulePrefs.get(DataConst.ENABLE_MODULE)
-                        .not() -> R.drawable.bg_yellow_round
                     isXposedModuleActive -> R.drawable.bg_green_round
                     else -> R.drawable.bg_dark_round
                 }
@@ -411,7 +401,6 @@ class MainActivity : BaseActivity() {
             )
             mainTextStatus.text =
                 when {
-                    isXposedModuleActive && !modulePrefs.get(DataConst.ENABLE_MODULE) -> "模块已停用"
                     isXposedModuleActive -> "模块已激活"
                     else -> "模块未激活"
                 }
@@ -422,8 +411,6 @@ class MainActivity : BaseActivity() {
 
         window.statusBarColor = getColor(
             when {
-                isXposedModuleActive && modulePrefs.get(DataConst.ENABLE_MODULE)
-                    .not() -> R.color.yellow
                 isXposedModuleActive -> R.color.green
                 else -> R.color.gray
             }

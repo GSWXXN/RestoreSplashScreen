@@ -3,7 +3,6 @@ package com.gswxxn.restoresplashscreen.data
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 
 object DataConst {
-    val ENABLE_MODULE = PrefsData("enable_module", true)
     val ENABLE_LOG = PrefsData("enable_log", false)
     val ENABLE_HIDE_DESCRIBE = PrefsData("enable_hide_describe", false)
     val ENABLE_CUSTOM_SCOPE = PrefsData("enable_custom_scope", false)

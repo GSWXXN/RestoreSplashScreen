@@ -144,6 +144,14 @@ class MainActivity : BaseActivity() {
                 startActivity(intent)
             }
 
+            // 绘制图标圆角
+            drawIconRoundCorner.apply {
+                setOnCheckedChangeListener { _, isChecked ->
+                    modulePrefs.put(DataConst.ENABLE_DRAW_ROUND_CORNER, isChecked)
+                }
+                isChecked = modulePrefs.get(DataConst.ENABLE_DRAW_ROUND_CORNER)
+            }
+
             // 缩小图标
             shrinkIcon.apply {
                 val item = DataConst.SHRINK_ICON_ITEMS.values.toList()

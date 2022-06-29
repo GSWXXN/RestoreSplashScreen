@@ -456,6 +456,18 @@
                         android:textSize="12sp" />
                 </LinearLayout>
 
+                <Switch
+                    android:id="@+id/draw_icon_round_corner"
+                    android:layout_width="match_parent"
+                    android:checked="true"
+                    android:layout_height="35dp"
+                    android:switchMinWidth="@dimen/switch_width"
+                    android:thumb="@drawable/switch_thumb"
+                    android:track="@drawable/switch_track"
+                    android:text="绘制图标圆角"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="15sp" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

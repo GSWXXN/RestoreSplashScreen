@@ -21,6 +21,7 @@ object DataConst {
     val FORCE_SHOW_SPLASH_SCREEN = PrefsData("force_show_splash_screen", false)
     val DISABLE_SPLASH_SCREEN = PrefsData("disable_splash_screen", false)
     val ENABLE_HOT_START_COMPATIBLE = PrefsData("enable_hot_start_compatible", false)
+    val ENABLE_DRAW_ROUND_CORNER = PrefsData("enable_draw_round_corner", false)
     val SHRINK_ICON = PrefsData("shrink_icon", 0)
     val SHRINK_ICON_ITEMS = mapOf(0 to "不缩小图标", 1 to "仅缩小分辨率较低的图标", 2 to "缩小全部图标")
 

@@ -811,6 +811,19 @@
                     android:text="移除背景颜色"
                     android:textColor="@color/colorTextGray"
                     android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/remove_bg_color_describe"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:alpha="0.6"
+                    android:text="此选项不可与 &quot;设置微信启动背景为深色&quot; 及 &quot;自适应背景颜色&quot; 同时开启。"
+                    android:lineSpacingExtra="6dp"
+                    android:textColor="@color/colorTextDark"
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <ImageView

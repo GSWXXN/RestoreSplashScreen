@@ -93,7 +93,8 @@ class MainActivity : BaseActivity() {
                         replaceIconDescribe,
                         hideDescribeDescribe,
                         disableSplashScreenDescribe,
-                        enableHotStartCompatibleDescribe
+                        enableHotStartCompatibleDescribe,
+                        removeBgColorDescribe
                     )
                     modulePrefs.put(DataConst.ENABLE_HIDE_DESCRIBE, isChecked)
                 }
@@ -312,6 +313,10 @@ class MainActivity : BaseActivity() {
                         independentColorWechat.isChecked = false
                         replaceBg.isChecked = false
                     }
+                }
+                setOnLongClickListener {
+                    showView(true, removeBgColorDescribe)
+                    true
                 }
                 isChecked = modulePrefs.get(DataConst.REMOVE_BG_COLOR)
             }

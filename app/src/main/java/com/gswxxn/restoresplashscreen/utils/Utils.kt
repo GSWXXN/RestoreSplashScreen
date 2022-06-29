@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable
 import android.widget.Toast
 import androidx.palette.graphics.Palette
 import com.gswxxn.restoresplashscreen.data.DataConst
+import com.gswxxn.restoresplashscreen.data.RoundDegree
 import com.highcapable.yukihookapi.hook.core.finder.FieldFinder.Result.Instance
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.field
@@ -38,29 +39,31 @@ object Utils {
      * 绘制图标圆角
      *
      * @param bitmap 待绘制圆角的 Bitmap
-     * @param isCircle 是否绘制圆形图标
+     * @param roundDegree 绘制圆形图标圆角程度
      * @param shrinkTrigger 若图标尺寸小于此数值则缩小图标；留空不缩小图标
      * @return [Bitmap]
      */
-     fun roundBitmapByShader(bitmap: Bitmap?, isCircle: Boolean, shrinkTrigger: Int = 0): Bitmap? {
+     fun roundBitmapByShader(bitmap: Bitmap?, roundDegree: RoundDegree, shrinkTrigger: Int = 0): Bitmap? {
         if (bitmap == null)  return null
 
-        val radius = if (isCircle) bitmap.width / 2 else  bitmap.width / 4
+        val radius = when (roundDegree) {
+            RoundDegree.RoundCorner -> bitmap.width / 4
+            RoundDegree.Circle -> bitmap.width / 2
+            else -> 0
+        }
 
         // 初始化目标bitmap
         val targetBitmap = Bitmap.createBitmap(bitmap.width, bitmap.width, Bitmap.Config.ARGB_8888)
-
-        // 初始化画笔
-        val paint = Paint()
-        paint.isAntiAlias = true
-        paint.shader = BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
 
         // 利用画笔将纹理图绘制到画布上面
         Canvas(targetBitmap).drawRoundRect(
             RectF(0F, 0F, bitmap.width.toFloat(), bitmap.width.toFloat()),
             radius.toFloat(),
             radius.toFloat(),
-            paint
+            Paint().apply{
+                isAntiAlias = true
+                shader = BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
+            }
         )
 
         // 缩小图标

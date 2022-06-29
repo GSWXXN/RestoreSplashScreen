@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
+import com.gswxxn.restoresplashscreen.data.RoundDegree
 import com.gswxxn.restoresplashscreen.utils.Utils
 import com.gswxxn.restoresplashscreen.utils.Utils.getField
 import com.gswxxn.restoresplashscreen.utils.Utils.printLog
@@ -237,6 +238,7 @@ class SystemUIHooker : YukiBaseHooker() {
                     val enableReplaceIcon = prefs.get(DataConst.ENABLE_REPLACE_ICON)
                     val shrinkIconType = prefs.get(DataConst.SHRINK_ICON)
                     val iconPackPackageName = prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)
+                    val isDrawIconRoundCorner = prefs.get(DataConst.ENABLE_DRAW_ROUND_CORNER)
                     val pkgName = args(0).cast<ActivityInfo>()?.packageName
                     val pkgActivity = args(0).cast<ActivityInfo>()?.targetActivity
                     val iconSize = args(1).cast<Int>()!!
@@ -272,28 +274,23 @@ class SystemUIHooker : YukiBaseHooker() {
 
                     /**
                      * 绘制图标圆角
-                     *
-                     * - 默认开启，不提供手动设置
+                     * 缩小图标
                      */
-                    result = BitmapDrawable(
-                        appContext.resources,
-                        Utils.roundBitmapByShader(
-                            drawable?.let { Utils.drawable2Bitmap(it, iconSize)},
-                            false,
-                            when (shrinkIconType) {
-                                0 -> 0               // 不缩小图标
-                                1 -> iconSize / 4    // 仅缩小分辨率较低的图标
-                                else -> 5000         // 缩小全部图标
-                            }
+                    Utils.roundBitmapByShader(
+                        drawable?.let { Utils.drawable2Bitmap(it, iconSize) },
+                        if (isDrawIconRoundCorner) RoundDegree.RoundCorner else RoundDegree.NotDrawRoundCorner,
+                        when (shrinkIconType) {
+                            0 -> 0               // 不缩小图标
+                            1 -> iconSize / 4    // 仅缩小分辨率较低的图标
+                            else -> 5000         // 缩小全部图标
+                        }
+                    )?.let { drawable = BitmapDrawable(appContext.resources, it) }
+                    printLog("8. getIcon(): ${if (isDrawIconRoundCorner) "" else "Not"} draw round corner; shrink icon type is $shrinkIconType")
 
-                        )
-                    )
-                    printLog("8. getIcon(): draw round corner")
+                    result = drawable
                 }
             }
-
         }
-
 
         /**
          * 设置图标不缩小

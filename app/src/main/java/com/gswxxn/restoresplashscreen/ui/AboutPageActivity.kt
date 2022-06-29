@@ -6,6 +6,7 @@ import android.net.Uri
 import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
 import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.R
+import com.gswxxn.restoresplashscreen.data.RoundDegree
 import com.gswxxn.restoresplashscreen.databinding.ActivityAboutPageBinding
 import com.gswxxn.restoresplashscreen.utils.Utils.drawable2Bitmap
 import com.gswxxn.restoresplashscreen.utils.Utils.roundBitmapByShader
@@ -29,10 +30,10 @@ class AboutPageActivity : BaseActivity() {
             titleBackIcon.setOnClickListener { onBackPressed() }
 
             appIcon.setImageBitmap(roundBitmapByShader(
-                getDrawable(R.mipmap.ic_launcher)?.let { drawable2Bitmap(it, it.intrinsicHeight) } , false))
+                getDrawable(R.mipmap.ic_launcher)?.let { drawable2Bitmap(it, it.intrinsicHeight) } , RoundDegree.RoundCorner))
 
             miluIcon.setImageBitmap(roundBitmapByShader(
-                getDrawable(R.mipmap.img_developer)?.let { drawable2Bitmap(it, it.intrinsicHeight) }, true))
+                getDrawable(R.mipmap.img_developer)?.let { drawable2Bitmap(it, it.intrinsicHeight) }, RoundDegree.Circle))
 
             version.text = "v${BuildConfig.VERSION_NAME}"
 

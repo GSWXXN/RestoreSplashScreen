@@ -94,7 +94,8 @@ class MainActivity : BaseActivity() {
                         hideDescribeDescribe,
                         disableSplashScreenDescribe,
                         enableHotStartCompatibleDescribe,
-                        removeBgColorDescribe
+                        removeBgColorDescribe,
+                        replaceToEmptySplashScreenDescribe
                     )
                     modulePrefs.put(DataConst.ENABLE_HIDE_DESCRIBE, isChecked)
                 }
@@ -142,6 +143,18 @@ class MainActivity : BaseActivity() {
                 val intent = Intent(this@MainActivity, ConfigAppsActivity::class.java)
                 intent.putExtra(EXTRA_MESSAGE, CUSTOM_SCOPE)
                 startActivity(intent)
+            }
+
+            // 将作用域外的应用替换为空白启动遮罩
+            replaceToEmptySplashScreen.apply {
+                setOnCheckedChangeListener { _, isChecked ->
+                    modulePrefs.put(DataConst.REPLACE_TO_EMPTY_SPLASH_SCREEN, isChecked)
+                }
+                setOnLongClickListener {
+                    showView(true, replaceToEmptySplashScreenDescribe)
+                    true
+                }
+                isChecked = modulePrefs.get(DataConst.REPLACE_TO_EMPTY_SPLASH_SCREEN)
             }
 
             // 绘制图标圆角

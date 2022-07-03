@@ -97,13 +97,13 @@ class SystemUIHooker : YukiBaseHooker() {
                         val isRemoveBrandingImage = prefs.get(DataConst.REMOVE_BRANDING_IMAGE)
                                 && pkgName in prefs.get(DataConst.REMOVE_BRANDING_IMAGE_LIST)
                         val isRemoveBGColor = prefs.get(DataConst.REMOVE_BG_COLOR)
+                        val isReplaceToEmptySplashScreen = prefs.get(DataConst.REPLACE_TO_EMPTY_SPLASH_SCREEN)
                         val isExcept = isExcept(pkgName)
                         val forceEnableSplashScreen = prefs.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)
+                        val context = instance.getField("mContext").cast<Context>()
                         val mSplashscreenContentDrawer = instance.getField("this\$0").any()!!
                         val mTmpAttrs = mSplashscreenContentDrawer
                             .getField("mTmpAttrs").any()!!
-
-                        if (isExcept) return@beforeHook
 
                         /**
                          * 强制开启启动遮罩
@@ -123,7 +123,6 @@ class SystemUIHooker : YukiBaseHooker() {
                             )
                         }
 
-
                         // 打印日志
                         printLog("info: build(): mSuggestType is ${instance.getField("mSuggestType").int()}")
 
@@ -132,9 +131,16 @@ class SystemUIHooker : YukiBaseHooker() {
                             method {
                                 name = "getWindowAttrs"
                                 paramCount(2)
-                            }.call(instance.getField("mContext").cast<Context>(), mTmpAttrs)
+                            }.call(context, mTmpAttrs)
                         }
                         printLog("2. build(): call getWindowAttrs() to reset mTmpAttrs")
+
+                        // 将作用域外的应用替换为空白启动遮罩
+                        if (isReplaceToEmptySplashScreen && isExcept && mTmpAttrs.getField("mSplashScreenIcon").any() == null) {
+                            instance.setField("mSuggestType", 3)
+                            instance.setField("mOverlayDrawable", context!!.getDrawable(mTmpAttrs.getField("mWindowBgResId").int()))
+                        }
+                        printLog("2.1. build(): ${if (isReplaceToEmptySplashScreen && isExcept) "set mSuggestType to 3;" else "Not"} replace to empty splash screen")
 
                         /**
                          * 忽略应用主动设置的图标
@@ -191,8 +197,8 @@ class SystemUIHooker : YukiBaseHooker() {
                         val ignoreDarkMode = prefs.get(DataConst.IGNORE_DARK_MODE)
                         val isDarkMode = appContext.resources
                             .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
-                        val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName
-                        val isInExceptList = pkgName in prefs.get(DataConst.BG_EXCEPT_LIST)
+                        val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
+                        val isInExceptList = pkgName in prefs.get(DataConst.BG_EXCEPT_LIST) || isExcept(pkgName)
 
                         when {
                             // 设置微信背景色为深色
@@ -239,9 +245,11 @@ class SystemUIHooker : YukiBaseHooker() {
                     val shrinkIconType = prefs.get(DataConst.SHRINK_ICON)
                     val iconPackPackageName = prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)
                     val isDrawIconRoundCorner = prefs.get(DataConst.ENABLE_DRAW_ROUND_CORNER)
-                    val pkgName = args(0).cast<ActivityInfo>()?.packageName
+                    val pkgName = args(0).cast<ActivityInfo>()?.packageName!!
                     val pkgActivity = args(0).cast<ActivityInfo>()?.targetActivity
                     val iconSize = args(1).cast<Int>()!!
+
+                    if (isExcept(pkgName)) return@afterHook
 
                     /**
                      * 替换获取图标方式
@@ -254,12 +262,12 @@ class SystemUIHooker : YukiBaseHooker() {
                                 appContext.packageManager.getActivityIcon(ComponentName("com.android.contacts","com.android.contacts.activities.TwelveKeyDialer"))
                             pkgName == "com.android.settings" && pkgActivity == "com.android.settings.BackgroundApplicationsManager" ->
                                 appContext.packageManager.getApplicationIcon("com.android.settings")
-                            else -> pkgName?.let { appContext.packageManager.getApplicationIcon(it) }
+                            else -> pkgName.let { appContext.packageManager.getApplicationIcon(it) }
                         }
                     } else {
                         result<Drawable>()
                     }
-                    printLog("6. getIcon(): ${if (enableReplaceIcon) "" else "Not"} replace Icon")
+                    printLog("6. getIcon(): ${if (enableReplaceIcon) "" else "Not"} replace way of getting icon")
 
                     // 使用图标包
                     if (iconPackPackageName != "None") {

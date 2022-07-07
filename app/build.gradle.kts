@@ -48,6 +48,7 @@ android {
 }
 
 dependencies {
+    implementation(project(mapOf("path" to ":blockmiui")))
     compileOnly("de.robv.android.xposed:api:82")
     implementation("com.highcapable.yukihookapi:api:1.0.92")
     ksp("com.highcapable.yukihookapi:ksp-xposed:1.0.92")

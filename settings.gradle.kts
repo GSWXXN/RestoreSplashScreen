@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "MIUI遮罩进化"
 include(":app")
+include(":blockmiui")

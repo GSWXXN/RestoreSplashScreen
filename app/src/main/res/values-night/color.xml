@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorThemeBackground">#FF2D2D2D</color>
+    <color name="colorThemeBackground">#FF000000</color>
+    <color name="colorDemoBackground">#FF2D2D2D</color>
     <color name="colorTextDark">#FFCFCFCF</color>
     <color name="colorTextGray">#FFD3D3D3</color>
+
+    <color name="demoSelect">#FF1E70C2</color>
+    <color name="demoNotSelect">#FF636363</color>
+    <color name="demoButton">#FF646464</color>
+    <color name="demoEdge">#FF585858</color>
+    <color name="demoFill">#FF262626</color>
+    <color name="demoText">#FFD3D3D3</color>
+    <color name="demoIcon">#FFD3D3D3</color>
 </resources>

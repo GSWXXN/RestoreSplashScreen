@@ -8,7 +8,11 @@
 
     <application
             android:icon="@mipmap/ic_launcher"
-            android:label="MIUI遮罩进化">
+            android:label="@string/app_name">
+
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="true"/>
 
         <activity
                 android:name=".ui.AboutPageActivity"
@@ -16,9 +20,15 @@
         <activity
                 android:name=".ui.ConfigAppsActivity"
                 android:exported="true"
-                android:parentActivityName=".ui.MainActivity"/>
+                android:parentActivityName=".ui.MainActivity"
+                android:launchMode="singleTask"/>
         <activity
-                android:name=".ui.MainActivity"
+            android:name=".ui.SubSettings"
+            android:exported="true"
+            android:parentActivityName=".ui.MainSettingsActivity"
+            android:launchMode="singleTask"/>
+        <activity
+                android:name=".ui.MainSettingsActivity"
                 android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -31,9 +41,9 @@
                 android:name=".Home"
                 android:enabled="true"
                 android:exported="true"
-                android:label="MIUI遮罩进化"
+                android:label="@string/app_name"
                 android:screenOrientation="behind"
-                android:targetActivity=".ui.MainActivity">
+                android:targetActivity=".ui.MainSettingsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

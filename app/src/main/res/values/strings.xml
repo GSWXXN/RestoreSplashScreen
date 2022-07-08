@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MIUI遮罩进化</string>
+
+    <!--主页-->
+    <string name="module_version">模块版本：%s</string>
+    <string name="module_is_active">模块已激活</string>
+    <string name="module_is_not_active">模块未激活</string>
+    <string name="xposed_framework_version">Activated by %s API %d</string>
+    <string name="main_activity_hint">做出任何设置前，请确保模块已激活。\n修改设置后点击右上角按钮启系统界面。</string>
+
+    <string name="restart_title">重启提示</string>
+    <string name="restart_message">配置修改后需要重启系统界面才能生效。\n\n如果您 LSPosed 框架中的作用域包含系统框架，则需要重启手机</string>
+    <string name="reboot">重启手机</string>
+    <string name="restart_system_ui">重启系统界面</string>
+    <string name="cancel">取消</string>
+
+    <string name="basic_settings">基础设置</string>
+    <string name="custom_scope_settings">作用域</string>
+    <string name="icon_settings">图标</string>
+    <string name="bottom_settings">底部</string>
+    <string name="background_settings">背景</string>
+    <string name="lab_settings">实验功能</string>
+    <string name="faq">常见问题</string>
+
+    <!--Sub Settings-->
+    <string name="enable_log">启用日志</string>
+    <string name="hide_icon">隐藏桌面图标</string>
+    <string name="hide_describe">隐藏功能描述</string>
+    <string name="return_to_old_ui">返回旧版UI</string>
+    <string name="return_to_old_ui_tips">此界面仅支持 v2.2.1 之前的设置项，且会在后续版本中移除，仅为过渡使用，请不要依赖使用旧版UI</string>
+    <string name="hide_describe_description">在隐藏描述前请完全理解每个功能的作用，长按条目可临时显示对应的描述。</string>
+    <string name="custom_scope">自定义模块作用域</string>
+    <string name="custom_scope_message">记得配置应用列表 ^_^</string>
+    <string name="exception_mode">排除模式</string>
+    <string name="exception_mode_message">当前模块 %s 作用在列表中的应用</string>
+    <string name="will_not">不会</string>
+    <string name="will_only">仅会</string>
+    <string name="exception_mode_list">配置应用列表</string>
+    <string name="replace_to_empty_splash_screen">将作用域外的应用替换位空白启动遮罩</string>
+    <string name="draw_round_corner">绘制图标圆角</string>
+    <string name="shrink_icon">缩小图标</string>
+    <string name="replace_icon">替换图标获取方式</string>
+    <string name="replace_icon_tips">开启此选项后，Splash Screen的图标可以跟随主题设定。但是通常获取到的主题图标分辨率较低，经过放大后图标可能会比较模糊。</string>
+    <string name="use_icon_pack">使用图标包</string>
+    <string name="default_style">忽略应用主动设置的图标</string>
+    <string name="default_style_tips">开启此选项并后，选中的应用即使主动适配Splash Screen, 也按未设置图标处理。开启此选项也可以解决以下问题：\n1. 使用第三方主题会出现图标方角问题。\n2. 部分应用没有将图标背景设置成透明导致图标方角问题。</string>
+    <string name="default_style_list">配置应用列表</string>
+    <string name="remove_branding_image">移除底部图片</string>
+    <string name="remove_branding_image_tips">开启此选项后，将会移除列表中应用的 Splash Screen 底部 Branding Image</string>
+    <string name="remove_branding_image_list">配置移除列表</string>
+    <string name="independent_color_wechat">设置微信启动背景为深色</string>
+    <string name="change_bg_color">自适应背景颜色</string>
+    <string name="change_bg_color_tips">开启此选项后，Splash Screen背景颜色将根据图标颜色更改。如有应用背景取色异常，请配置排除列表使用默认背景颜色。</string>
+    <string name="change_bg_color_list">配置排除列表</string>
+    <string name="ignore_dark_mode">忽略深色模式</string>
+    <string name="ignore_dark_mode_tips">开启此选项后，Splash Screen的背景颜色将不受深色模式的影响。</string>
+    <string name="remove_bg_drawable">移除截图背景</string>
+    <string name="remove_bg_drawable_tips">如果Splash Screen的背景为应用内截图，可开启此选项移除。</string>
+    <string name="remove_bg_color">移除背景颜色</string>
+    <string name="remove_bg_color_tips">开启此选项后 &quot;设置微信启动背景为深色&quot; 及 &quot;自适应背景颜色&quot; 将失效。</string>
+    <string name="force_show_splash_screen">强制显示遮罩</string>
+    <string name="force_show_splash_screen_tips">如果有部分应用没有显示Splash Screen, 请尝试开启此选项并将其加入到应用列表。\n注意：开启此选项需要在Xposed管理器的作用域中勾选 系统框架，并重启手机。</string>
+    <string name="force_show_splash_screen_list">配置应用列表</string>
+    <string name="force_enable_splash_screen">强制开启启动遮罩</string>
+    <string name="force_enable_splash_screen_tips">如果模块显示成功激活但是不起作用，请尝试开启此选项。\n如果模块可以正常运行，请 不要 开启此选项。\n开启此选项可能导致的问题：\n1. 可能会在不需要显示Splash Screen的场景显示启动遮罩。\n2. 如果应用主动设置了Splash Screen的背景图片，可能将无法显示。</string>
+    <string name="hot_start_compatible">将启动遮罩适用于热启动</string>
+    <string name="hot_start_compatible_tips">注意：开启此选项需要在Xposed管理器的作用域中勾选 系统框架，并重启手机；此选项需要与 &quot;强制开启启动遮罩&quot; 同时开启</string>
+    <string name="disable_splash_screen">彻底关闭 Splash Screen</string>
+    <string name="disable_splash_screen_tips">开启此选项需要在Xposed作用域中勾选 系统框架 并重启手机；由于开启了此选项，模块其他设置将成为摆设，所以没有必要在 Xposed 作用域中勾选系统界面。</string>
+
+    <!--应用配置界面-->
+    <string name="custom_scope_title">作用域列表</string>
+    <string name="default_style_title">忽略图标列表</string>
+    <string name="background_except_title">排除列表</string>
+    <string name="background_image_title">移除列表</string>
+    <string name="force_show_splash_screen_title">应用列表</string>
+
+    <string name="select_system_apps">选中系统应用</string>
+    <string name="clear_selected_apps">清除选中应用</string>
+    <string name="save_successful">保存成功</string>
+
+    <string name="search_hint">可输入 APP 名称、包名</string>
+    <string name="save_hint">勾选完成后记得点击下方保存按钮，保存成功后立即生效</string>
+    <string name="loading">正在加载……</string>
+    <string name="save">保存</string>
+
+    <!--关于页面-->
+    <string name="version">v%s</string>
+    <string name="follow_me">点个关注，不迷路</string>
+    <string name="star_project">点个小星星呗~</string>
+    <string name="thanks_to">感谢 %s</string>
+    <string name="about">关于</string>
+    <string name="developer">开发者</string>
+    <string name="developer_milu">迷璐</string>
+    <string name="open_source_repo">开源仓库</string>
+    <string name="icon_resource">使用图标来源</string>
+    <string name="open_source_license">开放源代码许可</string>
+</resources>

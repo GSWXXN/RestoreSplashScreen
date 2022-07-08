@@ -4,6 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+import android.widget.LinearLayout
+import android.widget.TextView
+import cn.fkj233.ui.activity.dp2px
 import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.RoundDegree
@@ -13,9 +16,8 @@ import com.gswxxn.restoresplashscreen.utils.Utils.roundBitmapByShader
 import com.gswxxn.restoresplashscreen.utils.Utils.toast
 
 class AboutPageActivity : BaseActivity() {
-    private lateinit var binding : ActivityAboutPageBinding
+    private lateinit var binding: ActivityAboutPageBinding
 
-    @SuppressLint("SetTextI18n")
     override fun onCreate() {
         window.insetsController?.setSystemBarsAppearance(
             APPEARANCE_LIGHT_STATUS_BARS,
@@ -30,48 +32,128 @@ class AboutPageActivity : BaseActivity() {
             titleBackIcon.setOnClickListener { onBackPressed() }
 
             appIcon.setImageBitmap(roundBitmapByShader(
-                getDrawable(R.mipmap.ic_launcher)?.let { drawable2Bitmap(it, it.intrinsicHeight) } , RoundDegree.RoundCorner))
+                getDrawable(R.mipmap.ic_launcher)?.let {
+                    drawable2Bitmap(
+                        it,
+                        it.intrinsicHeight
+                    )
+                }, RoundDegree.RoundCorner))
 
             miluIcon.setImageBitmap(roundBitmapByShader(
-                getDrawable(R.mipmap.img_developer)?.let { drawable2Bitmap(it, it.intrinsicHeight) }, RoundDegree.Circle))
+                getDrawable(R.mipmap.img_developer)?.let {
+                    drawable2Bitmap(
+                        it,
+                        it.intrinsicHeight
+                    )
+                }, RoundDegree.Circle
+            )
+            )
 
-            version.text = "v${BuildConfig.VERSION_NAME}"
+            version.text = getString(R.string.version, BuildConfig.VERSION_NAME)
 
             developerMilu.setOnClickListener {
-                toast("点个关注，不迷路")
-                try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("coolmarket://u/1189245"))) }
-                catch (e: Exception){startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://www.coolapk.com/u/1189245")))}
+                toast(getString(R.string.follow_me))
+                try {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("coolmarket://u/1189245")))
+                } catch (e: Exception) {
+                    startActivity(
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("http://www.coolapk.com/u/1189245")
+                        )
+                    )
+                }
             }
 
             githubRepo.setOnClickListener {
-                toast("点个小星星呗~")
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/GSWXXN/RestoreSplashScreen")))
+                toast(getString(R.string.star_project))
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("https://github.com/GSWXXN/RestoreSplashScreen")
+                    )
+                )
             }
 
             iconfont.setOnClickListener {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.iconfont.cn")))
             }
 
-            MIUINativeNotifyIcon.setOnClickListener {
-                toast("感谢fankes")
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/fankes/MIUINativeNotifyIcon")))
+            licenseLayout.apply {
+                addLicenseV(
+                    "MIUINativeNotifyIcon",
+                    "fankes",
+                    "https://github.com/fankes/MIUINativeNotifyIcon",
+                    "GNU Affero General Public License v3.0"
+                )
+                addLicenseV(
+                    "Hide-My-Applist",
+                    "Dr-TSNG",
+                    "https://github.com/Dr-TSNG/Hide-My-Applist",
+                    "GNU Affero General Public License v3.0"
+                )
+                addLicenseV(
+                    "YukiHookAPI",
+                    "fankes",
+                    "https://github.com/fankes/YukiHookAPI",
+                    "MIT License"
+                )
+                addLicenseV(
+                    "libsu",
+                    "topjohnwu",
+                    "https://github.com/topjohnwu/libsu",
+                    "Apache License 2.0"
+                )
+                addLicenseV(
+                    "BlockMIUI",
+                    "577fkj",
+                    "https://github.com/Block-Network/blockmiui",
+                    "GNU Lesser General Public License v2.1"
+                )
             }
-
-            YukiHookAPI.setOnClickListener {
-                toast("感谢fankes")
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/fankes/YukiHookAPI")))
-            }
-
-            HideMyApplist.setOnClickListener {
-                toast("感谢Dr-TSNG")
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Dr-TSNG/Hide-My-Applist")))
-            }
-
-            libsu.setOnClickListener {
-                toast("感谢topjohnwu")
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/topjohnwu/libsu")))
-            }
-
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    fun LinearLayout.addLicenseV(
+        projectName: String,
+        author: String,
+        url: String,
+        licenseName: String
+    ) {
+        addView(LinearLayout(this@AboutPageActivity).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(
+                    0,
+                    dp2px(this@AboutPageActivity, 10F),
+                    0,
+                    dp2px(this@AboutPageActivity, 15F),
+                )
+                orientation = LinearLayout.VERTICAL
+            }
+            addView(
+                TextView(this@AboutPageActivity).apply {
+                    text = "$projectName - $author"
+                    textSize = 15F
+                    setTextColor(getColor(R.color.colorTextGray))
+                }
+            )
+            addView(
+                TextView(this@AboutPageActivity).apply {
+                    text = "$url\n$licenseName"
+                    textSize = 12F
+                    setTextColor(getColor(R.color.colorTextDark))
+                    setLineSpacing(dp2px(this@AboutPageActivity, 3F).toFloat(), 1F)
+                }
+            )
+            setOnClickListener {
+                toast(getString(R.string.thanks_to, author))
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+            }
+        }
+        )
     }
 }

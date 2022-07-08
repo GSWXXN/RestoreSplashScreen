@@ -7,7 +7,7 @@
     android:background="@color/colorThemeBackground"
     android:orientation="vertical"
     tools:context=".ui.MainActivity"
-    tools:ignore="HardcodedText,UseCompoundDrawables,ContentDescription">
+    tools:ignore="UseCompoundDrawables,ContentDescription">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +20,6 @@
         android:paddingBottom="5dp"
         android:orientation="horizontal">
 
-
         <ImageView
             style="?android:attr/selectableItemBackgroundBorderless"
             android:id="@+id/title_back_icon"
@@ -32,7 +31,6 @@
             android:tint="@color/colorTextGray"
             android:tooltipText="返回" />
 
-
         <TextView
             android:id="@+id/app_list_title"
             android:gravity="center_vertical"
@@ -41,7 +39,6 @@
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
             android:singleLine="true"
-            android:text="标题"
             android:textColor="@color/colorTextGray"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -58,7 +55,7 @@
             android:textColor="@color/colorTextGray"
             android:imeOptions="actionSearch"
             android:nextFocusDown="@id/search_edit_text"
-            android:hint="可输入 APP 名称、包名"
+            android:hint="@string/search_hint"
             android:inputType="text"
             android:importantForAutofill="no" />
 
@@ -68,8 +65,7 @@
             android:layout_height="30dp"
             android:layout_marginEnd="10dp"
             android:src="@drawable/ic_search"
-            android:tint="@color/colorTextGray"
-            android:tooltipText="搜索" />
+            android:tint="@color/colorTextGray"/>
 
         <ImageView
             android:id="@+id/more_options"
@@ -77,8 +73,7 @@
             android:layout_height="30dp"
             android:layout_marginEnd="10dp"
             android:src="@drawable/ic_more_options"
-            android:tint="@color/colorTextGray"
-            android:tooltipText="搜索" />
+            android:tint="@color/colorTextGray"/>
     </LinearLayout>
 
     <LinearLayout
@@ -107,7 +102,7 @@
             android:layout_height="wrap_content"
             android:alpha="0.6"
             android:lineSpacingExtra="5dp"
-            android:text="勾选完成后记得点击下方保存按钮，保存成功后立即生效"
+            android:text="@string/save_hint"
             android:textColor="@color/colorTextGray"
             android:textSize="11sp"
             tools:ignore="SmallSp" />
@@ -125,7 +120,7 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:lineSpacingExtra="6dp"
-            android:text="正在加载..."
+            android:text="@string/loading"
             android:textColor="@color/colorTextDark"
             android:textSize="17sp" />
 
@@ -141,7 +136,6 @@
             android:requiresFadingEdge="vertical"
             android:scrollbars="none"
             android:visibility="gone" />
-
     </FrameLayout>
 
     <TextView
@@ -155,7 +149,7 @@
         android:gravity="center"
         android:padding="10dp"
         android:singleLine="true"
-        android:text="保存"
+        android:text="@string/save"
         android:textColor="@color/colorTextGray"
         android:textSize="15sp" />
 </LinearLayout>

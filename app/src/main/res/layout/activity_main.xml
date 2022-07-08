@@ -220,8 +220,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
                     android:switchMinWidth="@dimen/switch_width"
-                    android:thumb="@drawable/switch_thumb"
-                    android:track="@drawable/switch_track"
+                    android:thumb="@drawable/switch_thumb_old"
+                    android:track="@drawable/switch_track_old"
                     android:text="启用日志"
                     android:textColor="@color/colorTextGray"
                     android:textSize="15sp" />
@@ -231,8 +231,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
                     android:switchMinWidth="@dimen/switch_width"
-                    android:thumb="@drawable/switch_thumb"
-                    android:track="@drawable/switch_track"
+                    android:thumb="@drawable/switch_thumb_old"
+                    android:track="@drawable/switch_track_old"
                     android:text="隐藏桌面图标"
                     android:textColor="@color/colorTextGray"
                     android:textSize="15sp" />
@@ -242,8 +242,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
                     android:switchMinWidth="@dimen/switch_width"
-                    android:thumb="@drawable/switch_thumb"
-                    android:track="@drawable/switch_track"
+                    android:thumb="@drawable/switch_thumb_old"
+                    android:track="@drawable/switch_track_old"
                     android:text="隐藏功能描述"
                     android:textColor="@color/colorTextGray"
                     android:textSize="15sp" />
@@ -312,8 +312,8 @@
                     android:checked="true"
                     android:layout_height="35dp"
                     android:switchMinWidth="@dimen/switch_width"
-                    android:thumb="@drawable/switch_thumb"
-                    android:track="@drawable/switch_track"
+                    android:thumb="@drawable/switch_thumb_old"
+                    android:track="@drawable/switch_track_old"
                     android:text="自定义模块作用域"
                     android:textColor="@color/colorTextGray"
                     android:textSize="15sp" />
@@ -344,8 +344,8 @@
                         android:checked="true"
                         android:layout_height="35dp"
                         android:switchMinWidth="@dimen/switch_width"
-                        android:thumb="@drawable/switch_thumb"
-                        android:track="@drawable/switch_track"
+                        android:thumb="@drawable/switch_thumb_old"
+                        android:track="@drawable/switch_track_old"
                         android:text="排除模式"
                         android:textColor="@color/colorTextGray"
                         android:textSize="15sp" />
@@ -414,8 +414,8 @@
                         android:checked="true"
                         android:layout_height="35dp"
                         android:switchMinWidth="@dimen/switch_width"
-                        android:thumb="@drawable/switch_thumb"
-                        android:track="@drawable/switch_track"
+                        android:thumb="@drawable/switch_thumb_old"
+                        android:track="@drawable/switch_track_old"
                         android:text="将作用域外的应用替换为空白启动遮罩"
                         android:textColor="@color/colorTextGray"
                         android:textSize="15sp" />
@@ -487,8 +487,8 @@
                     android:checked="true"
                     android:layout_height="35dp"
                     android:switchMinWidth="@dimen/switch_width"
-                    android:thumb="@drawable/switch_thumb"
-                    android:track="@drawable/switch_track"
+                    android:thumb="@drawable/switch_thumb_old"
+                    android:track="@drawable/switch_track_old"
                     android:text="绘制图标圆角"
                     android:textColor="@color/colorTextGray"
                     android:textSize="15sp" />
@@ -520,8 +520,8 @@
                     android:checked="true"
                     android:layout_height="35dp"
                     android:switchMinWidth="@dimen/switch_width"
-                    android:thumb="@drawable/switch_thumb"
-                    android:track="@drawable/switch_track"
+                    android:thumb="@drawable/switch_thumb_old"
+                    android:track="@drawable/switch_track_old"
                     android:text="替换获取图标方式"
                     android:textColor="@color/colorTextGray"
                     android:textSize="15sp" />
@@ -546,6 +546,7 @@
                     android:gravity="center_vertical">
 
                     <TextView
+                        android:id="@+id/icon_pack_list"
                         android:layout_width="0dp"
                         android:layout_height="35dp"
                         android:layout_weight="1"
@@ -553,11 +554,6 @@
                         android:textSize="15sp"
                         android:textColor="@color/colorTextGray"
                         android:text="使用图标包" />
-
-                    <Spinner
-                        android:id="@+id/icon_pack_list"
-                        android:layout_width="150dp"
-                        android:layout_height="wrap_content" />
                 </LinearLayout>
 
                 <Switch
@@ -566,8 +562,8 @@
                     android:checked="true"
                     android:layout_height="35dp"
                     android:switchMinWidth="@dimen/switch_width"
-                    android:thumb="@drawable/switch_thumb"
-                    android:track="@drawable/switch_track"
+                    android:thumb="@drawable/switch_thumb_old"
+                    android:track="@drawable/switch_track_old"
                     android:text="忽略应用主动设置的图标"
                     android:textColor="@color/colorTextGray"
                     android:textSize="15sp" />
@@ -654,8 +650,8 @@
                     android:checked="true"
                     android:layout_height="35dp"
                     android:switchMinWidth="@dimen/switch_width"
-                    android:thumb="@drawable/switch_thumb"
-                    android:track="@drawable/switch_track"
+                    android:thumb="@drawable/switch_thumb_old"
+                    android:track="@drawable/switch_track_old"
                     android:text="移除底部图片"
                     android:textColor="@color/colorTextGray"
                     android:textSize="15sp" />
@@ -741,8 +737,8 @@
                     android:checked="true"
                     android:layout_height="35dp"
                     android:switchMinWidth="@dimen/switch_width"
-                    android:thumb="@drawable/switch_thumb"
-                    android:track="@drawable/switch_track"
+                    android:thumb="@drawable/switch_thumb_old"
+                    android:track="@drawable/switch_track_old"
                     android:text="设置微信启动背景为深色"
                     android:textColor="@color/colorTextGray"
                     android:textSize="15sp" />
@@ -753,8 +749,8 @@
                     android:checked="true"
                     android:layout_height="35dp"
                     android:switchMinWidth="@dimen/switch_width"
-                    android:thumb="@drawable/switch_thumb"
-                    android:track="@drawable/switch_track"
+                    android:thumb="@drawable/switch_thumb_old"
+                    android:track="@drawable/switch_track_old"
                     android:text="自适应背景颜色"
                     android:textColor="@color/colorTextGray"
                     android:textSize="15sp" />
@@ -793,8 +789,8 @@
                     android:checked="true"
                     android:layout_height="35dp"
                     android:switchMinWidth="@dimen/switch_width"
-                    android:thumb="@drawable/switch_thumb"
-                    android:track="@drawable/switch_track"
+                    android:thumb="@drawable/switch_thumb_old"
+                    android:track="@drawable/switch_track_old"
                     android:text="忽略深色模式"
                     android:textColor="@color/colorTextGray"
                     android:textSize="15sp" />
@@ -818,8 +814,8 @@
                     android:checked="true"
                     android:layout_height="35dp"
                     android:switchMinWidth="@dimen/switch_width"
-                    android:thumb="@drawable/switch_thumb"
-                    android:track="@drawable/switch_track"
+                    android:thumb="@drawable/switch_thumb_old"
+                    android:track="@drawable/switch_track_old"
                     android:text="移除截图背景"
                     android:textColor="@color/colorTextGray"
                     android:textSize="15sp" />
@@ -843,11 +839,12 @@
                     android:checked="true"
                     android:layout_height="35dp"
                     android:switchMinWidth="@dimen/switch_width"
-                    android:thumb="@drawable/switch_thumb"
-                    android:track="@drawable/switch_track"
+                    android:thumb="@drawable/switch_thumb_old"
+                    android:track="@drawable/switch_track_old"
                     android:text="移除背景颜色"
                     android:textColor="@color/colorTextGray"
                     android:textSize="15sp" />
+
 
                 <TextView
                     android:id="@+id/remove_bg_color_describe"
@@ -915,8 +912,8 @@
                     android:checked="true"
                     android:layout_height="35dp"
                     android:switchMinWidth="@dimen/switch_width"
-                    android:thumb="@drawable/switch_thumb"
-                    android:track="@drawable/switch_track"
+                    android:thumb="@drawable/switch_thumb_old"
+                    android:track="@drawable/switch_track_old"
                     android:text="强制显示遮罩"
                     android:textColor="@color/colorTextGray"
                     android:textSize="15sp" />
@@ -955,8 +952,8 @@
                     android:checked="true"
                     android:layout_height="35dp"
                     android:switchMinWidth="@dimen/switch_width"
-                    android:thumb="@drawable/switch_thumb"
-                    android:track="@drawable/switch_track"
+                    android:thumb="@drawable/switch_thumb_old"
+                    android:track="@drawable/switch_track_old"
                     android:text="强制开启启动遮罩"
                     android:textColor="@color/colorTextGray"
                     android:textSize="15sp"/>
@@ -980,8 +977,8 @@
                     android:checked="true"
                     android:layout_height="35dp"
                     android:switchMinWidth="@dimen/switch_width"
-                    android:thumb="@drawable/switch_thumb"
-                    android:track="@drawable/switch_track"
+                    android:thumb="@drawable/switch_thumb_old"
+                    android:track="@drawable/switch_track_old"
                     android:text="将启动遮罩适用于热启动"
                     android:textColor="@color/colorTextGray"
                     android:textSize="15sp"/>
@@ -1005,8 +1002,8 @@
                     android:checked="true"
                     android:layout_height="35dp"
                     android:switchMinWidth="@dimen/switch_width"
-                    android:thumb="@drawable/switch_thumb"
-                    android:track="@drawable/switch_track"
+                    android:thumb="@drawable/switch_thumb_old"
+                    android:track="@drawable/switch_track_old"
                     android:text="彻底关闭Splash Screen"
                     android:textColor="@color/colorTextGray"
                     android:textSize="15sp"/>

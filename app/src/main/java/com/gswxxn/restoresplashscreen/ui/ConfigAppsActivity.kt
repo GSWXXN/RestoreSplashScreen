@@ -82,12 +82,12 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
 
         // 标题名称
         binding.appListTitle.text = when (message) {
-            ConstValue.CUSTOM_SCOPE -> "作用域列表"
-            ConstValue.DEFAULT_STYLE -> "忽略图标列表"
-            ConstValue.BACKGROUND_EXCEPT -> "排除列表"
-            ConstValue.BRANDING_IMAGE -> "移除列表"
-            ConstValue.FORCE_SHOW_SPLASH_SCREEN -> "应用列表"
-            else -> "标题"
+            ConstValue.CUSTOM_SCOPE -> getString(R.string.custom_scope_title)
+            ConstValue.DEFAULT_STYLE -> getString(R.string.default_style_title)
+            ConstValue.BACKGROUND_EXCEPT -> getString(R.string.background_except_title)
+            ConstValue.BRANDING_IMAGE -> getString(R.string.background_image_title)
+            ConstValue.FORCE_SHOW_SPLASH_SCREEN -> getString(R.string.force_show_splash_screen_title)
+            else -> "Unavailable"
         }
 
         // 搜索按钮点击事件
@@ -182,7 +182,7 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
                     ConstValue.FORCE_SHOW_SPLASH_SCREEN -> DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST
                     else -> DataConst.UNDEFINED_LIST
                 }, checkedList)
-            toast("保存成功")
+            toast(getString(R.string.save_successful))
             finish()
         }
 

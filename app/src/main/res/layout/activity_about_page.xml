@@ -7,7 +7,7 @@
     android:background="@color/colorThemeBackground"
     android:orientation="vertical"
     tools:context=".ui.MainActivity"
-    tools:ignore="HardcodedText,UseCompoundDrawables,ContentDescription">
+    tools:ignore="ContentDescription, UseCompoundDrawables">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +19,6 @@
         android:paddingRight="15dp"
         android:paddingBottom="5dp"
         android:orientation="horizontal">
-
 
         <ImageView
             android:id="@+id/title_back_icon"
@@ -37,7 +36,7 @@
             android:layout_width="280dp"
             android:layout_height="45dp"
             android:singleLine="true"
-            android:text="关于"
+            android:text="@string/about"
             android:textColor="@color/colorTextGray"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -62,7 +61,7 @@
             android:layout_marginTop="6dp"
             android:textColor="@color/colorTextGray"
             android:textSize="15sp"
-            android:text="MIUI遮罩进化" />
+            android:text="@string/app_name" />
 
         <TextView
             android:id="@+id/version"
@@ -70,7 +69,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/colorTextGray"
             android:textSize="15sp"
-            android:text="v xx.xx" />
+            android:text="@string/version" />
 
     </LinearLayout>
 
@@ -108,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:alpha="0.85"
                     android:singleLine="true"
-                    android:text="开发者"
+                    android:text="@string/developer"
                     android:textColor="@color/colorTextGray"
                     android:textSize="12sp" />
 
@@ -131,7 +130,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:lineSpacingExtra="6dp"
-                        android:text="迷璐"
+                        android:text="@string/developer_milu"
                         android:textColor="@color/colorTextGray"
                         android:textSize="15sp" />
                 </LinearLayout>
@@ -157,7 +156,7 @@
                     android:layout_height="wrap_content"
                     android:alpha="0.85"
                     android:singleLine="true"
-                    android:text="开源仓库"
+                    android:text="@string/open_source_repo"
                     android:textColor="@color/colorTextGray"
                     android:textSize="12sp" />
 
@@ -188,7 +187,8 @@
                             android:lineSpacingExtra="6dp"
                             android:text="GITHUB"
                             android:textColor="@color/colorTextGray"
-                            android:textSize="15sp" />
+                            android:textSize="15sp"
+                            tools:ignore="HardcodedText" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -197,7 +197,8 @@
                             android:lineSpacingExtra="6dp"
                             android:text="https://github.com/GSWXXN/RestoreSplashScreen"
                             android:textColor="@color/colorTextDark"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            tools:ignore="HardcodedText" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -222,7 +223,7 @@
                     android:layout_height="wrap_content"
                     android:alpha="0.85"
                     android:singleLine="true"
-                    android:text="使用图标来源"
+                    android:text="@string/icon_resource"
                     android:textColor="@color/colorTextGray"
                     android:textSize="12sp" />
 
@@ -243,6 +244,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/license_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
@@ -257,118 +259,14 @@
                 android:paddingTop="15dp"
                 android:paddingRight="15dp">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center|start">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:alpha="0.85"
-                        android:singleLine="true"
-                        android:text="开放源代码许可"
-                        android:textColor="@color/colorTextGray"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/MIUINativeNotifyIcon"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="15dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:lineSpacingExtra="6dp"
-                        android:text="MIUINativeNotifyIcon - fankes"
-                        android:textColor="@color/colorTextGray"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:lineSpacingExtra="3dp"
-                        android:text="https://github.com/fankes/MIUINativeNotifyIcon\nGNU Affero General Public License v3.0"
-                        android:textColor="@color/colorTextDark"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/YukiHookAPI"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:lineSpacingExtra="6dp"
-                        android:text="YukiHookAPI - fankes"
-                        android:textColor="@color/colorTextGray"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:lineSpacingExtra="3dp"
-                        android:text="https://github.com/fankes/YukiHookAPI\nMIT License"
-                        android:textColor="@color/colorTextDark"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/HideMyApplist"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:lineSpacingExtra="6dp"
-                        android:text="Hide-My-Applist - Dr-TSNG"
-                        android:textColor="@color/colorTextGray"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:lineSpacingExtra="3dp"
-                        android:text="https://github.com/Dr-TSNG/Hide-My-Applist\nGNU Affero General Public License v3.0"
-                        android:textColor="@color/colorTextDark"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/libsu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:lineSpacingExtra="6dp"
-                        android:text="libsu - topjohnwu"
-                        android:textColor="@color/colorTextGray"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:lineSpacingExtra="3dp"
-                        android:text="https://github.com/topjohnwu/libsu\nApache License 2.0"
-                        android:textColor="@color/colorTextDark"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
+                    android:alpha="0.85"
+                    android:singleLine="true"
+                    android:text="@string/open_source_license"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

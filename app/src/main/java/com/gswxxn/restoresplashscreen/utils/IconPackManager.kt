@@ -135,7 +135,7 @@ class IconPackManager(private val mContext: Context, private val packageName: St
     /**
      * 获取可用的图标包列表
      *
-     * @return [Map] key: 图标包应用名; value: 图标包包名. 默认添加一个键值均为 None 的键值对
+     * @return [Map] key: 图标包包名; value: 图标包应用名. 默认添加一个键值均为 None 的键值对
      */
     fun getAvailableIconPacks(): Map<String, String> {
         val iconPacks = mutableMapOf("None" to "None")
@@ -159,7 +159,7 @@ class IconPackManager(private val mContext: Context, private val packageName: St
             try {
                 val ai = pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
                 val appName = mContext.packageManager.getApplicationLabel(ai).toString()
-                iconPacks += appName to packageName
+                iconPacks += packageName to appName
             } catch (e: PackageManager.NameNotFoundException) {
                 // shouldn't happen
                 e.printStackTrace()

@@ -10,6 +10,7 @@ import android.text.Html
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import cn.fkj233.ui.activity.MIUIActivity
 import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.ConstValue.BACKGROUND_EXCEPT
@@ -21,6 +22,7 @@ import com.gswxxn.restoresplashscreen.data.ConstValue.FORCE_SHOW_SPLASH_SCREEN
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.databinding.ActivityMainBinding
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
+import com.gswxxn.restoresplashscreen.utils.Utils.toast
 import com.highcapable.yukihookapi.YukiHookAPI.Status.executorName
 import com.highcapable.yukihookapi.YukiHookAPI.Status.executorVersion
 import com.highcapable.yukihookapi.YukiHookAPI.Status.isXposedModuleActive
@@ -198,34 +200,8 @@ class MainActivity : BaseActivity() {
             }
 
             // 使用图标包
-            iconPackList.apply {
-                val availableIconPacks = IconPackManager(this@MainActivity).getAvailableIconPacks()
-                val item = availableIconPacks.keys.toList()
-
-                adapter = ArrayAdapter(this@MainActivity, R.layout.spinner_item, item)
-                    .apply { setDropDownViewResource(R.layout.spinner_dropdown) }
-
-                onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(
-                        parent: AdapterView<*>?,
-                        view: View?,
-                        position: Int,
-                        id: Long
-                    ) {
-                        modulePrefs.put(
-                            DataConst.ICON_PACK_PACKAGE_NAME,
-                            availableIconPacks.values.elementAt(position)
-                        )
-                    }
-
-                    override fun onNothingSelected(parent: AdapterView<*>?) {}
-                }
-
-                availableIconPacks.forEach {
-                    if (it.value == modulePrefs.get(DataConst.ICON_PACK_PACKAGE_NAME)) {
-                        setSelection(item.indexOf(it.key))
-                    }
-                }
+            iconPackList.setOnClickListener {
+                toast("请使用新版UI操作")
             }
 
             // 忽略应用主动设置的图标

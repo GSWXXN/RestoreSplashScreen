@@ -193,6 +193,8 @@ class SystemUIHooker : YukiBaseHooker() {
                         param(DrawableClass, BooleanType)
                     }
                     beforeHook {
+                        if (prefs.get(DataConst.REMOVE_BG_COLOR)) return@beforeHook
+
                         val enableChangeBgColor = prefs.get(DataConst.ENABLE_CHANG_BG_COLOR)
                         val ignoreDarkMode = prefs.get(DataConst.IGNORE_DARK_MODE)
                         val isDarkMode = appContext.resources

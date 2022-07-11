@@ -40,6 +40,9 @@
     <string name="replace_to_empty_splash_screen">将作用域外的应用替换位空白启动遮罩</string>
     <string name="draw_round_corner">绘制图标圆角</string>
     <string name="shrink_icon">缩小图标</string>
+    <string name="not_shrink_icon">不缩小图标</string>
+    <string name="shrink_low_resolution_icon">仅缩小分辨率较低的图标</string>
+    <string name="shrink_all_icon">缩小全部图标</string>
     <string name="replace_icon">替换图标获取方式</string>
     <string name="replace_icon_tips">开启此选项后，Splash Screen的图标可以跟随主题设定。但是通常获取到的主题图标分辨率较低，经过放大后图标可能会比较模糊。</string>
     <string name="use_icon_pack">使用图标包</string>

@@ -169,7 +169,8 @@ class MainActivity : BaseActivity() {
 
             // 缩小图标
             shrinkIcon.apply {
-                val item = DataConst.SHRINK_ICON_ITEMS.values.toList()
+                val shrinkIconItems = mapOf(0 to "不缩小图标", 1 to "仅缩小分辨率较低的图标", 2 to "缩小全部图标")
+                val item = shrinkIconItems.values.toList()
 
                 adapter = ArrayAdapter(this@MainActivity, R.layout.spinner_item, item)
                     .apply { setDropDownViewResource(R.layout.spinner_dropdown) }

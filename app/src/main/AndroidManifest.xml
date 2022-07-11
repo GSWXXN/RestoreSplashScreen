@@ -20,7 +20,6 @@
         <activity
                 android:name=".ui.ConfigAppsActivity"
                 android:exported="true"
-                android:parentActivityName=".ui.MainActivity"
                 android:launchMode="singleTask"/>
         <activity
             android:name=".ui.SubSettings"
@@ -29,6 +28,7 @@
             android:launchMode="singleTask"/>
         <activity
                 android:name=".ui.MainSettingsActivity"
+                android:theme="@style/Starting"
                 android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

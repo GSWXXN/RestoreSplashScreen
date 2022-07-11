@@ -32,7 +32,7 @@ android {
         val buildType = buildType.name
         outputs.all {
             if (this is com.android.build.gradle.internal.api.ApkVariantOutputImpl) {
-                this.outputFileName = "${if (versionName.contains("Preview")) "MIUI遮罩进化" else "RestoreSplashScreen"}_${versionName}${if (buildType == "debug") "_debug" else ""}.apk"
+                this.outputFileName = "${if (versionName.contains("Preview") && buildType != "debug") "MIUI遮罩进化" else "RestoreSplashScreen"}_${versionName}${if (buildType == "debug") "_debug" else ""}.apk"
             }
         }
     }

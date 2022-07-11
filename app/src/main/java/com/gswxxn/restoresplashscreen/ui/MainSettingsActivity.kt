@@ -2,6 +2,8 @@ package com.gswxxn.restoresplashscreen.ui
 
 import android.content.Context
 import android.content.Intent
+import android.view.View
+import android.view.ViewTreeObserver
 import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.ConstValue
@@ -13,16 +15,29 @@ import com.gswxxn.restoresplashscreen.view.NewMIUIDialog
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.topjohnwu.superuser.Shell
 
-
 class MainSettingsActivity : BaseActivity() {
 
     companion object {
         lateinit var appContext: Context
     }
-
+    var isReady = false
     private lateinit var binding: ActivityMainSettingsBinding
 
     override fun onCreate() {
+        setContentView(R.layout.activity_main_settings)
+        val contentView = findViewById<View>(android.R.id.content)
+        contentView.viewTreeObserver.addOnPreDrawListener(object :
+            ViewTreeObserver.OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
+                if (isReady) {
+                    contentView.viewTreeObserver.removeOnPreDrawListener(this)
+                }
+                return isReady
+            }
+        })
+        Thread.sleep(400)
+        isReady = true
+
         appContext = this
         binding = ActivityMainSettingsBinding.inflate(layoutInflater).apply { setContentView(root) }
 

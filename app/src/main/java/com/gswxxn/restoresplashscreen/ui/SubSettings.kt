@@ -136,7 +136,7 @@ class SubSettings : BaseActivity() {
                     TextWithSwitch(TextV(textId = R.string.draw_round_corner), SwitchView(DataConst.ENABLE_DRAW_ROUND_CORNER))
 
                     // 缩小图标
-                    TextWithSpinner(TextV(textId = R.string.shrink_icon), SpinnerV(DataConst.SHRINK_ICON_ITEMS[modulePrefs.get(DataConst.SHRINK_ICON)]!!) {
+                    TextWithSpinner(TextV(textId = R.string.shrink_icon), SpinnerV(DataConst.SHRINK_ICON_ITEMS[modulePrefs.get(DataConst.SHRINK_ICON)]!!, 180F) {
                         for (item in DataConst.SHRINK_ICON_ITEMS) {
                             add(item.value) { modulePrefs.put(DataConst.SHRINK_ICON, item.key) }
                         }

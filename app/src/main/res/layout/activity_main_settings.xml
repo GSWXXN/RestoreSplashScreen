@@ -159,14 +159,24 @@
             android:textSize="11sp"/>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/settings_entry"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="23dp"
-        android:layout_marginStart="-20dp"
-        android:layout_marginBottom="5dp"
-        android:animateLayoutChanges="true"
-        android:orientation="vertical">
-    </LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_marginBottom="25dp"
+        android:fadingEdgeLength="10dp"
+        android:fillViewport="true"
+        android:requiresFadingEdge="vertical">
+
+        <LinearLayout
+            android:id="@+id/settings_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="23dp"
+            android:layout_marginStart="-20dp"
+            android:layout_marginBottom="5dp"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical">
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

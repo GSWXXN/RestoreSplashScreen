@@ -221,6 +221,15 @@ class SubSettings : BaseActivity() {
                         SwitchView(DataConst.ENABLE_CHANG_BG_COLOR, dataBindingSend = changeBGColorBinding.bindingSend)
                     )
 
+                    // 颜色模式
+                    val colorModeItems = mapOf(0 to getString(R.string.light_color), 1 to getString(R.string.dark_color), 2 to getString(R.string.follow_system))
+                    val colorModeBinding = getDataBinding(colorModeItems[modulePrefs.get(DataConst.BG_COLOR_MODE)]!!)
+                    TextSummaryWithSpinner(TextSummaryV(textId = R.string.color_mode, tipsId = R.string.color_mode_tips), SpinnerV(colorModeItems[modulePrefs.get(DataConst.BG_COLOR_MODE)]!!, dataBindingSend = colorModeBinding.bindingSend) {
+                        for (item in colorModeItems) {
+                            add(item.value) { modulePrefs.put(DataConst.BG_COLOR_MODE, item.key) }
+                        }
+                    }, dataBindingRecv = changeBGColorBinding.getRecv(2))
+
                     // 配置应用列表
                     TextSummaryArrow(TextSummaryV(textId = R.string.change_bg_color_list, onClickListener = {
                         startActivity(Intent(this@SubSettings, ConfigAppsActivity::class.java).apply {
@@ -231,7 +240,7 @@ class SubSettings : BaseActivity() {
                     Line()
 
                     // 忽略深色模式
-                    TextSummaryWithSwitch(TextSummaryV(textId = R.string.ignore_dark_mode, tipsId = R.string.ignore_dark_mode_tips), SwitchView(DataConst.IGNORE_DARK_MODE))
+                    TextSummaryWithSwitch(TextSummaryV(textId = R.string.ignore_dark_mode, tipsId = R.string.ignore_dark_mode_tips), SwitchView(DataConst.IGNORE_DARK_MODE, dataBindingRecv = colorModeBinding.getRecv(7)))
 
                     // 移除截图背景
                     TextSummaryWithSwitch(TextSummaryV(textId = R.string.remove_bg_drawable, tipsId = R.string.remove_bg_drawable_tips), SwitchView(DataConst.REMOVE_BG_DRAWABLE))

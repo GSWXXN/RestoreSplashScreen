@@ -110,15 +110,22 @@ object Utils {
      * 根据 Bitmap 获取背景颜色
      *
      * @param bitmap 从中获取颜色的图片
+     * @param isLight 是否为浅色模式
      * @return [Int]
      */
-    fun getBgColor(bitmap: Bitmap):Int {
+    fun getBgColor(bitmap: Bitmap, isLight: Boolean):Int {
         val hsv = FloatArray(3)
+
         val color = Palette.from(bitmap).maximumColorCount(8).generate()
-            .getDominantColor(Color.parseColor("#F5F5F5"))
+            .getDominantColor(Color.parseColor(if (isLight) "#F5F5F5" else "#1C2833"))
         Color.colorToHSV(color, hsv)
-        hsv[1] = hsv[1] - 0.4f // 减小饱和度
-        hsv[2] = hsv[2] + 0.2f // 增大明度
+        if (isLight) {
+            hsv[1] = hsv[1] - 0.4f // 减小饱和度
+            hsv[2] = hsv[2] + 0.2f // 增大明度
+        } else {
+            hsv[1] = hsv[1] - 0.2f // 减小饱和度
+            hsv[2] = hsv[2] - 0.7f // 减小明度
+        }
         return Color.HSVToColor(hsv)
     }
 

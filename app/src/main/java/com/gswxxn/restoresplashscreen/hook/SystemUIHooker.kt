@@ -197,6 +197,7 @@ class SystemUIHooker : YukiBaseHooker() {
 
                         val enableChangeBgColor = prefs.get(DataConst.ENABLE_CHANG_BG_COLOR)
                         val ignoreDarkMode = prefs.get(DataConst.IGNORE_DARK_MODE)
+                        val colorMode = prefs.get(DataConst.BG_COLOR_MODE)
                         val isDarkMode = appContext.resources
                             .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
                         val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
@@ -212,7 +213,13 @@ class SystemUIHooker : YukiBaseHooker() {
                             // 自适应背景色
                             enableChangeBgColor && !isInExceptList && (!isDarkMode || ignoreDarkMode) -> {
                                 val drawable = args(0).cast<Drawable>()
-                                val color = Utils.getBgColor(Utils.drawable2Bitmap(drawable!!, 100)!!)
+                                val color = Utils.getBgColor(
+                                    Utils.drawable2Bitmap(drawable!!, 100)!!,
+                                    when (colorMode) {
+                                        1 -> false
+                                        2 -> !isDarkMode
+                                        else -> true
+                                    })
                                 instance.setField("mThemeColor", color)
                                 printLog("10. createIconDrawable(): set adaptive background color")
                             }

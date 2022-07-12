@@ -176,13 +176,14 @@ object BlockMIUIHelper {
         })
     }
 
-    fun InitView.ItemData.getDataBinding(pref : Boolean) = GetDataBinding({ pref }) { view, flags, data ->
+    fun InitView.ItemData.getDataBinding(pref : Any) = GetDataBinding({ pref }) { view, flags, data ->
         when (flags) {
             1 -> (view as Switch).isEnabled = data as Boolean
             2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
             3 -> if (data as Boolean) (view as Switch).isChecked = true
             4 -> if (!(data as Boolean)) (view as Switch).isChecked = false
             6 -> (view as TextView).text = appContext.getString(com.gswxxn.restoresplashscreen.R.string.exception_mode_message, appContext.getString(if (data as Boolean) com.gswxxn.restoresplashscreen.R.string.will_not else com.gswxxn.restoresplashscreen.R.string.will_only))
+            7 -> if ((data as String) == appContext.getString(com.gswxxn.restoresplashscreen.R.string.follow_system)) (view as Switch).isChecked = true
         }
     }
 }

@@ -24,6 +24,7 @@ object DataConst {
     val ENABLE_HOT_START_COMPATIBLE = PrefsData("enable_hot_start_compatible", false)
     val ENABLE_DRAW_ROUND_CORNER = PrefsData("draw_round_corner", true)
     val SHRINK_ICON = PrefsData("shrink_icon", 0)
+    val BG_COLOR_MODE = PrefsData("color_mode", 0)
 
     val UNDEFINED_LIST = PrefsData("undefined_list", mutableSetOf<String>())
     val CUSTOM_SCOPE_LIST = PrefsData("custom_scope_list", mutableSetOf<String>())

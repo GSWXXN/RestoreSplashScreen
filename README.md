@@ -58,8 +58,8 @@
 
 
 ## 致谢
-本模块UI界面改自 [MIUI 原生通知图标](https://github.com/fankes/MIUINativeNotifyIcon)
-使用 [BlockMIUI](https://github.com/Block-Network/blockmiui) 的部分资源构建UI
+本模块UI界面改自 [MIUI 原生通知图标](https://github.com/fankes/MIUINativeNotifyIcon)  
+使用 [BlockMIUI](https://github.com/Block-Network/blockmiui) 的部分资源构建UI  
 获取应用列表方式改自 [Hide My Applist](https://github.com/Dr-TSNG/Hide-My-Applist)  
 模块使用 [Yuki Hook API](https://github.com/fankes/YukiHookAPI) 构建  
 使用 [libsu](https://github.com/topjohnwu/libsu) 执行Shell命令

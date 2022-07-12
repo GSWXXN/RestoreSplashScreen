@@ -22,6 +22,7 @@
     <string name="background_settings">背景</string>
     <string name="lab_settings">实验功能</string>
     <string name="faq">常见问题</string>
+    <string name="faq_url">https://gswxxn.coding.net/public/restoresplashscreen/faq/git</string>
 
     <!--Sub Settings-->
     <string name="enable_log">启用日志</string>

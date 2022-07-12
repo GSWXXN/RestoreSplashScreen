@@ -2,6 +2,7 @@ package com.gswxxn.restoresplashscreen.ui
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.view.View
 import android.view.ViewTreeObserver
 import com.gswxxn.restoresplashscreen.BuildConfig
@@ -110,11 +111,8 @@ class MainSettingsActivity : BaseActivity() {
 
             Line(true)
 
-            Author(shrinkIcon(R.drawable.ic_warn), getString(R.string.faq), null, 0f, {
-                toast("Unavailable for now")
-//                startActivity(Intent(this@MainSettingsActivity, SubSettings::class.java).apply {
-//                    putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.FAQ)
-//                })
+            Author(shrinkIcon(R.drawable.ic_help), getString(R.string.faq), null, 0f, {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.faq_url))))
             })
         }
     }

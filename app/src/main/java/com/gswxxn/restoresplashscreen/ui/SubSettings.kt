@@ -111,7 +111,7 @@ class SubSettings : BaseActivity() {
                     TextWithSwitch(TextV(textId = R.string.exception_mode), SwitchView(DataConst.IS_CUSTOM_SCOPE_EXCEPTION_MODE, dataBindingSend = exceptionModeBinding.bindingSend), dataBindingRecv = customScopeBinding.getRecv(2))
 
                     // 将作用域外的应用替换位空白启动遮罩
-                    TextWithSwitch(TextV(textId = R.string.replace_to_empty_splash_screen), SwitchView(DataConst.REPLACE_TO_EMPTY_SPLASH_SCREEN), dataBindingRecv = customScopeBinding.binding.getRecv(2))
+                    TextSummaryWithSwitch(TextSummaryV(textId = R.string.replace_to_empty_splash_screen, tipsId = R.string.replace_to_empty_splash_screen_tips), SwitchView(DataConst.REPLACE_TO_EMPTY_SPLASH_SCREEN), dataBindingRecv = customScopeBinding.binding.getRecv(2))
 
                     // 配置应用列表
                     TextSummaryArrow(TextSummaryV(textId = R.string.exception_mode_list) {

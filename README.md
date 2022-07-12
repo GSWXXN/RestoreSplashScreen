@@ -39,6 +39,9 @@
 - ~~部分机型 (如Redmi Note 10 Pro、小米12Pro) 的系统版本 (如稳定版、开发版) 可能无法使用本模块，请等待系统更新~~ (v1.9 已支持)
 
 
+## 常见问题解答
+[点击跳转](https://gswxxn.coding.net/public/restoresplashscreen/faq/git)
+
 
 ## 无法使用
 
@@ -55,7 +58,9 @@
 
 
 ## 致谢
-本模块UI界面改自 [MIUI 原生通知图标](https://github.com/fankes/MIUINativeNotifyIcon)  
+本模块UI界面改自 [MIUI 原生通知图标](https://github.com/fankes/MIUINativeNotifyIcon)
+使用 [BlockMIUI](https://github.com/Block-Network/blockmiui) 的部分资源构建UI
 获取应用列表方式改自 [Hide My Applist](https://github.com/Dr-TSNG/Hide-My-Applist)  
 模块使用 [Yuki Hook API](https://github.com/fankes/YukiHookAPI) 构建  
 使用 [libsu](https://github.com/topjohnwu/libsu) 执行Shell命令
+

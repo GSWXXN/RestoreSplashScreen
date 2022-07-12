@@ -35,7 +35,7 @@ class AboutPageActivity : BaseActivity() {
                 getDrawable(R.mipmap.ic_launcher)?.let {
                     drawable2Bitmap(
                         it,
-                        it.intrinsicHeight
+                        it.intrinsicHeight * 2
                     )
                 }, RoundDegree.RoundCorner))
 

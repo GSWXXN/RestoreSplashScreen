@@ -1,10 +1,10 @@
 package com.gswxxn.restoresplashscreen.utils
 
+import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.graphics.drawable.Drawable
-import com.gswxxn.restoresplashscreen.ui.MainSettingsActivity
 
-class AppInfoHelper(private val checkedList : Set<String>) {
+class AppInfoHelper(private val context : Context, private val checkedList : Set<String>) {
     private lateinit var appInfoList: MutableList<MyAppInfo>
 
     data class MyAppInfo(
@@ -22,7 +22,7 @@ class AppInfoHelper(private val checkedList : Set<String>) {
                 sortByDescending {it.isChecked }
             }.toMutableList()
         appInfoList = mutableListOf()
-        val pm = MainSettingsActivity.appContext.packageManager
+        val pm = context.packageManager
         for (appInfo in pm.getInstalledApplications(0)) {
             MyAppInfo(
                 appInfo.loadLabel(pm).toString(),

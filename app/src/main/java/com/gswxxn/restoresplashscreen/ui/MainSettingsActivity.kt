@@ -1,6 +1,5 @@
 package com.gswxxn.restoresplashscreen.ui
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.view.View
@@ -11,16 +10,11 @@ import com.gswxxn.restoresplashscreen.data.ConstValue
 import com.gswxxn.restoresplashscreen.databinding.ActivityMainSettingsBinding
 import com.gswxxn.restoresplashscreen.view.BlockMIUIHelper.addBlockMIUIView
 import com.gswxxn.restoresplashscreen.utils.Utils.shrinkIcon
-import com.gswxxn.restoresplashscreen.utils.Utils.toast
 import com.gswxxn.restoresplashscreen.view.NewMIUIDialog
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.topjohnwu.superuser.Shell
 
 class MainSettingsActivity : BaseActivity() {
-
-    companion object {
-        lateinit var appContext: Context
-    }
     var isReady = false
     private lateinit var binding: ActivityMainSettingsBinding
 
@@ -39,7 +33,6 @@ class MainSettingsActivity : BaseActivity() {
         Thread.sleep(400)
         isReady = true
 
-        appContext = this
         binding = ActivityMainSettingsBinding.inflate(layoutInflater).apply { setContentView(root) }
 
         binding.mainTextVersion.text = getString(R.string.module_version, BuildConfig.VERSION_NAME)

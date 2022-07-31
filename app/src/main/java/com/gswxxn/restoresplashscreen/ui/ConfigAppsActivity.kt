@@ -50,7 +50,7 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
                 else -> DataConst.UNDEFINED_LIST
             }).toMutableSet()
         // AppInfoHelper 实例
-        val appInfo = AppInfoHelper(checkedList)
+        val appInfo = AppInfoHelper(this, checkedList)
         // 在列表中的条目
         var appInfoFilter =  listOf<AppInfoHelper.MyAppInfo>()
 

@@ -48,6 +48,7 @@
     <string name="replace_icon">替换图标获取方式</string>
     <string name="replace_icon_tips">开启此选项后，Splash Screen的图标可以跟随主题设定。但是通常获取到的主题图标分辨率较低，经过放大后图标可能会比较模糊。</string>
     <string name="use_icon_pack">使用图标包</string>
+    <string name="icon_pack_is_removed">图标包被删除, 请重新选择</string>
     <string name="default_style">忽略应用主动设置的图标</string>
     <string name="default_style_tips">开启此选项并后，选中的应用即使主动适配Splash Screen, 也按未设置图标处理。开启此选项也可以解决以下问题：\n1. 使用第三方主题会出现图标方角问题。\n2. 部分应用没有将图标背景设置成透明导致图标方角问题。</string>
     <string name="default_style_list">配置应用列表</string>

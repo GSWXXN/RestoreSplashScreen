@@ -97,6 +97,7 @@ class IconPackManager(private val mContext: Context, private val packageName: St
      */
     fun getIconByPackageName(appPackageName: String?): Drawable? {
         if (!mLoaded) load()
+        if (iconPackRes == null) return null
         val pm = mContext.packageManager
         val launchIntent = pm.getLaunchIntentForPackage(appPackageName!!)
         var componentName: String? = null

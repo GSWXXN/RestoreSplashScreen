@@ -151,7 +151,7 @@ class SubSettings : BaseActivity() {
 
                     // 使用图标包
                     val availableIconPacks = IconPackManager(this@SubSettings).getAvailableIconPacks()
-                    TextWithSpinner(TextV(textId = R.string.use_icon_pack), SpinnerV(availableIconPacks[modulePrefs.get(DataConst.ICON_PACK_PACKAGE_NAME)]!!) {
+                    TextWithSpinner(TextV(textId = R.string.use_icon_pack), SpinnerV(availableIconPacks[modulePrefs.get(DataConst.ICON_PACK_PACKAGE_NAME)]?:getString(R.string.icon_pack_is_removed)) {
                         for (item in availableIconPacks) {
                             add(item.value) { modulePrefs.put(DataConst.ICON_PACK_PACKAGE_NAME, item.key) }
                         }

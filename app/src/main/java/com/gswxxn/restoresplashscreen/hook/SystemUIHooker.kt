@@ -12,6 +12,7 @@ import com.gswxxn.restoresplashscreen.utils.IconPackManager
 import com.gswxxn.restoresplashscreen.data.RoundDegree
 import com.gswxxn.restoresplashscreen.utils.Utils
 import com.gswxxn.restoresplashscreen.utils.Utils.getField
+import com.gswxxn.restoresplashscreen.utils.Utils.isMIUI
 import com.gswxxn.restoresplashscreen.utils.Utils.printLog
 import com.gswxxn.restoresplashscreen.utils.Utils.setField
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
@@ -340,7 +341,7 @@ class SystemUIHooker : YukiBaseHooker() {
          * 此处在 com.android.wm.shell.startingsurface.SplashscreenContentDrawer
          *   .$StartingWindowViewBuilder.fillViewWithIcon() 中被调用
          */
-        if (prefs.get(DataConst.IGNORE_DARK_MODE))
+        if (prefs.get(DataConst.IGNORE_DARK_MODE) && isMIUI)
             findClass("android.window.SplashScreenView\$Builder").hook {
                 injectMember {
                     method {

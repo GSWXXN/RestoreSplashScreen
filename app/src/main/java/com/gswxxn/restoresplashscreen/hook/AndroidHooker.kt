@@ -48,7 +48,10 @@ class AndroidHooker : YukiBaseHooker() {
             injectMember {
                 method {
                     name = "getStartingWindowType"
-                    paramCount(6)
+                    paramCount(when (Build.VERSION.SDK_INT) {
+                        33 -> 7
+                        else -> 6
+                    })
                 }
                 beforeHook {
                     val isHotStartCompatible = prefs.get(DataConst.ENABLE_HOT_START_COMPATIBLE)

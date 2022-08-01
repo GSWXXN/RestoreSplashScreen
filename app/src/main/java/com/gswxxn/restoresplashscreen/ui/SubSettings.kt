@@ -17,7 +17,7 @@ import com.gswxxn.restoresplashscreen.data.ConstValue
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.databinding.ActivitySubSettingsBinding
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
-import com.gswxxn.restoresplashscreen.view.BlockMIUIHelper.addBlockMIUIView
+import com.gswxxn.restoresplashscreen.utils.BlockMIUIHelper.addBlockMIUIView
 import com.gswxxn.restoresplashscreen.utils.Utils.toast
 import com.gswxxn.restoresplashscreen.view.InitView
 import com.gswxxn.restoresplashscreen.view.SwitchView
@@ -91,14 +91,6 @@ class SubSettings : BaseActivity() {
 //                            ),
 //                        SwitchView(DataConst.ENABLE_HIDE_DESCRIBE)
 //                    )
-
-                    TextSummary(
-                        textId = R.string.return_to_old_ui,
-                        tipsId = R.string.return_to_old_ui_tips
-                    ) {
-                        val intent = Intent(this@SubSettings, MainActivity::class.java)
-                        startActivity(intent)
-                    }
                 }
 
                 // 作用域

@@ -1,4 +1,4 @@
-package com.gswxxn.restoresplashscreen.view
+package com.gswxxn.restoresplashscreen.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import cn.fkj233.miui.R
 import cn.fkj233.ui.activity.dp2px
 import cn.fkj233.ui.activity.view.*
+import com.gswxxn.restoresplashscreen.view.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 

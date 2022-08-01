@@ -8,7 +8,7 @@ import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.ConstValue
 import com.gswxxn.restoresplashscreen.databinding.ActivityMainSettingsBinding
-import com.gswxxn.restoresplashscreen.view.BlockMIUIHelper.addBlockMIUIView
+import com.gswxxn.restoresplashscreen.utils.BlockMIUIHelper.addBlockMIUIView
 import com.gswxxn.restoresplashscreen.utils.Utils.shrinkIcon
 import com.gswxxn.restoresplashscreen.view.NewMIUIDialog
 import com.highcapable.yukihookapi.YukiHookAPI

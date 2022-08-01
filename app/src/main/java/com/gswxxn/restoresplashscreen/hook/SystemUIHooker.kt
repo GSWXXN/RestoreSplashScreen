@@ -7,6 +7,7 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.os.Build
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.RoundDegree
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
@@ -196,7 +197,10 @@ class SystemUIHooker : YukiBaseHooker() {
                 injectMember {
                     method {
                         name = "createIconDrawable"
-                        param(DrawableClass, BooleanType)
+                        when (Build.VERSION.SDK_INT) {
+                            33 -> param(DrawableClass, BooleanType, BooleanType)
+                            else -> param(DrawableClass, BooleanType)
+                        }
                     }
                     beforeHook {
                         if (prefs.get(DataConst.REMOVE_BG_COLOR)) return@beforeHook

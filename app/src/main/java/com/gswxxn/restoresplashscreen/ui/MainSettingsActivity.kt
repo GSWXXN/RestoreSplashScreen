@@ -2,7 +2,6 @@ package com.gswxxn.restoresplashscreen.ui
 
 import android.content.Intent
 import android.net.Uri
-import android.view.View
 import android.view.ViewTreeObserver
 import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.R
@@ -19,22 +18,17 @@ class MainSettingsActivity : BaseActivity() {
     private lateinit var binding: ActivityMainSettingsBinding
 
     override fun onCreate() {
-        setContentView(R.layout.activity_main_settings)
-        val contentView = findViewById<View>(android.R.id.content)
-        contentView.viewTreeObserver.addOnPreDrawListener(object :
-            ViewTreeObserver.OnPreDrawListener {
+        binding = ActivityMainSettingsBinding.inflate(layoutInflater).apply { setContentView(root) }
+        binding.root.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
             override fun onPreDraw(): Boolean {
-                if (isReady) {
-                    contentView.viewTreeObserver.removeOnPreDrawListener(this)
-                }
+                if (isReady) binding.root.viewTreeObserver.removeOnPreDrawListener(this)
                 return isReady
             }
         })
         Thread.sleep(400)
         isReady = true
 
-        binding = ActivityMainSettingsBinding.inflate(layoutInflater).apply { setContentView(root) }
-
+        // 显示版本号
         binding.mainTextVersion.text = getString(R.string.module_version, BuildConfig.VERSION_NAME)
 
         // 重启UI

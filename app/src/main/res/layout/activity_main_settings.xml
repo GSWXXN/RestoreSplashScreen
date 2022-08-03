@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/colorThemeBackground"
     android:orientation="vertical"
-    tools:context=".ui.MainSettingsActivity"
     tools:ignore="ContentDescription, UseCompoundDrawables" >
 
 <LinearLayout

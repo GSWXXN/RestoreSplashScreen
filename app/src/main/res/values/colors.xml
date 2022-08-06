@@ -3,10 +3,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="trans">#00000000</color>
     <color name="green">#228B22</color>
-    <color name="yellow">#FF9800</color>
     <color name="gray">#9E9E9E</color>
-    <color name="switch_on">#228B22</color>
-    <color name="switch_off">#9E9E9E</color>
     <color name="colorTextRed">#B22222</color>
-    <color name="colorDivider">#DADADA</color>
 </resources>

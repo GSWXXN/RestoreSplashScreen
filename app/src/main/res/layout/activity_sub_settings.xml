@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/colorThemeBackground"
     android:orientation="vertical"
-    tools:context=".ui.SubSettings"
     tools:ignore="UseCompoundDrawables, ContentDescription">
 
     <LinearLayout
@@ -35,7 +34,7 @@
                 android:layout_height="30dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="15dp"
-                android:src="@drawable/ic_back_button"
+                android:src="@drawable/abc_ic_ab_back_material"
                 android:tint="@color/colorTextGray"/>
 
             <TextView

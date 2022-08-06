@@ -3,7 +3,10 @@ package com.gswxxn.restoresplashscreen.ui
 import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.view.View
 import android.view.WindowInsetsController
+import android.widget.Switch
+import android.widget.TextView
 import androidx.core.widget.NestedScrollView
 import cn.fkj233.ui.activity.view.SpinnerV
 import cn.fkj233.ui.activity.view.TextSummaryV
@@ -14,9 +17,9 @@ import com.gswxxn.restoresplashscreen.data.ConstValue
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.databinding.ActivitySubSettingsBinding
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
-import com.gswxxn.restoresplashscreen.view.BlockMIUIHelper.addBlockMIUIView
+import com.gswxxn.restoresplashscreen.utils.BlockMIUIHelper.addBlockMIUIView
 import com.gswxxn.restoresplashscreen.utils.Utils.toast
-import com.gswxxn.restoresplashscreen.view.BlockMIUIHelper.getDataBinding
+import com.gswxxn.restoresplashscreen.view.InitView
 import com.gswxxn.restoresplashscreen.view.SwitchView
 import com.highcapable.yukihookapi.hook.factory.modulePrefs
 import kotlinx.coroutines.MainScope
@@ -88,14 +91,6 @@ class SubSettings : BaseActivity() {
 //                            ),
 //                        SwitchView(DataConst.ENABLE_HIDE_DESCRIBE)
 //                    )
-
-                    TextSummary(
-                        textId = R.string.return_to_old_ui,
-                        tipsId = R.string.return_to_old_ui_tips
-                    ) {
-                        val intent = Intent(this@SubSettings, MainActivity::class.java)
-                        startActivity(intent)
-                    }
                 }
 
                 // 作用域
@@ -148,7 +143,7 @@ class SubSettings : BaseActivity() {
 
                     // 使用图标包
                     val availableIconPacks = IconPackManager(this@SubSettings).getAvailableIconPacks()
-                    TextWithSpinner(TextV(textId = R.string.use_icon_pack), SpinnerV(availableIconPacks[modulePrefs.get(DataConst.ICON_PACK_PACKAGE_NAME)]!!) {
+                    TextWithSpinner(TextV(textId = R.string.use_icon_pack), SpinnerV(availableIconPacks[modulePrefs.get(DataConst.ICON_PACK_PACKAGE_NAME)]?:getString(R.string.icon_pack_is_removed)) {
                         for (item in availableIconPacks) {
                             add(item.value) { modulePrefs.put(DataConst.ICON_PACK_PACKAGE_NAME, item.key) }
                         }
@@ -304,6 +299,17 @@ class SubSettings : BaseActivity() {
                     TextSummaryWithSwitch(TextSummaryV(textId = R.string.disable_splash_screen, tipsId = R.string.disable_splash_screen_tips), SwitchView(DataConst.DISABLE_SPLASH_SCREEN))
                 }
             }
+        }
+    }
+
+    private fun InitView.ItemData.getDataBinding(pref : Any) = GetDataBinding({ pref }) { view, flags, data ->
+        when (flags) {
+            1 -> (view as Switch).isEnabled = data as Boolean
+            2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
+            3 -> if (data as Boolean) (view as Switch).isChecked = true
+            4 -> if (!(data as Boolean)) (view as Switch).isChecked = false
+            6 -> (view as TextView).text = getString(R.string.exception_mode_message, getString(if (data as Boolean) R.string.will_not else R.string.will_only))
+            7 -> if ((data as String) == getString(R.string.follow_system)) (view as Switch).isChecked = true
         }
     }
 }

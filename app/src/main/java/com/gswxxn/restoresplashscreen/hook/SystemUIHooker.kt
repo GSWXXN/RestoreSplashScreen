@@ -7,20 +7,27 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.os.Build
 import com.gswxxn.restoresplashscreen.data.DataConst
-import com.gswxxn.restoresplashscreen.utils.IconPackManager
 import com.gswxxn.restoresplashscreen.data.RoundDegree
+import com.gswxxn.restoresplashscreen.utils.IconPackManager
 import com.gswxxn.restoresplashscreen.utils.Utils
 import com.gswxxn.restoresplashscreen.utils.Utils.getField
+import com.gswxxn.restoresplashscreen.utils.Utils.isMIUI
 import com.gswxxn.restoresplashscreen.utils.Utils.printLog
 import com.gswxxn.restoresplashscreen.utils.Utils.setField
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.current
+import com.highcapable.yukihookapi.hook.log.loggerE
 import com.highcapable.yukihookapi.hook.type.android.ActivityInfoClass
 import com.highcapable.yukihookapi.hook.type.android.DrawableClass
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
 import com.highcapable.yukihookapi.hook.type.java.IntType
 import com.highcapable.yukihookapi.hook.type.java.StringType
+import de.robv.android.xposed.XC_MethodHook
+import de.robv.android.xposed.XposedBridge
+import de.robv.android.xposed.XposedHelpers
+import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 class SystemUIHooker : YukiBaseHooker() {
     private val iconPackManager by lazy { IconPackManager(
@@ -190,7 +197,10 @@ class SystemUIHooker : YukiBaseHooker() {
                 injectMember {
                     method {
                         name = "createIconDrawable"
-                        param(DrawableClass, BooleanType)
+                        when (Build.VERSION.SDK_INT) {
+                            33 -> param(DrawableClass, BooleanType, BooleanType)
+                            else -> param(DrawableClass, BooleanType)
+                        }
                     }
                     beforeHook {
                         if (prefs.get(DataConst.REMOVE_BG_COLOR)) return@beforeHook
@@ -318,19 +328,21 @@ class SystemUIHooker : YukiBaseHooker() {
          * createScaledBitmapWithoutShadow() 的第二个参数在 Android 源代码中被称为 shrinkNonAdaptiveIcons
          * 若将此参数设置为 true 时，在 MIUI 中的非自适应图标将会错位显示
          * 若将此参数设置为 false 时，非自适应图标不会缩小而且显示较模糊，我们可以在后续方法中将图标缩小绘制
+         *
+         * *** 为适配 Android 13 此块作废，使用底部新 Hook 方法
          */
-        findClass("com.android.launcher3.icons.BaseIconFactory").hook {
-            injectMember {
-                method {
-                    name = "createScaledBitmapWithoutShadow"
-                    param(DrawableClass, BooleanType)
-                }
-                beforeHook {
-                    args(1).set(false)
-                    printLog("9. BaseIconFactory(): set shrinkNonAdaptiveIcons false")
-                }
-            }
-        }
+//        findClass("com.android.launcher3.icons.BaseIconFactory").hook {
+//            injectMember {
+//                method {
+//                    name = "createScaledBitmapWithoutShadow"
+//                    param(DrawableClass, BooleanType)
+//                }
+//                beforeHook {
+//                    args(1).set(false)
+//                    printLog("9. BaseIconFactory(): set shrinkNonAdaptiveIcons false")
+//                }
+//            }
+//        }
 
         /**
          * 忽略深色模式
@@ -340,7 +352,7 @@ class SystemUIHooker : YukiBaseHooker() {
          * 此处在 com.android.wm.shell.startingsurface.SplashscreenContentDrawer
          *   .$StartingWindowViewBuilder.fillViewWithIcon() 中被调用
          */
-        if (prefs.get(DataConst.IGNORE_DARK_MODE))
+        if (prefs.get(DataConst.IGNORE_DARK_MODE) && isMIUI)
             findClass("android.window.SplashScreenView\$Builder").hook {
                 injectMember {
                     method {
@@ -382,4 +394,39 @@ class SystemUIHooker : YukiBaseHooker() {
                 }
             }
     }
+
+    /**
+     * 设置图标不缩小
+     *
+     * 兼容 Android 13
+     */
+    fun onXPEvent(lpparam : XC_LoadPackage.LoadPackageParam) {
+        val hookClass = XposedHelpers.findClass("com.android.launcher3.icons.BaseIconFactory", lpparam.classLoader)
+
+        fun findAndHookFirstMethod(methodName : String, callback : XC_MethodHook): XC_MethodHook.Unhook? {
+            for (method in hookClass.declaredMethods) {
+                if (method.name == methodName) return XposedBridge.hookMethod(method, callback)
+            }
+            loggerE(msg = "Cannot find method [$methodName] in class [com.android.launcher3.icons.BaseIconFactory]")
+            return null
+        }
+
+        findAndHookFirstMethod("createScaledBitmapWithoutShadow", object : XC_MethodHook() {
+            var hook : Unhook? = null
+            override fun beforeHookedMethod(param: MethodHookParam?) {
+
+               hook = findAndHookFirstMethod("normalizeAndWrapToAdaptiveIcon", object : XC_MethodHook() {
+                   override fun beforeHookedMethod(param: MethodHookParam?) {
+                       param!!.args[1] = false
+                       printLog("9. BaseIconFactory(): set shrinkNonAdaptiveIcons false")
+                   }
+               })
+
+            }
+            override fun afterHookedMethod(param: MethodHookParam?) {
+                hook?.unhook()
+            }
+        })
+    }
+
 }

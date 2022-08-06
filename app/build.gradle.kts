@@ -12,8 +12,8 @@ android {
         applicationId = "com.gswxxn.restoresplashscreen"
         minSdk = 31
         targetSdk = 32
-        versionCode = 230
-        versionName = "2.3"
+        versionCode = 240
+        versionName = "2.4"
     }
 
     buildTypes {

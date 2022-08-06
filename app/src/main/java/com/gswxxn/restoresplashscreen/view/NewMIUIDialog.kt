@@ -24,6 +24,7 @@ package com.gswxxn.restoresplashscreen.view
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
@@ -162,6 +163,10 @@ class NewMIUIDialog(context: Context, val build: NewMIUIDialog.() -> Unit) : Dia
     init {
         window?.setGravity(Gravity.BOTTOM)
         setContentView(root)
+        window?.setBackgroundDrawable(GradientDrawable().apply {
+            cornerRadius = dp2px(context, 25f).toFloat()
+            setColor(context.getColor(R.color.dialog_background))
+        })
     }
 
     fun addView(mView: View) {

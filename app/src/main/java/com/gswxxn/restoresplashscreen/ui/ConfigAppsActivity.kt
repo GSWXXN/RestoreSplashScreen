@@ -50,13 +50,13 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
                 else -> DataConst.UNDEFINED_LIST
             }).toMutableSet()
         // AppInfoHelper 实例
-        val appInfo = AppInfoHelper(checkedList)
+        val appInfo = AppInfoHelper(this, checkedList)
         // 在列表中的条目
         var appInfoFilter =  listOf<AppInfoHelper.MyAppInfo>()
 
         var onRefreshList: (() -> Unit)? = null
 
-        fun searchEvent() = run {
+        fun searchEvent() {
             val content = binding.searchEditText.text.toString()
             appInfoFilter = if (content.isBlank()) {
                 appInfo.getAppInfoList()
@@ -66,14 +66,20 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
             onRefreshList?.invoke()
         }
 
-
-
         launch {
             appInfoFilter = withContext(Dispatchers.Default) { appInfo.getAppInfoList() }
 
             showView(false, binding.configListLoadingView)
             showView(true, binding.configListView)
 
+            // 搜索栏内容改变事件
+            binding.searchEditText.addTextChangedListener(object : TextWatcher {
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    searchEvent()
+                }
+                override fun afterTextChanged(s: Editable?) {}
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            })
             searchEvent()
         }
 
@@ -100,14 +106,6 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
 
         // 搜索栏事件监听
         binding.searchEditText.apply {
-            addTextChangedListener(object : TextWatcher {
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    searchEvent()
-                }
-                override fun afterTextChanged(s: Editable?) {}
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            })
-
             // 焦点事件
             setOnFocusChangeListener { v, hasFocus ->
                 val imm = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -234,8 +232,3 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
         }
     }
 }
-
-
-
-
-

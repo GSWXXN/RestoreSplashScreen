@@ -1,5 +1,6 @@
 package com.gswxxn.restoresplashscreen.hook
 
+import android.os.Build
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.utils.Utils.printLog
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
@@ -35,7 +36,10 @@ class AndroidHooker : YukiBaseHooker() {
             injectMember {
                 method {
                     name = "addStartingWindow"
-                    paramCount(15)
+                    paramCount(when (Build.VERSION.SDK_INT) {
+                        33 -> 10
+                        else -> 15
+                    })
                 }
                 beforeHook {
                     val isDisableSS = prefs.get(DataConst.DISABLE_SPLASH_SCREEN)
@@ -48,7 +52,10 @@ class AndroidHooker : YukiBaseHooker() {
             injectMember {
                 method {
                     name = "getStartingWindowType"
-                    paramCount(6)
+                    paramCount(when (Build.VERSION.SDK_INT) {
+                        33 -> 7
+                        else -> 6
+                    })
                 }
                 beforeHook {
                     val isHotStartCompatible = prefs.get(DataConst.ENABLE_HOT_START_COMPATIBLE)

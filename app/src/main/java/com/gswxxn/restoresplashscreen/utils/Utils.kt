@@ -13,6 +13,7 @@ import com.gswxxn.restoresplashscreen.data.RoundDegree
 import com.highcapable.yukihookapi.hook.core.finder.FieldFinder.Result.Instance
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.field
+import com.highcapable.yukihookapi.hook.factory.hasClass
 import com.highcapable.yukihookapi.hook.log.loggerI
 
 object Utils {
@@ -167,4 +168,10 @@ object Utils {
     fun YukiBaseHooker.printLog(vararg msg: String) {
         if (this.prefs.get(DataConst.ENABLE_LOG)) msg.forEach { loggerI(msg = it) }
     }
+
+    /**
+     * 当前设备是否是 MIUI 定制 Android 系统
+     * @return [Boolean] 是否符合条件
+     */
+    val isMIUI by lazy { "android.miui.R".hasClass }
 }

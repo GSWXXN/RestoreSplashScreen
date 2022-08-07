@@ -12,4 +12,5 @@
     <color name="demoFill">#FFFFFFFF</color>
     <color name="demoText">#FF666666</color>
     <color name="demoIcon">#FF333333</color>
+    <color name="brandColor">#FF000000</color>
 </resources>

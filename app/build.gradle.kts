@@ -56,5 +56,11 @@ dependencies {
     implementation("androidx.palette:palette-ktx:1.0.0")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3")
-}
 
+    //API for SplashScreen
+    implementation("androidx.core:core-splashscreen:1.0.0-alpha01")
+
+    implementation("androidx.core:core-ktx:1.8.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
+    implementation("androidx.activity:activity-ktx:1.2.3")
+}

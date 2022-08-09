@@ -1,11 +1,11 @@
 package com.gswxxn.restoresplashscreen.ui
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.View
+import androidx.activity.ComponentActivity
 import com.gswxxn.restoresplashscreen.R
 
-abstract class BaseActivity : Activity() {
+abstract class BaseActivity : ComponentActivity() {
 
     open fun showView(isShow: Boolean = true, vararg views: View?) {
         for (element in views) {

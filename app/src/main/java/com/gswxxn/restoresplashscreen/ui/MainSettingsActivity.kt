@@ -1,9 +1,20 @@
 package com.gswxxn.restoresplashscreen.ui
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.app.Application
 import android.content.Intent
+import android.graphics.Path
 import android.net.Uri
+import android.view.View
 import android.view.ViewTreeObserver
+import android.view.animation.AnticipateInterpolator
+import androidx.activity.viewModels
+import androidx.core.animation.doOnEnd
+import androidx.core.splashscreen.SplashScreen
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.gswxxn.restoresplashscreen.BuildConfig
+import com.gswxxn.restoresplashscreen.MyViewModel
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.ConstValue
 import com.gswxxn.restoresplashscreen.databinding.ActivityMainSettingsBinding
@@ -16,9 +27,17 @@ import com.topjohnwu.superuser.Shell
 class MainSettingsActivity : BaseActivity() {
     var isReady = false
     private lateinit var binding: ActivityMainSettingsBinding
+    private val viewModel: MyViewModel by viewModels()
+    private lateinit var splashScreen: SplashScreen
+    private val defaultExitDuration: Long by lazy {
+        viewModel.getApplication<Application>()
+            .resources.getInteger(R.integer.splash_exit_total_duration).toLong()
+    }
 
     override fun onCreate() {
+        splashScreen = installSplashScreen()
         binding = ActivityMainSettingsBinding.inflate(layoutInflater).apply { setContentView(root) }
+        customizeSplashScreen(splashScreen)
         binding.root.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
             override fun onPreDraw(): Boolean {
                 if (isReady) binding.root.viewTreeObserver.removeOnPreDrawListener(this)
@@ -103,6 +122,99 @@ class MainSettingsActivity : BaseActivity() {
             })
         }
     }
+
+    private fun customizeSplashScreen(splashScreen: SplashScreen) {
+        customizeSplashScreenExit(splashScreen)
+    }
+
+    // Customize splash screen exit animator.
+    private fun customizeSplashScreenExit(splashScreen: SplashScreen) {
+        splashScreen.setOnExitAnimationListener { splashScreenViewProvider ->
+
+            showSplashExitAnimator(splashScreenViewProvider.view) {
+                splashScreenViewProvider.remove()
+            }
+
+            showSplashIconExitAnimator(splashScreenViewProvider.iconView) {
+                splashScreenViewProvider.remove()
+            }
+        }
+    }
+
+    // Show exit animator for splash screen view.
+    private fun showSplashExitAnimator(splashScreenView: View, onExit: () -> Unit = {}) {
+
+        // Create your custom animation set.
+        val alphaOut = ObjectAnimator.ofFloat(
+            splashScreenView,
+            View.ALPHA,
+            1f,
+            0f
+        )
+
+        // Slide down to center.
+        val slideDown = ObjectAnimator.ofFloat(
+            splashScreenView,
+            View.TRANSLATION_Y,
+            0f,
+            // iconView.translationY,
+            (splashScreenView.height).toFloat()
+        )
+
+        AnimatorSet().run {
+            duration = defaultExitDuration
+            interpolator = AnticipateInterpolator()
+            playTogether(slideDown, alphaOut)
+
+            doOnEnd {
+                onExit()
+            }
+            start()
+        }
+    }
+
+    // Show exit animator for splash icon.
+    private fun showSplashIconExitAnimator(iconView: View, onExit: () -> Unit = {}) {
+
+        val alphaOut = ObjectAnimator.ofFloat(
+            iconView,
+            View.ALPHA,
+            1f,
+            0f
+        )
+
+        // Bird scale out animator.
+        val scaleOut = ObjectAnimator.ofFloat(
+            iconView,
+            View.SCALE_X,
+            View.SCALE_Y,
+            Path().apply {
+                moveTo(1.0f, 1.0f)
+                lineTo(0.3f, 0.3f)
+            }
+        )
+
+        // Bird slide up to center.
+        val slideUp = ObjectAnimator.ofFloat(
+            iconView,
+            View.TRANSLATION_Y,
+            0f,
+            -(iconView.height).toFloat() * 2.25f
+        )
+
+        AnimatorSet().run {
+            interpolator = AnticipateInterpolator()
+            duration = defaultExitDuration
+
+            playTogether(alphaOut, scaleOut, slideUp)
+
+            doOnEnd {
+                onExit()
+            }
+            start()
+        }
+    }
+
 
     private fun refreshState() {
         binding.mainStatus.setBackgroundResource(

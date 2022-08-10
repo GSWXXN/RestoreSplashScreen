@@ -8,10 +8,11 @@ import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.ConstValue
 import com.gswxxn.restoresplashscreen.databinding.ActivityMainSettingsBinding
 import com.gswxxn.restoresplashscreen.utils.BlockMIUIHelper.addBlockMIUIView
+import com.gswxxn.restoresplashscreen.utils.Utils.execShell
 import com.gswxxn.restoresplashscreen.utils.Utils.shrinkIcon
 import com.gswxxn.restoresplashscreen.view.NewMIUIDialog
 import com.highcapable.yukihookapi.YukiHookAPI
-import com.topjohnwu.superuser.Shell
+import kotlin.system.exitProcess
 
 class MainSettingsActivity : BaseActivity() {
     var isReady = false
@@ -37,13 +38,11 @@ class MainSettingsActivity : BaseActivity() {
                 setTitle(R.string.restart_title)
                 setMessage(R.string.restart_message)
                 Button(getString(R.string.reboot)) {
-                    Shell.cmd("reboot").exec()
+                    execShell("reboot")
                 }
                 Button(getString(R.string.restart_system_ui)) {
-                    Shell.cmd(
-                        "pkill -f com.android.systemui",
-                        "pkill -f com.gswxxn.restoresplashscreen"
-                    ).exec()
+                    execShell("pkill -f com.android.systemui")
+                    exitProcess(0)
                 }
                 Button(getString(R.string.cancel), cancelStyle = true) {
                     dismiss()

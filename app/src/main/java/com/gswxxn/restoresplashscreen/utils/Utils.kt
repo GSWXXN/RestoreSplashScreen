@@ -15,6 +15,7 @@ import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.field
 import com.highcapable.yukihookapi.hook.factory.hasClass
 import com.highcapable.yukihookapi.hook.log.loggerI
+import java.io.DataOutputStream
 
 object Utils {
 
@@ -174,4 +175,22 @@ object Utils {
      * @return [Boolean] 是否符合条件
      */
     val isMIUI by lazy { "android.miui.R".hasClass }
+
+    /**
+     * 执行 Shell 命令
+     * @param command Shell 命令
+     */
+    fun execShell(command : String) {
+        try {
+            val p = Runtime.getRuntime().exec("su")
+            val outputStream = p.outputStream
+            val dataOutputStream = DataOutputStream(outputStream)
+            dataOutputStream.writeBytes(command)
+            dataOutputStream.flush()
+            dataOutputStream.close()
+            outputStream.close()
+        } catch (t: Throwable) {
+            t.printStackTrace()
+        }
+    }
 }

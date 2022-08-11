@@ -12,7 +12,6 @@ import com.gswxxn.restoresplashscreen.utils.Utils.execShell
 import com.gswxxn.restoresplashscreen.utils.Utils.shrinkIcon
 import com.gswxxn.restoresplashscreen.view.NewMIUIDialog
 import com.highcapable.yukihookapi.YukiHookAPI
-import kotlin.system.exitProcess
 
 class MainSettingsActivity : BaseActivity() {
     var isReady = false
@@ -42,7 +41,7 @@ class MainSettingsActivity : BaseActivity() {
                 }
                 Button(getString(R.string.restart_system_ui)) {
                     execShell("pkill -f com.android.systemui")
-                    exitProcess(0)
+                    finish()
                 }
                 Button(getString(R.string.cancel), cancelStyle = true) {
                     dismiss()

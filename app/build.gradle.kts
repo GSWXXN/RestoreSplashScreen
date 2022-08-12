@@ -19,6 +19,7 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
@@ -52,7 +53,6 @@ dependencies {
     implementation("com.highcapable.yukihookapi:api:1.0.92")
     ksp("com.highcapable.yukihookapi:ksp-xposed:1.0.92")
 
-    implementation("com.github.topjohnwu.libsu:core:5.0.2")
     implementation("androidx.palette:palette-ktx:1.0.0")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3")

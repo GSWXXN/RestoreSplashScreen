@@ -41,7 +41,7 @@ class MainSettingsActivity : BaseActivity() {
                 }
                 Button(getString(R.string.restart_system_ui)) {
                     execShell("pkill -f com.android.systemui")
-                    finish()
+                    finishAndRemoveTask()
                 }
                 Button(getString(R.string.cancel), cancelStyle = true) {
                     dismiss()

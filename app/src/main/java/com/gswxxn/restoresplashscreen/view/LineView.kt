@@ -30,7 +30,10 @@ import cn.fkj233.ui.activity.data.DataBinding
 import cn.fkj233.ui.activity.dp2px
 import cn.fkj233.ui.activity.view.BaseView
 
-class LineView(private val isShort: Boolean, private val dataBindingRecv: DataBinding.Binding.Recv? = null): BaseView() {
+class LineView(
+    private val isShort: Boolean,
+    private val dataBindingRecv: DataBinding.Binding.Recv? = null
+) : BaseView() {
 
     override fun getType(): BaseView {
         return this
@@ -38,12 +41,16 @@ class LineView(private val isShort: Boolean, private val dataBindingRecv: DataBi
 
     override fun create(context: Context, callBacks: (() -> Unit)?): View {
         return View(context).also {
-            val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp2px(context, 0.9f))
+            val layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                dp2px(context, 0.9f)
+            )
             layoutParams.setMargins(
                 if (isShort) dp2px(context, 20f) else 0,
                 dp2px(context, 23f),
                 0,
-                dp2px(context, 23f))
+                dp2px(context, 23f)
+            )
             it.layoutParams = layoutParams
             it.setBackgroundColor(context.resources.getColor(R.color.line, null))
             dataBindingRecv?.setView(it)

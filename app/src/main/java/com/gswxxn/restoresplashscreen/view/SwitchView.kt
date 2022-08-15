@@ -36,8 +36,8 @@ class SwitchView(
     private val dataBindingRecv: DataBinding.Binding.Recv? = null,
     private val dataBindingSend: DataBinding.Binding.Send? = null,
     private val onClickListener: ((Boolean) -> Unit)? = null
-): BaseView() {
-    private lateinit var context : Context
+) : BaseView() {
+    private lateinit var context: Context
 
     lateinit var switch: MIUISwitch
 

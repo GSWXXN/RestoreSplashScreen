@@ -93,7 +93,7 @@ object BlockMIUIHelper {
                 is LinearContainerV -> addView(item.create(context, callBacks)) // 布局创建
                 is AuthorV -> { // 作者框
                     addView(item.create(context, callBacks).apply {
-                        (layoutParams as LinearLayout.LayoutParams).setMargins(0, 0,0,0)
+                        (layoutParams as LinearLayout.LayoutParams).setMargins(0, 0, 0, 0)
                     })
                     item.onClick?.let { unit ->
                         setOnClickListener {
@@ -124,12 +124,19 @@ object BlockMIUIHelper {
                     }
                     setOnTouchListener { view, motionEvent ->
                         if (motionEvent.action == MotionEvent.ACTION_UP) {
-                            val popup = MIUIPopup(context, view, spinner.currentValue, spinner.dropDownWidth, {
-                                spinner.select.text = it
-                                spinner.currentValue = it
-                                callBacks?.let { it1 -> it1() }
-                                spinner.dataBindingSend?.send(it)
-                            }, SpinnerV.SpinnerData().apply(spinner.data).arrayList)
+                            val popup = MIUIPopup(
+                                context,
+                                view,
+                                spinner.currentValue,
+                                spinner.dropDownWidth,
+                                {
+                                    spinner.select.text = it
+                                    spinner.currentValue = it
+                                    callBacks?.let { it1 -> it1() }
+                                    spinner.dataBindingSend?.send(it)
+                                },
+                                SpinnerV.SpinnerData().apply(spinner.data).arrayList
+                            )
                             if (view.width / 2 >= motionEvent.x) {
                                 popup.apply {
                                     horizontalOffset = dp2px(context, 24F)

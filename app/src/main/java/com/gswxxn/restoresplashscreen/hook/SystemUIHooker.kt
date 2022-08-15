@@ -30,12 +30,14 @@ import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 class SystemUIHooker : YukiBaseHooker() {
-    private val iconPackManager by lazy { IconPackManager(
-        appContext,
-        prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)
-    ) }
+    private val iconPackManager by lazy {
+        IconPackManager(
+            appContext,
+            prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)
+        )
+    }
 
-    private fun isExcept(pkgName : String) : Boolean {
+    private fun isExcept(pkgName: String): Boolean {
         val list = prefs.get(DataConst.CUSTOM_SCOPE_LIST)
         val isExceptionMode = prefs.get(DataConst.IS_CUSTOM_SCOPE_EXCEPTION_MODE)
         return prefs.get(DataConst.ENABLE_CUSTOM_SCOPE)
@@ -98,15 +100,18 @@ class SystemUIHooker : YukiBaseHooker() {
                         emptyParam()
                     }
                     beforeHook {
-                        val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
+                        val pkgName =
+                            instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
                         val isDefaultStyle = prefs.get(DataConst.ENABLE_DEFAULT_STYLE)
                                 && pkgName in prefs.get(DataConst.DEFAULT_STYLE_LIST)
                         val isRemoveBrandingImage = prefs.get(DataConst.REMOVE_BRANDING_IMAGE)
                                 && pkgName in prefs.get(DataConst.REMOVE_BRANDING_IMAGE_LIST)
                         val isRemoveBGColor = prefs.get(DataConst.REMOVE_BG_COLOR)
-                        val isReplaceToEmptySplashScreen = prefs.get(DataConst.REPLACE_TO_EMPTY_SPLASH_SCREEN)
+                        val isReplaceToEmptySplashScreen =
+                            prefs.get(DataConst.REPLACE_TO_EMPTY_SPLASH_SCREEN)
                         val isExcept = isExcept(pkgName)
-                        val forceEnableSplashScreen = prefs.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)
+                        val forceEnableSplashScreen =
+                            prefs.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)
                         val context = instance.getField("mContext").cast<Context>()
                         val mSplashscreenContentDrawer = instance.getField("this\$0").any()!!
                         val mTmpAttrs = mSplashscreenContentDrawer
@@ -126,12 +131,17 @@ class SystemUIHooker : YukiBaseHooker() {
                                 "****** ${pkgName}(forceEnableSplashScreen):",
                                 "1. build(): ${
                                     if (isExcept) "Except this app"
-                                    else "set mSuggestType to 1; set mOverlayDrawable to null"}"
+                                    else "set mSuggestType to 1; set mOverlayDrawable to null"
+                                }"
                             )
                         }
 
                         // 打印日志
-                        printLog("info: build(): mSuggestType is ${instance.getField("mSuggestType").int()}")
+                        printLog(
+                            "info: build(): mSuggestType is ${
+                                instance.getField("mSuggestType").int()
+                            }"
+                        )
 
                         // 重置因实现自定义作用域而影响到的 mTmpAttrs
                         mSplashscreenContentDrawer.current {
@@ -143,9 +153,14 @@ class SystemUIHooker : YukiBaseHooker() {
                         printLog("2. build(): call getWindowAttrs() to reset mTmpAttrs")
 
                         // 将作用域外的应用替换为空白启动遮罩
-                        if (isReplaceToEmptySplashScreen && isExcept && mTmpAttrs.getField("mSplashScreenIcon").any() == null) {
+                        if (isReplaceToEmptySplashScreen && isExcept && mTmpAttrs.getField("mSplashScreenIcon")
+                                .any() == null
+                        ) {
                             instance.setField("mSuggestType", 3)
-                            instance.setField("mOverlayDrawable", context!!.getDrawable(mTmpAttrs.getField("mWindowBgResId").int()))
+                            instance.setField(
+                                "mOverlayDrawable",
+                                context!!.getDrawable(mTmpAttrs.getField("mWindowBgResId").int())
+                            )
                         }
                         printLog("2.1. build(): ${if (isReplaceToEmptySplashScreen && isExcept) "set mSuggestType to 3;" else "Not"} replace to empty splash screen")
 
@@ -210,8 +225,10 @@ class SystemUIHooker : YukiBaseHooker() {
                         val colorMode = prefs.get(DataConst.BG_COLOR_MODE)
                         val isDarkMode = appContext.resources
                             .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
-                        val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
-                        val isInExceptList = pkgName in prefs.get(DataConst.BG_EXCEPT_LIST) || isExcept(pkgName)
+                        val pkgName =
+                            instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
+                        val isInExceptList =
+                            pkgName in prefs.get(DataConst.BG_EXCEPT_LIST) || isExcept(pkgName)
 
                         when {
                             // 设置微信背景色为深色
@@ -229,7 +246,8 @@ class SystemUIHooker : YukiBaseHooker() {
                                         1 -> false
                                         2 -> !isDarkMode
                                         else -> true
-                                    })
+                                    }
+                                )
                                 instance.setField("mThemeColor", color)
                                 printLog("10. createIconDrawable(): set adaptive background color")
                             }
@@ -278,7 +296,12 @@ class SystemUIHooker : YukiBaseHooker() {
                     var drawable = if (enableReplaceIcon) {
                         when {
                             pkgName == "com.android.contacts" && pkgActivity == "com.android.contacts.activities.PeopleActivity" ->
-                                appContext.packageManager.getActivityIcon(ComponentName("com.android.contacts","com.android.contacts.activities.TwelveKeyDialer"))
+                                appContext.packageManager.getActivityIcon(
+                                    ComponentName(
+                                        "com.android.contacts",
+                                        "com.android.contacts.activities.TwelveKeyDialer"
+                                    )
+                                )
                             pkgName == "com.android.settings" && pkgActivity == "com.android.settings.BackgroundApplicationsManager" ->
                                 appContext.packageManager.getApplicationIcon("com.android.settings")
                             else -> pkgName.let { appContext.packageManager.getApplicationIcon(it) }
@@ -293,7 +316,7 @@ class SystemUIHooker : YukiBaseHooker() {
                         when {
                             pkgName == "com.android.contacts" && pkgActivity == "com.android.contacts.activities.PeopleActivity" ->
                                 iconPackManager.getIconByComponentName("ComponentInfo{com.android.contacts/com.android.contacts.activities.TwelveKeyDialer}")
-                            else ->  iconPackManager.getIconByPackageName(pkgName)
+                            else -> iconPackManager.getIconByPackageName(pkgName)
                         }?.let { drawable = it }
                     }
                     printLog("7. getIcon(): ${if (iconPackPackageName != "None") "" else "Not"} use Icon Pack")
@@ -400,10 +423,16 @@ class SystemUIHooker : YukiBaseHooker() {
      *
      * 兼容 Android 13
      */
-    fun onXPEvent(lpparam : XC_LoadPackage.LoadPackageParam) {
-        val hookClass = XposedHelpers.findClass("com.android.launcher3.icons.BaseIconFactory", lpparam.classLoader)
+    fun onXPEvent(lpparam: XC_LoadPackage.LoadPackageParam) {
+        val hookClass = XposedHelpers.findClass(
+            "com.android.launcher3.icons.BaseIconFactory",
+            lpparam.classLoader
+        )
 
-        fun findAndHookFirstMethod(methodName : String, callback : XC_MethodHook): XC_MethodHook.Unhook? {
+        fun findAndHookFirstMethod(
+            methodName: String,
+            callback: XC_MethodHook
+        ): XC_MethodHook.Unhook? {
             for (method in hookClass.declaredMethods) {
                 if (method.name == methodName) return XposedBridge.hookMethod(method, callback)
             }
@@ -412,17 +441,20 @@ class SystemUIHooker : YukiBaseHooker() {
         }
 
         findAndHookFirstMethod("createScaledBitmapWithoutShadow", object : XC_MethodHook() {
-            var hook : Unhook? = null
+            var hook: Unhook? = null
             override fun beforeHookedMethod(param: MethodHookParam?) {
 
-               hook = findAndHookFirstMethod("normalizeAndWrapToAdaptiveIcon", object : XC_MethodHook() {
-                   override fun beforeHookedMethod(param: MethodHookParam?) {
-                       param!!.args[1] = false
-                       printLog("9. BaseIconFactory(): set shrinkNonAdaptiveIcons false")
-                   }
-               })
+                hook = findAndHookFirstMethod(
+                    "normalizeAndWrapToAdaptiveIcon",
+                    object : XC_MethodHook() {
+                        override fun beforeHookedMethod(param: MethodHookParam?) {
+                            param!!.args[1] = false
+                            printLog("9. BaseIconFactory(): set shrinkNonAdaptiveIcons false")
+                        }
+                    })
 
             }
+
             override fun afterHookedMethod(param: MethodHookParam?) {
                 hook?.unhook()
             }

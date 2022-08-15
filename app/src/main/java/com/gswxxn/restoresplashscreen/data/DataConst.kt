@@ -4,7 +4,8 @@ import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 
 object DataConst {
     val ENABLE_LOG = PrefsData("enable_log", false)
-//    val ENABLE_HIDE_DESCRIBE = PrefsData("enable_hide_describe", false)
+
+    //    val ENABLE_HIDE_DESCRIBE = PrefsData("enable_hide_describe", false)
     val ENABLE_CUSTOM_SCOPE = PrefsData("enable_custom_scope", false)
     val IS_CUSTOM_SCOPE_EXCEPTION_MODE = PrefsData("is_custom_scope_exception_mode", true)
     val REPLACE_TO_EMPTY_SPLASH_SCREEN = PrefsData("replace_to_empty_splash_screen", false)
@@ -28,8 +29,10 @@ object DataConst {
 
     val UNDEFINED_LIST = PrefsData("undefined_list", mutableSetOf<String>())
     val CUSTOM_SCOPE_LIST = PrefsData("custom_scope_list", mutableSetOf<String>())
-    val DEFAULT_STYLE_LIST = PrefsData("default_style_list", mutableSetOf<String>()) // 忽略应用主动设置的图标 应用列表
-    val BG_EXCEPT_LIST =PrefsData("bg_except_list", mutableSetOf<String>()) //自适应背景颜色排除列表
+    val DEFAULT_STYLE_LIST =
+        PrefsData("default_style_list", mutableSetOf<String>()) // 忽略应用主动设置的图标 应用列表
+    val BG_EXCEPT_LIST = PrefsData("bg_except_list", mutableSetOf<String>()) //自适应背景颜色排除列表
     val REMOVE_BRANDING_IMAGE_LIST = PrefsData("remove_branding_image_list", mutableSetOf<String>())
-    val FORCE_SHOW_SPLASH_SCREEN_LIST = PrefsData("force_show_splash_screen_list", mutableSetOf<String>())
+    val FORCE_SHOW_SPLASH_SCREEN_LIST =
+        PrefsData("force_show_splash_screen_list", mutableSetOf<String>())
 }

@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.graphics.drawable.Drawable
 
-class AppInfoHelper(private val context : Context, private val checkedList : Set<String>) {
+class AppInfoHelper(private val context: Context, private val checkedList: Set<String>) {
     private lateinit var appInfoList: MutableList<MyAppInfo>
 
     data class MyAppInfo(
@@ -19,7 +19,7 @@ class AppInfoHelper(private val context : Context, private val checkedList : Set
         if (::appInfoList.isInitialized)
             return appInfoList.apply {
                 sortBy { it.appName }
-                sortByDescending {it.isChecked }
+                sortByDescending { it.isChecked }
             }.toMutableList()
         appInfoList = mutableListOf()
         val pm = context.packageManager
@@ -38,7 +38,7 @@ class AppInfoHelper(private val context : Context, private val checkedList : Set
         }.toMutableList()
     }
 
-    fun setChecked(info : MyAppInfo, status : Boolean) {
+    fun setChecked(info: MyAppInfo, status: Boolean) {
         appInfoList[appInfoList.indexOf(info)].isChecked = if (status) 1 else 0
     }
 }

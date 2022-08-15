@@ -10,20 +10,15 @@ import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
 import android.view.inputmethod.InputMethodManager
 import android.widget.BaseAdapter
 import android.widget.PopupMenu
+import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.ConstValue
 import com.gswxxn.restoresplashscreen.data.DataConst
-import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.databinding.ActivityConfigAppsBinding
 import com.gswxxn.restoresplashscreen.databinding.AdapterConfigBinding
 import com.gswxxn.restoresplashscreen.utils.AppInfoHelper
 import com.gswxxn.restoresplashscreen.utils.Utils.toast
 import com.highcapable.yukihookapi.hook.factory.modulePrefs
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
     private lateinit var binding: ActivityConfigAppsBinding
@@ -40,7 +35,7 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
         val message = intent.getIntExtra(ConstValue.EXTRA_MESSAGE, 0)
 
         // 已勾选的应用包名 Set
-        val checkedList : MutableSet<String> = modulePrefs.get(
+        val checkedList: MutableSet<String> = modulePrefs.get(
             when (message) {
                 ConstValue.CUSTOM_SCOPE -> DataConst.CUSTOM_SCOPE_LIST
                 ConstValue.DEFAULT_STYLE -> DataConst.DEFAULT_STYLE_LIST
@@ -48,11 +43,12 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
                 ConstValue.BRANDING_IMAGE -> DataConst.REMOVE_BRANDING_IMAGE_LIST
                 ConstValue.FORCE_SHOW_SPLASH_SCREEN -> DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST
                 else -> DataConst.UNDEFINED_LIST
-            }).toMutableSet()
+            }
+        ).toMutableSet()
         // AppInfoHelper 实例
         val appInfo = AppInfoHelper(this, checkedList)
         // 在列表中的条目
-        var appInfoFilter =  listOf<AppInfoHelper.MyAppInfo>()
+        var appInfoFilter = listOf<AppInfoHelper.MyAppInfo>()
 
         var onRefreshList: (() -> Unit)? = null
 
@@ -61,7 +57,8 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
             appInfoFilter = if (content.isBlank()) {
                 appInfo.getAppInfoList()
             } else {
-                appInfo.getAppInfoList().filter { it.appName.contains(content) or it.packageName.contains(content) }
+                appInfo.getAppInfoList()
+                    .filter { it.appName.contains(content) or it.packageName.contains(content) }
             }
             onRefreshList?.invoke()
         }
@@ -77,8 +74,15 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     searchEvent()
                 }
+
                 override fun afterTextChanged(s: Editable?) {}
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
             })
             searchEvent()
         }
@@ -108,12 +112,18 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
         binding.searchEditText.apply {
             // 焦点事件
             setOnFocusChangeListener { v, hasFocus ->
-                val imm = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val imm =
+                    v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 if (hasFocus) {
-                    showView(false, binding.appListTitle, binding.configDescription, binding.configTitleFilter)
+                    showView(
+                        false,
+                        binding.appListTitle,
+                        binding.configDescription,
+                        binding.configTitleFilter
+                    )
                     // 弹出软键盘
                     imm.showSoftInput(binding.searchEditText, InputMethodManager.SHOW_FORCED)
-                }else {
+                } else {
                     // 隐藏软键盘
                     imm.hideSoftInputFromWindow(this.windowToken, 0)
                 }
@@ -134,9 +144,9 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
                     val holder: AdapterConfigBinding
                     if (convertView == null) {
                         holder = AdapterConfigBinding.inflate(LayoutInflater.from(context))
-                        cView =holder.root
+                        cView = holder.root
                         cView.tag = holder
-                    }else {
+                    } else {
                         holder = cView?.tag as AdapterConfigBinding
                     }
                     getItem(position).also {
@@ -166,7 +176,7 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
                     }
                     return cView
                 }
-            }.apply{ onRefreshList = { notifyDataSetChanged() } }
+            }.apply { onRefreshList = { notifyDataSetChanged() } }
         }
 
         // 保存按钮点击事件
@@ -179,7 +189,8 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
                     ConstValue.BRANDING_IMAGE -> DataConst.REMOVE_BRANDING_IMAGE_LIST
                     ConstValue.FORCE_SHOW_SPLASH_SCREEN -> DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST
                     else -> DataConst.UNDEFINED_LIST
-                }, checkedList)
+                }, checkedList
+            )
             toast(getString(R.string.save_successful))
             finish()
         }
@@ -190,7 +201,7 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
                 setOnMenuItemClickListener { item ->
                     when (item.itemId) {
                         R.id.select_system_apps -> {
-                            appInfo.getAppInfoList().forEach{
+                            appInfo.getAppInfoList().forEach {
                                 if (it.isSystemApp) {
                                     appInfo.setChecked(it, true)
                                     checkedList.add(it.packageName)
@@ -201,7 +212,7 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
                             true
                         }
                         R.id.clear_slection -> {
-                            appInfo.getAppInfoList().forEach{
+                            appInfo.getAppInfoList().forEach {
                                 appInfo.setChecked(it, false)
                                 checkedList.remove(it.packageName)
                             }
@@ -219,14 +230,19 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
     }
 
     override fun onBackPressed() {
-        if (binding.searchEditText.isFocused){
+        if (binding.searchEditText.isFocused) {
             binding.searchEditText.apply {
                 clearFocus()
                 visibility = View.GONE
                 text = null
             }
-            showView(true, binding.appListTitle, binding.configDescription, binding.configTitleFilter)
-        }else {
+            showView(
+                true,
+                binding.appListTitle,
+                binding.configDescription,
+                binding.configTitleFilter
+            )
+        } else {
             cancel()
             super.onBackPressed()
         }

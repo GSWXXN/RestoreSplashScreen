@@ -19,7 +19,8 @@ class MainSettingsActivity : BaseActivity() {
 
     override fun onCreate() {
         binding = ActivityMainSettingsBinding.inflate(layoutInflater).apply { setContentView(root) }
-        binding.root.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+        binding.root.viewTreeObserver.addOnPreDrawListener(object :
+            ViewTreeObserver.OnPreDrawListener {
             override fun onPreDraw(): Boolean {
                 if (isReady) binding.root.viewTreeObserver.removeOnPreDrawListener(this)
                 return isReady
@@ -56,19 +57,29 @@ class MainSettingsActivity : BaseActivity() {
         }
 
         binding.settingsEntry.addBlockMIUIView(this) {
-            Author(shrinkIcon(R.drawable.ic_setting), getString(R.string.basic_settings), null, 0f, {
-                startActivity(Intent(this@MainSettingsActivity, SubSettings::class.java).apply {
-                    putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.BASIC_SETTINGS)
+            Author(
+                shrinkIcon(R.drawable.ic_setting),
+                getString(R.string.basic_settings),
+                null,
+                0f,
+                {
+                    startActivity(Intent(this@MainSettingsActivity, SubSettings::class.java).apply {
+                        putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.BASIC_SETTINGS)
+                    })
                 })
-            })
 
             Line(true)
 
-            Author(shrinkIcon(R.drawable.ic_app), getString(R.string.custom_scope_settings), null, 0f, {
-                startActivity(Intent(this@MainSettingsActivity, SubSettings::class.java).apply {
-                    putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.CUSTOM_SCOPE_SETTINGS)
+            Author(
+                shrinkIcon(R.drawable.ic_app),
+                getString(R.string.custom_scope_settings),
+                null,
+                0f,
+                {
+                    startActivity(Intent(this@MainSettingsActivity, SubSettings::class.java).apply {
+                        putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.CUSTOM_SCOPE_SETTINGS)
+                    })
                 })
-            })
 
             Author(shrinkIcon(R.drawable.ic_picture), getString(R.string.icon_settings), null, 0f, {
                 startActivity(Intent(this@MainSettingsActivity, SubSettings::class.java).apply {
@@ -76,17 +87,27 @@ class MainSettingsActivity : BaseActivity() {
                 })
             })
 
-            Author(shrinkIcon(R.drawable.ic_bottom), getString(R.string.bottom_settings), null, 0f, {
-                startActivity(Intent(this@MainSettingsActivity, SubSettings::class.java).apply {
-                    putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.BOTTOM_SETTINGS)
+            Author(
+                shrinkIcon(R.drawable.ic_bottom),
+                getString(R.string.bottom_settings),
+                null,
+                0f,
+                {
+                    startActivity(Intent(this@MainSettingsActivity, SubSettings::class.java).apply {
+                        putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.BOTTOM_SETTINGS)
+                    })
                 })
-            })
 
-            Author(shrinkIcon(R.drawable.ic_color), getString(R.string.background_settings), null, 0f, {
-                startActivity(Intent(this@MainSettingsActivity, SubSettings::class.java).apply {
-                    putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.BACKGROUND_SETTINGS)
+            Author(
+                shrinkIcon(R.drawable.ic_color),
+                getString(R.string.background_settings),
+                null,
+                0f,
+                {
+                    startActivity(Intent(this@MainSettingsActivity, SubSettings::class.java).apply {
+                        putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.BACKGROUND_SETTINGS)
+                    })
                 })
-            })
 
             Author(shrinkIcon(R.drawable.ic_lab), getString(R.string.lab_settings), null, 0f, {
                 startActivity(Intent(this@MainSettingsActivity, SubSettings::class.java).apply {
@@ -122,9 +143,11 @@ class MainSettingsActivity : BaseActivity() {
             }
         showView(YukiHookAPI.Status.isXposedModuleActive, binding.mainTextApiWay)
         binding.mainTextApiWay.text =
-            getString(R.string.xposed_framework_version,
+            getString(
+                R.string.xposed_framework_version,
                 YukiHookAPI.Status.executorName,
-                YukiHookAPI.Status.executorVersion)
+                YukiHookAPI.Status.executorVersion
+            )
 
         window.statusBarColor = getColor(
             when {

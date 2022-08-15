@@ -26,7 +26,7 @@ object Utils {
      * @param _size 如果图标为自适应图标，则生成此大小的 Bitmap；否则，此项无用
      * @return [Bitmap]
      */
-    fun drawable2Bitmap(drawable: Drawable, _size : Int): Bitmap? {
+    fun drawable2Bitmap(drawable: Drawable, _size: Int): Bitmap? {
         if (drawable is BitmapDrawable) {
             return drawable.bitmap
         }
@@ -47,8 +47,12 @@ object Utils {
      * @param shrinkTrigger 若图标尺寸小于此数值则缩小图标；留空不缩小图标
      * @return [Bitmap]
      */
-     fun roundBitmapByShader(bitmap: Bitmap?, roundDegree: RoundDegree, shrinkTrigger: Int = 0): Bitmap? {
-        if (bitmap == null)  return null
+    fun roundBitmapByShader(
+        bitmap: Bitmap?,
+        roundDegree: RoundDegree,
+        shrinkTrigger: Int = 0
+    ): Bitmap? {
+        if (bitmap == null) return null
 
         val radius = when (roundDegree) {
             RoundDegree.RoundCorner -> bitmap.width / 4
@@ -64,7 +68,7 @@ object Utils {
             RectF(0F, 0F, bitmap.width.toFloat(), bitmap.width.toFloat()),
             radius.toFloat(),
             radius.toFloat(),
-            Paint().apply{
+            Paint().apply {
                 isAntiAlias = true
                 shader = BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
             }
@@ -85,10 +89,10 @@ object Utils {
             )
             return shrankBitmap
         }
-        return  targetBitmap
+        return targetBitmap
     }
 
-    fun Context.shrinkIcon(@DrawableRes id : Int) : Drawable {
+    fun Context.shrinkIcon(@DrawableRes id: Int): Drawable {
         val px = dp2px(this, 50f)
 
         val bitmap = drawable2Bitmap(this.getDrawable(id)!!, px)!!
@@ -100,7 +104,7 @@ object Utils {
 
         Canvas(shrankBitmap).drawBitmap(
             bitmap,
-            (shrankBitmap.width * 0.5  - bitmap.width * 0.5).toFloat(),
+            (shrankBitmap.width * 0.5 - bitmap.width * 0.5).toFloat(),
             (shrankBitmap.height * 0.5 - bitmap.height * 0.5).toFloat(),
             null
         )
@@ -115,7 +119,7 @@ object Utils {
      * @param isLight 是否为浅色模式
      * @return [Int]
      */
-    fun getBgColor(bitmap: Bitmap, isLight: Boolean):Int {
+    fun getBgColor(bitmap: Bitmap, isLight: Boolean): Int {
         val hsv = FloatArray(3)
 
         val color = Palette.from(bitmap).maximumColorCount(8).generate()
@@ -138,7 +142,7 @@ object Utils {
      * @param fieldName Field 名称
      * @return [Instance]
      */
-    fun Any.getField(fieldName : String) = this.javaClass.field { name = fieldName }.get(this)
+    fun Any.getField(fieldName: String) = this.javaClass.field { name = fieldName }.get(this)
 
     /**
      * 根据名称设置实例 的 Field 实例内容
@@ -147,7 +151,7 @@ object Utils {
      * @param fieldName Field 名称
      * @param value 设置的实例内容
      */
-    fun Any.setField(fieldName : String, value : Any?) =
+    fun Any.setField(fieldName: String, value: Any?) =
         this.javaClass.field { name = fieldName }.get(this).set(value)
 
     /**
@@ -180,7 +184,7 @@ object Utils {
      * 执行 Shell 命令
      * @param command Shell 命令
      */
-    fun execShell(command : String) {
+    fun execShell(command: String) {
         try {
             val p = Runtime.getRuntime().exec("su")
             val outputStream = p.outputStream

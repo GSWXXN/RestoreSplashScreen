@@ -37,16 +37,19 @@ class AboutPageActivity : BaseActivity() {
                         it,
                         it.intrinsicHeight * 2
                     )
-                }, RoundDegree.RoundCorner))
-
-            miluIcon.setImageBitmap(roundBitmapByShader(
-                getDrawable(R.mipmap.img_developer)?.let {
-                    drawable2Bitmap(
-                        it,
-                        it.intrinsicHeight
-                    )
-                }, RoundDegree.Circle
+                }, RoundDegree.RoundCorner
             )
+            )
+
+            miluIcon.setImageBitmap(
+                roundBitmapByShader(
+                    getDrawable(R.mipmap.img_developer)?.let {
+                        drawable2Bitmap(
+                            it,
+                            it.intrinsicHeight
+                        )
+                    }, RoundDegree.Circle
+                )
             )
 
             version.text = getString(R.string.version, BuildConfig.VERSION_NAME)

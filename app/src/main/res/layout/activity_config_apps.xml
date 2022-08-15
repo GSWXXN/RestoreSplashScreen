@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,15 +12,15 @@
         android:layout_height="wrap_content"
         android:elevation="0dp"
         android:gravity="center|start"
+        android:orientation="horizontal"
         android:paddingStart="15dp"
         android:paddingTop="13dp"
         android:paddingEnd="10dp"
-        android:paddingBottom="5dp"
-        android:orientation="horizontal">
+        android:paddingBottom="5dp">
 
         <ImageView
-            style="?android:attr/selectableItemBackgroundBorderless"
             android:id="@+id/title_back_icon"
+            style="?android:attr/selectableItemBackgroundBorderless"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginStart="10dp"
@@ -32,11 +31,11 @@
 
         <TextView
             android:id="@+id/app_list_title"
-            android:gravity="center_vertical"
             android:layout_width="0dp"
             android:layout_height="45dp"
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
+            android:gravity="center_vertical"
             android:singleLine="true"
             android:textColor="@color/colorTextGray"
             android:textSize="24sp"
@@ -48,15 +47,15 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
-            android:singleLine="true"
-            android:visibility="gone"
-            android:textSize="17sp"
-            android:textColor="@color/colorTextGray"
-            android:imeOptions="actionSearch"
-            android:nextFocusDown="@id/search_edit_text"
             android:hint="@string/search_hint"
+            android:imeOptions="actionSearch"
+            android:importantForAutofill="no"
             android:inputType="text"
-            android:importantForAutofill="no" />
+            android:nextFocusDown="@id/search_edit_text"
+            android:singleLine="true"
+            android:textColor="@color/colorTextGray"
+            android:textSize="17sp"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/config_title_filter"
@@ -64,7 +63,7 @@
             android:layout_height="30dp"
             android:layout_marginEnd="10dp"
             android:src="@drawable/ic_search"
-            android:tint="@color/colorTextGray"/>
+            android:tint="@color/colorTextGray" />
 
         <ImageView
             android:id="@+id/more_options"
@@ -72,7 +71,7 @@
             android:layout_height="30dp"
             android:layout_marginEnd="10dp"
             android:src="@drawable/abc_ic_menu_overflow_material"
-            android:tint="@color/colorTextGray"/>
+            android:tint="@color/colorTextGray" />
     </LinearLayout>
 
     <LinearLayout

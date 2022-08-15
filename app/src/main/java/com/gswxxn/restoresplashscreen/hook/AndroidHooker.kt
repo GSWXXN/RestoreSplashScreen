@@ -25,26 +25,37 @@ class AndroidHooker : YukiBaseHooker() {
                 }
                 beforeHook {
                     val pkgName = args(1).string()
-                    val isForceShowSS = prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN) && pkgName in prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST)
+                    val isForceShowSS =
+                        prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN) && pkgName in prefs.get(
+                            DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST
+                        )
 
                     if (isForceShowSS) resultTrue()
                     printLog("[Android] validateStartingWindowTheme():${if (isForceShowSS) "" else "Not"} force show $pkgName splash screen")
-                   }
+                }
             }
 
             // 彻底关闭 Splash Screen
             injectMember {
                 method {
                     name = "addStartingWindow"
-                    paramCount(when (Build.VERSION.SDK_INT) {
-                        33 -> 10
-                        else -> 15
-                    })
+                    paramCount(
+                        when (Build.VERSION.SDK_INT) {
+                            33 -> 10
+                            else -> 15
+                        }
+                    )
                 }
                 beforeHook {
                     val isDisableSS = prefs.get(DataConst.DISABLE_SPLASH_SCREEN)
                     if (isDisableSS) resultFalse()
-                    printLog("[Android] addStartingWindow():${if (isDisableSS) "" else "Not"} disable ${args(0).string()} splash screen")
+                    printLog(
+                        "[Android] addStartingWindow():${if (isDisableSS) "" else "Not"} disable ${
+                            args(
+                                0
+                            ).string()
+                        } splash screen"
+                    )
                 }
             }
 
@@ -52,10 +63,12 @@ class AndroidHooker : YukiBaseHooker() {
             injectMember {
                 method {
                     name = "getStartingWindowType"
-                    paramCount(when (Build.VERSION.SDK_INT) {
-                        33 -> 7
-                        else -> 6
-                    })
+                    paramCount(
+                        when (Build.VERSION.SDK_INT) {
+                            33 -> 7
+                            else -> 6
+                        }
+                    )
                 }
                 beforeHook {
                     val isHotStartCompatible = prefs.get(DataConst.ENABLE_HOT_START_COMPATIBLE)

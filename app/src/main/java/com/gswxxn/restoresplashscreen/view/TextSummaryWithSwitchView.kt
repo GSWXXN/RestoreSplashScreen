@@ -33,7 +33,11 @@ import cn.fkj233.ui.activity.view.BaseView
 import cn.fkj233.ui.activity.view.LinearContainerV
 import cn.fkj233.ui.activity.view.TextSummaryV
 
-class TextSummaryWithSwitchView(private val textV: TextSummaryV, val switchV: SwitchView, private val dataBindingRecv: DataBinding.Binding.Recv? = null): BaseView() {
+class TextSummaryWithSwitchView(
+    private val textV: TextSummaryV,
+    val switchV: SwitchView,
+    private val dataBindingRecv: DataBinding.Binding.Recv? = null
+) : BaseView() {
 
     override fun getType(): BaseView = this
 
@@ -42,11 +46,26 @@ class TextSummaryWithSwitchView(private val textV: TextSummaryV, val switchV: Sw
         return LinearContainerV(
             LinearContainerV.HORIZONTAL,
             arrayOf(
-                LayoutPair(textV.create(context, callBacks), LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)),
-                LayoutPair(switchV.create(context, callBacks), LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).also { it.gravity = Gravity.CENTER_VERTICAL })
+                LayoutPair(
+                    textV.create(context, callBacks),
+                    LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        1f
+                    )
+                ),
+                LayoutPair(
+                    switchV.create(context, callBacks),
+                    LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    ).also { it.gravity = Gravity.CENTER_VERTICAL })
             ),
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT).also {
-                it.setMargins(0, dp2px(context, 17.75f),0, dp2px(context, 17.75f))
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+            ).also {
+                it.setMargins(0, dp2px(context, 17.75f), 0, dp2px(context, 17.75f))
             }
         ).create(context, callBacks).also {
             dataBindingRecv?.setView(it)

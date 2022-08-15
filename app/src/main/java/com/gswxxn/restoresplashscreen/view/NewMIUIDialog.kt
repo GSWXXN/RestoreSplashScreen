@@ -37,10 +37,14 @@ import cn.fkj233.miui.R
 import cn.fkj233.ui.activity.dp2px
 import cn.fkj233.ui.activity.getDisplay
 
-class NewMIUIDialog(context: Context, val build: NewMIUIDialog.() -> Unit) : Dialog(context, R.style.CustomDialog) {
+class NewMIUIDialog(context: Context, val build: NewMIUIDialog.() -> Unit) :
+    Dialog(context, R.style.CustomDialog) {
     private val title by lazy {
         TextView(context).also { textView ->
-            textView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).also {
+            textView.layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).also {
                 it.setMargins(0, dp2px(context, 20f), 0, dp2px(context, 25f))
             }
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19f)
@@ -52,7 +56,10 @@ class NewMIUIDialog(context: Context, val build: NewMIUIDialog.() -> Unit) : Dia
 
     private val message by lazy {
         TextView(context).also { textView ->
-            textView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).also {
+            textView.layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).also {
                 it.setMargins(dp2px(context, 25f), 0, dp2px(context, 25f), dp2px(context, 5f))
             }
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17f)
@@ -65,18 +72,27 @@ class NewMIUIDialog(context: Context, val build: NewMIUIDialog.() -> Unit) : Dia
 
     private val editText by lazy {
         EditText(context).also { editText ->
-            editText.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp2px(context, 55f)).also {
+            editText.layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                dp2px(context, 55f)
+            ).also {
                 it.setMargins(dp2px(context, 25f), dp2px(context, 10f), dp2px(context, 25f), 0)
             }
             editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25f)
             editText.setTextColor(context.getColor(R.color.whiteText))
             editText.gravity = Gravity.CENTER
-            editText.setPadding(dp2px(context, 8f), dp2px(context, 8f), dp2px(context, 8f), dp2px(context, 8f))
+            editText.setPadding(
+                dp2px(context, 8f),
+                dp2px(context, 8f),
+                dp2px(context, 8f),
+                dp2px(context, 8f)
+            )
             editText.visibility = View.GONE
             editText.background = context.getDrawable(R.drawable.editview_background)
             val mHeight = dp2px(context, 55f)
             val maxHeight = getDisplay(context).height / 2
-            editText.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            editText.viewTreeObserver.addOnGlobalLayoutListener(object :
+                ViewTreeObserver.OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
                     editText.viewTreeObserver.removeOnGlobalLayoutListener(this)
                     val params = editText.layoutParams as LinearLayout.LayoutParams
@@ -115,7 +131,10 @@ class NewMIUIDialog(context: Context, val build: NewMIUIDialog.() -> Unit) : Dia
 
     private val view by lazy {
         LinearLayout(context).also { linearLayout ->
-            linearLayout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            linearLayout.layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
             linearLayout.orientation = LinearLayout.VERTICAL
             linearLayout.addView(message)
             linearLayout.addView(editText)
@@ -125,14 +144,23 @@ class NewMIUIDialog(context: Context, val build: NewMIUIDialog.() -> Unit) : Dia
     var bView: LinearLayout
 
     private val root = RelativeLayout(context).also { viewRoot ->
-        viewRoot.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
+        viewRoot.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT
+        )
         viewRoot.addView(LinearLayout(context).also { viewLinearLayout ->
-            viewLinearLayout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            viewLinearLayout.layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
             viewLinearLayout.orientation = LinearLayout.VERTICAL
             viewLinearLayout.addView(title)
             viewLinearLayout.addView(view)
             viewLinearLayout.addView(LinearLayout(context).also { linearLayout ->
-                linearLayout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).also {
+                linearLayout.layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).also {
                     it.gravity = Gravity.CENTER_HORIZONTAL
                 }
                 linearLayout.orientation = LinearLayout.VERTICAL
@@ -142,9 +170,18 @@ class NewMIUIDialog(context: Context, val build: NewMIUIDialog.() -> Unit) : Dia
         })
     }
 
-    fun Button(text: CharSequence?, enable: Boolean = true, cancelStyle: Boolean = false, callBacks: (View) -> Unit) {
+    fun Button(
+        text: CharSequence?,
+        enable: Boolean = true,
+        cancelStyle: Boolean = false,
+        callBacks: (View) -> Unit
+    ) {
         bView.addView(Button(context).also { buttonView ->
-            buttonView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp2px(context, 50f), 1f).also {
+            buttonView.layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                dp2px(context, 50f),
+                1f
+            ).also {
                 it.setMargins(dp2px(context, 35f), dp2px(context, 10f), dp2px(context, 35f), 0)
                 it.gravity = Gravity.CENTER
             }
@@ -153,7 +190,8 @@ class NewMIUIDialog(context: Context, val build: NewMIUIDialog.() -> Unit) : Dia
             buttonView.text = text
             buttonView.isEnabled = enable
             buttonView.stateListAnimator = null
-            buttonView.background = context.getDrawable(if (cancelStyle) R.drawable.l_button_background else R.drawable.r_button_background)
+            buttonView.background =
+                context.getDrawable(if (cancelStyle) R.drawable.l_button_background else R.drawable.r_button_background)
             buttonView.setOnClickListener {
                 callBacks(it)
             }
@@ -218,8 +256,21 @@ class NewMIUIDialog(context: Context, val build: NewMIUIDialog.() -> Unit) : Dia
                         it(var1.toString())
                     }
 
-                    override fun beforeTextChanged(var1: CharSequence?, var2: Int, var3: Int, var4: Int) {}
-                    override fun onTextChanged(var1: CharSequence?, var2: Int, var3: Int, var4: Int) {}
+                    override fun beforeTextChanged(
+                        var1: CharSequence?,
+                        var2: Int,
+                        var3: Int,
+                        var4: Int
+                    ) {
+                    }
+
+                    override fun onTextChanged(
+                        var1: CharSequence?,
+                        var2: Int,
+                        var3: Int,
+                        var4: Int
+                    ) {
+                    }
                 })
             }
         }

@@ -1,18 +1,16 @@
 package com.gswxxn.restoresplashscreen.utils
 
 import android.content.Context
-import android.content.pm.PackageManager
-import org.xmlpull.v1.XmlPullParser
-import org.xmlpull.v1.XmlPullParserFactory
-import org.xmlpull.v1.XmlPullParserException
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
+import org.xmlpull.v1.XmlPullParser
+import org.xmlpull.v1.XmlPullParserException
+import org.xmlpull.v1.XmlPullParserFactory
 import java.io.IOException
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 /**
  * 图标包处理类
@@ -127,7 +125,7 @@ class IconPackManager(private val mContext: Context, private val packageName: St
         return null
     }
 
-    fun getIconByComponentName (componentName : String?) : Drawable? {
+    fun getIconByComponentName(componentName: String?): Drawable? {
         if (!mLoaded) load()
         val drawableName = mPackagesDrawables[componentName]
         return if (drawableName != null) loadDrawable(drawableName) else null

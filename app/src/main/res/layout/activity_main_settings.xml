@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorThemeBackground"
     android:orientation="vertical"
-    tools:ignore="ContentDescription, UseCompoundDrawables" >
+    tools:ignore="ContentDescription, UseCompoundDrawables">
 
-<LinearLayout
-    android:id="@+id/main_status"
-    android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/main_status"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:background="@drawable/bg_dark_round"
         android:elevation="0dp"
         android:gravity="center|start"
-        android:background="@drawable/bg_dark_round"
+        android:orientation="vertical"
         android:paddingLeft="15dp"
         android:paddingTop="13dp"
         android:paddingRight="15dp"
@@ -44,7 +43,7 @@
                 android:layout_marginEnd="15dp"
                 android:alpha="0.85"
                 android:src="@drawable/ic_restart"
-                android:tint="@color/white"/>
+                android:tint="@color/white" />
 
             <ImageView
                 android:id="@+id/title_about_page"
@@ -54,7 +53,7 @@
                 android:layout_marginEnd="5dp"
                 android:alpha="0.85"
                 android:src="@drawable/ic_more"
-                android:tint="@color/white"/>
+                android:tint="@color/white" />
         </LinearLayout>
 
         <LinearLayout
@@ -155,7 +154,7 @@
             android:lineSpacingExtra="5dp"
             android:text="@string/main_activity_hint"
             android:textColor="@color/colorTextGray"
-            android:textSize="11sp"/>
+            android:textSize="11sp" />
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -171,11 +170,10 @@
             android:id="@+id/settings_entry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="23dp"
             android:layout_marginStart="-20dp"
+            android:layout_marginTop="23dp"
             android:layout_marginBottom="5dp"
             android:animateLayoutChanges="true"
-            android:orientation="vertical">
-        </LinearLayout>
+            android:orientation="vertical"></LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

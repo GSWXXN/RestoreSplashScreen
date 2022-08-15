@@ -24,5 +24,6 @@ abstract class BaseActivity : Activity() {
 
         onCreate()
     }
+
     abstract fun onCreate()
 }

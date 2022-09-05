@@ -71,21 +71,25 @@ jobs:
       
 
     - name: Build with Gradle
-
-      run:  bash ./gradlew :app:packageRelease
+      run:  bash ./gradlew assemble
 
     - name: Upload a Build Artifact
-
       uses: actions/upload-artifact@v3.1.0
-
       with:
-
         # Artifact name
-
         name: my-build-apk_All # optional, default is artifact 
-
         # A file, directory or wildcard pattern that describes what to upload
-
         path: ./**/*.apk
-
         # The desired behavior if no files are found using the provided path.
+        
+    - name: Upload release
+      uses: actions/upload-artifact@v2
+      with:
+        name: ModemPro_Release
+        path: "app/build/outputs/apk/release/*.apk"
+        
+    - name: Upload debug
+      uses: actions/upload-artifact@v2
+      with:
+        name: ModemPro_Debug
+        path: "app/build/outputs/apk/debug/*.apk"

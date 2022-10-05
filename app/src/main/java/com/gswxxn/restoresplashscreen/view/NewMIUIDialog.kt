@@ -24,7 +24,9 @@ package com.gswxxn.restoresplashscreen.view
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
@@ -44,6 +46,7 @@ class NewMIUIDialog(context: Context, val build: NewMIUIDialog.() -> Unit) : Dia
                 it.setMargins(0, dp2px(context, 20f), 0, dp2px(context, 25f))
             }
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19f)
+            textView.paint.typeface = Typeface.create(null, 500, false)
             textView.setTextColor(context.getColor(R.color.whiteText))
             textView.gravity = Gravity.CENTER
             textView.setPadding(0, dp2px(context, 10f), 0, 0)
@@ -144,12 +147,12 @@ class NewMIUIDialog(context: Context, val build: NewMIUIDialog.() -> Unit) : Dia
 
     fun Button(text: CharSequence?, enable: Boolean = true, cancelStyle: Boolean = false, callBacks: (View) -> Unit) {
         bView.addView(Button(context).also { buttonView ->
-            buttonView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp2px(context, 50f), 1f).also {
+            buttonView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp2px(context, 52.5f), 1f).also {
                 it.setMargins(dp2px(context, 35f), dp2px(context, 10f), dp2px(context, 35f), 0)
                 it.gravity = Gravity.CENTER
             }
             buttonView.setTextColor(context.getColor(if (cancelStyle) R.color.whiteText else R.color.white))
-            buttonView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17f)
+            buttonView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17.5f)
             buttonView.text = text
             buttonView.isEnabled = enable
             buttonView.stateListAnimator = null

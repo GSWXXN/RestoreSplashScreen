@@ -26,7 +26,6 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
-import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue

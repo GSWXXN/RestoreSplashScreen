@@ -68,17 +68,22 @@ object BlockMIUIHelper {
                     }
                 }
                 is SwitchView -> addView(item.create(context, callBacks)) // 开关
-                is TextWithSwitchView -> {
+                is TextWithSwitchView, is TextSummaryWithSwitchView -> {
+                    val switch: SwitchView = when (item) {
+                        is TextWithSwitchView -> item.switchV
+                        is TextSummaryWithSwitchView -> item.switchV
+                        else -> throw IllegalArgumentException("item not is TextWithSwitchV or TextSummaryWithSwitchV")
+                    }
                     addView(item.create(context, callBacks)) // 带文本的开关
                     setOnTouchListener { _, motionEvent ->
                         when (motionEvent.action) {
-                            MotionEvent.ACTION_DOWN -> if (item.switchV.switch.isEnabled) background =
+                            MotionEvent.ACTION_DOWN -> if (switch.switch.isEnabled) background =
                                 context.getDrawable(
                                     R.drawable.ic_main_down_bg
                                 )
                             MotionEvent.ACTION_UP -> {
-                                if (item.switchV.switch.isEnabled) {
-                                    item.switchV.click()
+                                if (switch.switch.isEnabled) {
+                                    switch.click()
                                     callBacks?.let { it1 -> it1() }
                                     background = context.getDrawable(R.drawable.ic_main_bg)
                                 }
@@ -153,13 +158,6 @@ object BlockMIUIHelper {
                             unit()
                             callBacks?.let { it1 -> it1() }
                         }
-                    }
-                }
-                is TextSummaryWithSwitchView -> {
-                    addView(item.create(context, callBacks))
-                    setOnClickListener {
-                        item.switchV.click()
-                        callBacks?.let { it1 -> it1() }
                     }
                 }
                 is CustomViewV -> {

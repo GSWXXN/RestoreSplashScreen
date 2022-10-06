@@ -1,28 +1,22 @@
 package com.gswxxn.restoresplashscreen.hook
 
-import com.highcapable.yukihookapi.YukiHookAPI.configs
+import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.annotation.xposed.InjectYukiHookWithXposed
-import com.highcapable.yukihookapi.hook.factory.encase
-import com.highcapable.yukihookapi.hook.xposed.bridge.event.YukiXposedEvent
+import com.highcapable.yukihookapi.hook.log.YukiHookLogger
 import com.highcapable.yukihookapi.hook.xposed.proxy.IYukiHookXposedInit
 
 @InjectYukiHookWithXposed
 class HookEntry : IYukiHookXposedInit {
-    override fun onInit() = configs {
-        debugTag = "RestoreSplashScreen"
-        isDebug = false
+    override fun onInit() {
+        YukiHookLogger.Configs.tag = "RestoreSplashScreen"
+        YukiHookAPI.Configs.isDebug = false
     }
 
-    override fun onHook() = encase {
+    override fun onHook() = YukiHookAPI.encase {
         loadApp("com.android.systemui", SystemUIHooker())
         loadSystem(AndroidHooker())
-    }
+        onAppLifecycle {
 
-    override fun onXposedEvent() {
-        YukiXposedEvent.events {
-            onHandleLoadPackage {
-                SystemUIHooker().onXPEvent(it)
-            }
         }
     }
 }

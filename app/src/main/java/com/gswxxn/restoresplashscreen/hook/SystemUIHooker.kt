@@ -1,5 +1,6 @@
 package com.gswxxn.restoresplashscreen.hook
 
+import android.app.Application
 import android.content.ComponentName
 import android.content.Context
 import android.content.pm.ActivityInfo
@@ -16,22 +17,18 @@ import com.gswxxn.restoresplashscreen.utils.Utils.getField
 import com.gswxxn.restoresplashscreen.utils.Utils.isMIUI
 import com.gswxxn.restoresplashscreen.utils.Utils.printLog
 import com.gswxxn.restoresplashscreen.utils.Utils.setField
+import com.highcapable.yukihookapi.hook.core.YukiMemberHookCreator
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.current
-import com.highcapable.yukihookapi.hook.log.loggerE
 import com.highcapable.yukihookapi.hook.type.android.ActivityInfoClass
 import com.highcapable.yukihookapi.hook.type.android.DrawableClass
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
 import com.highcapable.yukihookapi.hook.type.java.IntType
 import com.highcapable.yukihookapi.hook.type.java.StringType
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedBridge
-import de.robv.android.xposed.XposedHelpers
-import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 class SystemUIHooker : YukiBaseHooker() {
     private val iconPackManager by lazy { IconPackManager(
-        appContext,
+        appContext!!,
         prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)
     ) }
 
@@ -107,7 +104,7 @@ class SystemUIHooker : YukiBaseHooker() {
                         val isReplaceToEmptySplashScreen = prefs.get(DataConst.REPLACE_TO_EMPTY_SPLASH_SCREEN)
                         val isExcept = isExcept(pkgName)
                         val forceEnableSplashScreen = prefs.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)
-                        val context = instance.getField("mContext").cast<Context>()
+                        val context = instance.getField("mContext").cast<Context>()!!
                         val mSplashscreenContentDrawer = instance.getField("this\$0").any()!!
                         val mTmpAttrs = mSplashscreenContentDrawer
                             .getField("mTmpAttrs").any()!!
@@ -145,7 +142,7 @@ class SystemUIHooker : YukiBaseHooker() {
                         // 将作用域外的应用替换为空白启动遮罩
                         if (isReplaceToEmptySplashScreen && isExcept && mTmpAttrs.getField("mSplashScreenIcon").any() == null) {
                             instance.setField("mSuggestType", 3)
-                            instance.setField("mOverlayDrawable", context!!.getDrawable(mTmpAttrs.getField("mWindowBgResId").int()))
+                            instance.setField("mOverlayDrawable", context.getDrawable(mTmpAttrs.getField("mWindowBgResId").int()))
                         }
                         printLog("2.1. build(): ${if (isReplaceToEmptySplashScreen && isExcept) "set mSuggestType to 3;" else "Not"} replace to empty splash screen")
 
@@ -208,7 +205,7 @@ class SystemUIHooker : YukiBaseHooker() {
                         val enableChangeBgColor = prefs.get(DataConst.ENABLE_CHANG_BG_COLOR)
                         val ignoreDarkMode = prefs.get(DataConst.IGNORE_DARK_MODE)
                         val colorMode = prefs.get(DataConst.BG_COLOR_MODE)
-                        val isDarkMode = appContext.resources
+                        val isDarkMode = appResources!!
                             .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
                         val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
                         val isInExceptList = pkgName in prefs.get(DataConst.BG_EXCEPT_LIST) || isExcept(pkgName)
@@ -278,10 +275,10 @@ class SystemUIHooker : YukiBaseHooker() {
                     var drawable = if (enableReplaceIcon) {
                         when {
                             pkgName == "com.android.contacts" && pkgActivity == "com.android.contacts.activities.PeopleActivity" ->
-                                appContext.packageManager.getActivityIcon(ComponentName("com.android.contacts","com.android.contacts.activities.TwelveKeyDialer"))
+                                appContext!!.packageManager.getActivityIcon(ComponentName("com.android.contacts","com.android.contacts.activities.TwelveKeyDialer"))
                             pkgName == "com.android.settings" && pkgActivity == "com.android.settings.BackgroundApplicationsManager" ->
-                                appContext.packageManager.getApplicationIcon("com.android.settings")
-                            else -> pkgName.let { appContext.packageManager.getApplicationIcon(it) }
+                                appContext!!.packageManager.getApplicationIcon("com.android.settings")
+                            else -> pkgName.let { appContext!!.packageManager.getApplicationIcon(it) }
                         }
                     } else {
                         result<Drawable>()
@@ -311,7 +308,7 @@ class SystemUIHooker : YukiBaseHooker() {
                             1 -> iconSize / 4    // 仅缩小分辨率较低的图标
                             else -> 5000         // 缩小全部图标
                         }
-                    )?.let { drawable = BitmapDrawable(appContext.resources, it) }
+                    )?.let { drawable = BitmapDrawable(appResources, it) }
                     printLog("8. getIcon(): ${if (isDrawIconRoundCorner) "" else "Not"} draw round corner; shrink icon type is $shrinkIconType")
 
                     result = drawable
@@ -329,20 +326,26 @@ class SystemUIHooker : YukiBaseHooker() {
          * 若将此参数设置为 true 时，在 MIUI 中的非自适应图标将会错位显示
          * 若将此参数设置为 false 时，非自适应图标不会缩小而且显示较模糊，我们可以在后续方法中将图标缩小绘制
          *
-         * *** 为适配 Android 13 此块作废，使用底部新 Hook 方法
          */
-//        findClass("com.android.launcher3.icons.BaseIconFactory").hook {
-//            injectMember {
-//                method {
-//                    name = "createScaledBitmapWithoutShadow"
-//                    param(DrawableClass, BooleanType)
-//                }
-//                beforeHook {
-//                    args(1).set(false)
-//                    printLog("9. BaseIconFactory(): set shrinkNonAdaptiveIcons false")
-//                }
-//            }
-//        }
+        findClass("com.android.launcher3.icons.BaseIconFactory").hook {
+            injectMember {
+                var hook : YukiMemberHookCreator.MemberHookCreator.Result? = null
+                method {
+                    name = "createScaledBitmapWithoutShadow"
+                }
+                beforeHook {
+                    hook = injectMember {
+                        method {
+                            name = "normalizeAndWrapToAdaptiveIcon"
+                            paramCount(4)
+                        }
+                        beforeHook { args(1).setFalse() }
+                    }
+                    printLog("9. BaseIconFactory(): set shrinkNonAdaptiveIcons false")
+                }
+                afterHook { hook?.remove() }
+            }
+        }
 
         /**
          * 忽略深色模式
@@ -394,39 +397,4 @@ class SystemUIHooker : YukiBaseHooker() {
                 }
             }
     }
-
-    /**
-     * 设置图标不缩小
-     *
-     * 兼容 Android 13
-     */
-    fun onXPEvent(lpparam : XC_LoadPackage.LoadPackageParam) {
-        val hookClass = XposedHelpers.findClass("com.android.launcher3.icons.BaseIconFactory", lpparam.classLoader)
-
-        fun findAndHookFirstMethod(methodName : String, callback : XC_MethodHook): XC_MethodHook.Unhook? {
-            for (method in hookClass.declaredMethods) {
-                if (method.name == methodName) return XposedBridge.hookMethod(method, callback)
-            }
-            loggerE(msg = "Cannot find method [$methodName] in class [com.android.launcher3.icons.BaseIconFactory]")
-            return null
-        }
-
-        findAndHookFirstMethod("createScaledBitmapWithoutShadow", object : XC_MethodHook() {
-            var hook : Unhook? = null
-            override fun beforeHookedMethod(param: MethodHookParam?) {
-
-               hook = findAndHookFirstMethod("normalizeAndWrapToAdaptiveIcon", object : XC_MethodHook() {
-                   override fun beforeHookedMethod(param: MethodHookParam?) {
-                       param!!.args[1] = false
-                       printLog("9. BaseIconFactory(): set shrinkNonAdaptiveIcons false")
-                   }
-               })
-
-            }
-            override fun afterHookedMethod(param: MethodHookParam?) {
-                hook?.unhook()
-            }
-        })
-    }
-
 }

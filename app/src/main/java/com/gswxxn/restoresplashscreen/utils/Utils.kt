@@ -10,7 +10,7 @@ import androidx.palette.graphics.Palette
 import cn.fkj233.ui.activity.dp2px
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.RoundDegree
-import com.highcapable.yukihookapi.hook.core.finder.FieldFinder.Result.Instance
+import com.highcapable.yukihookapi.hook.core.finder.members.FieldFinder.Result.Instance
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.field
 import com.highcapable.yukihookapi.hook.factory.hasClass
@@ -174,7 +174,7 @@ object Utils {
      * 当前设备是否是 MIUI 定制 Android 系统
      * @return [Boolean] 是否符合条件
      */
-    val isMIUI by lazy { "android.miui.R".hasClass }
+    val isMIUI by lazy { "android.miui.R".hasClass() }
 
     /**
      * 执行 Shell 命令

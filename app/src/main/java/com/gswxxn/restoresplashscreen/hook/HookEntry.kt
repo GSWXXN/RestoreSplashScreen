@@ -15,8 +15,5 @@ class HookEntry : IYukiHookXposedInit {
     override fun onHook() = YukiHookAPI.encase {
         loadApp("com.android.systemui", SystemUIHooker())
         loadSystem(AndroidHooker())
-        onAppLifecycle {
-
-        }
     }
 }

@@ -10,8 +10,10 @@ import androidx.palette.graphics.Palette
 import cn.fkj233.ui.activity.dp2px
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.RoundDegree
+import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.core.finder.members.FieldFinder.Result.Instance
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
+import com.highcapable.yukihookapi.hook.factory.dataChannel
 import com.highcapable.yukihookapi.hook.factory.field
 import com.highcapable.yukihookapi.hook.factory.hasClass
 import com.highcapable.yukihookapi.hook.log.loggerI
@@ -191,6 +193,25 @@ object Utils {
             outputStream.close()
         } catch (t: Throwable) {
             t.printStackTrace()
+        }
+    }
+
+    /**
+     * 通过 DataChannel 发送消息，检查宿主与模块版本是否一致
+     * @param packageName 宿主包名
+     * @param result 结果回调
+     */
+    fun Context.checkingHostVersion(packageName: String, result: (Boolean) -> Unit) {
+        this.dataChannel(packageName).wait<String>("${packageName.replace('.', '_')}_version_result") { result(it == YukiHookAPI.Status.compiledTimestamp.toString()) }
+        this.dataChannel(packageName).put("${packageName.replace('.', '_')}_version_get")
+    }
+
+    /**
+     * 宿主注册接收 DataChannel 消息，发送版本信息
+     */
+    fun YukiBaseHooker.returnVersionCheck() {
+        dataChannel.wait<String>(key = "${packageName.replace('.', '_')}_version_get") {
+            dataChannel.put(key = "${packageName.replace('.', '_')}_version_result", value = YukiHookAPI.Status.compiledTimestamp.toString())
         }
     }
 }

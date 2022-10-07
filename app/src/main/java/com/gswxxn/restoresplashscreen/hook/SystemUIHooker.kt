@@ -1,6 +1,5 @@
 package com.gswxxn.restoresplashscreen.hook
 
-import android.app.Application
 import android.content.ComponentName
 import android.content.Context
 import android.content.pm.ActivityInfo
@@ -16,6 +15,7 @@ import com.gswxxn.restoresplashscreen.utils.Utils
 import com.gswxxn.restoresplashscreen.utils.Utils.getField
 import com.gswxxn.restoresplashscreen.utils.Utils.isMIUI
 import com.gswxxn.restoresplashscreen.utils.Utils.printLog
+import com.gswxxn.restoresplashscreen.utils.Utils.returnVersionCheck
 import com.gswxxn.restoresplashscreen.utils.Utils.setField
 import com.highcapable.yukihookapi.hook.core.YukiMemberHookCreator
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
@@ -40,6 +40,7 @@ class SystemUIHooker : YukiBaseHooker() {
     }
 
     override fun onHook() {
+        returnVersionCheck()
 
         /**
          * 自定义作用域

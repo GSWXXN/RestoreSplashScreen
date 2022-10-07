@@ -3,12 +3,15 @@ package com.gswxxn.restoresplashscreen.hook
 import android.os.Build
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.utils.Utils.printLog
+import com.gswxxn.restoresplashscreen.utils.Utils.returnVersionCheck
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.loggerE
 
 class AndroidHooker : YukiBaseHooker() {
 
     override fun onHook() {
+
+        returnVersionCheck()
 
         findClass("com.android.server.wm.ActivityRecord").hook {
             /**

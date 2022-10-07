@@ -8,13 +8,17 @@ import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.ConstValue
 import com.gswxxn.restoresplashscreen.databinding.ActivityMainSettingsBinding
 import com.gswxxn.restoresplashscreen.utils.BlockMIUIHelper.addBlockMIUIView
+import com.gswxxn.restoresplashscreen.utils.Utils.checkingHostVersion
 import com.gswxxn.restoresplashscreen.utils.Utils.execShell
 import com.gswxxn.restoresplashscreen.utils.Utils.shrinkIcon
 import com.gswxxn.restoresplashscreen.view.NewMIUIDialog
 import com.highcapable.yukihookapi.YukiHookAPI
+import com.highcapable.yukihookapi.hook.factory.dataChannel
 
 class MainSettingsActivity : BaseActivity() {
-    var isReady = false
+    private var systemUIRestartNeeded: Boolean? = null
+    private var androidRestartNeeded: Boolean? = null
+    private var isReady = false
     private lateinit var binding: ActivityMainSettingsBinding
 
     override fun onCreate() {
@@ -103,20 +107,24 @@ class MainSettingsActivity : BaseActivity() {
     }
 
     private fun refreshState() {
+        val takeAction = androidRestartNeeded == true ||  systemUIRestartNeeded == true
         binding.mainStatus.setBackgroundResource(
             when {
+                YukiHookAPI.Status.isXposedModuleActive && takeAction -> R.drawable.bg_yellow_round
                 YukiHookAPI.Status.isXposedModuleActive -> R.drawable.bg_green_round
                 else -> R.drawable.bg_dark_round
             }
         )
         binding.mainImgStatus.setImageResource(
             when {
-                YukiHookAPI.Status.isXposedModuleActive -> R.drawable.ic_success
+                YukiHookAPI.Status.isXposedModuleActive && !takeAction -> R.drawable.ic_success
                 else -> R.drawable.ic_warn
             }
         )
         binding.mainTextStatus.text =
             when {
+                YukiHookAPI.Status.isXposedModuleActive && takeAction ->
+                    getString(R.string.module_is_updated, ""/**getString(if (androidRestartNeeded == true) R.string.phone else R.string.system_ui)**/)
                 YukiHookAPI.Status.isXposedModuleActive -> getString(R.string.module_is_active)
                 else -> getString(R.string.module_is_not_active)
             }
@@ -128,6 +136,7 @@ class MainSettingsActivity : BaseActivity() {
 
         window.statusBarColor = getColor(
             when {
+                YukiHookAPI.Status.isXposedModuleActive && takeAction -> R.color.yellow
                 YukiHookAPI.Status.isXposedModuleActive -> R.color.green
                 else -> R.color.gray
             }
@@ -137,5 +146,18 @@ class MainSettingsActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         refreshState()
+
+        dataChannel("com.android.systemui").checkingVersionEquals {
+            systemUIRestartNeeded = !it
+            refreshState()
+        }
+//        checkingHostVersion("com.android.systemui") {
+//            systemUIRestartNeeded = !it
+//            refreshState()
+//        }
+        checkingHostVersion("android") {
+            androidRestartNeeded = !it
+            refreshState()
+        }
     }
 }

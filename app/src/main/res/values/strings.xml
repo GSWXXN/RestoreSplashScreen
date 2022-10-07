@@ -6,6 +6,10 @@
     <string name="module_version">模块版本：%s</string>
     <string name="module_is_active">模块已激活</string>
     <string name="module_is_not_active">模块未激活</string>
+    <string name="module_is_updated">模块已更新, 需要重启%s</string>
+    <string name="phone">手机</string>
+    <string name="system_ui">系统界面</string>
+
     <string name="xposed_framework_version">Activated by %s API %d</string>
     <string name="main_activity_hint">做出任何设置前，请确保模块已激活。\n修改设置后点击右上角按钮启系统界面。</string>
 

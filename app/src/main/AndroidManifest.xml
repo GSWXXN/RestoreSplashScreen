@@ -56,7 +56,7 @@
                 android:value="93"/>
         <meta-data
                 android:name="xposedscope"
-                android:value="com.android.systemui"/>
+                android:resource="@array/xposed_scope"/>
         <meta-data
                 android:name="xposeddescription"
                 android:value="自定义MIUI的SplashScreen\n酷安@迷璐"/>

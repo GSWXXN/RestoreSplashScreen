@@ -16,7 +16,9 @@ import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.dataChannel
 import com.highcapable.yukihookapi.hook.factory.field
 import com.highcapable.yukihookapi.hook.factory.hasClass
+import com.highcapable.yukihookapi.hook.factory.modulePrefs
 import com.highcapable.yukihookapi.hook.log.loggerI
+import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 import java.io.DataOutputStream
 
 object Utils {
@@ -207,11 +209,50 @@ object Utils {
     }
 
     /**
-     * 宿主注册接收 DataChannel 消息，发送版本信息
+     * 给宿主发送通讯，通知配置变化
+     * @param prefsData 键值对存储实例
      */
-    fun YukiBaseHooker.returnVersionCheck() {
+    inline fun <reified T> Context.sendToHost(prefsData: PrefsData<T>) {
+        val host = if (prefsData.key in setOf(
+                "force_show_splash_screen",
+                "disable_splash_screen",
+                "enable_hot_start_compatible"))
+            "android"
+        else "com.android.systemui"
+        dataChannel(host)
+            .put("${host.replace('.', '_')}_config_change", "${prefsData.key}-${
+                when (prefsData.value) {
+                    is Int -> "int"
+                    is String -> "string"
+                    is Boolean -> "boolean"
+                    else -> "not_support"
+                }
+            }-${modulePrefs.get(prefsData)}")
+    }
+
+    /**
+     * 宿主注册接收 DataChannel 通知
+     */
+    fun YukiBaseHooker.register() {
         dataChannel.wait<String>(key = "${packageName.replace('.', '_')}_version_get") {
             dataChannel.put(key = "${packageName.replace('.', '_')}_version_result", value = YukiHookAPI.Status.compiledTimestamp.toString())
+        }
+
+        dataChannel.wait<String>(key = "${packageName.replace('.', '_')}_config_change") {
+            when (it.split("-")[1]) {
+                "boolean" -> {
+                    HostPrefsUtil.XSharedPreferencesCaches.booleanData[it.split("-")[0]] =
+                        it.split("-")[2].toBoolean()
+                }
+                "int" -> {
+                    HostPrefsUtil.XSharedPreferencesCaches.intData[it.split("-")[0]] =
+                        it.split("-")[2].toInt()
+                }
+                "string" -> {
+                    HostPrefsUtil.XSharedPreferencesCaches.stringData[it.split("-")[0]] =
+                        it.split("-")[2]
+                }
+            }
         }
     }
 }

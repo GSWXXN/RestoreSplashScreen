@@ -2,16 +2,18 @@ package com.gswxxn.restoresplashscreen.hook
 
 import android.os.Build
 import com.gswxxn.restoresplashscreen.data.DataConst
+import com.gswxxn.restoresplashscreen.utils.HostPrefsUtil
 import com.gswxxn.restoresplashscreen.utils.Utils.printLog
-import com.gswxxn.restoresplashscreen.utils.Utils.returnVersionCheck
+import com.gswxxn.restoresplashscreen.utils.Utils.register
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.loggerE
 
 class AndroidHooker : YukiBaseHooker() {
+    private val pref by lazy { HostPrefsUtil(this) }
 
     override fun onHook() {
 
-        returnVersionCheck()
+        register()
 
         findClass("com.android.server.wm.ActivityRecord").hook {
             /**
@@ -28,7 +30,7 @@ class AndroidHooker : YukiBaseHooker() {
                 }
                 beforeHook {
                     val pkgName = args(1).string()
-                    val isForceShowSS = prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN) && pkgName in prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST)
+                    val isForceShowSS = pref.get(DataConst.FORCE_SHOW_SPLASH_SCREEN) && pkgName in prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST)
 
                     if (isForceShowSS) resultTrue()
                     printLog("[Android] validateStartingWindowTheme():${if (isForceShowSS) "" else "Not"} force show $pkgName splash screen")
@@ -45,7 +47,7 @@ class AndroidHooker : YukiBaseHooker() {
                     })
                 }
                 beforeHook {
-                    val isDisableSS = prefs.get(DataConst.DISABLE_SPLASH_SCREEN)
+                    val isDisableSS = pref.get(DataConst.DISABLE_SPLASH_SCREEN)
                     if (isDisableSS) resultFalse()
                     printLog("[Android] addStartingWindow():${if (isDisableSS) "" else "Not"} disable ${args(0).string()} splash screen")
                 }
@@ -61,7 +63,7 @@ class AndroidHooker : YukiBaseHooker() {
                     })
                 }
                 beforeHook {
-                    val isHotStartCompatible = prefs.get(DataConst.ENABLE_HOT_START_COMPATIBLE)
+                    val isHotStartCompatible = pref.get(DataConst.ENABLE_HOT_START_COMPATIBLE)
                     if (isHotStartCompatible) result = 2
                     printLog("[Android] getStartingWindowType():${if (isHotStartCompatible) "" else "Not"} set result to 2")
                 }

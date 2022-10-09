@@ -15,8 +15,9 @@ import com.gswxxn.restoresplashscreen.utils.Utils
 import com.gswxxn.restoresplashscreen.utils.Utils.getField
 import com.gswxxn.restoresplashscreen.utils.Utils.isMIUI
 import com.gswxxn.restoresplashscreen.utils.Utils.printLog
-import com.gswxxn.restoresplashscreen.utils.Utils.returnVersionCheck
+import com.gswxxn.restoresplashscreen.utils.Utils.register
 import com.gswxxn.restoresplashscreen.utils.Utils.setField
+import com.gswxxn.restoresplashscreen.utils.HostPrefsUtil
 import com.highcapable.yukihookapi.hook.core.YukiMemberHookCreator
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.current
@@ -27,20 +28,22 @@ import com.highcapable.yukihookapi.hook.type.java.IntType
 import com.highcapable.yukihookapi.hook.type.java.StringType
 
 class SystemUIHooker : YukiBaseHooker() {
+    private val pref by lazy { HostPrefsUtil(this) }
+
     private val iconPackManager by lazy { IconPackManager(
         appContext!!,
-        prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)
+        pref.get(DataConst.ICON_PACK_PACKAGE_NAME)
     ) }
 
     private fun isExcept(pkgName : String) : Boolean {
         val list = prefs.get(DataConst.CUSTOM_SCOPE_LIST)
-        val isExceptionMode = prefs.get(DataConst.IS_CUSTOM_SCOPE_EXCEPTION_MODE)
-        return prefs.get(DataConst.ENABLE_CUSTOM_SCOPE)
+        val isExceptionMode = pref.get(DataConst.IS_CUSTOM_SCOPE_EXCEPTION_MODE)
+        return pref.get(DataConst.ENABLE_CUSTOM_SCOPE)
                 && ((isExceptionMode && (pkgName in list)) || (!isExceptionMode && pkgName !in list))
     }
 
     override fun onHook() {
-        returnVersionCheck()
+        register()
 
         /**
          * 自定义作用域
@@ -58,7 +61,7 @@ class SystemUIHooker : YukiBaseHooker() {
                     paramCount(2)
                 }
                 beforeHook {
-                    if (!prefs.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)) {
+                    if (!pref.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)) {
                         val pkgName = args(0).cast<ActivityInfo>()?.packageName!!
                         val isExcept = isExcept(pkgName)
                         if (!isExcept)
@@ -97,14 +100,14 @@ class SystemUIHooker : YukiBaseHooker() {
                     }
                     beforeHook {
                         val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
-                        val isDefaultStyle = prefs.get(DataConst.ENABLE_DEFAULT_STYLE)
+                        val isDefaultStyle = pref.get(DataConst.ENABLE_DEFAULT_STYLE)
                                 && pkgName in prefs.get(DataConst.DEFAULT_STYLE_LIST)
-                        val isRemoveBrandingImage = prefs.get(DataConst.REMOVE_BRANDING_IMAGE)
+                        val isRemoveBrandingImage = pref.get(DataConst.REMOVE_BRANDING_IMAGE)
                                 && pkgName in prefs.get(DataConst.REMOVE_BRANDING_IMAGE_LIST)
-                        val isRemoveBGColor = prefs.get(DataConst.REMOVE_BG_COLOR)
-                        val isReplaceToEmptySplashScreen = prefs.get(DataConst.REPLACE_TO_EMPTY_SPLASH_SCREEN)
+                        val isRemoveBGColor = pref.get(DataConst.REMOVE_BG_COLOR)
+                        val isReplaceToEmptySplashScreen = pref.get(DataConst.REPLACE_TO_EMPTY_SPLASH_SCREEN)
                         val isExcept = isExcept(pkgName)
-                        val forceEnableSplashScreen = prefs.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)
+                        val forceEnableSplashScreen = pref.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)
                         val context = instance.getField("mContext").cast<Context>()!!
                         val mSplashscreenContentDrawer = instance.getField("this\$0").any()!!
                         val mTmpAttrs = mSplashscreenContentDrawer
@@ -201,11 +204,11 @@ class SystemUIHooker : YukiBaseHooker() {
                         }
                     }
                     beforeHook {
-                        if (prefs.get(DataConst.REMOVE_BG_COLOR)) return@beforeHook
+                        if (pref.get(DataConst.REMOVE_BG_COLOR)) return@beforeHook
 
-                        val enableChangeBgColor = prefs.get(DataConst.ENABLE_CHANG_BG_COLOR)
-                        val ignoreDarkMode = prefs.get(DataConst.IGNORE_DARK_MODE)
-                        val colorMode = prefs.get(DataConst.BG_COLOR_MODE)
+                        val enableChangeBgColor = pref.get(DataConst.ENABLE_CHANG_BG_COLOR)
+                        val ignoreDarkMode = pref.get(DataConst.IGNORE_DARK_MODE)
+                        val colorMode = pref.get(DataConst.BG_COLOR_MODE)
                         val isDarkMode = appResources!!
                             .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
                         val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
@@ -213,7 +216,7 @@ class SystemUIHooker : YukiBaseHooker() {
 
                         when {
                             // 设置微信背景色为深色
-                            pkgName == "com.tencent.mm" && prefs.get(DataConst.INDEPENDENT_COLOR_WECHAT) -> {
+                            pkgName == "com.tencent.mm" && pref.get(DataConst.INDEPENDENT_COLOR_WECHAT) -> {
                                 instance.setField("mThemeColor", Color.parseColor("#010C15"))
                                 printLog("10. createIconDrawable(): set WeChat background color")
                             }
@@ -258,10 +261,10 @@ class SystemUIHooker : YukiBaseHooker() {
                     param(ActivityInfoClass, IntType)
                 }
                 afterHook {
-                    val enableReplaceIcon = prefs.get(DataConst.ENABLE_REPLACE_ICON)
-                    val shrinkIconType = prefs.get(DataConst.SHRINK_ICON)
-                    val iconPackPackageName = prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)
-                    val isDrawIconRoundCorner = prefs.get(DataConst.ENABLE_DRAW_ROUND_CORNER)
+                    val enableReplaceIcon = pref.get(DataConst.ENABLE_REPLACE_ICON)
+                    val shrinkIconType = pref.get(DataConst.SHRINK_ICON)
+                    val iconPackPackageName = pref.get(DataConst.ICON_PACK_PACKAGE_NAME)
+                    val isDrawIconRoundCorner = pref.get(DataConst.ENABLE_DRAW_ROUND_CORNER)
                     val pkgName = args(0).cast<ActivityInfo>()?.packageName!!
                     val pkgActivity = args(0).cast<ActivityInfo>()?.targetActivity
                     val iconSize = args(1).cast<Int>()!!
@@ -356,7 +359,7 @@ class SystemUIHooker : YukiBaseHooker() {
          * 此处在 com.android.wm.shell.startingsurface.SplashscreenContentDrawer
          *   .$StartingWindowViewBuilder.fillViewWithIcon() 中被调用
          */
-        if (prefs.get(DataConst.IGNORE_DARK_MODE) && isMIUI)
+        if (pref.get(DataConst.IGNORE_DARK_MODE) && isMIUI)
             findClass("android.window.SplashScreenView\$Builder").hook {
                 injectMember {
                     method {
@@ -382,7 +385,7 @@ class SystemUIHooker : YukiBaseHooker() {
          *
          * 原理为干预 fillViewWithIcon() 中的 if 判断，使其将启动器判断为不是 MIUI 桌面
          */
-        if (prefs.get(DataConst.REMOVE_BG_DRAWABLE))
+        if (pref.get(DataConst.REMOVE_BG_DRAWABLE))
             findClass("android.app.TaskSnapshotHelperImpl").hook {
                 injectMember {
                     method {

@@ -2,15 +2,10 @@ package com.gswxxn.restoresplashscreen.hook
 
 import android.os.Build
 import com.gswxxn.restoresplashscreen.data.DataConst
-import com.gswxxn.restoresplashscreen.utils.HostPrefsUtil
-import com.gswxxn.restoresplashscreen.utils.Utils.printLog
 import com.gswxxn.restoresplashscreen.utils.Utils.register
-import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.loggerE
 
-class AndroidHooker : YukiBaseHooker() {
-    private val pref by lazy { HostPrefsUtil(this) }
-
+class AndroidHooker : BaseHooker() {
     override fun onHook() {
 
         register()

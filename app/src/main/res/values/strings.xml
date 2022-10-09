@@ -11,10 +11,10 @@
     <string name="system_ui">系统界面</string>
 
     <string name="xposed_framework_version">Activated by %s API %d</string>
-    <string name="main_activity_hint">做出任何设置前，请确保模块已激活。\n修改设置后点击右上角按钮启系统界面。</string>
+    <string name="main_activity_hint">做出任何设置前，请确保模块已激活。\n修改设置后立即生效，无需重启。</string>
 
     <string name="restart_title">重启提示</string>
-    <string name="restart_message">配置修改后需要重启系统界面才能生效。\n\n如果您 LSPosed 框架中的作用域包含系统框架，则需要重启手机</string>
+    <string name="restart_message">模块更新后需要重启系统界面才能生效。\n\n如果您 LSPosed 框架中的作用域包含系统框架，则需要重启手机</string>
     <string name="reboot">重启手机</string>
     <string name="restart_system_ui">重启系统界面</string>
     <string name="cancel">取消</string>

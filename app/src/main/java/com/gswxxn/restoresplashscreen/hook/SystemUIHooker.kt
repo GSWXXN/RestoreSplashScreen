@@ -14,11 +14,8 @@ import com.gswxxn.restoresplashscreen.utils.IconPackManager
 import com.gswxxn.restoresplashscreen.utils.Utils
 import com.gswxxn.restoresplashscreen.utils.Utils.getField
 import com.gswxxn.restoresplashscreen.utils.Utils.isMIUI
-import com.gswxxn.restoresplashscreen.utils.Utils.printLog
 import com.gswxxn.restoresplashscreen.utils.Utils.register
 import com.gswxxn.restoresplashscreen.utils.Utils.setField
-import com.gswxxn.restoresplashscreen.utils.HostPrefsUtil
-import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.type.android.ActivityInfoClass
 import com.highcapable.yukihookapi.hook.type.android.DrawableClass
@@ -26,9 +23,7 @@ import com.highcapable.yukihookapi.hook.type.java.BooleanType
 import com.highcapable.yukihookapi.hook.type.java.IntType
 import com.highcapable.yukihookapi.hook.type.java.StringType
 
-class SystemUIHooker : YukiBaseHooker() {
-    private val pref by lazy { HostPrefsUtil(this) }
-
+class SystemUIHooker: BaseHooker() {
     private val iconPackManager by lazy { IconPackManager(
         appContext!!,
         pref.get(DataConst.ICON_PACK_PACKAGE_NAME)

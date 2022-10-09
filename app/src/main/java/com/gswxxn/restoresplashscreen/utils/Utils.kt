@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.palette.graphics.Palette
 import cn.fkj233.ui.activity.dp2px
-import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.RoundDegree
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.core.finder.members.FieldFinder.Result.Instance
@@ -17,7 +16,6 @@ import com.highcapable.yukihookapi.hook.factory.dataChannel
 import com.highcapable.yukihookapi.hook.factory.field
 import com.highcapable.yukihookapi.hook.factory.hasClass
 import com.highcapable.yukihookapi.hook.factory.modulePrefs
-import com.highcapable.yukihookapi.hook.log.loggerI
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 import java.io.DataOutputStream
 
@@ -166,15 +164,6 @@ object Utils {
         .apply { show() }
 
     /**
-     *  根据 [DataConst.ENABLE_LOG] 标志向 XPosed 框架打印日志
-     *
-     *  @param msg 打印日志的内容
-     */
-    fun YukiBaseHooker.printLog(vararg msg: String) {
-        if (this.prefs.get(DataConst.ENABLE_LOG)) msg.forEach { loggerI(msg = it) }
-    }
-
-    /**
      * 当前设备是否是 MIUI 定制 Android 系统
      * @return [Boolean] 是否符合条件
      */
@@ -219,15 +208,18 @@ object Utils {
                 "enable_hot_start_compatible"))
             "android"
         else "com.android.systemui"
-        dataChannel(host)
-            .put("${host.replace('.', '_')}_config_change", "${prefsData.key}-${
-                when (prefsData.value) {
-                    is Int -> "int"
-                    is String -> "string"
-                    is Boolean -> "boolean"
-                    else -> "not_support"
-                }
-            }-${modulePrefs.get(prefsData)}")
+        val key = "${host.replace('.', '_')}_config_change"
+        val value = "${prefsData.key}-${
+            when (prefsData.value) {
+                is Int -> "int"
+                is String -> "string"
+                is Boolean -> "boolean"
+                else -> "not_support"
+            }
+        }-${modulePrefs.get(prefsData)}"
+        dataChannel(host).put(key, value)
+        if (prefsData.key == "enable_log")
+            dataChannel("android").put("${"android".replace('.', '_')}_config_change", value)
     }
 
     /**

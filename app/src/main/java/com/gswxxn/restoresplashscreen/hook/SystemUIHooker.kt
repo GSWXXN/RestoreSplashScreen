@@ -18,7 +18,6 @@ import com.gswxxn.restoresplashscreen.utils.Utils.printLog
 import com.gswxxn.restoresplashscreen.utils.Utils.register
 import com.gswxxn.restoresplashscreen.utils.Utils.setField
 import com.gswxxn.restoresplashscreen.utils.HostPrefsUtil
-import com.highcapable.yukihookapi.hook.core.YukiMemberHookCreator
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.type.android.ActivityInfoClass
@@ -332,22 +331,27 @@ class SystemUIHooker : YukiBaseHooker() {
          *
          */
         findClass("com.android.launcher3.icons.BaseIconFactory").hook {
+            var shouldHook = false
+
             injectMember {
-                var hook : YukiMemberHookCreator.MemberHookCreator.Result? = null
                 method {
                     name = "createScaledBitmapWithoutShadow"
                 }
-                beforeHook {
-                    hook = injectMember {
-                        method {
-                            name = "normalizeAndWrapToAdaptiveIcon"
-                            paramCount(4)
-                        }
-                        beforeHook { args(1).setFalse() }
-                    }
-                    printLog("9. BaseIconFactory(): set shrinkNonAdaptiveIcons false")
+                beforeHook { shouldHook = true }
+                afterHook { shouldHook = false }
+            }
+
+            injectMember {
+                method {
+                    name = "normalizeAndWrapToAdaptiveIcon"
+                    paramCount(4)
                 }
-                afterHook { hook?.remove() }
+                beforeHook {
+                    if (shouldHook) {
+                        args(1).setFalse()
+                        printLog("9. BaseIconFactory(): set shrinkNonAdaptiveIcons false")
+                    }
+                }
             }
         }
 

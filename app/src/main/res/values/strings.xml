@@ -40,7 +40,7 @@
     <string name="will_not">不会</string>
     <string name="will_only">仅会</string>
     <string name="exception_mode_list">配置应用列表</string>
-    <string name="replace_to_empty_splash_screen">将作用域外的应用替换位空白启动遮罩</string>
+    <string name="replace_to_empty_splash_screen">将作用域外的应用替换为空白启动遮罩</string>
     <string name="replace_to_empty_splash_screen_tips">如不开启此选项则模块对作用域外的应用不作处理。</string>
     <string name="draw_round_corner">绘制图标圆角</string>
     <string name="shrink_icon">缩小图标</string>

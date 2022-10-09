@@ -11,6 +11,7 @@ import com.gswxxn.restoresplashscreen.utils.BlockMIUIHelper.addBlockMIUIView
 import com.gswxxn.restoresplashscreen.utils.Utils.checkingHostVersion
 import com.gswxxn.restoresplashscreen.utils.Utils.execShell
 import com.gswxxn.restoresplashscreen.utils.Utils.shrinkIcon
+import com.gswxxn.restoresplashscreen.utils.Utils.toast
 import com.gswxxn.restoresplashscreen.view.NewMIUIDialog
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.factory.dataChannel
@@ -42,10 +43,14 @@ class MainSettingsActivity : BaseActivity() {
                 setMessage(R.string.restart_message)
                 Button(getString(R.string.reboot)) {
                     execShell("reboot")
+                    Thread.sleep(300)
+                    toast("未授予 ROOT 权限")
                 }
                 Button(getString(R.string.restart_system_ui)) {
                     execShell("pkill -f com.android.systemui")
-                    finishAndRemoveTask()
+                    execShell("pkill -f com.gswxxn.restoresplashscreen")
+                    Thread.sleep(300)
+                    toast("未授予 ROOT 权限")
                 }
                 Button(getString(R.string.cancel), cancelStyle = true) {
                     dismiss()

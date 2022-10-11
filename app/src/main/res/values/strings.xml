@@ -59,8 +59,10 @@
     <string name="remove_branding_image_tips">开启此选项后，将会移除列表中应用的 Splash Screen 底部 Branding Image</string>
     <string name="remove_branding_image_list">配置移除列表</string>
     <string name="independent_color_wechat">设置微信启动背景为深色</string>
-    <string name="change_bg_color">自适应背景颜色</string>
-    <string name="change_bg_color_tips">开启此选项后，Splash Screen背景颜色将根据图标颜色更改。如有应用背景取色异常，请配置排除列表使用默认背景颜色。</string>
+    <string name="change_bg_color">替换背景颜色</string>
+    <string name="not_change_bg_color">不替换背景颜色</string>
+    <string name="from_icon">从图标取色</string>
+    <string name="from_monet">莫奈取色</string>
     <string name="color_mode">颜色模式</string>
     <string name="color_mode_tips">选择 &quot;跟随系统&quot; 模式后需要同时开启下方的 &quot;忽略深色模式&quot; 选项, 以便取色功能可以在深色模式下正常工作。其他两项按需开启 &quot;忽略深色模式&quot;</string>
     <string name="light_color">浅色</string>

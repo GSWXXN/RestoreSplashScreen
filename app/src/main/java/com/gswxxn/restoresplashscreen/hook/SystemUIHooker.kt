@@ -8,6 +8,9 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.ui.graphics.toArgb
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.RoundDegree
 import com.gswxxn.restoresplashscreen.utils.DataCacheUtils.colorData
@@ -78,7 +81,7 @@ class SystemUIHooker: BaseHooker() {
          * - 强制开启启动遮罩
          * - 忽略应用主动设置的图标
          * - 移除品牌图标
-         * - 自适应背景颜色
+         * - 替换背景颜色
          * - 设置微信背景色为黑色
          */
         findClass("com.android.wm.shell.startingsurface.SplashscreenContentDrawer\$StartingWindowViewBuilder")
@@ -184,7 +187,7 @@ class SystemUIHooker: BaseHooker() {
 
                 /**
                  * 此处实现功能：
-                 * - 自适应背景颜色
+                 * - 替换背景颜色
                  * - 设置微信背景色为深色
                  *
                  * 在系统执行 createIconDrawable() 时，会将 Splash Screen 图标传入到此函数的第一个参数，
@@ -202,7 +205,7 @@ class SystemUIHooker: BaseHooker() {
                     beforeHook {
                         if (pref.get(DataConst.REMOVE_BG_COLOR)) return@beforeHook
 
-                        val enableChangeBgColor = pref.get(DataConst.ENABLE_CHANG_BG_COLOR)
+                        val bgColorType = pref.get(DataConst.CHANG_BG_COLOR_TYPE)
                         val ignoreDarkMode = pref.get(DataConst.IGNORE_DARK_MODE)
                         val colorMode = pref.get(DataConst.BG_COLOR_MODE)
                         val enableDataCache = pref.get(DataConst.ENABLE_DATA_CACHE)
@@ -211,30 +214,46 @@ class SystemUIHooker: BaseHooker() {
                         val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
                         val isInExceptList = pkgName in prefs.get(DataConst.BG_EXCEPT_LIST) || isExcept(pkgName)
 
-                        when {
-                            // 设置微信背景色为深色
-                            pkgName == "com.tencent.mm" && pref.get(DataConst.INDEPENDENT_COLOR_WECHAT) -> {
-                                instance.setField("mThemeColor", Color.parseColor("#010C15"))
-                                printLog("10. createIconDrawable(): set WeChat background color")
-                            }
+                        fun getColor() = if (pkgName == "com.tencent.mm" && pref.get(DataConst.INDEPENDENT_COLOR_WECHAT)) {
+                            printLog("10. createIconDrawable(): set WeChat background color")
+                            Color.parseColor("#010C15")
+                        } else if (!isInExceptList && (!isDarkMode || ignoreDarkMode))
+                            when (bgColorType) {
 
-                            // 自适应背景色
-                            enableChangeBgColor && !isInExceptList && (!isDarkMode || ignoreDarkMode) -> {
-                                fun getColor() = Utils.getBgColor(
-                                    Utils.drawable2Bitmap(args(0).cast<Drawable>()!!, 100)!!,
+                                // 从图标取色
+                                1 -> {
+                                    printLog("10. createIconDrawable(): get adaptive background color")
+                                    Utils.getBgColor(
+                                        Utils.drawable2Bitmap(args(0).cast<Drawable>()!!, 100)!!,
+                                        when (colorMode) {
+                                            1 -> false
+                                            2 -> !isDarkMode
+                                            else -> true
+                                        }
+                                    )
+                                }
+
+                                // 从壁纸取色
+                                2 -> {
+                                    printLog("10. createIconDrawable(): get monet background color")
                                     when (colorMode) {
-                                        1 -> false
-                                        2 -> !isDarkMode
-                                        else -> true
-                                    })
-                                val color =
-                                    if (enableDataCache) colorData.getOrPut(pkgName) { getColor() }
-                                    else getColor()
-                                instance.setField("mThemeColor", color)
-                                printLog("10. createIconDrawable(): ${if (enableDataCache) "(from cache)" else ""}set adaptive background color")
-                            }
+                                        0 -> dynamicLightColorScheme(appContext!!).primaryContainer.toArgb()
+                                        1 -> dynamicDarkColorScheme(appContext!!).primaryContainer.toArgb()
+                                        else -> if (!isDarkMode)
+                                            dynamicLightColorScheme(appContext!!).primaryContainer.toArgb()
+                                        else
+                                            dynamicDarkColorScheme(appContext!!).primaryContainer.toArgb()
+                                    }
+                                }
+                                else -> null
+                        } else null
 
-                            else -> printLog("10. createIconDrawable(): Not set background color")
+                        val color = if (enableDataCache && bgColorType != 2) colorData.getOrPut(pkgName) { getColor() }
+                        else getColor()
+
+                        color?.let {
+                            printLog("action: createIconDrawable(): ${if (enableDataCache) "(from cache)" else ""}set background color")
+                            instance.setField("mThemeColor", it)
                         }
 
                     }

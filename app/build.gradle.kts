@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.gswxxn.restoresplashscreen"
-    compileSdk = 32
+    compileSdk = 33
 
     defaultConfig {
         applicationId = "com.gswxxn.restoresplashscreen"
         minSdk = 31
-        targetSdk = 32
+        targetSdk = 33
         versionCode = 240
         versionName = "2.4"
     }
@@ -54,7 +54,8 @@ dependencies {
     ksp("com.highcapable.yukihookapi:ksp-xposed:1.1.4")
 
     implementation("androidx.palette:palette-ktx:1.0.0")
+    implementation("androidx.compose.material3:material3:1.0.0-rc01")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 }
 

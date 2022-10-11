@@ -207,15 +207,17 @@ class SubSettings : BaseActivity() {
 
                     Line()
 
-                    // 自适应背景颜色
-                    val changeBGColorBinding = getDataBinding(modulePrefs.get(DataConst.ENABLE_CHANG_BG_COLOR))
-                    TextSummaryWithSwitch(
-                        TextSummaryV(
-                            textId = R.string.change_bg_color,
-                            tipsId = R.string.change_bg_color_tips
-                        ),
-                        SwitchView(DataConst.ENABLE_CHANG_BG_COLOR, dataBindingSend = changeBGColorBinding.bindingSend)
-                    )
+                    // 替换背景颜色
+                    val changeColorTypeItems = mapOf(0 to getString(R.string.not_change_bg_color), 1 to getString(R.string.from_icon), 2 to getString(R.string.from_monet))
+                    val changeBGColorTypeBinding = getDataBinding(changeColorTypeItems[modulePrefs.get(DataConst.CHANG_BG_COLOR_TYPE)]!!)
+                    TextWithSpinner(TextV(textId = R.string.change_bg_color), SpinnerV(changeColorTypeItems[modulePrefs.get(DataConst.CHANG_BG_COLOR_TYPE)]!!, 180F, dataBindingSend = changeBGColorTypeBinding.bindingSend){
+                        for (item in changeColorTypeItems) {
+                            add(item.value) {
+                                modulePrefs.put(DataConst.CHANG_BG_COLOR_TYPE, item.key)
+                                sendToHost(DataConst.CHANG_BG_COLOR_TYPE)
+                            }
+                        }
+                    })
 
                     // 颜色模式
                     val colorModeItems = mapOf(0 to getString(R.string.light_color), 1 to getString(R.string.dark_color), 2 to getString(R.string.follow_system))
@@ -227,14 +229,14 @@ class SubSettings : BaseActivity() {
                                 sendToHost(DataConst.BG_COLOR_MODE)
                             }
                         }
-                    }, dataBindingRecv = changeBGColorBinding.getRecv(2))
+                    }, dataBindingRecv = changeBGColorTypeBinding.getRecv(8))
 
                     // 配置应用列表
                     TextSummaryArrow(TextSummaryV(textId = R.string.change_bg_color_list, onClickListener = {
                         startActivity(Intent(this@SubSettings, ConfigAppsActivity::class.java).apply {
                             putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.BACKGROUND_EXCEPT)
                         })
-                    }), dataBindingRecv = changeBGColorBinding.getRecv(2))
+                    }), dataBindingRecv = changeBGColorTypeBinding.getRecv(8))
 
                     Line()
 
@@ -314,6 +316,7 @@ class SubSettings : BaseActivity() {
             4 -> if (!(data as Boolean)) (view as Switch).isChecked = false
             6 -> (view as TextView).text = getString(R.string.exception_mode_message, getString(if (data as Boolean) R.string.will_not else R.string.will_only))
             7 -> if ((data as String) == getString(R.string.follow_system)) (view as Switch).isChecked = true
+            8 -> view.visibility = if ((data as String) == getString(R.string.not_change_bg_color)) View.GONE else View.VISIBLE
         }
     }
 }

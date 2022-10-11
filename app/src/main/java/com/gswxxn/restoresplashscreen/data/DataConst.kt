@@ -12,7 +12,6 @@ object DataConst {
     val ENABLE_HIDE_ICON = PrefsData("enable_hide_icon", false)
     val ENABLE_REPLACE_ICON = PrefsData("enable_replace_icon", false)
     val ICON_PACK_PACKAGE_NAME = PrefsData("icon_pack_package_name", "None")
-    val ENABLE_CHANG_BG_COLOR = PrefsData("enable_change_bg_color", false)
     val INDEPENDENT_COLOR_WECHAT = PrefsData("independent_color_wechat", false)
     val IGNORE_DARK_MODE = PrefsData("ignore_dark_mode", false)
     val REMOVE_BG_DRAWABLE = PrefsData("remove_bg_drawable", false)
@@ -25,6 +24,7 @@ object DataConst {
     val ENABLE_DRAW_ROUND_CORNER = PrefsData("draw_round_corner", true)
     val SHRINK_ICON = PrefsData("shrink_icon", 0)
     val BG_COLOR_MODE = PrefsData("color_mode", 0)
+    val CHANG_BG_COLOR_TYPE = PrefsData("change_bg_color_type", 0)
 
     val UNDEFINED_LIST = PrefsData("undefined_list", mutableSetOf<String>())
     val CUSTOM_SCOPE_LIST = PrefsData("custom_scope_list", mutableSetOf<String>())

@@ -245,7 +245,7 @@ object Utils {
                         it.split("-")[2]
                 }
             }
-            if (it.split("-")[0] == "enable_data_cache") DataCacheUtils.clear()
+            DataCacheUtils.clear()
         }
     }
 }

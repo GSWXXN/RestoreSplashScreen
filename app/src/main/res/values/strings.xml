@@ -33,7 +33,7 @@
     <string name="enable_log">启用日志</string>
     <string name="hide_icon">隐藏桌面图标</string>
     <string name="enable_data_cache">启用缓存</string>
-    <string name="enable_data_cache_tips">开启后会缓存模块绘制的圆角图标、背景取色，可能会缓解在部分机型上卡顿问题，但会导致变更图标后不能及时刷新显示。重启系统界面或重新开关一次此开关即可清除缓存。</string>
+    <string name="enable_data_cache_tips">开启后会缓存模块绘制的圆角图标、背景取色，可能会缓解在部分机型上开启应用的瞬间会卡顿的问题。</string>
     <string name="custom_scope">自定义模块作用域</string>
     <string name="custom_scope_message">记得配置应用列表 ^_^</string>
     <string name="exception_mode">排除模式</string>

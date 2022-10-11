@@ -10,6 +10,8 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.RoundDegree
+import com.gswxxn.restoresplashscreen.utils.DataCacheUtils.colorData
+import com.gswxxn.restoresplashscreen.utils.DataCacheUtils.iconData
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
 import com.gswxxn.restoresplashscreen.utils.Utils
 import com.gswxxn.restoresplashscreen.utils.Utils.getField
@@ -203,6 +205,7 @@ class SystemUIHooker: BaseHooker() {
                         val enableChangeBgColor = pref.get(DataConst.ENABLE_CHANG_BG_COLOR)
                         val ignoreDarkMode = pref.get(DataConst.IGNORE_DARK_MODE)
                         val colorMode = pref.get(DataConst.BG_COLOR_MODE)
+                        val enableDataCache = pref.get(DataConst.ENABLE_DATA_CACHE)
                         val isDarkMode = appResources!!
                             .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
                         val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
@@ -217,16 +220,18 @@ class SystemUIHooker: BaseHooker() {
 
                             // 自适应背景色
                             enableChangeBgColor && !isInExceptList && (!isDarkMode || ignoreDarkMode) -> {
-                                val drawable = args(0).cast<Drawable>()
-                                val color = Utils.getBgColor(
-                                    Utils.drawable2Bitmap(drawable!!, 100)!!,
+                                fun getColor() = Utils.getBgColor(
+                                    Utils.drawable2Bitmap(args(0).cast<Drawable>()!!, 100)!!,
                                     when (colorMode) {
                                         1 -> false
                                         2 -> !isDarkMode
                                         else -> true
                                     })
+                                val color =
+                                    if (enableDataCache) colorData.getOrPut(pkgName) { getColor() }
+                                    else getColor()
                                 instance.setField("mThemeColor", color)
-                                printLog("10. createIconDrawable(): set adaptive background color")
+                                printLog("10. createIconDrawable(): ${if (enableDataCache) "(from cache)" else ""}set adaptive background color")
                             }
 
                             else -> printLog("10. createIconDrawable(): Not set background color")
@@ -255,6 +260,7 @@ class SystemUIHooker: BaseHooker() {
                     param(ActivityInfoClass, IntType)
                 }
                 afterHook {
+                    val enableDataCache = pref.get(DataConst.ENABLE_DATA_CACHE)
                     val enableReplaceIcon = pref.get(DataConst.ENABLE_REPLACE_ICON)
                     val shrinkIconType = pref.get(DataConst.SHRINK_ICON)
                     val iconPackPackageName = pref.get(DataConst.ICON_PACK_PACKAGE_NAME)
@@ -265,51 +271,66 @@ class SystemUIHooker: BaseHooker() {
 
                     if (isExcept(pkgName)) return@afterHook
 
-                    /**
-                     * 替换获取图标方式
-                     *
-                     * 使用 Context.packageManager.getApplicationIcon() 的方式获取图标
-                     */
-                    var drawable = if (enableReplaceIcon) {
-                        when {
-                            pkgName == "com.android.contacts" && pkgActivity == "com.android.contacts.activities.PeopleActivity" ->
-                                appContext!!.packageManager.getActivityIcon(ComponentName("com.android.contacts","com.android.contacts.activities.TwelveKeyDialer"))
-                            pkgName == "com.android.settings" && pkgActivity == "com.android.settings.BackgroundApplicationsManager" ->
-                                appContext!!.packageManager.getApplicationIcon("com.android.settings")
-                            else -> pkgName.let { appContext!!.packageManager.getApplicationIcon(it) }
+                    fun getDrawable(): Drawable {
+                        /**
+                         * 替换获取图标方式
+                         *
+                         * 使用 Context.packageManager.getApplicationIcon() 的方式获取图标
+                         */
+                        var drawable = if (enableReplaceIcon) {
+                            when {
+                                pkgName == "com.android.contacts" && pkgActivity == "com.android.contacts.activities.PeopleActivity" ->
+                                    appContext!!.packageManager.getActivityIcon(
+                                        ComponentName(
+                                            "com.android.contacts",
+                                            "com.android.contacts.activities.TwelveKeyDialer"
+                                        )
+                                    )
+                                pkgName == "com.android.settings" && pkgActivity == "com.android.settings.BackgroundApplicationsManager" ->
+                                    appContext!!.packageManager.getApplicationIcon("com.android.settings")
+                                else -> pkgName.let {
+                                    appContext!!.packageManager.getApplicationIcon(
+                                        it
+                                    )
+                                }
+                            }
+                        } else {
+                            result<Drawable>()!!
                         }
-                    } else {
-                        result<Drawable>()
-                    }
-                    printLog("6. getIcon(): ${if (enableReplaceIcon) "" else "Not"} replace way of getting icon")
+                        printLog("6. getIcon(): ${if (enableReplaceIcon) "" else "Not"} replace way of getting icon")
 
-                    // 使用图标包
-                    if (iconPackPackageName != "None") {
-                        when {
-                            pkgName == "com.android.contacts" && pkgActivity == "com.android.contacts.activities.PeopleActivity" ->
-                                iconPackManager.getIconByComponentName("ComponentInfo{com.android.contacts/com.android.contacts.activities.TwelveKeyDialer}")
-                            else ->  iconPackManager.getIconByPackageName(pkgName)
-                        }?.let { drawable = it }
-                    }
-                    printLog("7. getIcon(): ${if (iconPackPackageName != "None") "" else "Not"} use Icon Pack")
-
-
-                    /**
-                     * 绘制图标圆角
-                     * 缩小图标
-                     */
-                    Utils.roundBitmapByShader(
-                        drawable?.let { Utils.drawable2Bitmap(it, iconSize) },
-                        if (isDrawIconRoundCorner) RoundDegree.RoundCorner else RoundDegree.NotDrawRoundCorner,
-                        when (shrinkIconType) {
-                            0 -> 0               // 不缩小图标
-                            1 -> iconSize / 4    // 仅缩小分辨率较低的图标
-                            else -> 5000         // 缩小全部图标
+                        // 使用图标包
+                        if (iconPackPackageName != "None") {
+                            when {
+                                pkgName == "com.android.contacts" && pkgActivity == "com.android.contacts.activities.PeopleActivity" ->
+                                    iconPackManager.getIconByComponentName("ComponentInfo{com.android.contacts/com.android.contacts.activities.TwelveKeyDialer}")
+                                else -> iconPackManager.getIconByPackageName(pkgName)
+                            }?.let { drawable = it }
                         }
-                    )?.let { drawable = BitmapDrawable(appResources, it) }
-                    printLog("8. getIcon(): ${if (isDrawIconRoundCorner) "" else "Not"} draw round corner; shrink icon type is $shrinkIconType")
+                        printLog("7. getIcon(): ${if (iconPackPackageName != "None") "" else "Not"} use Icon Pack")
 
-                    result = drawable
+
+                        /**
+                         * 绘制图标圆角
+                         * 缩小图标
+                         */
+                        Utils.roundBitmapByShader(
+                            drawable.let { Utils.drawable2Bitmap(it, iconSize) },
+                            if (isDrawIconRoundCorner) RoundDegree.RoundCorner else RoundDegree.NotDrawRoundCorner,
+                            when (shrinkIconType) {
+                                0 -> 0               // 不缩小图标
+                                1 -> iconSize / 4    // 仅缩小分辨率较低的图标
+                                else -> 5000         // 缩小全部图标
+                            }
+                        )?.let { drawable = BitmapDrawable(appResources, it) }
+                        printLog("8. getIcon(): ${if (isDrawIconRoundCorner) "" else "Not"} draw round corner; shrink icon type is $shrinkIconType")
+
+                        return drawable
+                    }
+
+                    printLog("action: getIcon(): ${if (enableDataCache) "(from cache)" else ""}set drawable icon")
+                    result = if (enableDataCache) iconData.getOrPut(pkgName) { getDrawable() }
+                    else getDrawable()
                 }
             }
         }

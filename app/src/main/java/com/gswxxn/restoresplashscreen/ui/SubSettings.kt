@@ -84,14 +84,8 @@ class SubSettings : BaseActivity() {
                         )
                     })
 
-                    // 隐藏功能描述
-//                    TextSummaryWithSwitch(
-//                        TextSummaryV(
-//                            textId = R.string.hide_describe,
-//                            tipsId = R.string.hide_describe_description
-//                            ),
-//                        SwitchView(DataConst.ENABLE_HIDE_DESCRIBE)
-//                    )
+                    // 启用缓存
+                    TextSummaryWithSwitch(TextSummaryV(textId = R.string.enable_data_cache, tipsId = R.string.enable_data_cache_tips), SwitchView(DataConst.ENABLE_DATA_CACHE))
                 }
 
                 // 作用域

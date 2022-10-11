@@ -4,7 +4,7 @@ import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 
 object DataConst {
     val ENABLE_LOG = PrefsData("enable_log", false)
-//    val ENABLE_HIDE_DESCRIBE = PrefsData("enable_hide_describe", false)
+    val ENABLE_DATA_CACHE = PrefsData("enable_data_cache", false)
     val ENABLE_CUSTOM_SCOPE = PrefsData("enable_custom_scope", false)
     val IS_CUSTOM_SCOPE_EXCEPTION_MODE = PrefsData("is_custom_scope_exception_mode", true)
     val REPLACE_TO_EMPTY_SPLASH_SCREEN = PrefsData("replace_to_empty_splash_screen", false)

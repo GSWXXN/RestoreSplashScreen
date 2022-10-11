@@ -29,6 +29,7 @@
     <string name="faq_url">https://gswxxn.coding.net/public/restoresplashscreen/faq/git</string>
 
     <!--Sub Settings-->
+    <string name="make_sure_active">请确保模块已激活再进行配置</string>
     <string name="enable_log">启用日志</string>
     <string name="hide_icon">隐藏桌面图标</string>
     <string name="enable_data_cache">启用缓存</string>

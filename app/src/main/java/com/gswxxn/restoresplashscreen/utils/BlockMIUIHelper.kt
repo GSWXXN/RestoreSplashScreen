@@ -6,10 +6,12 @@ import android.view.Gravity
 import android.view.MotionEvent
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
 import cn.fkj233.miui.R
 import cn.fkj233.ui.activity.dp2px
 import cn.fkj233.ui.activity.view.*
 import com.gswxxn.restoresplashscreen.view.*
+import com.highcapable.yukihookapi.YukiHookAPI
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -129,6 +131,10 @@ object BlockMIUIHelper {
                     }
                     setOnTouchListener { view, motionEvent ->
                         if (motionEvent.action == MotionEvent.ACTION_UP) {
+                            if (!YukiHookAPI.Status.isXposedModuleActive) {
+                                Toast.makeText(context, com.gswxxn.restoresplashscreen.R.string.make_sure_active, Toast.LENGTH_SHORT).show()
+                                return@setOnTouchListener false
+                            }
                             val popup = MIUIPopup(context, view, spinner.currentValue, spinner.dropDownWidth, {
                                 spinner.select.text = it
                                 spinner.currentValue = it

@@ -25,10 +25,13 @@ package com.gswxxn.restoresplashscreen.view
 
 import android.content.Context
 import android.view.View
+import android.widget.Toast
 import cn.fkj233.ui.activity.data.DataBinding
 import cn.fkj233.ui.activity.view.BaseView
 import cn.fkj233.ui.switch.MIUISwitch
+import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.utils.Utils.sendToHost
+import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.factory.modulePrefs
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 
@@ -50,7 +53,12 @@ class SwitchView(
             dataBindingRecv?.setView(it)
             this.context = context
             it.isChecked = context.modulePrefs.get(pref)
-            it.setOnCheckedChangeListener { _, b ->
+            it.setOnCheckedChangeListener { v, b ->
+                if (!YukiHookAPI.Status.isXposedModuleActive) {
+                    v.isChecked = !b
+                    Toast.makeText(context, R.string.make_sure_active, Toast.LENGTH_SHORT).show()
+                    return@setOnCheckedChangeListener
+                }
                 dataBindingSend?.let { send ->
                     send.send(b)
                 }
@@ -62,12 +70,5 @@ class SwitchView(
         }
     }
 
-    fun click() {
-        switch.isChecked = !switch.isChecked
-        dataBindingSend?.let { send ->
-            send.send(switch.isChecked)
-        }
-        onClickListener?.let { it(switch.isChecked) }
-        context.modulePrefs.put(pref, switch.isChecked)
-    }
+    fun click() { switch.isChecked = !switch.isChecked }
 }

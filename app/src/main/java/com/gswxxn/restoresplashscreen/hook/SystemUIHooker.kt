@@ -13,6 +13,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.ui.graphics.toArgb
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.RoundDegree
+import com.gswxxn.restoresplashscreen.utils.DataCacheUtils.checkDarkModeChanged
 import com.gswxxn.restoresplashscreen.utils.DataCacheUtils.colorData
 import com.gswxxn.restoresplashscreen.utils.DataCacheUtils.iconData
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
@@ -209,8 +210,9 @@ class SystemUIHooker: BaseHooker() {
                         val ignoreDarkMode = pref.get(DataConst.IGNORE_DARK_MODE)
                         val colorMode = pref.get(DataConst.BG_COLOR_MODE)
                         val enableDataCache = pref.get(DataConst.ENABLE_DATA_CACHE)
-                        val isDarkMode = appResources!!
-                            .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+                        val isDarkMode = (appContext!!.resources
+                            .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES)
+                            .also { checkDarkModeChanged(it) }
                         val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
                         val isInExceptList = pkgName in prefs.get(DataConst.BG_EXCEPT_LIST) || isExcept(pkgName)
 

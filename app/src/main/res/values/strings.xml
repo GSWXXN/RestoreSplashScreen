@@ -68,13 +68,13 @@
     <string name="from_icon">从图标取色</string>
     <string name="from_monet">莫奈取色</string>
     <string name="color_mode">颜色模式</string>
-    <string name="color_mode_tips">选择 &quot;跟随系统&quot; 模式后需要同时开启下方的 &quot;忽略深色模式&quot; 选项, 以便取色功能可以在深色模式下正常工作。其他两项按需开启 &quot;忽略深色模式&quot;</string>
+    <string name="color_mode_tips">选择 &quot;跟随系统&quot; 模式后需要同时开启下方的 &quot;忽略 MIUI 深色模式&quot; 选项, 以便取色功能可以在深色模式下正常工作。其他两项按需开启 &quot;忽略 MIUI 深色模式&quot;</string>
     <string name="light_color">浅色</string>
     <string name="dark_color">暗色</string>
     <string name="follow_system">跟随系统</string>
     <string name="change_bg_color_list">配置排除列表</string>
-    <string name="ignore_dark_mode">忽略深色模式</string>
-    <string name="ignore_dark_mode_tips">开启此选项后，Splash Screen的背景颜色将不受深色模式的影响。</string>
+    <string name="ignore_dark_mode">忽略 MIUI 深色模式</string>
+    <string name="ignore_dark_mode_tips">在深色模式下，MIUI 会将启动遮罩替换为固定颜色。开启此选项后，将解除此限制。</string>
     <string name="remove_bg_drawable">移除截图背景</string>
     <string name="remove_bg_drawable_tips">如果Splash Screen的背景为应用内截图，可开启此选项移除。</string>
     <string name="remove_bg_color">移除背景颜色</string>

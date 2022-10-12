@@ -414,6 +414,14 @@ class SystemUIHooker: BaseHooker() {
                 }
             }
 
+        // 遮罩最小持续时间
+        findClass("com.android.wm.shell.startingsurface.SplashScreenExitAnimation").hook {
+            injectMember {
+                method { name = "startAnimations" }
+                beforeHook { pref.get(DataConst.MIN_DURATION).let { if (it != 0) Thread.sleep(it.toLong()) } }
+            }
+        }
+
         /**
          * 移除截图背景
          *

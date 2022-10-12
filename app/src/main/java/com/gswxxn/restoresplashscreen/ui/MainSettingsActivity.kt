@@ -52,7 +52,7 @@ class MainSettingsActivity : BaseActivity() {
                     Thread.sleep(300)
                     toast("未授予 ROOT 权限")
                 }
-                Button(getString(R.string.cancel), cancelStyle = true) {
+                Button(getString(R.string.button_cancel), cancelStyle = true) {
                     dismiss()
                 }
             }.show()

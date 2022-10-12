@@ -17,7 +17,8 @@
     <string name="restart_message">模块更新后需要重启系统界面才能生效。\n\n如果您 LSPosed 框架中的作用域包含系统框架，则需要重启手机</string>
     <string name="reboot">重启手机</string>
     <string name="restart_system_ui">重启系统界面</string>
-    <string name="cancel">取消</string>
+    <string name="button_okay">确定</string>
+    <string name="button_cancel">取消</string>
 
     <string name="basic_settings">基础设置</string>
     <string name="custom_scope_settings">作用域</string>
@@ -32,6 +33,9 @@
     <string name="make_sure_active">请确保模块已激活再进行配置</string>
     <string name="enable_log">启用日志</string>
     <string name="hide_icon">隐藏桌面图标</string>
+    <string name="min_duration">遮罩最小持续时间</string>
+    <string name="set_min_duration">设置遮罩最小持续时间</string>
+    <string name="set_min_duration_unit">单位：毫秒</string>
     <string name="enable_data_cache">启用缓存</string>
     <string name="enable_data_cache_tips">开启后会缓存模块绘制的圆角图标、背景取色，可能会缓解在部分机型上开启应用的瞬间会卡顿的问题。</string>
     <string name="custom_scope">自定义模块作用域</string>

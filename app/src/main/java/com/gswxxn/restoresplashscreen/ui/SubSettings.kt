@@ -3,14 +3,17 @@ package com.gswxxn.restoresplashscreen.ui
 import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.text.method.DigitsKeyListener
 import android.view.View
 import android.view.WindowInsetsController
+import android.widget.EditText
 import android.widget.Switch
 import android.widget.TextView
 import androidx.core.widget.NestedScrollView
 import cn.fkj233.ui.activity.view.SpinnerV
 import cn.fkj233.ui.activity.view.TextSummaryV
 import cn.fkj233.ui.activity.view.TextV
+import cn.fkj233.ui.dialog.MIUIDialog
 import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.ConstValue
@@ -22,6 +25,7 @@ import com.gswxxn.restoresplashscreen.utils.Utils.sendToHost
 import com.gswxxn.restoresplashscreen.utils.Utils.toast
 import com.gswxxn.restoresplashscreen.view.InitView
 import com.gswxxn.restoresplashscreen.view.SwitchView
+import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.factory.modulePrefs
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -82,6 +86,26 @@ class SubSettings : BaseActivity() {
                             if (it) PackageManager.COMPONENT_ENABLED_STATE_DISABLED else PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                             PackageManager.DONT_KILL_APP
                         )
+                    })
+
+                    // 遮罩最小持续时间
+                    TextSummaryArrow(TextSummaryV(textId = R.string.min_duration) {
+                        MIUIDialog(this@SubSettings) {
+                            setTitle(R.string.set_min_duration)
+                            setMessage(R.string.set_min_duration_unit)
+                            setEditText(modulePrefs.get(DataConst.MIN_DURATION).toString(), "")
+                            this.javaClass.method {
+                                returnType = EditText::class.java
+                            }.get(this).invoke<EditText>()?.keyListener = DigitsKeyListener.getInstance("1234567890")
+                            setRButton(R.string.button_okay) {
+                                if (getEditText().isNotBlank()) {
+                                    modulePrefs.put(DataConst.MIN_DURATION, getEditText().toInt())
+                                    sendToHost(DataConst.MIN_DURATION)
+                                }
+                                dismiss()
+                            }
+                            setLButton(R.string.button_cancel) { dismiss() }
+                        }.show()
                     })
 
                     // 启用缓存

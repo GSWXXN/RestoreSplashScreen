@@ -25,6 +25,7 @@ object DataConst {
     val SHRINK_ICON = PrefsData("shrink_icon", 0)
     val BG_COLOR_MODE = PrefsData("color_mode", 0)
     val CHANG_BG_COLOR_TYPE = PrefsData("change_bg_color_type", 0)
+    val MIN_DURATION = PrefsData("min_duration", 0)
 
     val UNDEFINED_LIST = PrefsData("undefined_list", mutableSetOf<String>())
     val CUSTOM_SCOPE_LIST = PrefsData("custom_scope_list", mutableSetOf<String>())

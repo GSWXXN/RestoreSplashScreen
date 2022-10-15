@@ -417,9 +417,9 @@ class SystemUIHooker: BaseHooker() {
             }
 
         // 遮罩最小持续时间
-        findClass("com.android.wm.shell.startingsurface.SplashScreenExitAnimation").hook {
+        findClass("com.android.wm.shell.startingsurface.StartingWindowController").hook {
             injectMember {
-                method { name = "startAnimations" }
+                method { name = "removeStartingWindow" }
                 beforeHook { pref.get(DataConst.MIN_DURATION).let { if (it != 0) Thread.sleep(it.toLong()) } }
             }
         }

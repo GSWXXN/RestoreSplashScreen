@@ -89,7 +89,7 @@ class SubSettings : BaseActivity() {
                     })
 
                     // 遮罩最小持续时间
-                    TextSummaryArrow(TextSummaryV(textId = R.string.min_duration) {
+                    TextSummaryArrow(TextSummaryV(textId = R.string.min_duration, tipsId = R.string.min_duration_tips) {
                         MIUIDialog(this@SubSettings) {
                             setTitle(R.string.set_min_duration)
                             setMessage(R.string.set_min_duration_unit)

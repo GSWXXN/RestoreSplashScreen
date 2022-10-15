@@ -3,6 +3,8 @@ name: Android CI
 on:
   push:
     branches: ["master"]
+    paths-ignore:
+      - 'README.md'
   pull_request:
     branches: ["master"]
 
@@ -41,9 +43,12 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+        
+      - name: Build
+        run: bash ./gradlew build
 
       - name: Build with Gradle
-        run: bash ./gradlew :app:packageRelease
+        run: bash ./gradlew assemble
 
       - name: Upload release
         uses: actions/upload-artifact@v3

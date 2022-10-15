@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.application") version "7.4.0-beta02" apply false
+    id("com.android.application") version "8.0.0-alpha02" apply false
     kotlin("jvm") version "1.7.20" apply false
 }
 

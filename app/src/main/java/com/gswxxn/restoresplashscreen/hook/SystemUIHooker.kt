@@ -13,7 +13,6 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.ui.graphics.toArgb
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.RoundDegree
-import com.gswxxn.restoresplashscreen.utils.DataCacheUtils.checkDarkModeChanged
 import com.gswxxn.restoresplashscreen.utils.DataCacheUtils.colorData
 import com.gswxxn.restoresplashscreen.utils.DataCacheUtils.iconData
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
@@ -210,9 +209,8 @@ class SystemUIHooker: BaseHooker() {
                         val ignoreDarkMode = pref.get(DataConst.IGNORE_DARK_MODE)
                         val colorMode = pref.get(DataConst.BG_COLOR_MODE)
                         val enableDataCache = pref.get(DataConst.ENABLE_DATA_CACHE)
-                        val isDarkMode = (appContext!!.resources
-                            .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES)
-                            .also { checkDarkModeChanged(it) }
+                        val isDarkMode = appResources!!
+                            .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
                         val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
                         val isInExceptList = pkgName in prefs.get(DataConst.BG_EXCEPT_LIST) || isExcept(pkgName)
 
@@ -417,9 +415,9 @@ class SystemUIHooker: BaseHooker() {
             }
 
         // 遮罩最小持续时间
-        findClass("com.android.wm.shell.startingsurface.StartingWindowController").hook {
+        findClass("com.android.wm.shell.startingsurface.SplashScreenExitAnimation").hook {
             injectMember {
-                method { name = "removeStartingWindow" }
+                method { name = "startAnimations" }
                 beforeHook { pref.get(DataConst.MIN_DURATION).let { if (it != 0) Thread.sleep(it.toLong()) } }
             }
         }

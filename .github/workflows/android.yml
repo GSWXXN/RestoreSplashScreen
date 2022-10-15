@@ -1,0 +1,64 @@
+name: Android CI
+
+on:
+  push:
+    branches: ["master"]
+    paths-ignore:
+      - 'README.md'
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: set up JDK 19
+        uses: actions/setup-java@v3
+        with:
+          java-version: "19"
+          distribution: "temurin"
+          cache: gradle
+
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            !~/.gradle/caches/build-cache-*
+          key: gradle-deps-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: gradle-deps
+
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches/build-cache-*
+          key: gradle-builds-${{ github.sha }}
+
+      - name: Init Submodule
+        run: |
+          git submodule init
+          git submodule update
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+        
+      - name: Build
+        run: bash ./gradlew build
+
+      - name: Build with Gradle
+        run: |
+          echo ${{ secrets.SIGNING_KEY }} | base64 -d > keystore.jks
+          bash ./gradlew assemble
+        env:
+          KEYSTORE_PATH: "../keystore.jks"
+          KEYSTORE_PASS: ${{ secrets.KEY_STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Upload release
+        uses: actions/upload-artifact@v3
+        with:
+          name: RestoreSplashScreen_Release
+          path: "app/build/outputs/apk/CI/release/*.apk"

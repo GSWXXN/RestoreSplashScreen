@@ -34,6 +34,7 @@
     <string name="enable_log">启用日志</string>
     <string name="hide_icon">隐藏桌面图标</string>
     <string name="min_duration">遮罩最小持续时间</string>
+    <string name="min_duration_tips">注意：设置此参数会拖慢应用启动时间。如无特殊需求，则不应配置此项。</string>
     <string name="set_min_duration">设置遮罩最小持续时间</string>
     <string name="set_min_duration_unit">单位：毫秒</string>
     <string name="enable_data_cache">启用缓存</string>

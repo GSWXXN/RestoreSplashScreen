@@ -12,8 +12,8 @@ android {
         applicationId = "com.gswxxn.restoresplashscreen"
         minSdk = 31
         targetSdk = 33
-        versionCode = 251
-        versionName = "2.5"
+        versionCode = 240
+        versionName = "2.4"
     }
 
     buildTypes {
@@ -38,12 +38,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "11"
     }
 }
 

@@ -14,5 +14,4 @@ object ConstValue {
     const val BOTTOM_SETTINGS = 1400
     const val BACKGROUND_SETTINGS = 1500
     const val LAB_SETTINGS = 1600
-    const val FAQ = 1700
 }

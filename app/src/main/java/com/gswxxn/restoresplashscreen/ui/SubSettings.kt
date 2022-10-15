@@ -3,14 +3,17 @@ package com.gswxxn.restoresplashscreen.ui
 import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.text.method.DigitsKeyListener
 import android.view.View
 import android.view.WindowInsetsController
+import android.widget.EditText
 import android.widget.Switch
 import android.widget.TextView
 import androidx.core.widget.NestedScrollView
 import cn.fkj233.ui.activity.view.SpinnerV
 import cn.fkj233.ui.activity.view.TextSummaryV
 import cn.fkj233.ui.activity.view.TextV
+import cn.fkj233.ui.dialog.MIUIDialog
 import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.ConstValue
@@ -18,9 +21,11 @@ import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.databinding.ActivitySubSettingsBinding
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
 import com.gswxxn.restoresplashscreen.utils.BlockMIUIHelper.addBlockMIUIView
+import com.gswxxn.restoresplashscreen.utils.Utils.sendToHost
 import com.gswxxn.restoresplashscreen.utils.Utils.toast
 import com.gswxxn.restoresplashscreen.view.InitView
 import com.gswxxn.restoresplashscreen.view.SwitchView
+import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.factory.modulePrefs
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -83,14 +88,28 @@ class SubSettings : BaseActivity() {
                         )
                     })
 
-                    // 隐藏功能描述
-//                    TextSummaryWithSwitch(
-//                        TextSummaryV(
-//                            textId = R.string.hide_describe,
-//                            tipsId = R.string.hide_describe_description
-//                            ),
-//                        SwitchView(DataConst.ENABLE_HIDE_DESCRIBE)
-//                    )
+                    // 遮罩最小持续时间
+                    TextSummaryArrow(TextSummaryV(textId = R.string.min_duration) {
+                        MIUIDialog(this@SubSettings) {
+                            setTitle(R.string.set_min_duration)
+                            setMessage(R.string.set_min_duration_unit)
+                            setEditText(modulePrefs.get(DataConst.MIN_DURATION).toString(), "")
+                            this.javaClass.method {
+                                returnType = EditText::class.java
+                            }.get(this).invoke<EditText>()?.keyListener = DigitsKeyListener.getInstance("1234567890")
+                            setRButton(R.string.button_okay) {
+                                if (getEditText().isNotBlank()) {
+                                    modulePrefs.put(DataConst.MIN_DURATION, getEditText().toInt())
+                                    sendToHost(DataConst.MIN_DURATION)
+                                }
+                                dismiss()
+                            }
+                            setLButton(R.string.button_cancel) { dismiss() }
+                        }.show()
+                    })
+
+                    // 启用缓存
+                    TextSummaryWithSwitch(TextSummaryV(textId = R.string.enable_data_cache, tipsId = R.string.enable_data_cache_tips), SwitchView(DataConst.ENABLE_DATA_CACHE))
                 }
 
                 // 作用域
@@ -134,7 +153,10 @@ class SubSettings : BaseActivity() {
                     val shrinkIconItems = mapOf(0 to getString(R.string.not_shrink_icon), 1 to getString(R.string.shrink_low_resolution_icon), 2 to getString(R.string.shrink_all_icon))
                     TextWithSpinner(TextV(textId = R.string.shrink_icon), SpinnerV(shrinkIconItems[modulePrefs.get(DataConst.SHRINK_ICON)]!!, 180F) {
                         for (item in shrinkIconItems) {
-                            add(item.value) { modulePrefs.put(DataConst.SHRINK_ICON, item.key) }
+                            add(item.value) {
+                                modulePrefs.put(DataConst.SHRINK_ICON, item.key)
+                                sendToHost(DataConst.SHRINK_ICON)
+                            }
                         }
                     })
 
@@ -145,7 +167,10 @@ class SubSettings : BaseActivity() {
                     val availableIconPacks = IconPackManager(this@SubSettings).getAvailableIconPacks()
                     TextWithSpinner(TextV(textId = R.string.use_icon_pack), SpinnerV(availableIconPacks[modulePrefs.get(DataConst.ICON_PACK_PACKAGE_NAME)]?:getString(R.string.icon_pack_is_removed)) {
                         for (item in availableIconPacks) {
-                            add(item.value) { modulePrefs.put(DataConst.ICON_PACK_PACKAGE_NAME, item.key) }
+                            add(item.value) {
+                                modulePrefs.put(DataConst.ICON_PACK_PACKAGE_NAME, item.key)
+                                sendToHost(DataConst.ICON_PACK_PACKAGE_NAME)
+                            }
                         }
                     })
 
@@ -206,31 +231,36 @@ class SubSettings : BaseActivity() {
 
                     Line()
 
-                    // 自适应背景颜色
-                    val changeBGColorBinding = getDataBinding(modulePrefs.get(DataConst.ENABLE_CHANG_BG_COLOR))
-                    TextSummaryWithSwitch(
-                        TextSummaryV(
-                            textId = R.string.change_bg_color,
-                            tipsId = R.string.change_bg_color_tips
-                        ),
-                        SwitchView(DataConst.ENABLE_CHANG_BG_COLOR, dataBindingSend = changeBGColorBinding.bindingSend)
-                    )
+                    // 替换背景颜色
+                    val changeColorTypeItems = mapOf(0 to getString(R.string.not_change_bg_color), 1 to getString(R.string.from_icon), 2 to getString(R.string.from_monet))
+                    val changeBGColorTypeBinding = getDataBinding(changeColorTypeItems[modulePrefs.get(DataConst.CHANG_BG_COLOR_TYPE)]!!)
+                    TextWithSpinner(TextV(textId = R.string.change_bg_color), SpinnerV(changeColorTypeItems[modulePrefs.get(DataConst.CHANG_BG_COLOR_TYPE)]!!, 180F, dataBindingSend = changeBGColorTypeBinding.bindingSend){
+                        for (item in changeColorTypeItems) {
+                            add(item.value) {
+                                modulePrefs.put(DataConst.CHANG_BG_COLOR_TYPE, item.key)
+                                sendToHost(DataConst.CHANG_BG_COLOR_TYPE)
+                            }
+                        }
+                    })
 
                     // 颜色模式
                     val colorModeItems = mapOf(0 to getString(R.string.light_color), 1 to getString(R.string.dark_color), 2 to getString(R.string.follow_system))
                     val colorModeBinding = getDataBinding(colorModeItems[modulePrefs.get(DataConst.BG_COLOR_MODE)]!!)
                     TextSummaryWithSpinner(TextSummaryV(textId = R.string.color_mode, tipsId = R.string.color_mode_tips), SpinnerV(colorModeItems[modulePrefs.get(DataConst.BG_COLOR_MODE)]!!, dataBindingSend = colorModeBinding.bindingSend) {
                         for (item in colorModeItems) {
-                            add(item.value) { modulePrefs.put(DataConst.BG_COLOR_MODE, item.key) }
+                            add(item.value) {
+                                modulePrefs.put(DataConst.BG_COLOR_MODE, item.key)
+                                sendToHost(DataConst.BG_COLOR_MODE)
+                            }
                         }
-                    }, dataBindingRecv = changeBGColorBinding.getRecv(2))
+                    }, dataBindingRecv = changeBGColorTypeBinding.getRecv(8))
 
                     // 配置应用列表
                     TextSummaryArrow(TextSummaryV(textId = R.string.change_bg_color_list, onClickListener = {
                         startActivity(Intent(this@SubSettings, ConfigAppsActivity::class.java).apply {
                             putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.BACKGROUND_EXCEPT)
                         })
-                    }), dataBindingRecv = changeBGColorBinding.getRecv(2))
+                    }), dataBindingRecv = changeBGColorTypeBinding.getRecv(8))
 
                     Line()
 
@@ -310,6 +340,7 @@ class SubSettings : BaseActivity() {
             4 -> if (!(data as Boolean)) (view as Switch).isChecked = false
             6 -> (view as TextView).text = getString(R.string.exception_mode_message, getString(if (data as Boolean) R.string.will_not else R.string.will_only))
             7 -> if ((data as String) == getString(R.string.follow_system)) (view as Switch).isChecked = true
+            8 -> view.visibility = if ((data as String) == getString(R.string.not_change_bg_color)) View.GONE else View.VISIBLE
         }
     }
 }

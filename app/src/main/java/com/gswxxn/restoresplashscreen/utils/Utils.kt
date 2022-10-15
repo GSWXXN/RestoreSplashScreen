@@ -8,13 +8,15 @@ import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.palette.graphics.Palette
 import cn.fkj233.ui.activity.dp2px
-import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.RoundDegree
-import com.highcapable.yukihookapi.hook.core.finder.FieldFinder.Result.Instance
+import com.highcapable.yukihookapi.YukiHookAPI
+import com.highcapable.yukihookapi.hook.core.finder.members.FieldFinder.Result.Instance
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
+import com.highcapable.yukihookapi.hook.factory.dataChannel
 import com.highcapable.yukihookapi.hook.factory.field
 import com.highcapable.yukihookapi.hook.factory.hasClass
-import com.highcapable.yukihookapi.hook.log.loggerI
+import com.highcapable.yukihookapi.hook.factory.modulePrefs
+import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 import java.io.DataOutputStream
 
 object Utils {
@@ -162,19 +164,10 @@ object Utils {
         .apply { show() }
 
     /**
-     *  根据 [DataConst.ENABLE_LOG] 标志向 XPosed 框架打印日志
-     *
-     *  @param msg 打印日志的内容
-     */
-    fun YukiBaseHooker.printLog(vararg msg: String) {
-        if (this.prefs.get(DataConst.ENABLE_LOG)) msg.forEach { loggerI(msg = it) }
-    }
-
-    /**
      * 当前设备是否是 MIUI 定制 Android 系统
      * @return [Boolean] 是否符合条件
      */
-    val isMIUI by lazy { "android.miui.R".hasClass }
+    val isMIUI by lazy { "android.miui.R".hasClass() }
 
     /**
      * 执行 Shell 命令
@@ -191,6 +184,68 @@ object Utils {
             outputStream.close()
         } catch (t: Throwable) {
             t.printStackTrace()
+        }
+    }
+
+    /**
+     * 通过 DataChannel 发送消息，检查宿主与模块版本是否一致
+     * @param packageName 宿主包名
+     * @param result 结果回调
+     */
+    fun Context.checkingHostVersion(packageName: String, result: (Boolean) -> Unit) {
+        this.dataChannel(packageName).wait<String>("${packageName.replace('.', '_')}_version_result") { result(it == YukiHookAPI.Status.compiledTimestamp.toString()) }
+        this.dataChannel(packageName).put("${packageName.replace('.', '_')}_version_get")
+    }
+
+    /**
+     * 给宿主发送通讯，通知配置变化
+     * @param prefsData 键值对存储实例
+     */
+    inline fun <reified T> Context.sendToHost(prefsData: PrefsData<T>) {
+        val host = if (prefsData.key in setOf(
+                "force_show_splash_screen",
+                "disable_splash_screen",
+                "enable_hot_start_compatible"))
+            "android"
+        else "com.android.systemui"
+        val key = "${host.replace('.', '_')}_config_change"
+        val value = "${prefsData.key}-${
+            when (prefsData.value) {
+                is Int -> "int"
+                is String -> "string"
+                is Boolean -> "boolean"
+                else -> "not_support"
+            }
+        }-${modulePrefs.get(prefsData)}"
+        dataChannel(host).put(key, value)
+        if (prefsData.key == "enable_log")
+            dataChannel("android").put("${"android".replace('.', '_')}_config_change", value)
+    }
+
+    /**
+     * 宿主注册接收 DataChannel 通知
+     */
+    fun YukiBaseHooker.register() {
+        dataChannel.wait<String>(key = "${packageName.replace('.', '_')}_version_get") {
+            dataChannel.put(key = "${packageName.replace('.', '_')}_version_result", value = YukiHookAPI.Status.compiledTimestamp.toString())
+        }
+
+        dataChannel.wait<String>(key = "${packageName.replace('.', '_')}_config_change") {
+            when (it.split("-")[1]) {
+                "boolean" -> {
+                    HostPrefsUtil.XSharedPreferencesCaches.booleanData[it.split("-")[0]] =
+                        it.split("-")[2].toBoolean()
+                }
+                "int" -> {
+                    HostPrefsUtil.XSharedPreferencesCaches.intData[it.split("-")[0]] =
+                        it.split("-")[2].toInt()
+                }
+                "string" -> {
+                    HostPrefsUtil.XSharedPreferencesCaches.stringData[it.split("-")[0]] =
+                        it.split("-")[2]
+                }
+            }
+            DataCacheUtils.clear()
         }
     }
 }

@@ -8,41 +8,41 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.ui.graphics.toArgb
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.RoundDegree
+import com.gswxxn.restoresplashscreen.utils.DataCacheUtils.colorData
+import com.gswxxn.restoresplashscreen.utils.DataCacheUtils.iconData
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
 import com.gswxxn.restoresplashscreen.utils.Utils
 import com.gswxxn.restoresplashscreen.utils.Utils.getField
 import com.gswxxn.restoresplashscreen.utils.Utils.isMIUI
-import com.gswxxn.restoresplashscreen.utils.Utils.printLog
+import com.gswxxn.restoresplashscreen.utils.Utils.register
 import com.gswxxn.restoresplashscreen.utils.Utils.setField
-import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.current
-import com.highcapable.yukihookapi.hook.log.loggerE
 import com.highcapable.yukihookapi.hook.type.android.ActivityInfoClass
 import com.highcapable.yukihookapi.hook.type.android.DrawableClass
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
 import com.highcapable.yukihookapi.hook.type.java.IntType
 import com.highcapable.yukihookapi.hook.type.java.StringType
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedBridge
-import de.robv.android.xposed.XposedHelpers
-import de.robv.android.xposed.callbacks.XC_LoadPackage
 
-class SystemUIHooker : YukiBaseHooker() {
+class SystemUIHooker: BaseHooker() {
     private val iconPackManager by lazy { IconPackManager(
-        appContext,
-        prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)
+        appContext!!,
+        pref.get(DataConst.ICON_PACK_PACKAGE_NAME)
     ) }
 
     private fun isExcept(pkgName : String) : Boolean {
         val list = prefs.get(DataConst.CUSTOM_SCOPE_LIST)
-        val isExceptionMode = prefs.get(DataConst.IS_CUSTOM_SCOPE_EXCEPTION_MODE)
-        return prefs.get(DataConst.ENABLE_CUSTOM_SCOPE)
+        val isExceptionMode = pref.get(DataConst.IS_CUSTOM_SCOPE_EXCEPTION_MODE)
+        return pref.get(DataConst.ENABLE_CUSTOM_SCOPE)
                 && ((isExceptionMode && (pkgName in list)) || (!isExceptionMode && pkgName !in list))
     }
 
     override fun onHook() {
+        register()
 
         /**
          * 自定义作用域
@@ -60,7 +60,7 @@ class SystemUIHooker : YukiBaseHooker() {
                     paramCount(2)
                 }
                 beforeHook {
-                    if (!prefs.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)) {
+                    if (!pref.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)) {
                         val pkgName = args(0).cast<ActivityInfo>()?.packageName!!
                         val isExcept = isExcept(pkgName)
                         if (!isExcept)
@@ -81,7 +81,7 @@ class SystemUIHooker : YukiBaseHooker() {
          * - 强制开启启动遮罩
          * - 忽略应用主动设置的图标
          * - 移除品牌图标
-         * - 自适应背景颜色
+         * - 替换背景颜色
          * - 设置微信背景色为黑色
          */
         findClass("com.android.wm.shell.startingsurface.SplashscreenContentDrawer\$StartingWindowViewBuilder")
@@ -99,15 +99,15 @@ class SystemUIHooker : YukiBaseHooker() {
                     }
                     beforeHook {
                         val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
-                        val isDefaultStyle = prefs.get(DataConst.ENABLE_DEFAULT_STYLE)
+                        val isDefaultStyle = pref.get(DataConst.ENABLE_DEFAULT_STYLE)
                                 && pkgName in prefs.get(DataConst.DEFAULT_STYLE_LIST)
-                        val isRemoveBrandingImage = prefs.get(DataConst.REMOVE_BRANDING_IMAGE)
+                        val isRemoveBrandingImage = pref.get(DataConst.REMOVE_BRANDING_IMAGE)
                                 && pkgName in prefs.get(DataConst.REMOVE_BRANDING_IMAGE_LIST)
-                        val isRemoveBGColor = prefs.get(DataConst.REMOVE_BG_COLOR)
-                        val isReplaceToEmptySplashScreen = prefs.get(DataConst.REPLACE_TO_EMPTY_SPLASH_SCREEN)
+                        val isRemoveBGColor = pref.get(DataConst.REMOVE_BG_COLOR)
+                        val isReplaceToEmptySplashScreen = pref.get(DataConst.REPLACE_TO_EMPTY_SPLASH_SCREEN)
                         val isExcept = isExcept(pkgName)
-                        val forceEnableSplashScreen = prefs.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)
-                        val context = instance.getField("mContext").cast<Context>()
+                        val forceEnableSplashScreen = pref.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)
+                        val context = instance.getField("mContext").cast<Context>()!!
                         val mSplashscreenContentDrawer = instance.getField("this\$0").any()!!
                         val mTmpAttrs = mSplashscreenContentDrawer
                             .getField("mTmpAttrs").any()!!
@@ -145,7 +145,7 @@ class SystemUIHooker : YukiBaseHooker() {
                         // 将作用域外的应用替换为空白启动遮罩
                         if (isReplaceToEmptySplashScreen && isExcept && mTmpAttrs.getField("mSplashScreenIcon").any() == null) {
                             instance.setField("mSuggestType", 3)
-                            instance.setField("mOverlayDrawable", context!!.getDrawable(mTmpAttrs.getField("mWindowBgResId").int()))
+                            instance.setField("mOverlayDrawable", context.getDrawable(mTmpAttrs.getField("mWindowBgResId").int()))
                         }
                         printLog("2.1. build(): ${if (isReplaceToEmptySplashScreen && isExcept) "set mSuggestType to 3;" else "Not"} replace to empty splash screen")
 
@@ -187,7 +187,7 @@ class SystemUIHooker : YukiBaseHooker() {
 
                 /**
                  * 此处实现功能：
-                 * - 自适应背景颜色
+                 * - 替换背景颜色
                  * - 设置微信背景色为深色
                  *
                  * 在系统执行 createIconDrawable() 时，会将 Splash Screen 图标传入到此函数的第一个参数，
@@ -203,38 +203,57 @@ class SystemUIHooker : YukiBaseHooker() {
                         }
                     }
                     beforeHook {
-                        if (prefs.get(DataConst.REMOVE_BG_COLOR)) return@beforeHook
+                        if (pref.get(DataConst.REMOVE_BG_COLOR)) return@beforeHook
 
-                        val enableChangeBgColor = prefs.get(DataConst.ENABLE_CHANG_BG_COLOR)
-                        val ignoreDarkMode = prefs.get(DataConst.IGNORE_DARK_MODE)
-                        val colorMode = prefs.get(DataConst.BG_COLOR_MODE)
-                        val isDarkMode = appContext.resources
+                        val bgColorType = pref.get(DataConst.CHANG_BG_COLOR_TYPE)
+                        val ignoreDarkMode = pref.get(DataConst.IGNORE_DARK_MODE)
+                        val colorMode = pref.get(DataConst.BG_COLOR_MODE)
+                        val enableDataCache = pref.get(DataConst.ENABLE_DATA_CACHE)
+                        val isDarkMode = appResources!!
                             .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
                         val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
                         val isInExceptList = pkgName in prefs.get(DataConst.BG_EXCEPT_LIST) || isExcept(pkgName)
 
-                        when {
-                            // 设置微信背景色为深色
-                            pkgName == "com.tencent.mm" && prefs.get(DataConst.INDEPENDENT_COLOR_WECHAT) -> {
-                                instance.setField("mThemeColor", Color.parseColor("#010C15"))
-                                printLog("10. createIconDrawable(): set WeChat background color")
-                            }
+                        fun getColor() = if (pkgName == "com.tencent.mm" && pref.get(DataConst.INDEPENDENT_COLOR_WECHAT)) {
+                            printLog("10. createIconDrawable(): set WeChat background color")
+                            Color.parseColor("#010C15")
+                        } else if (!isInExceptList && (!isDarkMode || ignoreDarkMode))
+                            when (bgColorType) {
 
-                            // 自适应背景色
-                            enableChangeBgColor && !isInExceptList && (!isDarkMode || ignoreDarkMode) -> {
-                                val drawable = args(0).cast<Drawable>()
-                                val color = Utils.getBgColor(
-                                    Utils.drawable2Bitmap(drawable!!, 100)!!,
+                                // 从图标取色
+                                1 -> {
+                                    printLog("10. createIconDrawable(): get adaptive background color")
+                                    Utils.getBgColor(
+                                        Utils.drawable2Bitmap(args(0).cast<Drawable>()!!, 100)!!,
+                                        when (colorMode) {
+                                            1 -> false
+                                            2 -> !isDarkMode
+                                            else -> true
+                                        }
+                                    )
+                                }
+
+                                // 从壁纸取色
+                                2 -> {
+                                    printLog("10. createIconDrawable(): get monet background color")
                                     when (colorMode) {
-                                        1 -> false
-                                        2 -> !isDarkMode
-                                        else -> true
-                                    })
-                                instance.setField("mThemeColor", color)
-                                printLog("10. createIconDrawable(): set adaptive background color")
-                            }
+                                        0 -> dynamicLightColorScheme(appContext!!).primaryContainer.toArgb()
+                                        1 -> dynamicDarkColorScheme(appContext!!).primaryContainer.toArgb()
+                                        else -> if (!isDarkMode)
+                                            dynamicLightColorScheme(appContext!!).primaryContainer.toArgb()
+                                        else
+                                            dynamicDarkColorScheme(appContext!!).primaryContainer.toArgb()
+                                    }
+                                }
+                                else -> null
+                        } else null
 
-                            else -> printLog("10. createIconDrawable(): Not set background color")
+                        val color = if (enableDataCache && bgColorType != 2) colorData.getOrPut(pkgName) { getColor() }
+                        else getColor()
+
+                        color?.let {
+                            printLog("action: createIconDrawable(): ${if (enableDataCache) "(from cache)" else ""}set background color")
+                            instance.setField("mThemeColor", it)
                         }
 
                     }
@@ -260,61 +279,77 @@ class SystemUIHooker : YukiBaseHooker() {
                     param(ActivityInfoClass, IntType)
                 }
                 afterHook {
-                    val enableReplaceIcon = prefs.get(DataConst.ENABLE_REPLACE_ICON)
-                    val shrinkIconType = prefs.get(DataConst.SHRINK_ICON)
-                    val iconPackPackageName = prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)
-                    val isDrawIconRoundCorner = prefs.get(DataConst.ENABLE_DRAW_ROUND_CORNER)
+                    val enableDataCache = pref.get(DataConst.ENABLE_DATA_CACHE)
+                    val enableReplaceIcon = pref.get(DataConst.ENABLE_REPLACE_ICON)
+                    val shrinkIconType = pref.get(DataConst.SHRINK_ICON)
+                    val iconPackPackageName = pref.get(DataConst.ICON_PACK_PACKAGE_NAME)
+                    val isDrawIconRoundCorner = pref.get(DataConst.ENABLE_DRAW_ROUND_CORNER)
                     val pkgName = args(0).cast<ActivityInfo>()?.packageName!!
                     val pkgActivity = args(0).cast<ActivityInfo>()?.targetActivity
                     val iconSize = args(1).cast<Int>()!!
 
                     if (isExcept(pkgName)) return@afterHook
 
-                    /**
-                     * 替换获取图标方式
-                     *
-                     * 使用 Context.packageManager.getApplicationIcon() 的方式获取图标
-                     */
-                    var drawable = if (enableReplaceIcon) {
-                        when {
-                            pkgName == "com.android.contacts" && pkgActivity == "com.android.contacts.activities.PeopleActivity" ->
-                                appContext.packageManager.getActivityIcon(ComponentName("com.android.contacts","com.android.contacts.activities.TwelveKeyDialer"))
-                            pkgName == "com.android.settings" && pkgActivity == "com.android.settings.BackgroundApplicationsManager" ->
-                                appContext.packageManager.getApplicationIcon("com.android.settings")
-                            else -> pkgName.let { appContext.packageManager.getApplicationIcon(it) }
+                    fun getDrawable(): Drawable {
+                        /**
+                         * 替换获取图标方式
+                         *
+                         * 使用 Context.packageManager.getApplicationIcon() 的方式获取图标
+                         */
+                        var drawable = if (enableReplaceIcon) {
+                            when {
+                                pkgName == "com.android.contacts" && pkgActivity == "com.android.contacts.activities.PeopleActivity" ->
+                                    appContext!!.packageManager.getActivityIcon(
+                                        ComponentName(
+                                            "com.android.contacts",
+                                            "com.android.contacts.activities.TwelveKeyDialer"
+                                        )
+                                    )
+                                pkgName == "com.android.settings" && pkgActivity == "com.android.settings.BackgroundApplicationsManager" ->
+                                    appContext!!.packageManager.getApplicationIcon("com.android.settings")
+                                else -> pkgName.let {
+                                    appContext!!.packageManager.getApplicationIcon(
+                                        it
+                                    )
+                                }
+                            }
+                        } else {
+                            result<Drawable>()!!
                         }
-                    } else {
-                        result<Drawable>()
-                    }
-                    printLog("6. getIcon(): ${if (enableReplaceIcon) "" else "Not"} replace way of getting icon")
+                        printLog("6. getIcon(): ${if (enableReplaceIcon) "" else "Not"} replace way of getting icon")
 
-                    // 使用图标包
-                    if (iconPackPackageName != "None") {
-                        when {
-                            pkgName == "com.android.contacts" && pkgActivity == "com.android.contacts.activities.PeopleActivity" ->
-                                iconPackManager.getIconByComponentName("ComponentInfo{com.android.contacts/com.android.contacts.activities.TwelveKeyDialer}")
-                            else ->  iconPackManager.getIconByPackageName(pkgName)
-                        }?.let { drawable = it }
-                    }
-                    printLog("7. getIcon(): ${if (iconPackPackageName != "None") "" else "Not"} use Icon Pack")
-
-
-                    /**
-                     * 绘制图标圆角
-                     * 缩小图标
-                     */
-                    Utils.roundBitmapByShader(
-                        drawable?.let { Utils.drawable2Bitmap(it, iconSize) },
-                        if (isDrawIconRoundCorner) RoundDegree.RoundCorner else RoundDegree.NotDrawRoundCorner,
-                        when (shrinkIconType) {
-                            0 -> 0               // 不缩小图标
-                            1 -> iconSize / 4    // 仅缩小分辨率较低的图标
-                            else -> 5000         // 缩小全部图标
+                        // 使用图标包
+                        if (iconPackPackageName != "None") {
+                            when {
+                                pkgName == "com.android.contacts" && pkgActivity == "com.android.contacts.activities.PeopleActivity" ->
+                                    iconPackManager.getIconByComponentName("ComponentInfo{com.android.contacts/com.android.contacts.activities.TwelveKeyDialer}")
+                                else -> iconPackManager.getIconByPackageName(pkgName)
+                            }?.let { drawable = it }
                         }
-                    )?.let { drawable = BitmapDrawable(appContext.resources, it) }
-                    printLog("8. getIcon(): ${if (isDrawIconRoundCorner) "" else "Not"} draw round corner; shrink icon type is $shrinkIconType")
+                        printLog("7. getIcon(): ${if (iconPackPackageName != "None") "" else "Not"} use Icon Pack")
 
-                    result = drawable
+
+                        /**
+                         * 绘制图标圆角
+                         * 缩小图标
+                         */
+                        Utils.roundBitmapByShader(
+                            drawable.let { Utils.drawable2Bitmap(it, iconSize) },
+                            if (isDrawIconRoundCorner) RoundDegree.RoundCorner else RoundDegree.NotDrawRoundCorner,
+                            when (shrinkIconType) {
+                                0 -> 0               // 不缩小图标
+                                1 -> iconSize / 4    // 仅缩小分辨率较低的图标
+                                else -> 5000         // 缩小全部图标
+                            }
+                        )?.let { drawable = BitmapDrawable(appResources, it) }
+                        printLog("8. getIcon(): ${if (isDrawIconRoundCorner) "" else "Not"} draw round corner; shrink icon type is $shrinkIconType")
+
+                        return drawable
+                    }
+
+                    printLog("action: getIcon(): ${if (enableDataCache) "(from cache)" else ""}set drawable icon")
+                    result = if (enableDataCache) iconData.getOrPut(pkgName) { getDrawable() }
+                    else getDrawable()
                 }
             }
         }
@@ -329,20 +364,31 @@ class SystemUIHooker : YukiBaseHooker() {
          * 若将此参数设置为 true 时，在 MIUI 中的非自适应图标将会错位显示
          * 若将此参数设置为 false 时，非自适应图标不会缩小而且显示较模糊，我们可以在后续方法中将图标缩小绘制
          *
-         * *** 为适配 Android 13 此块作废，使用底部新 Hook 方法
          */
-//        findClass("com.android.launcher3.icons.BaseIconFactory").hook {
-//            injectMember {
-//                method {
-//                    name = "createScaledBitmapWithoutShadow"
-//                    param(DrawableClass, BooleanType)
-//                }
-//                beforeHook {
-//                    args(1).set(false)
-//                    printLog("9. BaseIconFactory(): set shrinkNonAdaptiveIcons false")
-//                }
-//            }
-//        }
+        findClass("com.android.launcher3.icons.BaseIconFactory").hook {
+            var shouldHook = false
+
+            injectMember {
+                method {
+                    name = "createScaledBitmapWithoutShadow"
+                }
+                beforeHook { shouldHook = true }
+                afterHook { shouldHook = false }
+            }
+
+            injectMember {
+                method {
+                    name = "normalizeAndWrapToAdaptiveIcon"
+                    paramCount(4)
+                }
+                beforeHook {
+                    if (shouldHook) {
+                        args(1).setFalse()
+                        printLog("9. BaseIconFactory(): set shrinkNonAdaptiveIcons false")
+                    }
+                }
+            }
+        }
 
         /**
          * 忽略深色模式
@@ -352,7 +398,7 @@ class SystemUIHooker : YukiBaseHooker() {
          * 此处在 com.android.wm.shell.startingsurface.SplashscreenContentDrawer
          *   .$StartingWindowViewBuilder.fillViewWithIcon() 中被调用
          */
-        if (prefs.get(DataConst.IGNORE_DARK_MODE) && isMIUI)
+        if (pref.get(DataConst.IGNORE_DARK_MODE) && isMIUI)
             findClass("android.window.SplashScreenView\$Builder").hook {
                 injectMember {
                     method {
@@ -368,6 +414,14 @@ class SystemUIHooker : YukiBaseHooker() {
                 }
             }
 
+        // 遮罩最小持续时间
+        findClass("com.android.wm.shell.startingsurface.SplashScreenExitAnimation").hook {
+            injectMember {
+                method { name = "startAnimations" }
+                beforeHook { pref.get(DataConst.MIN_DURATION).let { if (it != 0) Thread.sleep(it.toLong()) } }
+            }
+        }
+
         /**
          * 移除截图背景
          *
@@ -378,7 +432,7 @@ class SystemUIHooker : YukiBaseHooker() {
          *
          * 原理为干预 fillViewWithIcon() 中的 if 判断，使其将启动器判断为不是 MIUI 桌面
          */
-        if (prefs.get(DataConst.REMOVE_BG_DRAWABLE))
+        if (pref.get(DataConst.REMOVE_BG_DRAWABLE))
             findClass("android.app.TaskSnapshotHelperImpl").hook {
                 injectMember {
                     method {
@@ -394,39 +448,4 @@ class SystemUIHooker : YukiBaseHooker() {
                 }
             }
     }
-
-    /**
-     * 设置图标不缩小
-     *
-     * 兼容 Android 13
-     */
-    fun onXPEvent(lpparam : XC_LoadPackage.LoadPackageParam) {
-        val hookClass = XposedHelpers.findClass("com.android.launcher3.icons.BaseIconFactory", lpparam.classLoader)
-
-        fun findAndHookFirstMethod(methodName : String, callback : XC_MethodHook): XC_MethodHook.Unhook? {
-            for (method in hookClass.declaredMethods) {
-                if (method.name == methodName) return XposedBridge.hookMethod(method, callback)
-            }
-            loggerE(msg = "Cannot find method [$methodName] in class [com.android.launcher3.icons.BaseIconFactory]")
-            return null
-        }
-
-        findAndHookFirstMethod("createScaledBitmapWithoutShadow", object : XC_MethodHook() {
-            var hook : Unhook? = null
-            override fun beforeHookedMethod(param: MethodHookParam?) {
-
-               hook = findAndHookFirstMethod("normalizeAndWrapToAdaptiveIcon", object : XC_MethodHook() {
-                   override fun beforeHookedMethod(param: MethodHookParam?) {
-                       param!!.args[1] = false
-                       printLog("9. BaseIconFactory(): set shrinkNonAdaptiveIcons false")
-                   }
-               })
-
-            }
-            override fun afterHookedMethod(param: MethodHookParam?) {
-                hook?.unhook()
-            }
-        })
-    }
-
 }

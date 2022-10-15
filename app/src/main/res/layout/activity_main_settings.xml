@@ -94,24 +94,16 @@
                     android:textColor="@color/white"
                     android:textSize="18sp" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/main_text_version"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:gravity="center|start"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/main_text_version"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:alpha="0.8"
-                        android:ellipsize="end"
-                        android:singleLine="true"
-                        android:text="@string/module_version"
-                        android:textColor="@color/white"
-                        android:textSize="13sp" />
-                </LinearLayout>
+                    android:alpha="0.8"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="@string/module_version"
+                    android:textColor="@color/white"
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/main_text_api_way"
@@ -121,10 +113,9 @@
                     android:alpha="0.6"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:text="@string/module_version"
+                    android:text="@string/xposed_framework_version"
                     android:textColor="@color/white"
-                    android:textSize="11sp"
-                    android:visibility="gone" />
+                    android:textSize="11sp"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -159,7 +150,6 @@
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/nested_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="25dp"
@@ -175,7 +165,6 @@
             android:layout_marginStart="-20dp"
             android:layout_marginBottom="5dp"
             android:animateLayoutChanges="true"
-            android:orientation="vertical">
-        </LinearLayout>
+            android:orientation="vertical" />
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

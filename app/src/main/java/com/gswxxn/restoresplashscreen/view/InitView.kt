@@ -68,8 +68,8 @@ class InitView(private val datalist: HashMap<String, ItemData>) {
             itemList.add(TextWithSwitchView(textV, switchV, dataBindingRecv))
         }
 
-        fun TextS(text: String? = null, textId: Int? = null, key: String, onClickListener: ((Boolean) -> Unit)? = null, dataBindingRecv: DataBinding.Binding.Recv? = null) {
-            itemList.add(TextWithSwitchV(TextV(text, textId), SwitchV(key, onClickListener = onClickListener), dataBindingRecv))
+        fun TextS(text: String? = null, textId: Int? = null, key: String, defValue: Boolean=false, onClickListener: ((Boolean) -> Unit)? = null, dataBindingRecv: DataBinding.Binding.Recv? = null) {
+            itemList.add(TextWithSwitchV(TextV(text, textId), SwitchV(key, defValue, onClickListener = onClickListener), dataBindingRecv))
         }
 
         fun TextWithSpinner(textV: TextV, spinnerV: SpinnerV, dataBindingRecv: DataBinding.Binding.Recv? = null) {

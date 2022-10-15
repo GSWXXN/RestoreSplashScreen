@@ -6,10 +6,12 @@ import android.view.Gravity
 import android.view.MotionEvent
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
 import cn.fkj233.miui.R
 import cn.fkj233.ui.activity.dp2px
 import cn.fkj233.ui.activity.view.*
 import com.gswxxn.restoresplashscreen.view.*
+import com.highcapable.yukihookapi.YukiHookAPI
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -68,17 +70,22 @@ object BlockMIUIHelper {
                     }
                 }
                 is SwitchView -> addView(item.create(context, callBacks)) // 开关
-                is TextWithSwitchView -> {
+                is TextWithSwitchView, is TextSummaryWithSwitchView -> {
+                    val switch: SwitchView = when (item) {
+                        is TextWithSwitchView -> item.switchV
+                        is TextSummaryWithSwitchView -> item.switchV
+                        else -> throw IllegalArgumentException("item not is TextWithSwitchV or TextSummaryWithSwitchV")
+                    }
                     addView(item.create(context, callBacks)) // 带文本的开关
                     setOnTouchListener { _, motionEvent ->
                         when (motionEvent.action) {
-                            MotionEvent.ACTION_DOWN -> if (item.switchV.switch.isEnabled) background =
+                            MotionEvent.ACTION_DOWN -> if (switch.switch.isEnabled) background =
                                 context.getDrawable(
                                     R.drawable.ic_main_down_bg
                                 )
                             MotionEvent.ACTION_UP -> {
-                                if (item.switchV.switch.isEnabled) {
-                                    item.switchV.click()
+                                if (switch.switch.isEnabled) {
+                                    switch.click()
                                     callBacks?.let { it1 -> it1() }
                                     background = context.getDrawable(R.drawable.ic_main_bg)
                                 }
@@ -124,6 +131,10 @@ object BlockMIUIHelper {
                     }
                     setOnTouchListener { view, motionEvent ->
                         if (motionEvent.action == MotionEvent.ACTION_UP) {
+                            if (!YukiHookAPI.Status.isXposedModuleActive) {
+                                Toast.makeText(context, com.gswxxn.restoresplashscreen.R.string.make_sure_active, Toast.LENGTH_SHORT).show()
+                                return@setOnTouchListener false
+                            }
                             val popup = MIUIPopup(context, view, spinner.currentValue, spinner.dropDownWidth, {
                                 spinner.select.text = it
                                 spinner.currentValue = it
@@ -153,13 +164,6 @@ object BlockMIUIHelper {
                             unit()
                             callBacks?.let { it1 -> it1() }
                         }
-                    }
-                }
-                is TextSummaryWithSwitchView -> {
-                    addView(item.create(context, callBacks))
-                    setOnClickListener {
-                        item.switchV.click()
-                        callBacks?.let { it1 -> it1() }
                     }
                 }
                 is CustomViewV -> {

@@ -1,95 +1,51 @@
 name: Android CI
 
 on:
-
   push:
-
-    branches: [ "master" ]
-
+    branches: ["main"]
   pull_request:
-
-    branches: [ "master" ]
+    branches: ["main"]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v3
+      - name: set up JDK 18
+        uses: actions/setup-java@v3
+        with:
+          java-version: "18"
+          distribution: "temurin"
+          cache: gradle
 
-    
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            !~/.gradle/caches/build-cache-*
+          key: gradle-deps-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: gradle-deps
 
-    - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches/build-cache-*
+          key: gradle-builds-${{ github.sha }}
 
-      with:
+      - name: Init Submodule
+        run: |
+          git submodule init
+          git submodule update
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
-        submodules: 'recursive'
+      - name: Build with Gradle
+        run: bash ./gradlew :app:packageRelease
 
-        
-
-    - name: set up JDK 17
-
-      uses: actions/setup-java@v3
-
-      with:
-
-        java-version: '17'
-
-        distribution: 'temurin'
-
-        cache: gradle
-
-      
-
-    - uses: actions/cache@v2
-
-      with:
-
-        path: |
-
-          ~/.gradle/caches
-
-          ~/.gradle/wrapper
-
-          !~/.gradle/caches/build-cache-*
-
-        key: gradle-deps-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-
-        restore-keys: gradle-deps
-
-    - uses: actions/cache@v2
-
-      with:
-
-        path: |
-
-          ~/.gradle/caches/build-cache-*
-
-        key: gradle-builds-${{ github.sha }}
-
-      
-
-    - name: Build with Gradle
-      run:  bash ./gradlew assemble
-
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v3.1.0
-      with:
-        # Artifact name
-        name: build_all # optional, default is artifact 
-        # A file, directory or wildcard pattern that describes what to upload
-        path: ./**/*.apk
-        # The desired behavior if no files are found using the provided path.
-        
-    - name: Upload release
-      uses: actions/upload-artifact@v2
-      with:
-        name: RestoreSplashScreen_Release
-        path: "app/build/outputs/apk/release/*.apk"
-        
-    - name: Upload debug
-      uses: actions/upload-artifact@v2
-      with:
-        name: RestoreSplashScreen_Debug
-        path: "app/build/outputs/apk/debug/*.apk"
+      - name: Upload release
+        uses: actions/upload-artifact@v2
+        with:
+          name: RestoreSplashScreen_Release
+          path: "app/build/outputs/apk/release/*.apk"

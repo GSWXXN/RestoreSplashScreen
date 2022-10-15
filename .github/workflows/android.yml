@@ -19,7 +19,7 @@ jobs:
           distribution: "temurin"
           cache: gradle
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -28,7 +28,7 @@ jobs:
           key: gradle-deps-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: gradle-deps
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches/build-cache-*
@@ -46,7 +46,7 @@ jobs:
         run: bash ./gradlew :app:packageRelease
 
       - name: Upload release
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: RestoreSplashScreen_Release
           path: "app/build/outputs/apk/release/*.apk"

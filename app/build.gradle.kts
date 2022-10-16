@@ -41,6 +41,9 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            if (keystorePath != null) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
 
@@ -51,7 +54,7 @@ android {
             versionCode = defaultConfig.versionCode?.plus(1)
             versionName = "${defaultConfig.versionName?.split(" - ")?.get(0)}${getGitHeadRefsSuffix(rootProject)}"
         }
-        create("Release-apk") {
+        create("app") {
             dimension = "tier"
         }
     }

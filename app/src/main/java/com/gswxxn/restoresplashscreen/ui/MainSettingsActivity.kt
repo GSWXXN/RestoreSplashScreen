@@ -17,7 +17,7 @@ import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.factory.dataChannel
 
 class MainSettingsActivity : BaseActivity() {
-    private var systemUIRestartNeeded: Boolean? = null
+    private var systemUIRestartNeeded: Boolean = true
     private var androidRestartNeeded: Boolean? = null
     private var isReady = false
     private lateinit var binding: ActivityMainSettingsBinding
@@ -112,7 +112,7 @@ class MainSettingsActivity : BaseActivity() {
     }
 
     private fun refreshState() {
-        val takeAction = androidRestartNeeded == true ||  systemUIRestartNeeded == true
+        val takeAction = androidRestartNeeded == true || systemUIRestartNeeded
         binding.mainStatus.setBackgroundResource(
             when {
                 YukiHookAPI.Status.isXposedModuleActive && takeAction -> R.drawable.bg_yellow_round

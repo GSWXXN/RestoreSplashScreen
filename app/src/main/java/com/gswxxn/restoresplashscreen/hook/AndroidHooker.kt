@@ -25,7 +25,7 @@ class AndroidHooker : BaseHooker() {
                 }
                 beforeHook {
                     val pkgName = args(1).string()
-                    val isForceShowSS = pref.get(DataConst.FORCE_SHOW_SPLASH_SCREEN) && pkgName in prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST)
+                    val isForceShowSS = pref.get(DataConst.FORCE_SHOW_SPLASH_SCREEN) && pkgName in pref.get(DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST)
 
                     if (isForceShowSS) resultTrue()
                     printLog("[Android] validateStartingWindowTheme():${if (isForceShowSS) "" else "Not"} force show $pkgName splash screen")

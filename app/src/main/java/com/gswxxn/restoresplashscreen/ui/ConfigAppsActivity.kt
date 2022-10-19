@@ -16,6 +16,7 @@ import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.databinding.ActivityConfigAppsBinding
 import com.gswxxn.restoresplashscreen.databinding.AdapterConfigBinding
 import com.gswxxn.restoresplashscreen.utils.AppInfoHelper
+import com.gswxxn.restoresplashscreen.utils.Utils.sendToHost
 import com.gswxxn.restoresplashscreen.utils.Utils.toast
 import com.highcapable.yukihookapi.hook.factory.modulePrefs
 import kotlinx.coroutines.CoroutineScope
@@ -179,7 +180,7 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
                     ConstValue.BRANDING_IMAGE -> DataConst.REMOVE_BRANDING_IMAGE_LIST
                     ConstValue.FORCE_SHOW_SPLASH_SCREEN -> DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST
                     else -> DataConst.UNDEFINED_LIST
-                }, checkedList)
+                }.also { sendToHost(it) }, checkedList)
             toast(getString(R.string.save_successful))
             finish()
         }

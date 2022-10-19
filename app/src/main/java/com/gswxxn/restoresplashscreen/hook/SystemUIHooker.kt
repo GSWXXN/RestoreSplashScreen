@@ -36,7 +36,7 @@ class SystemUIHooker: BaseHooker() {
     ) }
 
     private fun isExcept(pkgName : String) : Boolean {
-        val list = prefs.get(DataConst.CUSTOM_SCOPE_LIST)
+        val list = pref.get(DataConst.CUSTOM_SCOPE_LIST)
         val isExceptionMode = pref.get(DataConst.IS_CUSTOM_SCOPE_EXCEPTION_MODE)
         return pref.get(DataConst.ENABLE_CUSTOM_SCOPE)
                 && ((isExceptionMode && (pkgName in list)) || (!isExceptionMode && pkgName !in list))
@@ -101,9 +101,9 @@ class SystemUIHooker: BaseHooker() {
                     beforeHook {
                         val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
                         val isDefaultStyle = pref.get(DataConst.ENABLE_DEFAULT_STYLE)
-                                && pkgName in prefs.get(DataConst.DEFAULT_STYLE_LIST)
+                                && pkgName in pref.get(DataConst.DEFAULT_STYLE_LIST)
                         val isRemoveBrandingImage = pref.get(DataConst.REMOVE_BRANDING_IMAGE)
-                                && pkgName in prefs.get(DataConst.REMOVE_BRANDING_IMAGE_LIST)
+                                && pkgName in pref.get(DataConst.REMOVE_BRANDING_IMAGE_LIST)
                         val isRemoveBGColor = pref.get(DataConst.REMOVE_BG_COLOR)
                         val isReplaceToEmptySplashScreen = pref.get(DataConst.REPLACE_TO_EMPTY_SPLASH_SCREEN)
                         val isExcept = isExcept(pkgName)
@@ -214,7 +214,7 @@ class SystemUIHooker: BaseHooker() {
                             .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES)
                             .also { checkDarkModeChanged(it) }
                         val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
-                        val isInExceptList = pkgName in prefs.get(DataConst.BG_EXCEPT_LIST) || isExcept(pkgName)
+                        val isInExceptList = pkgName in pref.get(DataConst.BG_EXCEPT_LIST) || isExcept(pkgName)
 
                         fun getColor() = if (pkgName == "com.tencent.mm" && pref.get(DataConst.INDEPENDENT_COLOR_WECHAT)) {
                             printLog("10. createIconDrawable(): set WeChat background color")

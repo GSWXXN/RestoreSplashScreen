@@ -10,6 +10,7 @@ class HookEntry : IYukiHookXposedInit {
     override fun onInit() {
         YukiHookLogger.Configs.tag = "RestoreSplashScreen"
         YukiHookAPI.Configs.isDebug = false
+        YukiHookAPI.Configs.isEnableModulePrefsCache = false
     }
 
     override fun onHook() = YukiHookAPI.encase {

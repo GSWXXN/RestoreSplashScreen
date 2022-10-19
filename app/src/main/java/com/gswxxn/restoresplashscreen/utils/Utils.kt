@@ -203,6 +203,7 @@ object Utils {
      */
     inline fun <reified T> Context.sendToHost(prefsData: PrefsData<T>) {
         val host = if (prefsData.key in setOf(
+                "force_show_splash_screen_list",
                 "force_show_splash_screen",
                 "disable_splash_screen",
                 "enable_hot_start_compatible"))

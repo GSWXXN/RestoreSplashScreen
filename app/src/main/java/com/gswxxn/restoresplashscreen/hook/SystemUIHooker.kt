@@ -298,7 +298,7 @@ class SystemUIHooker: BaseHooker() {
                          *
                          * 使用 Context.packageManager.getApplicationIcon() 的方式获取图标
                          */
-                        var drawable = if (enableReplaceIcon) {
+                        var drawable = if (enableReplaceIcon || pkgName == "com.android.settings") {
                             when {
                                 pkgName == "com.android.contacts" && pkgActivity == "com.android.contacts.activities.PeopleActivity" ->
                                     appContext!!.packageManager.getActivityIcon(

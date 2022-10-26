@@ -58,7 +58,7 @@ class AndroidHooker : BaseHooker() {
                     })
                 }
                 beforeHook {
-                    val isHotStartCompatible = pref.get(DataConst.ENABLE_HOT_START_COMPATIBLE)
+                    val isHotStartCompatible = pref.get(DataConst.ENABLE_HOT_START_COMPATIBLE) && args(1).boolean()
                     if (isHotStartCompatible) result = 2
                     printLog("[Android] getStartingWindowType():${if (isHotStartCompatible) "" else "Not"} set result to 2")
                 }

@@ -1,7 +1,9 @@
 package com.gswxxn.restoresplashscreen.hook
 
+import android.content.ComponentName
 import android.os.Build
 import com.gswxxn.restoresplashscreen.data.DataConst
+import com.gswxxn.restoresplashscreen.utils.Utils.getField
 import com.gswxxn.restoresplashscreen.utils.Utils.register
 import com.highcapable.yukihookapi.hook.log.loggerE
 
@@ -45,6 +47,17 @@ class AndroidHooker : BaseHooker() {
                     val isDisableSS = pref.get(DataConst.DISABLE_SPLASH_SCREEN)
                     if (isDisableSS) resultFalse()
                     printLog("[Android] addStartingWindow():${if (isDisableSS) "" else "Not"} disable ${args(0).string()} splash screen")
+
+                    // 关闭支付宝小程序遮罩
+                    if (pref.get(DataConst.FORCE_SHOW_SPLASH_SCREEN) &&
+                        "com.eg.android.AlipayGphone" in pref.get(DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST) &&
+
+                        instance.getField("mActivityComponent").cast<ComponentName>()!!.let {
+                            "com.eg.android.AlipayGphone" == it.packageName && "nebula" in it.flattenToShortString()
+                        }) {
+                        printLog("[Android] addStartingWindow(): disable splash screen of Alipay Nebula")
+                        resultFalse()
+                    }
                 }
             }
 

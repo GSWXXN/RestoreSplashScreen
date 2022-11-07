@@ -22,11 +22,10 @@ import com.gswxxn.restoresplashscreen.utils.Utils.getField
 import com.gswxxn.restoresplashscreen.utils.Utils.isMIUI
 import com.gswxxn.restoresplashscreen.utils.Utils.register
 import com.gswxxn.restoresplashscreen.utils.Utils.setField
+import com.highcapable.yukihookapi.hook.bean.VariousClass
 import com.highcapable.yukihookapi.hook.factory.current
-import com.highcapable.yukihookapi.hook.type.android.ActivityInfoClass
 import com.highcapable.yukihookapi.hook.type.android.DrawableClass
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
-import com.highcapable.yukihookapi.hook.type.java.IntType
 import com.highcapable.yukihookapi.hook.type.java.StringType
 
 class SystemUIHooker: BaseHooker() {
@@ -274,12 +273,12 @@ class SystemUIHooker: BaseHooker() {
          * 此处在 com.android.wm.shell.startingsurface.SplashscreenContentDrawer
          *   .$StartingWindowViewBuilder.build() 中被调用
          */
-        findClass("com.android.launcher3.icons.IconProvider").hook {
+        VariousClass(
+            "com.android.wm.shell.startingsurface.SplashscreenContentDrawer\$HighResIconProvider",
+            "com.android.launcher3.icons.IconProvider"
+        ).hook {
             injectMember {
-                method {
-                    name = "getIcon"
-                    param(ActivityInfoClass, IntType)
-                }
+                method { name = "getIcon" }
                 afterHook {
                     val enableDataCache = pref.get(DataConst.ENABLE_DATA_CACHE)
                     val enableReplaceIcon = pref.get(DataConst.ENABLE_REPLACE_ICON)
@@ -434,7 +433,7 @@ class SystemUIHooker: BaseHooker() {
          *
          * 原理为干预 fillViewWithIcon() 中的 if 判断，使其将启动器判断为不是 MIUI 桌面
          */
-        if (pref.get(DataConst.REMOVE_BG_DRAWABLE))
+        if (pref.get(DataConst.REMOVE_BG_DRAWABLE) && isMIUI)
             findClass("android.app.TaskSnapshotHelperImpl").hook {
                 injectMember {
                     method {
@@ -449,5 +448,15 @@ class SystemUIHooker: BaseHooker() {
                     }
                 }
             }
+
+        findClass("com.android.wm.shell.startingsurface.OplusShellStartingWindowManager").hook {
+            injectMember {
+                method { name = "setContentViewBackground" }
+                beforeHook {
+                    printLog("ColorOS: setContentViewBackground(): intercept!!")
+                    result = null
+                }
+            }
+        }.ignoredHookClassNotFoundFailure()
     }
 }

@@ -1,19 +1,20 @@
 package com.gswxxn.restoresplashscreen.hook
 
-import com.highcapable.yukihookapi.YukiHookAPI
+import com.gswxxn.restoresplashscreen.BuildConfig
 import com.highcapable.yukihookapi.annotation.xposed.InjectYukiHookWithXposed
-import com.highcapable.yukihookapi.hook.log.YukiHookLogger
+import com.highcapable.yukihookapi.hook.factory.configs
+import com.highcapable.yukihookapi.hook.factory.encase
 import com.highcapable.yukihookapi.hook.xposed.proxy.IYukiHookXposedInit
 
-@InjectYukiHookWithXposed
+@InjectYukiHookWithXposed(isUsingResourcesHook = false)
 class HookEntry : IYukiHookXposedInit {
-    override fun onInit() {
-        YukiHookLogger.Configs.tag = "RestoreSplashScreen"
-        YukiHookAPI.Configs.isDebug = false
-        YukiHookAPI.Configs.isEnableModulePrefsCache = false
+    override fun onInit() = configs {
+        debugLog { tag = "RestoreSplashScreen" }
+        isDebug = BuildConfig.DEBUG
+        isEnableModulePrefsCache = false
     }
 
-    override fun onHook() = YukiHookAPI.encase {
+    override fun onHook() = encase {
         loadApp("com.android.systemui", SystemUIHooker())
         loadSystem(AndroidHooker())
     }

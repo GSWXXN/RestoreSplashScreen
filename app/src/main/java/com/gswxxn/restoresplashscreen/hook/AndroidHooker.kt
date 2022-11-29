@@ -7,7 +7,7 @@ import com.gswxxn.restoresplashscreen.utils.Utils.getField
 import com.gswxxn.restoresplashscreen.utils.Utils.register
 import com.highcapable.yukihookapi.hook.log.loggerE
 
-class AndroidHooker : BaseHooker() {
+object AndroidHooker : BaseHooker() {
     override fun onHook() {
 
         register()

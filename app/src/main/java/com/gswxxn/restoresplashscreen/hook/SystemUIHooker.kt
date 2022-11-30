@@ -28,7 +28,7 @@ import com.highcapable.yukihookapi.hook.type.android.DrawableClass
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
 import com.highcapable.yukihookapi.hook.type.java.StringType
 
-class SystemUIHooker: BaseHooker() {
+object SystemUIHooker: BaseHooker() {
     private val iconPackManager by lazy { IconPackManager(
         appContext!!,
         pref.get(DataConst.ICON_PACK_PACKAGE_NAME)

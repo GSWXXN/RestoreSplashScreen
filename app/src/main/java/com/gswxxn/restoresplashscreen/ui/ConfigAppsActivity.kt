@@ -153,7 +153,7 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
                             setMessage(R.string.set_min_duration_unit)
                             setEditText(modulePrefs.get(DataConst.MIN_DURATION).toString(), "")
                             this.javaClass.method {
-                                name = "getEditText"
+                                emptyParam()
                                 returnType = EditText::class.java
                             }.get(this).invoke<EditText>()?.keyListener = DigitsKeyListener.getInstance("1234567890")
                             setRButton(R.string.button_okay) {
@@ -226,7 +226,7 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
                                     setMessage(R.string.set_min_duration_unit)
                                     setEditText(it.config, "")
                                     this@MIUIDialog.javaClass.method {
-                                        name = "getEditText"
+                                        emptyParam()
                                         returnType = EditText::class.java
                                     }.get(this@MIUIDialog).invoke<EditText>()?.keyListener = DigitsKeyListener.getInstance("1234567890")
                                     setRButton(R.string.button_okay) { _ ->

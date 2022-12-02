@@ -33,9 +33,12 @@
     <string name="make_sure_active">请确保模块已激活再进行配置</string>
     <string name="enable_log">启用日志</string>
     <string name="hide_icon">隐藏桌面图标</string>
-    <string name="min_duration">遮罩最小持续时间</string>
+    <string name="min_duration">遮罩最小持续时长</string>
     <string name="min_duration_tips">注意：设置此参数会拖慢应用启动时间。如无特殊需求，则不应配置此项。</string>
-    <string name="set_min_duration">设置遮罩最小持续时间</string>
+    <string name="set_default_min_duration">默认最小持续时长</string>
+    <string name="min_duration_separate_configuration">单独配置应用</string>
+    <string name="set_min_duration">设置遮罩最小持续时长</string>
+    <string name="not_set_min_duration">未设置</string>
     <string name="set_min_duration_unit">单位：毫秒</string>
     <string name="enable_data_cache">启用缓存</string>
     <string name="enable_data_cache_tips">开启后会缓存模块绘制的圆角图标、背景取色，可能会缓解在部分机型上开启应用的瞬间会卡顿的问题。</string>
@@ -96,6 +99,7 @@
     <string name="background_except_title">排除列表</string>
     <string name="background_image_title">移除列表</string>
     <string name="force_show_splash_screen_title">应用列表</string>
+    <string name="min_duration_title">最小持续时长</string>
 
     <string name="select_system_apps">选中系统应用</string>
     <string name="clear_selected_apps">清除选中应用</string>
@@ -103,6 +107,7 @@
 
     <string name="search_hint">可输入 APP 名称、包名</string>
     <string name="save_hint">勾选完成后记得点击下方保存按钮，保存成功后立即生效</string>
+    <string name="min_duration_sub_setting_hint">点击应用名称设置持续时长，点击复选框以启用该条目\n勾选完成后记得点击下方保存按钮，保存成功后立即生效</string>
     <string name="loading">正在加载……</string>
     <string name="save">保存</string>
 

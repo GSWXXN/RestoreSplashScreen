@@ -248,9 +248,34 @@ object Utils {
                 }
                 "set" -> {
                     HostPrefsUtil.XSharedPreferencesCaches.stringSetData.remove(it.split("-")[0])
+                    HostPrefsUtil.XSharedPreferencesCaches.stringMapData.remove(it.split("-")[0])
                 }
             }
             DataCacheUtils.clear()
         }
+    }
+
+    /**
+     * 将值为类似 <[String]_[String]> 的 Set 转换成 <[String], [String]> 的 Map
+     */
+    fun Set<String>.toMap(): MutableMap<String, String> {
+        val result = mutableMapOf<String, String>()
+        forEach { item ->
+            item.split("_").let {
+                result += it[0] to it[1]
+            }
+        }
+        return result
+    }
+
+    /**
+     * 将类似 <[String], [String]> 的 Map 转换成值为类似 <[String]_[String]> 的 Set
+     */
+    fun MutableMap<String, String>.toSet(): MutableSet<String> {
+        val result = mutableSetOf<String>()
+        forEach { (key, value) ->
+            result += "${key}_${value}"
+        }
+        return result
     }
 }

@@ -97,6 +97,7 @@
             android:tint="@color/colorTextDark" />
 
         <TextView
+            android:id="@+id/sub_setting_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:alpha="0.6"
@@ -106,6 +107,13 @@
             android:textSize="11sp"
             tools:ignore="SmallSp" />
     </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/overall_settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="23dp"
+            android:orientation="vertical"/>
 
     <FrameLayout
         android:layout_width="match_parent"

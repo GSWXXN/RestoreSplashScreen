@@ -33,4 +33,6 @@ object DataConst {
     val BG_EXCEPT_LIST =PrefsData("bg_except_list", mutableSetOf<String>()) //自适应背景颜色排除列表
     val REMOVE_BRANDING_IMAGE_LIST = PrefsData("remove_branding_image_list", mutableSetOf<String>())
     val FORCE_SHOW_SPLASH_SCREEN_LIST = PrefsData("force_show_splash_screen_list", mutableSetOf<String>())
+    val MIN_DURATION_LIST = PrefsData("min_duration_list", mutableSetOf<String>())
+    val MIN_DURATION_CONFIG_MAP = PrefsData("min_duration_config_map", mutableSetOf<String>())
 }

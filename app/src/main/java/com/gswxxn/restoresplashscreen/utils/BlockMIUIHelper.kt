@@ -161,6 +161,10 @@ object BlockMIUIHelper {
                     addView(item.create(context, callBacks))
                     item.textSummaryV.onClickListener?.let { unit ->
                         setOnClickListener {
+                            if (!YukiHookAPI.Status.isXposedModuleActive) {
+                                Toast.makeText(context, com.gswxxn.restoresplashscreen.R.string.make_sure_active, Toast.LENGTH_SHORT).show()
+                                return@setOnClickListener
+                            }
                             unit()
                             callBacks?.let { it1 -> it1() }
                         }

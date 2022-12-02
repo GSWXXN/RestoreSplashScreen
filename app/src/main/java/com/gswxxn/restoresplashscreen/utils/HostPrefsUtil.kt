@@ -1,5 +1,6 @@
 package com.gswxxn.restoresplashscreen.utils
 
+import com.gswxxn.restoresplashscreen.utils.Utils.toMap
 import com.highcapable.yukihookapi.hook.param.PackageParam
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 
@@ -16,6 +17,9 @@ class HostPrefsUtil(private val pp : PackageParam) {
 
         /** 缓存的 [Set]<[String]> 键值数据 */
         var stringSetData = HashMap<String, Set<String>>()
+
+        /** 缓存的 [Map]<[String], [String]> 键值数据 */
+        var stringMapData = HashMap<String, Map<String, String>>()
     }
 
 
@@ -27,6 +31,7 @@ class HostPrefsUtil(private val pp : PackageParam) {
         is Boolean -> getBoolean(key, value)
         is String -> getString(key, value)
         is Set<*> -> getStringSet(key, value as? Set<String> ?: error("Key-Value type ${value.javaClass.name} is not allowed"))
+        is Map<*, *> -> getStringMap(key)
         else -> error("Key-Value type ${value?.javaClass?.name} is not allowed")
     }
 
@@ -50,6 +55,14 @@ class HostPrefsUtil(private val pp : PackageParam) {
         XSharedPreferencesCaches.stringSetData[key].let {
             (it ?: pp.prefs.getStringSet(key, value)).let { value ->
                 XSharedPreferencesCaches.stringSetData[key] = value
+                value
+            }
+        }
+
+    private fun getStringMap(key: String) =
+        XSharedPreferencesCaches.stringMapData[key].let {
+            (it ?: getStringSet(key, setOf()).toMap()).let { value ->
+                XSharedPreferencesCaches.stringMapData[key] = value
                 value
             }
         }

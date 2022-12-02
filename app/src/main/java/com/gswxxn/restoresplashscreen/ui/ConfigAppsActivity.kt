@@ -1,23 +1,32 @@
 package com.gswxxn.restoresplashscreen.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.method.DigitsKeyListener
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
 import android.view.inputmethod.InputMethodManager
 import android.widget.BaseAdapter
+import android.widget.EditText
 import android.widget.PopupMenu
+import cn.fkj233.ui.activity.view.TextSummaryV
+import cn.fkj233.ui.dialog.MIUIDialog
 import com.gswxxn.restoresplashscreen.data.ConstValue
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.databinding.ActivityConfigAppsBinding
 import com.gswxxn.restoresplashscreen.databinding.AdapterConfigBinding
 import com.gswxxn.restoresplashscreen.utils.AppInfoHelper
+import com.gswxxn.restoresplashscreen.utils.BlockMIUIHelper.addBlockMIUIView
 import com.gswxxn.restoresplashscreen.utils.Utils.sendToHost
+import com.gswxxn.restoresplashscreen.utils.Utils.toMap
+import com.gswxxn.restoresplashscreen.utils.Utils.toSet
 import com.gswxxn.restoresplashscreen.utils.Utils.toast
+import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.factory.modulePrefs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -40,6 +49,8 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
 
         val message = intent.getIntExtra(ConstValue.EXTRA_MESSAGE, 0)
 
+        val isNeedConfig = message == 600
+
         // 已勾选的应用包名 Set
         val checkedList : MutableSet<String> = modulePrefs.get(
             when (message) {
@@ -48,10 +59,17 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
                 ConstValue.BACKGROUND_EXCEPT -> DataConst.BG_EXCEPT_LIST
                 ConstValue.BRANDING_IMAGE -> DataConst.REMOVE_BRANDING_IMAGE_LIST
                 ConstValue.FORCE_SHOW_SPLASH_SCREEN -> DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST
+                ConstValue.MIN_DURATION -> DataConst.MIN_DURATION_LIST
                 else -> DataConst.UNDEFINED_LIST
             }).toMutableSet()
+        // 应用配置信息
+        val configMap = modulePrefs.get(
+            when (message) {
+                ConstValue.MIN_DURATION -> DataConst.MIN_DURATION_CONFIG_MAP
+                else -> DataConst.UNDEFINED_LIST
+            }).toMap()
         // AppInfoHelper 实例
-        val appInfo = AppInfoHelper(this, checkedList)
+        val appInfo = AppInfoHelper(this, checkedList, configMap)
         // 在列表中的条目
         var appInfoFilter =  listOf<AppInfoHelper.MyAppInfo>()
 
@@ -94,6 +112,10 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
             ConstValue.BACKGROUND_EXCEPT -> getString(R.string.background_except_title)
             ConstValue.BRANDING_IMAGE -> getString(R.string.background_image_title)
             ConstValue.FORCE_SHOW_SPLASH_SCREEN -> getString(R.string.force_show_splash_screen_title)
+            ConstValue.MIN_DURATION -> {
+                binding.subSettingHint.text = getString(R.string.min_duration_sub_setting_hint)
+                getString(R.string.min_duration_title)
+            }
             else -> "Unavailable"
         }
 
@@ -111,12 +133,42 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
             setOnFocusChangeListener { v, hasFocus ->
                 val imm = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 if (hasFocus) {
-                    showView(false, binding.appListTitle, binding.configDescription, binding.configTitleFilter)
+                    showView(false, binding.appListTitle, binding.configDescription, binding.configTitleFilter, binding.overallSettings)
                     // 弹出软键盘
                     imm.showSoftInput(binding.searchEditText, InputMethodManager.SHOW_FORCED)
                 }else {
                     // 隐藏软键盘
                     imm.hideSoftInputFromWindow(this.windowToken, 0)
+                }
+            }
+        }
+
+        // 总体设置
+        binding.overallSettings.addBlockMIUIView(this@ConfigAppsActivity) {
+            when (message) {
+                ConstValue.MIN_DURATION -> {
+                    TextSummaryArrow(TextSummaryV(textId = R.string.set_default_min_duration) {
+                        MIUIDialog(this@ConfigAppsActivity) {
+                            setTitle(R.string.set_default_min_duration)
+                            setMessage(R.string.set_min_duration_unit)
+                            setEditText(modulePrefs.get(DataConst.MIN_DURATION).toString(), "")
+                            this.javaClass.method {
+                                name = "getEditText"
+                                returnType = EditText::class.java
+                            }.get(this).invoke<EditText>()?.keyListener = DigitsKeyListener.getInstance("1234567890")
+                            setRButton(R.string.button_okay) {
+                                if (getEditText().isNotBlank())
+                                    modulePrefs.put(DataConst.MIN_DURATION, getEditText().toInt())
+                                else
+                                    modulePrefs.put(DataConst.MIN_DURATION, 0)
+                                sendToHost(DataConst.MIN_DURATION)
+                                dismiss()
+                            }
+                            setLButton(R.string.button_cancel) { dismiss() }
+                        }.show()
+                    })
+                    Line()
+                    TitleText(textId = R.string.min_duration_separate_configuration)
                 }
             }
         }
@@ -130,6 +182,7 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
 
                 override fun getItemId(position: Int) = position.toLong()
 
+                @SuppressLint("SetTextI18n")
                 override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
                     var cView = convertView
                     val holder: AdapterConfigBinding
@@ -147,13 +200,15 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
                         holder.adpAppName.text = it.appName
                         // 设置包名
                         holder.adpAppPkgName.text = it.packageName
+                        // 设置 TextView
+                        if (isNeedConfig)
+                            holder.adpAppTextView.text = if (it.config.isEmpty()) getString(R.string.not_set_min_duration) else "${it.config} ms"
                         // 设置复选框
                         holder.adpAppCheckBox.apply {
                             setOnCheckedChangeListener { _, isChecked ->
                                 appInfo.setChecked(it, isChecked)
                                 if (isChecked) {
                                     checkedList.add(it.packageName)
-
                                 } else {
                                     checkedList.remove(it.packageName)
                                 }
@@ -161,8 +216,34 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
                             isChecked = it.packageName in checkedList
                         }
                         // 设置LinearLayout
-                        holder.adapterLayout.setOnClickListener {
-                            holder.adpAppCheckBox.isChecked = !holder.adpAppCheckBox.isChecked
+                        holder.adapterLayout.setOnClickListener { _ ->
+                            if (!isNeedConfig) {
+                                holder.adpAppCheckBox.isChecked = !holder.adpAppCheckBox.isChecked
+                            } else {
+                                holder.adpAppCheckBox.isChecked = true
+                                MIUIDialog(this@ConfigAppsActivity) {
+                                    setTitle(R.string.set_min_duration)
+                                    setMessage(R.string.set_min_duration_unit)
+                                    setEditText(it.config, "")
+                                    this@MIUIDialog.javaClass.method {
+                                        name = "getEditText"
+                                        returnType = EditText::class.java
+                                    }.get(this@MIUIDialog).invoke<EditText>()?.keyListener = DigitsKeyListener.getInstance("1234567890")
+                                    setRButton(R.string.button_okay) { _ ->
+                                        if (getEditText().isEmpty() || getEditText() == "0") {
+                                            appInfo.setConfig(it, "")
+                                            holder.adpAppTextView.text = getString(R.string.not_set_min_duration)
+                                            configMap.remove(it.packageName)
+                                        } else {
+                                            appInfo.setConfig(it, getEditText())
+                                            holder.adpAppTextView.text = "${getEditText()} ms"
+                                            configMap[it.packageName] = getEditText()
+                                        }
+                                        dismiss()
+                                    }
+                                    setLButton(R.string.button_cancel) { dismiss() }
+                                }.show()
+                            }
                         }
                     }
                     return cView
@@ -179,8 +260,15 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
                     ConstValue.BACKGROUND_EXCEPT -> DataConst.BG_EXCEPT_LIST
                     ConstValue.BRANDING_IMAGE -> DataConst.REMOVE_BRANDING_IMAGE_LIST
                     ConstValue.FORCE_SHOW_SPLASH_SCREEN -> DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST
+                    ConstValue.MIN_DURATION -> DataConst.MIN_DURATION_LIST
                     else -> DataConst.UNDEFINED_LIST
                 }.also { sendToHost(it) }, checkedList)
+            if (isNeedConfig)
+                modulePrefs.put(
+                    when (message) {
+                        ConstValue.MIN_DURATION -> DataConst.MIN_DURATION_CONFIG_MAP
+                        else -> DataConst.UNDEFINED_LIST
+                    }.also { sendToHost(it) }, configMap.toSet())
             toast(getString(R.string.save_successful))
             finish()
         }
@@ -226,7 +314,7 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
                 visibility = View.GONE
                 text = null
             }
-            showView(true, binding.appListTitle, binding.configDescription, binding.configTitleFilter)
+            showView(true, binding.appListTitle, binding.configDescription, binding.configTitleFilter, binding.overallSettings)
         }else {
             cancel()
             super.onBackPressed()

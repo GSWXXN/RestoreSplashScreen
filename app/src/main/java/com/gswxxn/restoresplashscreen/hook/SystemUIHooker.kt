@@ -419,7 +419,29 @@ object SystemUIHooker: BaseHooker() {
         findClass("com.android.wm.shell.startingsurface.StartingWindowController").hook {
             injectMember {
                 method { name = "removeStartingWindow" }
-                beforeHook { pref.get(DataConst.MIN_DURATION).let { if (it != 0) Thread.sleep(it.toLong()) } }
+                beforeHook {
+                    val packageName = args(1).any()?.let {
+                        it.getField("mName").string().run {
+                            substring(indexOfFirst { s -> s == ' ' } + 1, indexOfFirst { s -> s == '/'
+                            })
+                        }
+                    } ?: ""
+
+                    if (packageName in pref.get(DataConst.MIN_DURATION_LIST)) {
+                        val configMap = pref.getPrefsData(DataConst.MIN_DURATION_CONFIG_MAP.key, mapOf<String, String>()) as Map<*, *>
+                        try {
+                            configMap[packageName].toString().toLong().let {
+                                printLog("removeStartingWindow(): remove splash screen of $packageName after $it ms")
+                                if (it != 0L) Thread.sleep(it)
+                            }
+                        }
+                        catch (_: NumberFormatException) { printLog("removeStartingWindow(): $packageName: a NumberFormatException is threw") }
+                    } else
+                        pref.get(DataConst.MIN_DURATION).let {
+                            printLog("removeStartingWindow(): remove splash screen of $packageName after $it ms (default value)")
+                            if (it != 0) Thread.sleep(it.toLong())
+                        }
+                }
             }
         }
 

@@ -215,10 +215,7 @@ object SystemUIHooker: BaseHooker() {
                         val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
                         val isInExceptList = pkgName in pref.get(DataConst.BG_EXCEPT_LIST) || isExcept(pkgName)
 
-                        fun getColor() = if (pkgName == "com.tencent.mm" && pref.get(DataConst.INDEPENDENT_COLOR_WECHAT)) {
-                            printLog("10. createIconDrawable(): set WeChat background color")
-                            Color.parseColor("#010C15")
-                        } else if (!isInExceptList && (!isDarkMode || ignoreDarkMode))
+                        fun getColor() = if (!isInExceptList && (!isDarkMode || ignoreDarkMode))
                             when (bgColorType) {
 
                                 // 从图标取色

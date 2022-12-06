@@ -209,11 +209,6 @@ class SubSettings : BaseActivity() {
 
                 // 背景
                 ConstValue.BACKGROUND_SETTINGS -> {
-                    // 设置微信启动背景为深色
-                    TextWithSwitch(TextV(textId = R.string.independent_color_wechat), SwitchView(DataConst.INDEPENDENT_COLOR_WECHAT))
-
-                    Line()
-
                     // 替换背景颜色
                     val changeColorTypeItems = mapOf(0 to getString(R.string.not_change_bg_color), 1 to getString(R.string.from_icon), 2 to getString(R.string.from_monet))
                     val changeBGColorTypeBinding = getDataBinding(changeColorTypeItems[modulePrefs.get(DataConst.CHANG_BG_COLOR_TYPE)]!!)

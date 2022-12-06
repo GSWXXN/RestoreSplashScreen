@@ -66,7 +66,6 @@
     <string name="remove_branding_image">移除底部图片</string>
     <string name="remove_branding_image_tips">开启此选项后，将会移除列表中应用的 Splash Screen 底部 Branding Image</string>
     <string name="remove_branding_image_list">配置移除列表</string>
-    <string name="independent_color_wechat">设置微信启动背景为深色</string>
     <string name="change_bg_color">替换背景颜色</string>
     <string name="not_change_bg_color">不替换背景颜色</string>
     <string name="from_icon">从图标取色</string>
@@ -82,7 +81,7 @@
     <string name="remove_bg_drawable">移除截图背景</string>
     <string name="remove_bg_drawable_tips">如果Splash Screen的背景为应用内截图，可开启此选项移除。</string>
     <string name="remove_bg_color">移除背景颜色</string>
-    <string name="remove_bg_color_tips">开启此选项后 &quot;设置微信启动背景为深色&quot; 及 &quot;自适应背景颜色&quot; 将失效。</string>
+    <string name="remove_bg_color_tips">开启此选项后 &quot;自适应背景颜色&quot; 将失效。</string>
     <string name="force_show_splash_screen">强制显示遮罩</string>
     <string name="force_show_splash_screen_tips">如果有部分应用没有显示Splash Screen, 请尝试开启此选项并将其加入到应用列表。\n注意：开启此选项需要在Xposed管理器的作用域中勾选 系统框架，并重启手机。</string>
     <string name="force_show_splash_screen_list">配置应用列表</string>

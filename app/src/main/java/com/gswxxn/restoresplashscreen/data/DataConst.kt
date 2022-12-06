@@ -12,7 +12,6 @@ object DataConst {
     val ENABLE_HIDE_ICON = PrefsData("enable_hide_icon", false)
     val ENABLE_REPLACE_ICON = PrefsData("enable_replace_icon", false)
     val ICON_PACK_PACKAGE_NAME = PrefsData("icon_pack_package_name", "None")
-    val INDEPENDENT_COLOR_WECHAT = PrefsData("independent_color_wechat", false)
     val IGNORE_DARK_MODE = PrefsData("ignore_dark_mode", false)
     val REMOVE_BG_DRAWABLE = PrefsData("remove_bg_drawable", false)
     val REMOVE_BG_COLOR = PrefsData("remove_bg_color", false)

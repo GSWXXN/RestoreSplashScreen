@@ -418,26 +418,37 @@ object SystemUIHooker: BaseHooker() {
             injectMember {
                 method { name = "removeStartingWindow" }
                 beforeHook {
-                    val packageName = args(1).any()?.let {
-                        it.getField("mName").string().run {
-                            substring(indexOfFirst { s -> s == ' ' } + 1, indexOfFirst { s -> s == '/'
-                            })
-                        }
-                    } ?: ""
+                    val packageName = if (Build.VERSION.SDK_INT == 31) {
+                        args(1).any()
+                            ?.getField("mName")?.string()
+                            ?: ""
+                    } else {
+                        args(0).any()
+                            ?.getField("windowAnimationLeash")?.any()
+                            ?.getField("mName")?.string()
+                            ?: ""
+                    }.run {
+                        printLog("removeStartingWindow(): mName ->$this")
+                        substring(indexOfFirst { s -> s == ' ' } + 1, indexOfFirst { s -> s == '/' })
+                    }.also { printLog("removeStartingWindow(): pkgName -> $it") }
 
                     if (packageName in pref.get(DataConst.MIN_DURATION_LIST)) {
                         val configMap = pref.getPrefsData(DataConst.MIN_DURATION_CONFIG_MAP.key, mapOf<String, String>()) as Map<*, *>
                         try {
                             configMap[packageName].toString().toLong().let {
-                                printLog("removeStartingWindow(): remove splash screen of $packageName after $it ms")
-                                if (it != 0L) Thread.sleep(it)
+                                if (it != 0L) {
+                                    Thread.sleep(it)
+                                    printLog("removeStartingWindow(): remove splash screen of $packageName after $it ms")
+                                }
                             }
                         }
                         catch (_: NumberFormatException) { printLog("removeStartingWindow(): $packageName: a NumberFormatException is threw") }
                     } else
                         pref.get(DataConst.MIN_DURATION).let {
-                            printLog("removeStartingWindow(): remove splash screen of $packageName after $it ms (default value)")
-                            if (it != 0) Thread.sleep(it.toLong())
+                            if (it != 0) {
+                                Thread.sleep(it.toLong())
+                                printLog("removeStartingWindow(): remove splash screen of $packageName after $it ms (default value)")
+                            }
                         }
                 }
             }

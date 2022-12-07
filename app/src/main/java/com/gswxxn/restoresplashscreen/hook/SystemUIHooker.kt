@@ -19,7 +19,6 @@ import com.gswxxn.restoresplashscreen.utils.DataCacheUtils.iconData
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
 import com.gswxxn.restoresplashscreen.utils.Utils
 import com.gswxxn.restoresplashscreen.utils.Utils.getField
-import com.gswxxn.restoresplashscreen.utils.Utils.isMIUI
 import com.gswxxn.restoresplashscreen.utils.Utils.register
 import com.gswxxn.restoresplashscreen.utils.Utils.setField
 import com.highcapable.yukihookapi.hook.bean.VariousClass
@@ -396,21 +395,23 @@ object SystemUIHooker: BaseHooker() {
          * 此处在 com.android.wm.shell.startingsurface.SplashscreenContentDrawer
          *   .$StartingWindowViewBuilder.fillViewWithIcon() 中被调用
          */
-        if (pref.get(DataConst.IGNORE_DARK_MODE) && isMIUI)
-            findClass("android.window.SplashScreenView\$Builder").hook {
-                injectMember {
-                    method {
-                        name = "isStaringWindowUnderNightMode"
-                        emptyParam()
-                    }
-                    beforeHook {
+
+        findClass("android.window.SplashScreenView\$Builder").hook {
+            injectMember {
+                method {
+                    name = "isStaringWindowUnderNightMode"
+                    emptyParam()
+                }
+                beforeHook {
+                    if (pref.get(DataConst.IGNORE_DARK_MODE)) {
                         resultFalse()
                         printLog(
                             "11. isStaringWindowUnderNightMode(): ignore dark mode"
                         )
                     }
                 }
-            }
+            }.ignoredNoSuchMemberFailure()
+        }
 
         // 遮罩最小持续时间
         findClass("com.android.wm.shell.startingsurface.StartingWindowController").hook {
@@ -452,21 +453,22 @@ object SystemUIHooker: BaseHooker() {
          *
          * 原理为干预 fillViewWithIcon() 中的 if 判断，使其将启动器判断为不是 MIUI 桌面
          */
-        if (pref.get(DataConst.REMOVE_BG_DRAWABLE) && isMIUI)
-            findClass("android.app.TaskSnapshotHelperImpl").hook {
-                injectMember {
-                    method {
-                        name = "isMiuiHome"
-                        param(StringType)
-                    }
-                    beforeHook {
+        findClass("android.app.TaskSnapshotHelperImpl").hook {
+            injectMember {
+                method {
+                    name = "isMiuiHome"
+                    param(StringType)
+                }
+                beforeHook {
+                    if (pref.get(DataConst.REMOVE_BG_DRAWABLE)) {
                         resultFalse()
                         printLog(
                             "12. isMiuiHome(): set isMiuiHome() false"
                         )
                     }
                 }
-            }
+            }.ignoredNoSuchMemberFailure()
+        }
 
         findClass("com.android.wm.shell.startingsurface.OplusShellStartingWindowManager").hook {
             injectMember {

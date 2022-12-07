@@ -14,7 +14,6 @@ import com.highcapable.yukihookapi.hook.core.finder.members.FieldFinder.Result.I
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.dataChannel
 import com.highcapable.yukihookapi.hook.factory.field
-import com.highcapable.yukihookapi.hook.factory.hasClass
 import com.highcapable.yukihookapi.hook.factory.modulePrefs
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 import java.io.DataOutputStream
@@ -162,12 +161,6 @@ object Utils {
     fun Context.toast(message: CharSequence): Toast = Toast
         .makeText(this, message, Toast.LENGTH_SHORT)
         .apply { show() }
-
-    /**
-     * 当前设备是否是 MIUI 定制 Android 系统
-     * @return [Boolean] 是否符合条件
-     */
-    val isMIUI by lazy { "android.miui.R".hasClass() }
 
     /**
      * 执行 Shell 命令

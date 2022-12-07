@@ -24,7 +24,8 @@ android {
     val keystorePwd = properties.getProperty("KEYSTORE_PASS") ?: System.getenv("KEYSTORE_PASS")
     val alias = properties.getProperty("KEY_ALIAS") ?: System.getenv("KEY_ALIAS")
     val pwd = properties.getProperty("KEY_PASSWORD") ?: System.getenv("KEY_PASSWORD")
-    if (keystorePath != null) {
+    val isKeyStoreAvailable = keystorePath != null && keystorePwd != null && alias != null && pwd != null
+    if (isKeyStoreAvailable) {
         signingConfigs {
             create("release") {
                 storeFile = file(keystorePath)
@@ -41,7 +42,7 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
-            if (keystorePath != null) {
+            if (isKeyStoreAvailable) {
                 signingConfig = signingConfigs.getByName("release")
             }
         }

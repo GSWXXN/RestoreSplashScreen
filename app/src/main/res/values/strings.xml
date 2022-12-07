@@ -9,6 +9,7 @@
     <string name="module_is_updated">模块已更新, 需要重启%s</string>
     <string name="phone">手机</string>
     <string name="system_ui">系统界面</string>
+    <string name="no_root">请授予 Root 权限</string>
 
     <string name="xposed_framework_version">Activated by %s API %d</string>
     <string name="main_activity_hint">做出任何设置前，请确保模块已激活。\n修改设置后立即生效，无需重启。</string>

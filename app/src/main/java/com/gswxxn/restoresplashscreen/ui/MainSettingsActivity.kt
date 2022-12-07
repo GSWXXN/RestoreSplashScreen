@@ -14,7 +14,6 @@ import com.gswxxn.restoresplashscreen.utils.Utils.shrinkIcon
 import com.gswxxn.restoresplashscreen.utils.Utils.toast
 import com.gswxxn.restoresplashscreen.view.NewMIUIDialog
 import com.highcapable.yukihookapi.YukiHookAPI
-import com.highcapable.yukihookapi.hook.factory.dataChannel
 
 class MainSettingsActivity : BaseActivity() {
     private var systemUIRestartNeeded: Boolean = true
@@ -44,12 +43,12 @@ class MainSettingsActivity : BaseActivity() {
                 Button(getString(R.string.reboot)) {
                     execShell("reboot")
                     Thread.sleep(300)
-                    toast("未授予 ROOT 权限")
+                    toast(getString(R.string.no_root))
                 }
                 Button(getString(R.string.restart_system_ui)) {
                     execShell("pkill -f com.android.systemui && pkill -f com.gswxxn.restoresplashscreen")
                     Thread.sleep(300)
-                    toast("未授予 ROOT 权限")
+                    toast(getString(R.string.no_root))
                 }
                 Button(getString(R.string.button_cancel), cancelStyle = true) {
                     dismiss()
@@ -128,7 +127,7 @@ class MainSettingsActivity : BaseActivity() {
         binding.mainTextStatus.text =
             when {
                 YukiHookAPI.Status.isXposedModuleActive && takeAction ->
-                    getString(R.string.module_is_updated, ""/**getString(if (androidRestartNeeded == true) R.string.phone else R.string.system_ui)**/)
+                    getString(R.string.module_is_updated, getString(if (androidRestartNeeded == true) R.string.phone else R.string.system_ui))
                 YukiHookAPI.Status.isXposedModuleActive -> getString(R.string.module_is_active)
                 else -> getString(R.string.module_is_not_active)
             }
@@ -151,14 +150,10 @@ class MainSettingsActivity : BaseActivity() {
         super.onResume()
         refreshState()
 
-        dataChannel("com.android.systemui").checkingVersionEquals {
+        checkingHostVersion("com.android.systemui") {
             systemUIRestartNeeded = !it
             refreshState()
         }
-//        checkingHostVersion("com.android.systemui") {
-//            systemUIRestartNeeded = !it
-//            refreshState()
-//        }
         checkingHostVersion("android") {
             androidRestartNeeded = !it
             refreshState()

@@ -47,8 +47,7 @@ class MainSettingsActivity : BaseActivity() {
                     toast("未授予 ROOT 权限")
                 }
                 Button(getString(R.string.restart_system_ui)) {
-                    execShell("pkill -f com.android.systemui")
-                    execShell("pkill -f com.gswxxn.restoresplashscreen")
+                    execShell("pkill -f com.android.systemui && pkill -f com.gswxxn.restoresplashscreen")
                     Thread.sleep(300)
                     toast("未授予 ROOT 权限")
                 }

@@ -221,6 +221,13 @@ class SubSettings : BaseActivity() {
                         }
                     })
 
+                    // 单独配置应用背景颜色
+                    TextSummaryArrow(TextSummaryV(textId = R.string.configure_bg_colors_individually, onClickListener = {
+                        startActivity(Intent(this@SubSettings, ConfigAppsActivity::class.java).apply {
+                            putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.BACKGROUND_INDIVIDUALLY_CONFIG)
+                        })
+                    }), dataBindingRecv = changeBGColorTypeBinding.getRecv(8))
+
                     // 颜色模式
                     val colorModeItems = mapOf(0 to getString(R.string.light_color), 1 to getString(R.string.dark_color), 2 to getString(R.string.follow_system))
                     val colorModeBinding = getDataBinding(colorModeItems[modulePrefs.get(DataConst.BG_COLOR_MODE)]!!)

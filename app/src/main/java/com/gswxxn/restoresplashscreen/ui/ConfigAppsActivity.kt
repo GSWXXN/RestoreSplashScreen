@@ -2,6 +2,10 @@ package com.gswxxn.restoresplashscreen.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
+import android.content.res.Configuration
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.DigitsKeyListener
@@ -13,6 +17,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.BaseAdapter
 import android.widget.EditText
 import android.widget.PopupMenu
+import cn.fkj233.ui.activity.dp2px
 import cn.fkj233.ui.activity.view.TextSummaryV
 import cn.fkj233.ui.dialog.MIUIDialog
 import com.gswxxn.restoresplashscreen.data.ConstValue
@@ -26,6 +31,7 @@ import com.gswxxn.restoresplashscreen.utils.Utils.sendToHost
 import com.gswxxn.restoresplashscreen.utils.Utils.toMap
 import com.gswxxn.restoresplashscreen.utils.Utils.toSet
 import com.gswxxn.restoresplashscreen.utils.Utils.toast
+import com.gswxxn.restoresplashscreen.utils.Utils.toastL
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.factory.modulePrefs
 import kotlinx.coroutines.CoroutineScope
@@ -37,8 +43,12 @@ import kotlinx.coroutines.withContext
 
 class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
     private lateinit var binding: ActivityConfigAppsBinding
+    private lateinit var appInfo: AppInfoHelper
+    private lateinit var configMap: MutableMap<String, String>
+    private var onRefreshList: (() -> Unit)? = null
 
     override fun onCreate() {
+        val isDarkMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
         window.insetsController?.setSystemBarsAppearance(
             APPEARANCE_LIGHT_STATUS_BARS,
             APPEARANCE_LIGHT_STATUS_BARS
@@ -48,8 +58,6 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
         setContentView(binding.root)
 
         val message = intent.getIntExtra(ConstValue.EXTRA_MESSAGE, 0)
-
-        val isNeedConfig = message == 600
 
         // 已勾选的应用包名 Set
         val checkedList : MutableSet<String> = modulePrefs.get(
@@ -63,17 +71,16 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
                 else -> DataConst.UNDEFINED_LIST
             }).toMutableSet()
         // 应用配置信息
-        val configMap = modulePrefs.get(
+        configMap = modulePrefs.get(
             when (message) {
                 ConstValue.MIN_DURATION -> DataConst.MIN_DURATION_CONFIG_MAP
+                ConstValue.BACKGROUND_INDIVIDUALLY_CONFIG -> if (isDarkMode) DataConst.INDIVIDUAL_BG_COLOR_APP_MAP_DARK else DataConst.INDIVIDUAL_BG_COLOR_APP_MAP
                 else -> DataConst.UNDEFINED_LIST
             }).toMap()
         // AppInfoHelper 实例
-        val appInfo = AppInfoHelper(this, checkedList, configMap)
+        appInfo = AppInfoHelper(this, checkedList, configMap)
         // 在列表中的条目
         var appInfoFilter =  listOf<AppInfoHelper.MyAppInfo>()
-
-        var onRefreshList: (() -> Unit)? = null
 
         fun searchEvent() {
             val content = binding.searchEditText.text.toString()
@@ -115,6 +122,10 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
             ConstValue.MIN_DURATION -> {
                 binding.subSettingHint.text = getString(R.string.min_duration_sub_setting_hint)
                 getString(R.string.min_duration_title)
+            }
+            ConstValue.BACKGROUND_INDIVIDUALLY_CONFIG -> {
+                binding.subSettingHint.text = getString(R.string.custom_bg_color_sub_setting_hint)
+                getString(R.string.configure_bg_colors_individually)
             }
             else -> "Unavailable"
         }
@@ -193,56 +204,84 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
                     }else {
                         holder = cView?.tag as AdapterConfigBinding
                     }
-                    getItem(position).also {
+                    getItem(position).also { item ->
                         // 设置图标
-                        holder.adpAppIcon.setImageDrawable(it.icon)
+                        holder.adpAppIcon.setImageDrawable(item.icon)
                         // 设置应用名
-                        holder.adpAppName.text = it.appName
+                        holder.adpAppName.text = item.appName
                         // 设置包名
-                        holder.adpAppPkgName.text = it.packageName
+                        holder.adpAppPkgName.text = item.packageName
                         // 设置 TextView
-                        if (isNeedConfig)
-                            holder.adpAppTextView.text = if (it.config.isEmpty()) getString(R.string.not_set_min_duration) else "${it.config} ms"
-                        // 设置复选框
-                        holder.adpAppCheckBox.apply {
-                            setOnCheckedChangeListener { _, isChecked ->
-                                appInfo.setChecked(it, isChecked)
-                                if (isChecked) {
-                                    checkedList.add(it.packageName)
+                        when (message) {
+                            ConstValue.MIN_DURATION -> holder.adpAppTextView.text = if (item.config == null) getString(R.string.not_set_min_duration) else "${item.config} ms"
+                            ConstValue.BACKGROUND_INDIVIDUALLY_CONFIG -> holder.adpAppTextView.apply {
+                                if (item.config == null) {
+                                    text = getString(R.string.default_value)
+                                    background = null
                                 } else {
-                                    checkedList.remove(it.packageName)
+                                    text = ""
+                                    width = dp2px(this@ConfigAppsActivity, 30f)
+                                    background = GradientDrawable().apply { setColor(
+                                        Color.parseColor(item.config))
+                                        setStroke(2, getColor(R.color.brandColor))
+                                        cornerRadius = dp2px(this@ConfigAppsActivity, 15f).toFloat() }
                                 }
                             }
-                            isChecked = it.packageName in checkedList
                         }
-                        // 设置LinearLayout
-                        holder.adapterLayout.setOnClickListener { _ ->
-                            if (!isNeedConfig) {
-                                holder.adpAppCheckBox.isChecked = !holder.adpAppCheckBox.isChecked
-                            } else {
-                                holder.adpAppCheckBox.isChecked = true
-                                MIUIDialog(this@ConfigAppsActivity) {
-                                    setTitle(R.string.set_min_duration)
-                                    setMessage(R.string.set_min_duration_unit)
-                                    setEditText(it.config, "")
-                                    this@MIUIDialog.javaClass.method {
-                                        emptyParam()
-                                        returnType = EditText::class.java
-                                    }.get(this@MIUIDialog).invoke<EditText>()?.keyListener = DigitsKeyListener.getInstance("1234567890")
-                                    setRButton(R.string.button_okay) { _ ->
-                                        if (getEditText().isEmpty() || getEditText() == "0") {
-                                            appInfo.setConfig(it, "")
-                                            holder.adpAppTextView.text = getString(R.string.not_set_min_duration)
-                                            configMap.remove(it.packageName)
-                                        } else {
-                                            appInfo.setConfig(it, getEditText())
-                                            holder.adpAppTextView.text = "${getEditText()} ms"
-                                            configMap[it.packageName] = getEditText()
-                                        }
-                                        dismiss()
+
+                        // 设置复选框
+                        holder.adpAppCheckBox.apply {
+                            if (message == ConstValue.BACKGROUND_INDIVIDUALLY_CONFIG) { visibility = View.GONE }
+                            else {
+                                setOnCheckedChangeListener { _, isChecked ->
+                                    appInfo.setChecked(item, isChecked)
+                                    if (isChecked) {
+                                        checkedList.add(item.packageName)
+                                    } else {
+                                        checkedList.remove(item.packageName)
                                     }
-                                    setLButton(R.string.button_cancel) { dismiss() }
-                                }.show()
+                                }
+                                isChecked = item.packageName in checkedList
+                            }
+                        }
+                        // 设置 LinearLayout 单击事件
+                        holder.adapterLayout.setOnClickListener {
+                            when (message) {
+                                ConstValue.BACKGROUND_INDIVIDUALLY_CONFIG -> {
+                                    startActivityForResult(Intent(this@ConfigAppsActivity, ColorSelectActivity::class.java).apply {
+                                        putExtra(ConstValue.EXTRA_MESSAGE_PACKAGE_NAME, item.packageName)
+                                        putExtra(ConstValue.EXTRA_MESSAGE_APP_INDEX, appInfo.getIndex(item))
+                                        putExtra(ConstValue.EXTRA_MESSAGE_CURRENT_COLOR, item.config)
+                                    }, 1)
+                                }
+
+                                ConstValue.MIN_DURATION -> {
+                                    holder.adpAppCheckBox.isChecked = true
+                                    MIUIDialog(this@ConfigAppsActivity) {
+                                        setTitle(R.string.set_min_duration)
+                                        setMessage(R.string.set_min_duration_unit)
+                                        setEditText(item.config ?: "", "")
+                                        this@MIUIDialog.javaClass.method {
+                                            emptyParam()
+                                            returnType = EditText::class.java
+                                        }.get(this@MIUIDialog).invoke<EditText>()?.keyListener = DigitsKeyListener.getInstance("1234567890")
+                                        setRButton(R.string.button_okay) {
+                                            if (getEditText().isEmpty() || getEditText() == "0") {
+                                                appInfo.setConfig(item, null)
+                                                holder.adpAppTextView.text = getString(R.string.not_set_min_duration)
+                                                configMap.remove(item.packageName)
+                                            } else {
+                                                appInfo.setConfig(item, getEditText())
+                                                holder.adpAppTextView.text = "${getEditText()} ms"
+                                                configMap[item.packageName] = getEditText()
+                                            }
+                                            dismiss()
+                                        }
+                                        setLButton(R.string.button_cancel) { dismiss() }
+                                    }.show()
+                                }
+
+                                else -> { holder.adpAppCheckBox.isChecked = !holder.adpAppCheckBox.isChecked }
                             }
                         }
                     }
@@ -263,10 +302,12 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
                     ConstValue.MIN_DURATION -> DataConst.MIN_DURATION_LIST
                     else -> DataConst.UNDEFINED_LIST
                 }.also { sendToHost(it) }, checkedList)
-            if (isNeedConfig)
+
+            if (configMap.isNotEmpty())
                 modulePrefs.put(
                     when (message) {
                         ConstValue.MIN_DURATION -> DataConst.MIN_DURATION_CONFIG_MAP
+                        ConstValue.BACKGROUND_INDIVIDUALLY_CONFIG -> if (isDarkMode) DataConst.INDIVIDUAL_BG_COLOR_APP_MAP_DARK else DataConst.INDIVIDUAL_BG_COLOR_APP_MAP
                         else -> DataConst.UNDEFINED_LIST
                     }.also { sendToHost(it) }, configMap.toSet())
             toast(getString(R.string.save_successful))
@@ -274,35 +315,38 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
         }
 
         // 菜单栏事件
-        binding.moreOptions.setOnClickListener { it ->
-            PopupMenu(this, it).apply {
-                setOnMenuItemClickListener { item ->
-                    when (item.itemId) {
-                        R.id.select_system_apps -> {
-                            appInfo.getAppInfoList().forEach{
-                                if (it.isSystemApp) {
-                                    appInfo.setChecked(it, true)
-                                    checkedList.add(it.packageName)
+        binding.moreOptions.apply{
+            if (message == ConstValue.BACKGROUND_INDIVIDUALLY_CONFIG) { visibility = View.GONE; return@apply }
+            setOnClickListener { it ->
+                PopupMenu(this@ConfigAppsActivity, it).apply {
+                    setOnMenuItemClickListener { item ->
+                        when (item.itemId) {
+                            R.id.select_system_apps -> {
+                                appInfo.getAppInfoList().forEach {
+                                    if (it.isSystemApp) {
+                                        appInfo.setChecked(it, true)
+                                        checkedList.add(it.packageName)
+                                    }
                                 }
+                                appInfoFilter = appInfo.getAppInfoList()
+                                onRefreshList?.invoke()
+                                true
                             }
-                            appInfoFilter = appInfo.getAppInfoList()
-                            onRefreshList?.invoke()
-                            true
-                        }
-                        R.id.clear_slection -> {
-                            appInfo.getAppInfoList().forEach{
-                                appInfo.setChecked(it, false)
-                                checkedList.remove(it.packageName)
+                            R.id.clear_slection -> {
+                                appInfo.getAppInfoList().forEach {
+                                    appInfo.setChecked(it, false)
+                                    checkedList.remove(it.packageName)
+                                }
+                                appInfoFilter = appInfo.getAppInfoList()
+                                onRefreshList?.invoke()
+                                true
                             }
-                            appInfoFilter = appInfo.getAppInfoList()
-                            onRefreshList?.invoke()
-                            true
+                            else -> false
                         }
-                        else -> false
                     }
+                    inflate(R.menu.more_options_menu)
+                    show()
                 }
-                inflate(R.menu.more_options_menu)
-                show()
             }
         }
     }
@@ -319,5 +363,30 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
             cancel()
             super.onBackPressed()
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val color = data?.getStringExtra(ConstValue.EXTRA_MESSAGE_SELECTED_COLOR)
+        val pkgName = data?.getStringExtra(ConstValue.EXTRA_MESSAGE_PACKAGE_NAME)
+        val index = data?.getIntExtra(ConstValue.EXTRA_MESSAGE_APP_INDEX, -1) ?: -1
+        if (requestCode != 1 || color == null || index == -1 || pkgName == null) return
+        try {
+            when (resultCode) {
+                ConstValue.SELECTED_COLOR -> {
+                    appInfo.setConfig(index, color)
+                    onRefreshList?.invoke()
+                    configMap[pkgName] = color
+                }
+                ConstValue.DEFAULT_COLOR -> {
+                    appInfo.setConfig(index, null)
+                    onRefreshList?.invoke()
+                    configMap.remove(pkgName)
+                }
+                ConstValue.UNDO_MODIFY -> {}
+            }
+        } catch (_: RuntimeException) {
+            toastL(getString(R.string.mode_conflict))
+        }
+
     }
 }

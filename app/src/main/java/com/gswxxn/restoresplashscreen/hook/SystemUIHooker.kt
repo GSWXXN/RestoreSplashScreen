@@ -81,7 +81,7 @@ object SystemUIHooker: BaseHooker() {
          * - 忽略应用主动设置的图标
          * - 移除品牌图标
          * - 替换背景颜色
-         * - 设置微信背景色为黑色
+         * - 单独配置应用背景颜色
          */
         findClass("com.android.wm.shell.startingsurface.SplashscreenContentDrawer\$StartingWindowViewBuilder")
             .hook {
@@ -187,7 +187,7 @@ object SystemUIHooker: BaseHooker() {
                 /**
                  * 此处实现功能：
                  * - 替换背景颜色
-                 * - 设置微信背景色为深色
+                 * - 单独配置应用背景颜色
                  *
                  * 在系统执行 createIconDrawable() 时，会将 Splash Screen 图标传入到此函数的第一个参数，
                  * 在此处就可以通过 Palette API 自动从图标中选取颜色或手动指定颜色，并将背景颜色设置到 mThemeColor
@@ -211,10 +211,16 @@ object SystemUIHooker: BaseHooker() {
                         val isDarkMode = (appContext!!.resources
                             .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES)
                             .also { checkDarkModeChanged(it) }
+                        val individualBgColorAppMap = pref.getPrefsData(
+                            if (!isDarkMode) DataConst.INDIVIDUAL_BG_COLOR_APP_MAP.key
+                            else DataConst.INDIVIDUAL_BG_COLOR_APP_MAP_DARK.key, mapOf<String, String>()) as Map<*, *>
                         val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
                         val isInExceptList = pkgName in pref.get(DataConst.BG_EXCEPT_LIST) || isExcept(pkgName)
 
-                        fun getColor() = if (!isInExceptList && (!isDarkMode || ignoreDarkMode))
+                        fun getColor() = if (pkgName in individualBgColorAppMap.keys) {
+                            printLog("10. createIconDrawable(): set individual background color, ${individualBgColorAppMap[pkgName]}")
+                            Color.parseColor(individualBgColorAppMap[pkgName] as String)
+                        } else if (!isInExceptList && (!isDarkMode || ignoreDarkMode))
                             when (bgColorType) {
 
                                 // 从图标取色

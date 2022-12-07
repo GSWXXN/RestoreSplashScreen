@@ -36,11 +36,6 @@
     <string name="hide_icon">隐藏桌面图标</string>
     <string name="min_duration">遮罩最小持续时长</string>
     <string name="min_duration_tips">注意：设置此参数会拖慢应用启动时间。如无特殊需求，则不应配置此项。</string>
-    <string name="set_default_min_duration">默认最小持续时长</string>
-    <string name="min_duration_separate_configuration">单独配置应用</string>
-    <string name="set_min_duration">设置遮罩最小持续时长</string>
-    <string name="not_set_min_duration">未设置</string>
-    <string name="set_min_duration_unit">单位：毫秒</string>
     <string name="enable_data_cache">启用缓存</string>
     <string name="enable_data_cache_tips">开启后会缓存模块绘制的圆角图标、背景取色，可能会缓解在部分机型上开启应用的瞬间会卡顿的问题。</string>
     <string name="custom_scope">自定义模块作用域</string>
@@ -77,6 +72,7 @@
     <string name="dark_color">暗色</string>
     <string name="follow_system">跟随系统</string>
     <string name="change_bg_color_list">配置排除列表</string>
+    <string name="configure_bg_colors_individually">单独配置应用背景颜色</string>
     <string name="ignore_dark_mode">忽略 MIUI 深色模式</string>
     <string name="ignore_dark_mode_tips">在深色模式下，MIUI 会将启动遮罩替换为固定颜色。开启此选项后，将解除此限制。</string>
     <string name="remove_bg_drawable">移除截图背景</string>
@@ -108,8 +104,34 @@
     <string name="search_hint">可输入 APP 名称、包名</string>
     <string name="save_hint">勾选完成后记得点击下方保存按钮，保存成功后立即生效</string>
     <string name="min_duration_sub_setting_hint">点击应用名称设置持续时长，点击复选框以启用该条目\n勾选完成后记得点击下方保存按钮，保存成功后立即生效</string>
+    <string name="custom_bg_color_sub_setting_hint">· 点击应用名称进入颜色设定界面\n· 如需设置深色模式下的颜色，请在手机系统设置中开启深色模式后进入此界面进行配置\n· 做出配置后请不要在保存前切换深色模式状态，否则未保存的配置将会丢失\n· 配置完成后记得点击下方保存按钮，保存成功后立即生效</string>
     <string name="loading">正在加载……</string>
     <string name="save">保存</string>
+
+    <string name="set_default_min_duration">默认最小持续时长</string>
+    <string name="min_duration_separate_configuration">单独配置应用</string>
+    <string name="set_min_duration">设置遮罩最小持续时长</string>
+    <string name="not_set_min_duration">未设置</string>
+    <string name="set_min_duration_unit">单位：毫秒</string>
+
+    <string name="default_value">默认</string>
+    <string name="mode_conflict">模式冲突，请保持应用列表与颜色选择界面相同的模式，配置未保存</string>
+
+    <!--颜色配置界面-->
+    <string name="please_select">请选择：</string>
+    <string name="manual_input">手动输入</string>
+    <string name="manual_input_hint">请输入 16 进制颜色代码</string>
+    <string name="color_input_invalid">请输入正确的颜色代码</string>
+    <string name="rgb_color_space">RGB 空间色彩</string>
+    <string name="hsv_color_space">HSV 空间色彩</string>
+    <string name="rgb_r">R</string>
+    <string name="rgb_g">G</string>
+    <string name="rgb_b">B</string>
+    <string name="hue">色相</string>
+    <string name="saturation">饱和度</string>
+    <string name="value">明度</string>
+    <string name="undo_modification">撤销本次修改</string>
+    <string name="reset">恢复默认</string>
 
     <!--关于页面-->
     <string name="version">v%s</string>

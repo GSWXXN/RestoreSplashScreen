@@ -34,4 +34,6 @@ object DataConst {
     val FORCE_SHOW_SPLASH_SCREEN_LIST = PrefsData("force_show_splash_screen_list", mutableSetOf<String>())
     val MIN_DURATION_LIST = PrefsData("min_duration_list", mutableSetOf<String>())
     val MIN_DURATION_CONFIG_MAP = PrefsData("min_duration_config_map", mutableSetOf<String>())
+    val INDIVIDUAL_BG_COLOR_APP_MAP = PrefsData("individual_bg_color_app_map", mutableSetOf<String>())
+    val INDIVIDUAL_BG_COLOR_APP_MAP_DARK = PrefsData("individual_bg_color_app_map_dark", mutableSetOf<String>())
 }

@@ -162,6 +162,10 @@ object Utils {
         .makeText(this, message, Toast.LENGTH_SHORT)
         .apply { show() }
 
+    fun Context.toastL(message: CharSequence): Toast = Toast
+        .makeText(this, message, Toast.LENGTH_LONG)
+        .apply { show() }
+
     /**
      * 执行 Shell 命令
      * @param command Shell 命令

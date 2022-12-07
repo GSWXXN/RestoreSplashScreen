@@ -15,6 +15,9 @@
                 android:name=".ui.AboutPageActivity"
                 android:exported="true"/>
         <activity
+            android:name=".ui.ColorSelectActivity"
+            android:exported="true" />
+        <activity
                 android:name=".ui.ConfigAppsActivity"
                 android:exported="true"
                 android:launchMode="singleTask"/>

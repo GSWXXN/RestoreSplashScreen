@@ -54,13 +54,14 @@
 
 如果你想捐赠，觉得这个模块好用的不得了，我会非常感谢你的！！！如果这个模块对你来说只要还差一点点意思，就不要捐赠啦
 
-<img src="https://raw.githubusercontent.com/GSWXXN/RestoreSplashScreen/master/Doc/donate.png" width = "250" alt="donate" align=center />
+<img src="https://raw.githubusercontent.com/GSWXXN/RestoreSplashScreen/master/Doc/donate.png" width = "250" alt="donate" />
 
 
 ## 致谢
-本模块UI界面改自 [MIUI 原生通知图标](https://github.com/fankes/MIUINativeNotifyIcon)  
+使用 [Yuki Hook API](https://github.com/fankes/YukiHookAPI) 构建模块  
+UI界面改自 [MIUI 原生通知图标](https://github.com/fankes/MIUINativeNotifyIcon)  
 使用 [BlockMIUI](https://github.com/Block-Network/blockmiui) 的部分资源构建UI  
-获取应用列表方式改自 [Hide My Applist](https://github.com/Dr-TSNG/Hide-My-Applist)  
-模块使用 [Yuki Hook API](https://github.com/fankes/YukiHookAPI) 构建  
-使用 [libsu](https://github.com/topjohnwu/libsu) 执行Shell命令
+获取应用列表方式参考 [Hide My Applist](https://github.com/Dr-TSNG/Hide-My-Applist)  
+曾使用 [libsu](https://github.com/topjohnwu/libsu) 执行Shell命令  
+参考 [MIUIHomeR](https://github.com/qqlittleice/MiuiHome_R) 优化部分代码
 

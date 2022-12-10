@@ -35,7 +35,7 @@ class SubSettings : BaseActivity<ActivitySubSettingsBinding>() {
             instance = this
             binding.appListTitle.text = getString(titleID)
             binding.demoImage.setImageDrawable(getDrawable(demoImageID))
-            binding.settingItems.addBlockMIUIView(this@SubSettings, titleID, create(this@SubSettings, binding))
+            binding.settingItems.addBlockMIUIView(this@SubSettings, itemData = create(this@SubSettings, binding))
         }
     }
 

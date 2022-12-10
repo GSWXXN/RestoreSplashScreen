@@ -9,6 +9,7 @@ import android.widget.TextView
 import cn.fkj233.ui.activity.dp2px
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.ConstValue
+import com.gswxxn.restoresplashscreen.data.ConstValue.SELECT_COLOR_CODE
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.databinding.AdapterConfigBinding
 import com.gswxxn.restoresplashscreen.ui.ColorSelectActivity
@@ -63,14 +64,14 @@ object BGColorIndividualConfig : IConfigApps {
             putExtra(ConstValue.EXTRA_MESSAGE_PACKAGE_NAME, item.packageName)
             putExtra(ConstValue.EXTRA_MESSAGE_APP_INDEX, context.appInfo.getIndex(item))
             putExtra(ConstValue.EXTRA_MESSAGE_CURRENT_COLOR, item.config)
-        }, 1)
+        }, SELECT_COLOR_CODE)
     }
 
     override fun onActivityResult(context: ConfigAppsActivity, requestCode: Int, resultCode: Int, data: Intent?) {
         val color = data?.getStringExtra(ConstValue.EXTRA_MESSAGE_SELECTED_COLOR)
         val pkgName = data?.getStringExtra(ConstValue.EXTRA_MESSAGE_PACKAGE_NAME)
         val index = data?.getIntExtra(ConstValue.EXTRA_MESSAGE_APP_INDEX, -1) ?: -1
-        if (requestCode != 1 || color == null || index == -1 || pkgName == null) return
+        if (requestCode != SELECT_COLOR_CODE || color == null || index == -1 || pkgName == null) return
         try {
             when (resultCode) {
                 ConstValue.SELECTED_COLOR -> {

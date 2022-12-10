@@ -43,8 +43,10 @@ object YukiHelper {
      * 给宿主发送通讯，通知配置变化
      * @param prefsData 键值对存储实例
      */
-    inline fun <reified T> Context.sendToHost(prefsData: PrefsData<T>) {
-        val host = if (prefsData.key in setOf(
+    inline fun <reified T> Context.sendToHost(prefsData: PrefsData<T>) =
+        sendToHost(prefsData.key, modulePrefs.get(prefsData))
+    fun <T> Context.sendToHost(key: String, value: T) {
+        val host = if (key in setOf(
                 "force_show_splash_screen_list",
                 "force_show_splash_screen",
                 "disable_splash_screen",
@@ -52,19 +54,19 @@ object YukiHelper {
         )
             "android"
         else "com.android.systemui"
-        val key = "${host.replace('.', '_')}_config_change"
-        val value = "${prefsData.key}-${
-            when (prefsData.value) {
+        val sendKey = "${host.replace('.', '_')}_config_change"
+        val sendValue = "${key}-${
+            when (value) {
                 is Int -> "int"
                 is String -> "string"
                 is Boolean -> "boolean"
                 is Set<*> -> "set"
                 else -> "not_support"
             }
-        }-${if (prefsData.value !is Set<*>) modulePrefs.get(prefsData) else null}"
-        dataChannel(host).put(key, value)
-        if (prefsData.key == "enable_log")
-            dataChannel("android").put("${"android".replace('.', '_')}_config_change", value)
+        }-${if (value !is Set<*>) value else null}"
+        dataChannel(host).put(sendKey, sendValue)
+        if (key == "enable_log")
+            dataChannel("android").put("${"android".replace('.', '_')}_config_change", sendValue)
     }
 
     /**

@@ -1,6 +1,5 @@
 package com.gswxxn.restoresplashscreen.ui.subsettings
 
-import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.widget.TextView
@@ -11,6 +10,7 @@ import com.gswxxn.restoresplashscreen.data.ConstValue
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.databinding.ActivitySubSettingsBinding
 import com.gswxxn.restoresplashscreen.ui.ConfigAppsActivity
+import com.gswxxn.restoresplashscreen.ui.SubSettings
 import com.gswxxn.restoresplashscreen.ui.`interface`.ISubSettings
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.gswxxn.restoresplashscreen.view.BlockMIUIItemData
@@ -21,7 +21,7 @@ object CustomScopeSettings : ISubSettings {
     override val titleID: Int = R.string.custom_scope_settings
     override val demoImageID: Int = R.drawable.demo_scope
 
-    override fun create(context: Context, binding: ActivitySubSettingsBinding): BlockMIUIItemData.() -> Unit = {
+    override fun create(context: SubSettings, binding: ActivitySubSettingsBinding): BlockMIUIItemData.() -> Unit = {
         fun getDataBinding(pref : Any) = GetDataBinding({ pref }) { view, flags, data ->
             when (flags) {
                 0 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE

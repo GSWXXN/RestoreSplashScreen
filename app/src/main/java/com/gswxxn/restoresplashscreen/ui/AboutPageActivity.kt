@@ -90,10 +90,10 @@ class AboutPageActivity : BaseActivity<ActivityAboutPageBinding>() {
                     "MIT License"
                 )
                 addLicenseV(
-                    "libsu",
-                    "topjohnwu",
-                    "https://github.com/topjohnwu/libsu",
-                    "Apache License 2.0"
+                    "MiuiHomeR",
+                    "YuKongA",
+                    "https://github.com/qqlittleice/MiuiHome_R",
+                    "GNU General Public License v3.0"
                 )
                 addLicenseV(
                     "BlockMIUI",

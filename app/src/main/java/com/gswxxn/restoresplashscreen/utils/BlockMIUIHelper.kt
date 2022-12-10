@@ -17,14 +17,9 @@ import kotlinx.coroutines.launch
 
 object BlockMIUIHelper {
 
-    fun LinearLayout.addBlockMIUIView(context: Context, key: Int = -1, itemData: BlockMIUIItemData.() -> Unit) {
-        if (key == -1) {
-            BlockMIUIItemData().apply(itemData).itemList
-        } else {
-            BlockMIUIItemData.datalist.getOrPut(key) { BlockMIUIItemData().apply(itemData).itemList }
-        }.forEach {
+    fun LinearLayout.addBlockMIUIView(context: Context, itemData: BlockMIUIItemData.() -> Unit) =
+        BlockMIUIItemData().apply(itemData).itemList.forEach {
             MainScope().launch { addItem(this@addBlockMIUIView, it, context) }
-        }
     }
 
     @SuppressLint("ClickableViewAccessibility")

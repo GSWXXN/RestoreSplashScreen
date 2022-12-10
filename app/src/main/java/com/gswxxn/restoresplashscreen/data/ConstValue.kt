@@ -7,6 +7,10 @@ object ConstValue {
     const val EXTRA_MESSAGE_CURRENT_COLOR = "CURRENT COLOR"
     const val EXTRA_MESSAGE_SELECTED_COLOR = "SELECTED COLOR"
 
+    const val CREATE_DOCUMENT_CODE = 0
+    const val OPEN_DOCUMENT_CODE = 1
+    const val SELECT_COLOR_CODE = 3
+
     const val DEFAULT_COLOR = 0
     const val UNDO_MODIFY = 1
     const val SELECTED_COLOR = 2

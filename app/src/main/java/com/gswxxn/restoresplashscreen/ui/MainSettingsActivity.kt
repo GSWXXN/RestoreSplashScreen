@@ -63,7 +63,7 @@ class MainSettingsActivity : BaseActivity<ActivityMainSettingsBinding>() {
             startActivity(intent)
         }
 
-        binding.settingsEntry.addBlockMIUIView(this, 0) {
+        binding.settingsEntry.addBlockMIUIView(this) {
             fun line() = CustomView(LineV().create(this@MainSettingsActivity, null).apply {
                 layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp2px(context, 0.9f))
                     .apply {

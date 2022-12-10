@@ -3,7 +3,6 @@ package com.gswxxn.restoresplashscreen.ui
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
-import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
 import android.widget.LinearLayout
 import android.widget.TextView
 import cn.fkj233.ui.activity.dp2px
@@ -11,22 +10,14 @@ import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.RoundDegree
 import com.gswxxn.restoresplashscreen.databinding.ActivityAboutPageBinding
-import com.gswxxn.restoresplashscreen.utils.Utils.drawable2Bitmap
-import com.gswxxn.restoresplashscreen.utils.Utils.roundBitmapByShader
-import com.gswxxn.restoresplashscreen.utils.Utils.toast
+import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
+import com.gswxxn.restoresplashscreen.utils.GraphicUtils.drawable2Bitmap
+import com.gswxxn.restoresplashscreen.utils.GraphicUtils.roundBitmapByShader
 
-class AboutPageActivity : BaseActivity() {
-    private lateinit var binding: ActivityAboutPageBinding
+class AboutPageActivity : BaseActivity<ActivityAboutPageBinding>() {
 
     override fun onCreate() {
-        window.insetsController?.setSystemBarsAppearance(
-            APPEARANCE_LIGHT_STATUS_BARS,
-            APPEARANCE_LIGHT_STATUS_BARS
-        )
-
-        binding = ActivityAboutPageBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
+        window.statusBarColor = getColor(R.color.colorThemeBackground)
         binding.apply {
 
             titleBackIcon.setOnClickListener { onBackPressed() }
@@ -59,7 +50,7 @@ class AboutPageActivity : BaseActivity() {
                     startActivity(
                         Intent(
                             Intent.ACTION_VIEW,
-                            Uri.parse("http://www.coolapk.com/u/1189245")
+                            Uri.parse("https://www.coolapk.com/u/1189245")
                         )
                     )
                 }

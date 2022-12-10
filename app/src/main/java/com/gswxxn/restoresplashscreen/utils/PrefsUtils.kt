@@ -1,10 +1,10 @@
 package com.gswxxn.restoresplashscreen.utils
 
-import com.gswxxn.restoresplashscreen.utils.Utils.toMap
+import com.gswxxn.restoresplashscreen.utils.CommonUtils.toMap
 import com.highcapable.yukihookapi.hook.param.PackageParam
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 
-class HostPrefsUtil(private val pp : PackageParam) {
+class PrefsUtils(private val pp : PackageParam) {
     object XSharedPreferencesCaches {
         /** 缓存的 [Boolean] 键值数据 */
         var booleanData = HashMap<String, Boolean>()

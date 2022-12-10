@@ -10,7 +10,6 @@ import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowInsetsController
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.SeekBar
@@ -27,19 +26,18 @@ import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.ConstValue
 import com.gswxxn.restoresplashscreen.databinding.ActivityColorSelectBinding
 import com.gswxxn.restoresplashscreen.utils.BlockMIUIHelper.addBlockMIUIView
-import com.gswxxn.restoresplashscreen.utils.Utils.drawable2Bitmap
-import com.gswxxn.restoresplashscreen.utils.Utils.getBgColor
-import com.gswxxn.restoresplashscreen.utils.Utils.toast
+import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
+import com.gswxxn.restoresplashscreen.utils.GraphicUtils.drawable2Bitmap
+import com.gswxxn.restoresplashscreen.utils.GraphicUtils.getBgColor
 import com.highcapable.yukihookapi.hook.factory.method
 import java.util.*
 import java.util.regex.Pattern
 
-class ColorSelectActivity : BaseActivity() {
+class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
     companion object {
         lateinit var huePanel: Drawable
         fun isHuePanelInitialized() = ::huePanel.isInitialized
     }
-    private lateinit var binding: ActivityColorSelectBinding
     private var currentColor: Int? = null
     private lateinit var pkgName: String
     private var resetColor = false
@@ -78,21 +76,11 @@ class ColorSelectActivity : BaseActivity() {
             statusS.text = "%.2f / 100".format(hsvColor[1] * 100)
             statusV.text = "%.2f / 100".format(hsvColor[2] * 100)
         }
-
     override fun onCreate() {
+        drawHuePanel()
         pkgName = intent.getStringExtra(ConstValue.EXTRA_MESSAGE_PACKAGE_NAME)!!
         currentColor = intent.getStringExtra(ConstValue.EXTRA_MESSAGE_CURRENT_COLOR)?.let { Color.parseColor(it) }
 
-        window.apply {
-            statusBarColor = getColor(R.color.colorDemoBackground)
-            insetsController?.setSystemBarsAppearance(
-                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
-                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
-            )
-        }
-        binding = ActivityColorSelectBinding.inflate(layoutInflater).apply { setContentView(root) }
-
-        drawHuePanel()
         seekBarR = createSeekBar(255, 0xFFF36060.toInt()) { Color.valueOf(color).apply { setRGBColor(Color.valueOf(((it - 0.5)/255).toFloat(), green(), blue()).toArgb()) } }
         seekBarG = createSeekBar(255, 0xFF5FF25F.toInt()) { Color.valueOf(color).apply { setRGBColor(Color.valueOf(red(), ((it - 0.5)/255).toFloat(), blue()).toArgb()) } }
         seekBarB = createSeekBar(255, 0xFF5F5FF3.toInt()) { Color.valueOf(color).apply { setRGBColor(Color.valueOf(red(), green(),((it - 0.5)/255).toFloat()).toArgb()) } }

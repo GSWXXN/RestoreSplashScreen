@@ -96,6 +96,7 @@
     <string name="background_image_title">移除列表</string>
     <string name="force_show_splash_screen_title">应用列表</string>
     <string name="min_duration_title">最小持续时长</string>
+    <string name="unavailable">Unavailable</string>
 
     <string name="select_system_apps">选中系统应用</string>
     <string name="clear_selected_apps">清除选中应用</string>

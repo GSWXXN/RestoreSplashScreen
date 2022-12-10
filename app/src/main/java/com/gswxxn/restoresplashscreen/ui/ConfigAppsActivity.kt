@@ -1,86 +1,69 @@
 package com.gswxxn.restoresplashscreen.ui
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.text.Editable
 import android.text.TextWatcher
-import android.text.method.DigitsKeyListener
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
 import android.view.inputmethod.InputMethodManager
 import android.widget.BaseAdapter
-import android.widget.EditText
-import android.widget.PopupMenu
-import cn.fkj233.ui.activity.dp2px
-import cn.fkj233.ui.activity.view.TextSummaryV
-import cn.fkj233.ui.dialog.MIUIDialog
-import com.gswxxn.restoresplashscreen.data.ConstValue
-import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.R
+import com.gswxxn.restoresplashscreen.data.ConstValue
 import com.gswxxn.restoresplashscreen.databinding.ActivityConfigAppsBinding
 import com.gswxxn.restoresplashscreen.databinding.AdapterConfigBinding
+import com.gswxxn.restoresplashscreen.ui.configapps.*
+import com.gswxxn.restoresplashscreen.ui.`interface`.IConfigApps
 import com.gswxxn.restoresplashscreen.utils.AppInfoHelper
 import com.gswxxn.restoresplashscreen.utils.BlockMIUIHelper.addBlockMIUIView
-import com.gswxxn.restoresplashscreen.utils.Utils.sendToHost
-import com.gswxxn.restoresplashscreen.utils.Utils.toMap
-import com.gswxxn.restoresplashscreen.utils.Utils.toSet
-import com.gswxxn.restoresplashscreen.utils.Utils.toast
-import com.gswxxn.restoresplashscreen.utils.Utils.toastL
-import com.highcapable.yukihookapi.hook.factory.method
+import com.gswxxn.restoresplashscreen.utils.CommonUtils.toMap
+import com.gswxxn.restoresplashscreen.utils.CommonUtils.toSet
+import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
+import com.gswxxn.restoresplashscreen.utils.YukiHelper.sendToHost
 import com.highcapable.yukihookapi.hook.factory.modulePrefs
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
-class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
-    private lateinit var binding: ActivityConfigAppsBinding
-    private lateinit var appInfo: AppInfoHelper
-    private lateinit var configMap: MutableMap<String, String>
-    private var onRefreshList: (() -> Unit)? = null
+class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineScope by MainScope() {
+    companion object {
+        var isDarkMode: Boolean = false
+    }
+
+    lateinit var appInfo: AppInfoHelper
+    lateinit var configMap: MutableMap<String, String>
+    lateinit var checkedList : MutableSet<String>
+    lateinit var appInfoFilter: List<AppInfoHelper.MyAppInfo>
+    lateinit var instance: IConfigApps
+    var onRefreshList: (() -> Unit)? = null
 
     override fun onCreate() {
-        val isDarkMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
-        window.insetsController?.setSystemBarsAppearance(
-            APPEARANCE_LIGHT_STATUS_BARS,
-            APPEARANCE_LIGHT_STATUS_BARS
-        )
+        window.statusBarColor = getColor(R.color.colorThemeBackground)
+        isDarkMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 
-        binding = ActivityConfigAppsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        val message = intent.getIntExtra(ConstValue.EXTRA_MESSAGE, 0)
+        instance = when (intent.getIntExtra(ConstValue.EXTRA_MESSAGE, 0)) {
+            ConstValue.CUSTOM_SCOPE -> CustomScope
+            ConstValue.DEFAULT_STYLE -> DefaultStyle
+            ConstValue.BACKGROUND_EXCEPT -> BackgroundExcept
+            ConstValue.BRANDING_IMAGE -> BrandingImage
+            ConstValue.FORCE_SHOW_SPLASH_SCREEN -> ForceShowSplashScreen
+            ConstValue.MIN_DURATION -> MinDuration
+            ConstValue.BACKGROUND_INDIVIDUALLY_CONFIG -> BGColorIndividualConfig
+            else -> { object : IConfigApps {
+                override val titleID: Int get() = R.string.unavailable
+                override val submitSet: Boolean
+                    get() = false
+            } }
+        }
 
         // 已勾选的应用包名 Set
-        val checkedList : MutableSet<String> = modulePrefs.get(
-            when (message) {
-                ConstValue.CUSTOM_SCOPE -> DataConst.CUSTOM_SCOPE_LIST
-                ConstValue.DEFAULT_STYLE -> DataConst.DEFAULT_STYLE_LIST
-                ConstValue.BACKGROUND_EXCEPT -> DataConst.BG_EXCEPT_LIST
-                ConstValue.BRANDING_IMAGE -> DataConst.REMOVE_BRANDING_IMAGE_LIST
-                ConstValue.FORCE_SHOW_SPLASH_SCREEN -> DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST
-                ConstValue.MIN_DURATION -> DataConst.MIN_DURATION_LIST
-                else -> DataConst.UNDEFINED_LIST
-            }).toMutableSet()
+        checkedList = modulePrefs.get(instance.checkedListPrefs).toMutableSet()
         // 应用配置信息
-        configMap = modulePrefs.get(
-            when (message) {
-                ConstValue.MIN_DURATION -> DataConst.MIN_DURATION_CONFIG_MAP
-                ConstValue.BACKGROUND_INDIVIDUALLY_CONFIG -> if (isDarkMode) DataConst.INDIVIDUAL_BG_COLOR_APP_MAP_DARK else DataConst.INDIVIDUAL_BG_COLOR_APP_MAP
-                else -> DataConst.UNDEFINED_LIST
-            }).toMap()
+        configMap = modulePrefs.get(instance.configMapPrefs).toMap()
         // AppInfoHelper 实例
         appInfo = AppInfoHelper(this, checkedList, configMap)
         // 在列表中的条目
-        var appInfoFilter =  listOf<AppInfoHelper.MyAppInfo>()
+        appInfoFilter =  listOf()
 
         fun searchEvent() {
             val content = binding.searchEditText.text.toString()
@@ -113,22 +96,8 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
         binding.titleBackIcon.setOnClickListener { onBackPressed() }
 
         // 标题名称
-        binding.appListTitle.text = when (message) {
-            ConstValue.CUSTOM_SCOPE -> getString(R.string.custom_scope_title)
-            ConstValue.DEFAULT_STYLE -> getString(R.string.default_style_title)
-            ConstValue.BACKGROUND_EXCEPT -> getString(R.string.background_except_title)
-            ConstValue.BRANDING_IMAGE -> getString(R.string.background_image_title)
-            ConstValue.FORCE_SHOW_SPLASH_SCREEN -> getString(R.string.force_show_splash_screen_title)
-            ConstValue.MIN_DURATION -> {
-                binding.subSettingHint.text = getString(R.string.min_duration_sub_setting_hint)
-                getString(R.string.min_duration_title)
-            }
-            ConstValue.BACKGROUND_INDIVIDUALLY_CONFIG -> {
-                binding.subSettingHint.text = getString(R.string.custom_bg_color_sub_setting_hint)
-                getString(R.string.configure_bg_colors_individually)
-            }
-            else -> "Unavailable"
-        }
+        binding.appListTitle.text = getString(instance.titleID)
+        binding.subSettingHint.text = getString(instance.subSettingHint)
 
         // 搜索按钮点击事件
         binding.configTitleFilter.setOnClickListener {
@@ -155,34 +124,7 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
         }
 
         // 总体设置
-        binding.overallSettings.addBlockMIUIView(this@ConfigAppsActivity) {
-            when (message) {
-                ConstValue.MIN_DURATION -> {
-                    TextSummaryArrow(TextSummaryV(textId = R.string.set_default_min_duration) {
-                        MIUIDialog(this@ConfigAppsActivity) {
-                            setTitle(R.string.set_default_min_duration)
-                            setMessage(R.string.set_min_duration_unit)
-                            setEditText(modulePrefs.get(DataConst.MIN_DURATION).toString(), "")
-                            this.javaClass.method {
-                                emptyParam()
-                                returnType = EditText::class.java
-                            }.get(this).invoke<EditText>()?.keyListener = DigitsKeyListener.getInstance("1234567890")
-                            setRButton(R.string.button_okay) {
-                                if (getEditText().isNotBlank())
-                                    modulePrefs.put(DataConst.MIN_DURATION, getEditText().toInt())
-                                else
-                                    modulePrefs.put(DataConst.MIN_DURATION, 0)
-                                sendToHost(DataConst.MIN_DURATION)
-                                dismiss()
-                            }
-                            setLButton(R.string.button_cancel) { dismiss() }
-                        }.show()
-                    })
-                    Line()
-                    TitleText(textId = R.string.min_duration_separate_configuration)
-                }
-            }
-        }
+        binding.overallSettings.addBlockMIUIView(this@ConfigAppsActivity, itemData = instance.blockMIUIView(this@ConfigAppsActivity))
 
         // 列表
         binding.configListView.apply {
@@ -193,7 +135,6 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
 
                 override fun getItemId(position: Int) = position.toLong()
 
-                @SuppressLint("SetTextI18n")
                 override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
                     var cView = convertView
                     val holder: AdapterConfigBinding
@@ -212,78 +153,11 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
                         // 设置包名
                         holder.adpAppPkgName.text = item.packageName
                         // 设置 TextView
-                        when (message) {
-                            ConstValue.MIN_DURATION -> holder.adpAppTextView.text = if (item.config == null) getString(R.string.not_set_min_duration) else "${item.config} ms"
-                            ConstValue.BACKGROUND_INDIVIDUALLY_CONFIG -> holder.adpAppTextView.apply {
-                                if (item.config == null) {
-                                    text = getString(R.string.default_value)
-                                    background = null
-                                } else {
-                                    text = ""
-                                    width = dp2px(this@ConfigAppsActivity, 30f)
-                                    background = GradientDrawable().apply { setColor(
-                                        Color.parseColor(item.config))
-                                        setStroke(2, getColor(R.color.brandColor))
-                                        cornerRadius = dp2px(this@ConfigAppsActivity, 15f).toFloat() }
-                                }
-                            }
-                        }
-
+                        holder.adpAppTextView.apply(instance.adpTextView(this@ConfigAppsActivity, holder, item))
                         // 设置复选框
-                        holder.adpAppCheckBox.apply {
-                            if (message == ConstValue.BACKGROUND_INDIVIDUALLY_CONFIG) { visibility = View.GONE }
-                            else {
-                                setOnCheckedChangeListener { _, isChecked ->
-                                    appInfo.setChecked(item, isChecked)
-                                    if (isChecked) {
-                                        checkedList.add(item.packageName)
-                                    } else {
-                                        checkedList.remove(item.packageName)
-                                    }
-                                }
-                                isChecked = item.packageName in checkedList
-                            }
-                        }
+                        holder.adpAppCheckBox.apply(instance.adpCheckBox(this@ConfigAppsActivity, holder, item))
                         // 设置 LinearLayout 单击事件
-                        holder.adapterLayout.setOnClickListener {
-                            when (message) {
-                                ConstValue.BACKGROUND_INDIVIDUALLY_CONFIG -> {
-                                    startActivityForResult(Intent(this@ConfigAppsActivity, ColorSelectActivity::class.java).apply {
-                                        putExtra(ConstValue.EXTRA_MESSAGE_PACKAGE_NAME, item.packageName)
-                                        putExtra(ConstValue.EXTRA_MESSAGE_APP_INDEX, appInfo.getIndex(item))
-                                        putExtra(ConstValue.EXTRA_MESSAGE_CURRENT_COLOR, item.config)
-                                    }, 1)
-                                }
-
-                                ConstValue.MIN_DURATION -> {
-                                    holder.adpAppCheckBox.isChecked = true
-                                    MIUIDialog(this@ConfigAppsActivity) {
-                                        setTitle(R.string.set_min_duration)
-                                        setMessage(R.string.set_min_duration_unit)
-                                        setEditText(item.config ?: "", "")
-                                        this@MIUIDialog.javaClass.method {
-                                            emptyParam()
-                                            returnType = EditText::class.java
-                                        }.get(this@MIUIDialog).invoke<EditText>()?.keyListener = DigitsKeyListener.getInstance("1234567890")
-                                        setRButton(R.string.button_okay) {
-                                            if (getEditText().isEmpty() || getEditText() == "0") {
-                                                appInfo.setConfig(item, null)
-                                                holder.adpAppTextView.text = getString(R.string.not_set_min_duration)
-                                                configMap.remove(item.packageName)
-                                            } else {
-                                                appInfo.setConfig(item, getEditText())
-                                                holder.adpAppTextView.text = "${getEditText()} ms"
-                                                configMap[item.packageName] = getEditText()
-                                            }
-                                            dismiss()
-                                        }
-                                        setLButton(R.string.button_cancel) { dismiss() }
-                                    }.show()
-                                }
-
-                                else -> { holder.adpAppCheckBox.isChecked = !holder.adpAppCheckBox.isChecked }
-                            }
-                        }
+                        holder.adapterLayout.setOnClickListener(instance.adpLinearLayout(this@ConfigAppsActivity, holder, item))
                     }
                     return cView
                 }
@@ -292,63 +166,16 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
 
         // 保存按钮点击事件
         binding.configSaveButton.setOnClickListener {
-            modulePrefs.put(
-                when (message) {
-                    ConstValue.CUSTOM_SCOPE -> DataConst.CUSTOM_SCOPE_LIST
-                    ConstValue.DEFAULT_STYLE -> DataConst.DEFAULT_STYLE_LIST
-                    ConstValue.BACKGROUND_EXCEPT -> DataConst.BG_EXCEPT_LIST
-                    ConstValue.BRANDING_IMAGE -> DataConst.REMOVE_BRANDING_IMAGE_LIST
-                    ConstValue.FORCE_SHOW_SPLASH_SCREEN -> DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST
-                    ConstValue.MIN_DURATION -> DataConst.MIN_DURATION_LIST
-                    else -> DataConst.UNDEFINED_LIST
-                }.also { sendToHost(it) }, checkedList)
-
-            if (configMap.isNotEmpty())
-                modulePrefs.put(
-                    when (message) {
-                        ConstValue.MIN_DURATION -> DataConst.MIN_DURATION_CONFIG_MAP
-                        ConstValue.BACKGROUND_INDIVIDUALLY_CONFIG -> if (isDarkMode) DataConst.INDIVIDUAL_BG_COLOR_APP_MAP_DARK else DataConst.INDIVIDUAL_BG_COLOR_APP_MAP
-                        else -> DataConst.UNDEFINED_LIST
-                    }.also { sendToHost(it) }, configMap.toSet())
+            if (instance.submitSet)
+                modulePrefs.put(instance.checkedListPrefs.also { sendToHost(it) }, checkedList)
+            if (instance.submitMap)
+                modulePrefs.put(instance.configMapPrefs.also { sendToHost(it) }, configMap.toSet())
             toast(getString(R.string.save_successful))
             finish()
         }
 
         // 菜单栏事件
-        binding.moreOptions.apply{
-            if (message == ConstValue.BACKGROUND_INDIVIDUALLY_CONFIG) { visibility = View.GONE; return@apply }
-            setOnClickListener { it ->
-                PopupMenu(this@ConfigAppsActivity, it).apply {
-                    setOnMenuItemClickListener { item ->
-                        when (item.itemId) {
-                            R.id.select_system_apps -> {
-                                appInfo.getAppInfoList().forEach {
-                                    if (it.isSystemApp) {
-                                        appInfo.setChecked(it, true)
-                                        checkedList.add(it.packageName)
-                                    }
-                                }
-                                appInfoFilter = appInfo.getAppInfoList()
-                                onRefreshList?.invoke()
-                                true
-                            }
-                            R.id.clear_slection -> {
-                                appInfo.getAppInfoList().forEach {
-                                    appInfo.setChecked(it, false)
-                                    checkedList.remove(it.packageName)
-                                }
-                                appInfoFilter = appInfo.getAppInfoList()
-                                onRefreshList?.invoke()
-                                true
-                            }
-                            else -> false
-                        }
-                    }
-                    inflate(R.menu.more_options_menu)
-                    show()
-                }
-            }
-        }
+        binding.moreOptions.apply(instance.moreOptions(this))
     }
 
     override fun onBackPressed() {
@@ -365,28 +192,6 @@ class ConfigAppsActivity : BaseActivity(), CoroutineScope by MainScope() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val color = data?.getStringExtra(ConstValue.EXTRA_MESSAGE_SELECTED_COLOR)
-        val pkgName = data?.getStringExtra(ConstValue.EXTRA_MESSAGE_PACKAGE_NAME)
-        val index = data?.getIntExtra(ConstValue.EXTRA_MESSAGE_APP_INDEX, -1) ?: -1
-        if (requestCode != 1 || color == null || index == -1 || pkgName == null) return
-        try {
-            when (resultCode) {
-                ConstValue.SELECTED_COLOR -> {
-                    appInfo.setConfig(index, color)
-                    onRefreshList?.invoke()
-                    configMap[pkgName] = color
-                }
-                ConstValue.DEFAULT_COLOR -> {
-                    appInfo.setConfig(index, null)
-                    onRefreshList?.invoke()
-                    configMap.remove(pkgName)
-                }
-                ConstValue.UNDO_MODIFY -> {}
-            }
-        } catch (_: RuntimeException) {
-            toastL(getString(R.string.mode_conflict))
-        }
-
-    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) =
+        instance.onActivityResult(this, requestCode, resultCode, data)
 }

@@ -16,11 +16,11 @@ import com.gswxxn.restoresplashscreen.data.RoundDegree
 import com.gswxxn.restoresplashscreen.utils.DataCacheUtils.checkDarkModeChanged
 import com.gswxxn.restoresplashscreen.utils.DataCacheUtils.colorData
 import com.gswxxn.restoresplashscreen.utils.DataCacheUtils.iconData
+import com.gswxxn.restoresplashscreen.utils.GraphicUtils
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
-import com.gswxxn.restoresplashscreen.utils.Utils
-import com.gswxxn.restoresplashscreen.utils.Utils.getField
-import com.gswxxn.restoresplashscreen.utils.Utils.register
-import com.gswxxn.restoresplashscreen.utils.Utils.setField
+import com.gswxxn.restoresplashscreen.utils.YukiHelper.getField
+import com.gswxxn.restoresplashscreen.utils.YukiHelper.register
+import com.gswxxn.restoresplashscreen.utils.YukiHelper.setField
 import com.highcapable.yukihookapi.hook.bean.VariousClass
 import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.type.android.DrawableClass
@@ -59,6 +59,7 @@ object SystemUIHooker: BaseHooker() {
                     paramCount(2)
                 }
                 beforeHook {
+                    appContext
                     if (!pref.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)) {
                         val pkgName = args(0).cast<ActivityInfo>()?.packageName!!
                         val isExcept = isExcept(pkgName)
@@ -226,8 +227,8 @@ object SystemUIHooker: BaseHooker() {
                                 // 从图标取色
                                 1 -> {
                                     printLog("10. createIconDrawable(): get adaptive background color")
-                                    Utils.getBgColor(
-                                        Utils.drawable2Bitmap(args(0).cast<Drawable>()!!, 100)!!,
+                                    GraphicUtils.getBgColor(
+                                        GraphicUtils.drawable2Bitmap(args(0).cast<Drawable>()!!, 100)!!,
                                         when (colorMode) {
                                             1 -> false
                                             2 -> !isDarkMode
@@ -336,8 +337,8 @@ object SystemUIHooker: BaseHooker() {
                          * 绘制图标圆角
                          * 缩小图标
                          */
-                        Utils.roundBitmapByShader(
-                            drawable.let { Utils.drawable2Bitmap(it, iconSize) },
+                        GraphicUtils.roundBitmapByShader(
+                            drawable.let { GraphicUtils.drawable2Bitmap(it, iconSize) },
                             if (isDrawIconRoundCorner) RoundDegree.RoundCorner else RoundDegree.NotDrawRoundCorner,
                             when (shrinkIconType) {
                                 0 -> 0               // 不缩小图标
@@ -404,6 +405,7 @@ object SystemUIHooker: BaseHooker() {
 
         findClass("android.window.SplashScreenView\$Builder").hook {
             injectMember {
+                constructor()
                 method {
                     name = "isStaringWindowUnderNightMode"
                     emptyParam()

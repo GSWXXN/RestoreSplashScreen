@@ -3,8 +3,8 @@ package com.gswxxn.restoresplashscreen.hook
 import android.content.ComponentName
 import android.os.Build
 import com.gswxxn.restoresplashscreen.data.DataConst
-import com.gswxxn.restoresplashscreen.utils.Utils.getField
-import com.gswxxn.restoresplashscreen.utils.Utils.register
+import com.gswxxn.restoresplashscreen.utils.YukiHelper.getField
+import com.gswxxn.restoresplashscreen.utils.YukiHelper.register
 import com.highcapable.yukihookapi.hook.log.loggerE
 
 object AndroidHooker : BaseHooker() {

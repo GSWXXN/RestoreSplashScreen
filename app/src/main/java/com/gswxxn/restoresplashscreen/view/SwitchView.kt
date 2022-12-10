@@ -30,7 +30,7 @@ import cn.fkj233.ui.activity.data.DataBinding
 import cn.fkj233.ui.activity.view.BaseView
 import cn.fkj233.ui.switch.MIUISwitch
 import com.gswxxn.restoresplashscreen.R
-import com.gswxxn.restoresplashscreen.utils.Utils.sendToHost
+import com.gswxxn.restoresplashscreen.utils.YukiHelper.sendToHost
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.factory.modulePrefs
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData

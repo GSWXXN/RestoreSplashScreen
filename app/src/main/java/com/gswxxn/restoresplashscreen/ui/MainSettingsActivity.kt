@@ -3,26 +3,27 @@ package com.gswxxn.restoresplashscreen.ui
 import android.content.Intent
 import android.net.Uri
 import android.view.ViewTreeObserver
+import android.widget.LinearLayout
+import cn.fkj233.ui.activity.dp2px
+import cn.fkj233.ui.activity.view.LineV
 import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.ConstValue
 import com.gswxxn.restoresplashscreen.databinding.ActivityMainSettingsBinding
 import com.gswxxn.restoresplashscreen.utils.BlockMIUIHelper.addBlockMIUIView
-import com.gswxxn.restoresplashscreen.utils.Utils.checkingHostVersion
-import com.gswxxn.restoresplashscreen.utils.Utils.execShell
-import com.gswxxn.restoresplashscreen.utils.Utils.shrinkIcon
-import com.gswxxn.restoresplashscreen.utils.Utils.toast
+import com.gswxxn.restoresplashscreen.utils.CommonUtils.execShell
+import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
+import com.gswxxn.restoresplashscreen.utils.GraphicUtils.shrinkIcon
+import com.gswxxn.restoresplashscreen.utils.YukiHelper.checkingHostVersion
 import com.gswxxn.restoresplashscreen.view.NewMIUIDialog
 import com.highcapable.yukihookapi.YukiHookAPI
 
-class MainSettingsActivity : BaseActivity() {
+class MainSettingsActivity : BaseActivity<ActivityMainSettingsBinding>() {
     private var systemUIRestartNeeded: Boolean = true
     private var androidRestartNeeded: Boolean? = null
     private var isReady = false
-    private lateinit var binding: ActivityMainSettingsBinding
 
     override fun onCreate() {
-        binding = ActivityMainSettingsBinding.inflate(layoutInflater).apply { setContentView(root) }
         binding.root.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
             override fun onPreDraw(): Boolean {
                 if (isReady) binding.root.viewTreeObserver.removeOnPreDrawListener(this)
@@ -62,14 +63,21 @@ class MainSettingsActivity : BaseActivity() {
             startActivity(intent)
         }
 
-        binding.settingsEntry.addBlockMIUIView(this) {
+        binding.settingsEntry.addBlockMIUIView(this, 0) {
+            fun line() = CustomView(LineV().create(this@MainSettingsActivity, null).apply {
+                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp2px(context, 0.9f))
+                    .apply {
+                        setMargins(dp2px(context, 20f), dp2px(context, 23f), 0, dp2px(context, 23f))
+                    }
+            })
+
             Author(shrinkIcon(R.drawable.ic_setting), getString(R.string.basic_settings), null, 0f, {
                 startActivity(Intent(this@MainSettingsActivity, SubSettings::class.java).apply {
                     putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.BASIC_SETTINGS)
                 })
             })
 
-            Line(true)
+            line()
 
             Author(shrinkIcon(R.drawable.ic_app), getString(R.string.custom_scope_settings), null, 0f, {
                 startActivity(Intent(this@MainSettingsActivity, SubSettings::class.java).apply {
@@ -101,7 +109,7 @@ class MainSettingsActivity : BaseActivity() {
                 })
             })
 
-            Line(true)
+            line()
 
             Author(shrinkIcon(R.drawable.ic_help), getString(R.string.faq), null, 0f, {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.faq_url))))

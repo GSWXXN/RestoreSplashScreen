@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.BaseAdapter
+import cn.fkj233.ui.dialog.MIUIDialog
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.ConstValue
 import com.gswxxn.restoresplashscreen.databinding.ActivityConfigAppsBinding
@@ -18,6 +19,7 @@ import com.gswxxn.restoresplashscreen.ui.configapps.*
 import com.gswxxn.restoresplashscreen.ui.`interface`.IConfigApps
 import com.gswxxn.restoresplashscreen.utils.AppInfoHelper
 import com.gswxxn.restoresplashscreen.utils.BlockMIUIHelper.addBlockMIUIView
+import com.gswxxn.restoresplashscreen.utils.CommonUtils.notEqualsTo
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toMap
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toSet
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
@@ -186,7 +188,15 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineS
                 text = null
             }
             showView(true, binding.appListTitle, binding.configDescription, binding.configTitleFilter, binding.overallSettings)
-        }else {
+        } else if ((instance.submitSet && modulePrefs.get(instance.checkedListPrefs) notEqualsTo checkedList) ||
+            (instance.submitMap && modulePrefs.get(instance.configMapPrefs) notEqualsTo configMap.toSet())) {
+            MIUIDialog(this) {
+                setTitle(getString(R.string.not_saved_title))
+                setMessage(getString(R.string.not_saved_hint))
+                setRButton(getString(R.string.button_okay)) { this@ConfigAppsActivity.cancel(); super.onBackPressed() }
+                setLButton(getString(R.string.button_cancel)) { dismiss() }
+            }.show()
+        } else {
             cancel()
             super.onBackPressed()
         }

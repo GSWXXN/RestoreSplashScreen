@@ -62,4 +62,14 @@ object CommonUtils {
         }
         return result
     }
+
+    /**
+     * 比较两个 [Collection] 的内容是否相同
+     */
+    infix fun Collection<*>.notEqualsTo(second: Collection<*>): Boolean = !(this equalTo second)
+    private infix fun Collection<*>.equalTo(second: Collection<*>): Boolean {
+        if (size != second.size) return false
+        forEach { if (it !in second) return false }
+        return true
+    }
 }

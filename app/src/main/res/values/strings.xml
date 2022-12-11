@@ -114,6 +114,9 @@
     <string name="custom_bg_color_sub_setting_hint">· 点击应用名称进入颜色设定界面\n· 如需设置深色模式下的颜色，请在手机系统设置中开启深色模式后进入此界面进行配置\n· 做出配置后请不要在保存前切换深色模式状态，否则未保存的配置将会丢失\n· 配置完成后记得点击下方保存按钮，保存成功后立即生效</string>
     <string name="loading">正在加载……</string>
     <string name="save">保存</string>
+    <string name="not_saved_title">配置未保存</string>
+    <string name="not_saved_hint">更改的设置项还未保存，你确定要舍弃修改吗</string>
+
 
     <string name="set_default_min_duration">默认最小持续时长</string>
     <string name="min_duration_separate_configuration">单独配置应用</string>

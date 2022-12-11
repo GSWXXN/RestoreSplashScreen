@@ -85,5 +85,5 @@ object BackupUtils {
     }
 
     private fun parseStringArray(value: String) =
-        value.substring(1, value.lastIndex).split(", ").toSet()
+        value.substring(1, value.lastIndex).split(", ").toMutableSet().apply { remove("") }
 }

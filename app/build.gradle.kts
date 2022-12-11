@@ -1,4 +1,4 @@
-import java.util.Properties
+import java.util.*
 
 plugins {
     id("com.android.application")
@@ -14,8 +14,8 @@ android {
         applicationId = "com.gswxxn.restoresplashscreen"
         minSdk = 31
         targetSdk = 33
-        versionCode = 251
-        versionName = "2.5.1"
+        versionCode = 2600
+        versionName = "2.6"
     }
 
     val properties = Properties()

@@ -23,6 +23,7 @@ import com.gswxxn.restoresplashscreen.utils.YukiHelper.register
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.setField
 import com.highcapable.yukihookapi.hook.bean.VariousClass
 import com.highcapable.yukihookapi.hook.factory.current
+import com.highcapable.yukihookapi.hook.factory.field
 import com.highcapable.yukihookapi.hook.type.android.DrawableClass
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
 import com.highcapable.yukihookapi.hook.type.java.StringType
@@ -33,7 +34,7 @@ object SystemUIHooker: BaseHooker() {
         pref.get(DataConst.ICON_PACK_PACKAGE_NAME)
     ) }
 
-    private fun isExcept(pkgName : String) : Boolean {
+    private fun isExcept(pkgName: String): Boolean {
         val list = pref.get(DataConst.CUSTOM_SCOPE_LIST)
         val isExceptionMode = pref.get(DataConst.IS_CUSTOM_SCOPE_EXCEPTION_MODE)
         return pref.get(DataConst.ENABLE_CUSTOM_SCOPE)
@@ -203,8 +204,6 @@ object SystemUIHooker: BaseHooker() {
                         }
                     }
                     beforeHook {
-                        if (pref.get(DataConst.REMOVE_BG_COLOR)) return@beforeHook
-
                         val bgColorType = pref.get(DataConst.CHANG_BG_COLOR_TYPE)
                         val ignoreDarkMode = pref.get(DataConst.IGNORE_DARK_MODE)
                         val colorMode = pref.get(DataConst.BG_COLOR_MODE)
@@ -214,9 +213,48 @@ object SystemUIHooker: BaseHooker() {
                             .also { checkDarkModeChanged(it) }
                         val individualBgColorAppMap = pref.getPrefsData(
                             if (!isDarkMode) DataConst.INDIVIDUAL_BG_COLOR_APP_MAP.key
-                            else DataConst.INDIVIDUAL_BG_COLOR_APP_MAP_DARK.key, mapOf<String, String>()) as Map<*, *>
-                        val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
-                        val isInExceptList = pkgName in pref.get(DataConst.BG_EXCEPT_LIST) || isExcept(pkgName)
+                            else DataConst.INDIVIDUAL_BG_COLOR_APP_MAP_DARK.key,
+                            mapOf<String, String>()
+                        ) as Map<*, *>
+                        val pkgName =
+                            instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
+                        val mSplashscreenContentDrawer = instance.getField("this\$0").any()!!
+                        val isInExceptList =
+                            pkgName in pref.get(DataConst.BG_EXCEPT_LIST) || isExcept(pkgName)
+
+                        /**
+                         * 替换系统处理过的图标，防止出现图标有白边，错位等问题
+                         */
+                        if (args(1).boolean()) {
+                            val iconScale = mSplashscreenContentDrawer.getField("mIconSize").int().toFloat() /
+                                    mSplashscreenContentDrawer.getField("mDefaultIconSize").int().toFloat()
+                            val densityDpi = instance.getField("mContext").cast<Context>()!!.resources.configuration.densityDpi
+                            val scaledIconDpi = (0.5f + iconScale * densityDpi * 1.2f).toInt()
+                            if (Build.VERSION.SDK_INT == 31) {
+                                mSplashscreenContentDrawer.getField("mIconProvider").any()!!.current {
+                                    args(0).set(method { name = "getIcon"; paramCount(2) }
+                                        .invoke<Drawable>(instance.getField("mActivityInfo").any(), scaledIconDpi))
+                                    printLog("9. createIconDrawable(): replace the icons processed by the system")
+                                }
+                            } else{
+                                mSplashscreenContentDrawer.getField("mHighResIconProvider").any()!!.current {
+                                    args(0).set(method { name = "getIcon"; paramCount(3) }
+                                        .invoke<Drawable>(instance.getField("mActivityInfo").any(), densityDpi, scaledIconDpi))
+                                    printLog("9. createIconDrawable(): replace the icons processed by the system")
+                                }
+                            }
+                        }
+
+                        /**
+                         * 此处实现功能：
+                         * - 替换背景颜色
+                         * - 单独配置应用背景颜色
+                         *
+                         * 在系统执行 createIconDrawable() 时，会将 Splash Screen 图标传入到此函数的第一个参数，
+                         * 在此处就可以通过 Palette API 自动从图标中选取颜色或手动指定颜色，并将背景颜色设置到 mThemeColor
+                         * 成员变量中，以备后续调用
+                         */
+                        if (pref.get(DataConst.REMOVE_BG_COLOR)) return@beforeHook
 
                         fun getColor() = if (pkgName in individualBgColorAppMap.keys) {
                             printLog("10. createIconDrawable(): set individual background color, ${individualBgColorAppMap[pkgName]}")
@@ -250,7 +288,7 @@ object SystemUIHooker: BaseHooker() {
                                     }
                                 }
                                 else -> null
-                        } else null
+                            } else null
 
                         val color = if (enableDataCache && bgColorType != 2) colorData.getOrPut(pkgName) { getColor() }
                         else getColor()
@@ -259,10 +297,8 @@ object SystemUIHooker: BaseHooker() {
                             printLog("action: createIconDrawable(): ${if (enableDataCache) "(from cache)" else ""}set background color")
                             instance.setField("mThemeColor", it)
                         }
-
                     }
                 }
-
             }
 
         /**
@@ -290,7 +326,9 @@ object SystemUIHooker: BaseHooker() {
                     val isDrawIconRoundCorner = pref.get(DataConst.ENABLE_DRAW_ROUND_CORNER)
                     val pkgName = args(0).cast<ActivityInfo>()?.packageName!!
                     val pkgActivity = args(0).cast<ActivityInfo>()?.targetActivity
-                    val iconSize = args(1).cast<Int>()!!
+                    val iconSize = appResources!!.getDimensionPixelSize(
+                        "com.android.internal.R\$dimen".toClass().field { name = "starting_surface_icon_size" }.get().int()
+                    )
 
                     if (isExcept(pkgName)) return@afterHook
 
@@ -354,42 +392,6 @@ object SystemUIHooker: BaseHooker() {
                     printLog("action: getIcon(): ${if (enableDataCache) "(from cache)" else ""}set drawable icon")
                     result = if (enableDataCache) iconData.getOrPut(pkgName) { getDrawable() }
                     else getDrawable()
-                }
-            }
-        }
-
-        /**
-         * 设置图标不缩小
-         *
-         * 此处在 com.android.wm.shell.startingsurface.SplashscreenContentDrawer
-         *   .$StartingWindowViewBuilder.build() 中被调用
-         *
-         * createScaledBitmapWithoutShadow() 的第二个参数在 Android 源代码中被称为 shrinkNonAdaptiveIcons
-         * 若将此参数设置为 true 时，在 MIUI 中的非自适应图标将会错位显示
-         * 若将此参数设置为 false 时，非自适应图标不会缩小而且显示较模糊，我们可以在后续方法中将图标缩小绘制
-         *
-         */
-        findClass("com.android.launcher3.icons.BaseIconFactory").hook {
-            var shouldHook = false
-
-            injectMember {
-                method {
-                    name = "createScaledBitmapWithoutShadow"
-                }
-                beforeHook { shouldHook = true }
-                afterHook { shouldHook = false }
-            }
-
-            injectMember {
-                method {
-                    name = "normalizeAndWrapToAdaptiveIcon"
-                    paramCount(4)
-                }
-                beforeHook {
-                    if (shouldHook) {
-                        args(1).setFalse()
-                        printLog("9. BaseIconFactory(): set shrinkNonAdaptiveIcons false")
-                    }
                 }
             }
         }

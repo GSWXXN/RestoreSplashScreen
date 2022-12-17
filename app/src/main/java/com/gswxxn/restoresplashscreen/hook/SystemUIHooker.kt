@@ -24,6 +24,7 @@ import com.gswxxn.restoresplashscreen.utils.YukiHelper.setField
 import com.highcapable.yukihookapi.hook.bean.VariousClass
 import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.factory.field
+import com.highcapable.yukihookapi.hook.param.HookParam
 import com.highcapable.yukihookapi.hook.type.android.ActivityInfoClass
 import com.highcapable.yukihookapi.hook.type.android.DrawableClass
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
@@ -411,22 +412,31 @@ object SystemUIHooker: BaseHooker() {
          *   .$StartingWindowViewBuilder.fillViewWithIcon() 中被调用
          */
 
-        findClass("android.window.SplashScreenView\$Builder").hook {
-            injectMember {
-                constructor()
-                method {
-                    name = "isStaringWindowUnderNightMode"
-                    emptyParam()
-                }
-                beforeHook {
-                    if (pref.get(DataConst.IGNORE_DARK_MODE)) {
-                        resultFalse()
-                        printLog(
-                            "11. isStaringWindowUnderNightMode(): ignore dark mode"
-                        )
+        if (pref.get(DataConst.IGNORE_DARK_MODE)) {
+            val ignoreDarkModeHook: HookParam.() -> Unit = {
+                resultFalse()
+                printLog(
+                    "11. isStaringWindowUnderNightMode(): ignore dark mode"
+                )
+            }
+            findClass("android.window.SplashScreenView\$Builder").hook {
+                injectMember {
+                    method {
+                        name = "isStaringWindowUnderNightMode"
+                        emptyParam()
                     }
-                }
-            }.ignoredNoSuchMemberFailure()
+                    beforeHook(ignoreDarkModeHook)
+                }.ignoredNoSuchMemberFailure()
+            }
+            findClass("android.view.ForceDarkHelperStubImpl").hook {
+                injectMember {
+                    method {
+                        name = "updateForceDarkSplashScreen"
+                        paramCount(3)
+                    }
+                    beforeHook(ignoreDarkModeHook)
+                }.ignoredNoSuchMemberFailure()
+            }
         }
 
         // 遮罩最小持续时间

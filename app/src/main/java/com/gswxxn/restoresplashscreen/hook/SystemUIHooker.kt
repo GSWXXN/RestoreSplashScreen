@@ -232,16 +232,16 @@ object SystemUIHooker: BaseHooker() {
                                     mSplashscreenContentDrawer.getField("mDefaultIconSize").int().toFloat()
                             val densityDpi = instance.getField("mContext").cast<Context>()!!.resources.configuration.densityDpi
                             val scaledIconDpi = (0.5f + iconScale * densityDpi * 1.2f).toInt()
-                            if (Build.VERSION.SDK_INT == 31) {
-                                mSplashscreenContentDrawer.getField("mIconProvider").any()!!.current {
-                                    args(0).set(method { name = "getIcon"; paramCount(2) }
-                                        .invoke<Drawable>(instance.getField("mActivityInfo").any(), scaledIconDpi))
+                            if (Build.VERSION.SDK_INT == 33) {
+                                mSplashscreenContentDrawer.getField("mHighResIconProvider").any()!!.current {
+                                    args(0).set(method { name = "getIcon"; param(ActivityInfoClass, IntType, IntType) }
+                                        .invoke<Drawable>(instance.getField("mActivityInfo").any(), densityDpi, scaledIconDpi))
                                     printLog("9. createIconDrawable(): replace the icons processed by the system")
                                 }
                             } else{
-                                mSplashscreenContentDrawer.getField("mHighResIconProvider").any()!!.current {
-                                    args(0).set(method { name = "getIcon"; paramCount(3) }
-                                        .invoke<Drawable>(instance.getField("mActivityInfo").any(), densityDpi, scaledIconDpi))
+                                mSplashscreenContentDrawer.getField("mIconProvider").any()!!.current {
+                                    args(0).set(method { name = "getIcon"; param(ActivityInfoClass, IntType) }
+                                        .invoke<Drawable>(instance.getField("mActivityInfo").any(), scaledIconDpi))
                                     printLog("9. createIconDrawable(): replace the icons processed by the system")
                                 }
                             }

@@ -24,8 +24,10 @@ import com.gswxxn.restoresplashscreen.utils.YukiHelper.setField
 import com.highcapable.yukihookapi.hook.bean.VariousClass
 import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.factory.field
+import com.highcapable.yukihookapi.hook.type.android.ActivityInfoClass
 import com.highcapable.yukihookapi.hook.type.android.DrawableClass
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
+import com.highcapable.yukihookapi.hook.type.java.IntType
 import com.highcapable.yukihookapi.hook.type.java.StringType
 
 object SystemUIHooker: BaseHooker() {
@@ -317,7 +319,11 @@ object SystemUIHooker: BaseHooker() {
             "com.android.launcher3.icons.IconProvider"
         ).hook {
             injectMember {
-                method { name = "getIcon" }
+                method {
+                    name = "getIcon"
+                    if (Build.VERSION.SDK_INT == 33) param(ActivityInfoClass, IntType, IntType)
+                    else param(ActivityInfoClass, IntType)
+                }
                 afterHook {
                     val enableDataCache = pref.get(DataConst.ENABLE_DATA_CACHE)
                     val enableReplaceIcon = pref.get(DataConst.ENABLE_REPLACE_ICON)

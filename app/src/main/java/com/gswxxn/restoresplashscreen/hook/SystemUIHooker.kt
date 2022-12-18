@@ -186,6 +186,35 @@ object SystemUIHooker: BaseHooker() {
                         printLog(
                             "5. build(): ${if (isRemoveBGColor) "" else "Not"} remove BG Color"
                         )
+
+                        // 减少重复调用
+                        if (instance.getField("mSuggestType").int() == 1 &&
+                            mTmpAttrs.getField("mSplashScreenIcon").any() == null) {
+                            instance.current().method { name = "createIconDrawable" }.apply {
+                                if (Build.VERSION.SDK_INT == 33)
+                                    call(
+                                        null,
+                                        true,
+                                        mSplashscreenContentDrawer.getField("mHighResIconProvider").any()!!
+                                            .getField("mLoadInDetail").boolean()
+                                    )
+                                else call(null, true)
+                            }
+                            result = instance.current().method { name = "fillViewWithIcon" }.run {
+                                if (Build.VERSION.SDK_INT == 33)
+                                    call(
+                                        instance.getField("mFinalIconSize").any(),
+                                        instance.getField("mFinalIconDrawables").any(),
+                                        instance.getField("mUiThreadInitTask").any()
+                                    )
+                                else
+                                    call(
+                                        instance.getField("mFinalIconSize").any(),
+                                        instance.getField("mFinalIconDrawables").any(),
+                                        mTmpAttrs.getField("mAnimationDuration").any()
+                                    )
+                            }
+                        }
                     }
                 }
 
@@ -412,32 +441,31 @@ object SystemUIHooker: BaseHooker() {
          *   .$StartingWindowViewBuilder.fillViewWithIcon() 中被调用
          */
 
-        if (pref.get(DataConst.IGNORE_DARK_MODE)) {
-            val ignoreDarkModeHook: HookParam.() -> Unit = {
+        val ignoreDarkModeHook: HookParam.() -> Unit = {
+            if (pref.get(DataConst.IGNORE_DARK_MODE)) {
                 resultFalse()
-                printLog(
-                    "11. isStaringWindowUnderNightMode(): ignore dark mode"
-                )
-            }
-            findClass("android.window.SplashScreenView\$Builder").hook {
-                injectMember {
-                    method {
-                        name = "isStaringWindowUnderNightMode"
-                        emptyParam()
-                    }
-                    beforeHook(ignoreDarkModeHook)
-                }.ignoredNoSuchMemberFailure()
-            }
-            findClass("android.view.ForceDarkHelperStubImpl").hook {
-                injectMember {
-                    method {
-                        name = "updateForceDarkSplashScreen"
-                        paramCount(3)
-                    }
-                    beforeHook(ignoreDarkModeHook)
-                }.ignoredNoSuchMemberFailure()
+                printLog("11. isStaringWindowUnderNightMode(): ignore dark mode")
             }
         }
+        findClass("android.window.SplashScreenView\$Builder").hook {
+            injectMember {
+                method {
+                    name = "isStaringWindowUnderNightMode"
+                    emptyParam()
+                }
+                beforeHook(ignoreDarkModeHook)
+            }.ignoredNoSuchMemberFailure()
+        }
+        findClass("android.view.ForceDarkHelperStubImpl").hook {
+            injectMember {
+                method {
+                    name = "updateForceDarkSplashScreen"
+                    paramCount(3)
+                }
+                beforeHook(ignoreDarkModeHook)
+            }.ignoredNoSuchMemberFailure()
+        }
+
 
         // 遮罩最小持续时间
         findClass("com.android.wm.shell.startingsurface.StartingWindowController").hook {

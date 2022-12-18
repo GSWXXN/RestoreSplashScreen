@@ -14,8 +14,8 @@ android {
         applicationId = "com.gswxxn.restoresplashscreen"
         minSdk = 31
         targetSdk = 33
-        versionCode = 2600
-        versionName = "2.6"
+        versionCode = 2610
+        versionName = "2.6.1"
     }
 
     val properties = Properties()

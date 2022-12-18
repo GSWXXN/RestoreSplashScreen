@@ -15,8 +15,8 @@ import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.ConstValue
 import com.gswxxn.restoresplashscreen.databinding.ActivityConfigAppsBinding
 import com.gswxxn.restoresplashscreen.databinding.AdapterConfigBinding
-import com.gswxxn.restoresplashscreen.ui.configapps.*
 import com.gswxxn.restoresplashscreen.ui.`interface`.IConfigApps
+import com.gswxxn.restoresplashscreen.ui.configapps.*
 import com.gswxxn.restoresplashscreen.utils.AppInfoHelper
 import com.gswxxn.restoresplashscreen.utils.BlockMIUIHelper.addBlockMIUIView
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.notEqualsTo
@@ -169,9 +169,10 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineS
         // 保存按钮点击事件
         binding.configSaveButton.setOnClickListener {
             if (instance.submitSet)
-                modulePrefs.put(instance.checkedListPrefs.also { sendToHost(it) }, checkedList)
+                modulePrefs.put(instance.checkedListPrefs, checkedList)
             if (instance.submitMap)
-                modulePrefs.put(instance.configMapPrefs.also { sendToHost(it) }, configMap.toSet())
+                modulePrefs.put(instance.configMapPrefs, configMap.toSet())
+            sendToHost()
             toast(getString(R.string.save_successful))
             finish()
         }

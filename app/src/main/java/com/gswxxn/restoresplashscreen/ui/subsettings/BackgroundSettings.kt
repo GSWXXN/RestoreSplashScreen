@@ -41,7 +41,7 @@ object BackgroundSettings : ISubSettings {
             for (item in changeColorTypeItems) {
                 add(item.value) {
                     context.modulePrefs.put(DataConst.CHANG_BG_COLOR_TYPE, item.key)
-                    context.sendToHost(DataConst.CHANG_BG_COLOR_TYPE)
+                    context.sendToHost()
                 }
             }
         })
@@ -65,7 +65,7 @@ object BackgroundSettings : ISubSettings {
             for (item in colorModeItems) {
                 add(item.value) {
                     context.modulePrefs.put(DataConst.BG_COLOR_MODE, item.key)
-                    context.sendToHost(DataConst.BG_COLOR_MODE)
+                    context.sendToHost()
                 }
             }
         }, dataBindingRecv = changeBGColorTypeBinding.getRecv(1))

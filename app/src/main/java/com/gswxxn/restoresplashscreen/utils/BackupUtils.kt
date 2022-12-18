@@ -46,22 +46,21 @@ object BackupUtils {
                         val key = keys()
                         while (key.hasNext()) {
                             val keys = key.next()
-                            @Suppress("IMPLICIT_CAST_TO_ANY")
                             when (val value = get(keys)) {
                                 is String -> {
                                     if (value.firstOrNull() == '[' && value.lastOrNull() == ']')
-                                        parseStringArray(value).also { activity.modulePrefs.putStringSet(keys, it) }
-                                    else value.also { activity.modulePrefs.putString(keys, it) }
+                                        activity.modulePrefs.putStringSet(keys, parseStringArray(value))
+                                    else activity.modulePrefs.putString(keys, value)
                                 }
-                                is Boolean -> value.also { activity.modulePrefs.putBoolean(keys, it) }
-                                is Int -> value.also { activity.modulePrefs.putInt(keys, it) }
-                                else -> null
-                            }?.let { activity.sendToHost(keys, it) }
+                                is Boolean -> activity.modulePrefs.putBoolean(keys, value)
+                                is Int -> activity.modulePrefs.putInt(keys, value)
+                            }
                         }
                     }
                     close()
                 }
             }
+            activity.sendToHost()
             activity.finish()
             activity.toast(activity.getString(R.string.restore_successful))
         } catch (e: Throwable) { activity.toast(activity.getString(R.string.restore_failed)) }

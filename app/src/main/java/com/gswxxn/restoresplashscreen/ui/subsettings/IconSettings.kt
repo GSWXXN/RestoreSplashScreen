@@ -46,7 +46,7 @@ object IconSettings : ISubSettings {
             for (item in shrinkIconItems) {
                 add(item.value) {
                     context.modulePrefs.put(DataConst.SHRINK_ICON, item.key)
-                    context.sendToHost(DataConst.SHRINK_ICON)
+                    context.sendToHost()
                 }
             }
         })
@@ -65,7 +65,7 @@ object IconSettings : ISubSettings {
             for (item in availableIconPacks) {
                 add(item.value) {
                     context.modulePrefs.put(DataConst.ICON_PACK_PACKAGE_NAME, item.key)
-                    context.sendToHost(DataConst.ICON_PACK_PACKAGE_NAME)
+                    context.sendToHost()
                 }
             }
         })

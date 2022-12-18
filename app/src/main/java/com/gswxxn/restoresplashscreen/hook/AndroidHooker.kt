@@ -4,10 +4,12 @@ import android.content.ComponentName
 import android.os.Build
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.getField
+import com.gswxxn.restoresplashscreen.utils.YukiHelper.printLog
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.register
+import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.loggerE
 
-object AndroidHooker : BaseHooker() {
+object AndroidHooker : YukiBaseHooker() {
     override fun onHook() {
 
         register()
@@ -27,7 +29,7 @@ object AndroidHooker : BaseHooker() {
                 }
                 beforeHook {
                     val pkgName = args(1).string()
-                    val isForceShowSS = pref.get(DataConst.FORCE_SHOW_SPLASH_SCREEN) && pkgName in pref.get(DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST)
+                    val isForceShowSS = prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN) && pkgName in prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST)
 
                     if (isForceShowSS) resultTrue()
                     printLog("[Android] validateStartingWindowTheme():${if (isForceShowSS) "" else "Not"} force show $pkgName splash screen")
@@ -44,15 +46,15 @@ object AndroidHooker : BaseHooker() {
                     })
                 }
                 beforeHook {
-                    val isDisableSS = pref.get(DataConst.DISABLE_SPLASH_SCREEN)
+                    val isDisableSS = prefs.get(DataConst.DISABLE_SPLASH_SCREEN)
                     if (isDisableSS) resultFalse()
                     printLog("[Android] addStartingWindow():${if (isDisableSS) "" else "Not"} disable ${args(0).string()} splash screen")
 
                     // 关闭支付宝小程序遮罩
-                    if (pref.get(DataConst.FORCE_SHOW_SPLASH_SCREEN) &&
-                        "com.eg.android.AlipayGphone" in pref.get(DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST) &&
+                    if (prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN) &&
+                        "com.eg.android.AlipayGphone" in prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST) &&
 
-                        instance.getField("mActivityComponent").cast<ComponentName>()!!.let {
+                        instance.getField<ComponentName>("mActivityComponent")!!.let {
                             "com.eg.android.AlipayGphone" == it.packageName && "nebula" in it.flattenToShortString()
                         }) {
                         printLog("[Android] addStartingWindow(): disable splash screen of Alipay Nebula")
@@ -71,7 +73,7 @@ object AndroidHooker : BaseHooker() {
                     })
                 }
                 beforeHook {
-                    val isHotStartCompatible = pref.get(DataConst.ENABLE_HOT_START_COMPATIBLE) && args(1).boolean()
+                    val isHotStartCompatible = prefs.get(DataConst.ENABLE_HOT_START_COMPATIBLE) && args(1).boolean()
                     if (isHotStartCompatible) result = 2
                     printLog("[Android] getStartingWindowType():${if (isHotStartCompatible) "" else "Not"} set result to 2")
                 }

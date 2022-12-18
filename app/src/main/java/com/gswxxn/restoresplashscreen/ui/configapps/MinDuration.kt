@@ -50,7 +50,7 @@ object MinDuration : IConfigApps {
                         context.modulePrefs.put(DataConst.MIN_DURATION, getEditText().toInt())
                     else
                         context.modulePrefs.put(DataConst.MIN_DURATION, 0)
-                    context.sendToHost(DataConst.MIN_DURATION)
+                    context.sendToHost()
                     dismiss()
                 }
                 setLButton(R.string.button_cancel) { dismiss() }

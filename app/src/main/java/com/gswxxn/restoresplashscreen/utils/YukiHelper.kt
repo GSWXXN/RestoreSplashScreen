@@ -1,15 +1,22 @@
 package com.gswxxn.restoresplashscreen.utils
 
 import android.content.Context
+import com.gswxxn.restoresplashscreen.data.DataConst
+import com.gswxxn.restoresplashscreen.utils.CommonUtils.toMap
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.core.finder.members.FieldFinder.Result.Instance
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
+import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.factory.dataChannel
-import com.highcapable.yukihookapi.hook.factory.field
-import com.highcapable.yukihookapi.hook.factory.modulePrefs
+import com.highcapable.yukihookapi.hook.log.loggerI
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 
 object YukiHelper {
+    /** 缓存的 [Map]<[String], [String]> 键值数据 */
+    private var stringMapData = HashMap<String, Map<String, String>>()
+    fun YukiBaseHooker.getMapPrefs(p: PrefsData<MutableSet<String>>) =
+        stringMapData.getOrPut(p.key) { prefs.get(p).toMap() }
+
     /**
      * 根据名称获取实例 的 Field 实例处理类
      *
@@ -17,7 +24,9 @@ object YukiHelper {
      * @param fieldName Field 名称
      * @return [Instance]
      */
-    fun Any.getField(fieldName : String) = this.javaClass.field { name = fieldName }.get(this)
+    @JvmName("getFieldAny")
+    fun Any.getField(fieldName : String) = current().field { name = fieldName }.any()
+    fun <T> Any.getField(fieldName : String) = current().field { name = fieldName }.cast<T>()
 
     /**
      * 根据名称设置实例 的 Field 实例内容
@@ -26,8 +35,7 @@ object YukiHelper {
      * @param fieldName Field 名称
      * @param value 设置的实例内容
      */
-    fun Any.setField(fieldName : String, value : Any?) =
-        this.javaClass.field { name = fieldName }.get(this).set(value)
+    fun Any.setField(fieldName : String, value : Any?) = current().field { name = fieldName }.set(value)
 
     /**
      * 通过 DataChannel 发送消息，检查宿主与模块版本是否一致
@@ -41,33 +49,10 @@ object YukiHelper {
 
     /**
      * 给宿主发送通讯，通知配置变化
-     * @param prefsData 键值对存储实例
      */
-    inline fun <reified T> Context.sendToHost(prefsData: PrefsData<T>) =
-        sendToHost(prefsData.key, modulePrefs.get(prefsData))
-    fun <T> Context.sendToHost(key: String, value: T) {
-        val host = if (key in setOf(
-                "force_show_splash_screen_list",
-                "force_show_splash_screen",
-                "disable_splash_screen",
-                "enable_hot_start_compatible")
-        )
-            "android"
-        else "com.android.systemui"
-        val sendKey = "${host.replace('.', '_')}_config_change"
-        val sendValue = "${key}-${
-            when (value) {
-                is Int -> "int"
-                is String -> "string"
-                is Boolean -> "boolean"
-                is Set<*> -> "set"
-                else -> "not_support"
-            }
-        }-${if (value !is Set<*>) value else null}"
-        dataChannel(host).put(sendKey, sendValue)
-        if (key == "enable_log")
-            dataChannel("android").put("${"android".replace('.', '_')}_config_change", sendValue)
-    }
+    fun Context.sendToHost() =
+        setOf("android", "com.android.systemui")
+            .forEach { dataChannel(it).put("${it.replace('.', '_')}_config_change") }
 
     /**
      * 宿主注册接收 DataChannel 通知
@@ -78,25 +63,15 @@ object YukiHelper {
         }
 
         dataChannel.wait<String>(key = "${packageName.replace('.', '_')}_config_change") {
-            when (it.split("-")[1]) {
-                "boolean" -> {
-                    PrefsUtils.XSharedPreferencesCaches.booleanData[it.split("-")[0]] =
-                        it.split("-")[2].toBoolean()
-                }
-                "int" -> {
-                    PrefsUtils.XSharedPreferencesCaches.intData[it.split("-")[0]] =
-                        it.split("-")[2].toInt()
-                }
-                "string" -> {
-                    PrefsUtils.XSharedPreferencesCaches.stringData[it.split("-")[0]] =
-                        it.split("-")[2]
-                }
-                "set" -> {
-                    PrefsUtils.XSharedPreferencesCaches.stringSetData.remove(it.split("-")[0])
-                    PrefsUtils.XSharedPreferencesCaches.stringMapData.remove(it.split("-")[0])
-                }
-            }
-            DataCacheUtils.clear()
+            prefs.clearCache()
+            stringMapData.clear()
         }
+    }
+
+    /**
+     * 打印日志
+     */
+    fun YukiBaseHooker.printLog(vararg msg: String) {
+        if (prefs.get(DataConst.ENABLE_LOG)) msg.forEach { loggerI(msg = it) }
     }
 }

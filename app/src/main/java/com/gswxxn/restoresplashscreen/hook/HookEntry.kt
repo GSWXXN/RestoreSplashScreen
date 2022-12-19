@@ -11,7 +11,6 @@ class HookEntry : IYukiHookXposedInit {
     override fun onInit() = configs {
         debugLog { tag = "RestoreSplashScreen" }
         isDebug = BuildConfig.DEBUG
-        isEnableModulePrefsCache = false
     }
 
     override fun onHook() = encase {

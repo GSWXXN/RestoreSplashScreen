@@ -7,21 +7,25 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.os.Build
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.ui.graphics.toArgb
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.RoundDegree
+import com.gswxxn.restoresplashscreen.utils.CommonUtils.isAndroidS
+import com.gswxxn.restoresplashscreen.utils.CommonUtils.isAtLeastT
 import com.gswxxn.restoresplashscreen.utils.DataCacheUtils.checkDarkModeChanged
 import com.gswxxn.restoresplashscreen.utils.DataCacheUtils.colorData
 import com.gswxxn.restoresplashscreen.utils.DataCacheUtils.iconData
 import com.gswxxn.restoresplashscreen.utils.GraphicUtils
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.getField
+import com.gswxxn.restoresplashscreen.utils.YukiHelper.getMapPrefs
+import com.gswxxn.restoresplashscreen.utils.YukiHelper.printLog
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.register
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.setField
 import com.highcapable.yukihookapi.hook.bean.VariousClass
+import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.factory.field
 import com.highcapable.yukihookapi.hook.param.HookParam
@@ -31,16 +35,16 @@ import com.highcapable.yukihookapi.hook.type.java.BooleanType
 import com.highcapable.yukihookapi.hook.type.java.IntType
 import com.highcapable.yukihookapi.hook.type.java.StringType
 
-object SystemUIHooker: BaseHooker() {
+object SystemUIHooker: YukiBaseHooker() {
     private val iconPackManager by lazy { IconPackManager(
         appContext!!,
-        pref.get(DataConst.ICON_PACK_PACKAGE_NAME)
+        prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)
     ) }
 
     private fun isExcept(pkgName: String): Boolean {
-        val list = pref.get(DataConst.CUSTOM_SCOPE_LIST)
-        val isExceptionMode = pref.get(DataConst.IS_CUSTOM_SCOPE_EXCEPTION_MODE)
-        return pref.get(DataConst.ENABLE_CUSTOM_SCOPE)
+        val list = prefs.get(DataConst.CUSTOM_SCOPE_LIST)
+        val isExceptionMode = prefs.get(DataConst.IS_CUSTOM_SCOPE_EXCEPTION_MODE)
+        return prefs.get(DataConst.ENABLE_CUSTOM_SCOPE)
                 && ((isExceptionMode && (pkgName in list)) || (!isExceptionMode && pkgName !in list))
     }
 
@@ -64,11 +68,11 @@ object SystemUIHooker: BaseHooker() {
                 }
                 beforeHook {
                     appContext
-                    if (!pref.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)) {
+                    if (!prefs.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)) {
                         val pkgName = args(0).cast<ActivityInfo>()?.packageName!!
                         val isExcept = isExcept(pkgName)
                         if (!isExcept)
-                            instance.getField("mTmpAttrs").any()!!.setField("mIconBgColor", 1)
+                            instance.getField("mTmpAttrs")!!.setField("mIconBgColor", 1)
                         printLog(
                             "****** ${pkgName}:",
                             "1. getBGColorFromCache(): ${
@@ -102,19 +106,19 @@ object SystemUIHooker: BaseHooker() {
                         emptyParam()
                     }
                     beforeHook {
-                        val pkgName = instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
-                        val isDefaultStyle = pref.get(DataConst.ENABLE_DEFAULT_STYLE)
-                                && pkgName in pref.get(DataConst.DEFAULT_STYLE_LIST)
-                        val isRemoveBrandingImage = pref.get(DataConst.REMOVE_BRANDING_IMAGE)
-                                && pkgName in pref.get(DataConst.REMOVE_BRANDING_IMAGE_LIST)
-                        val isRemoveBGColor = pref.get(DataConst.REMOVE_BG_COLOR)
-                        val isReplaceToEmptySplashScreen = pref.get(DataConst.REPLACE_TO_EMPTY_SPLASH_SCREEN)
+                        val pkgName = instance.getField<ActivityInfo>("mActivityInfo")!!.packageName!!
+                        val isDefaultStyle = prefs.get(DataConst.ENABLE_DEFAULT_STYLE)
+                                && pkgName in prefs.get(DataConst.DEFAULT_STYLE_LIST)
+                        val isRemoveBrandingImage = prefs.get(DataConst.REMOVE_BRANDING_IMAGE)
+                                && pkgName in prefs.get(DataConst.REMOVE_BRANDING_IMAGE_LIST)
+                        val isRemoveBGColor = prefs.get(DataConst.REMOVE_BG_COLOR)
+                        val isReplaceToEmptySplashScreen = prefs.get(DataConst.REPLACE_TO_EMPTY_SPLASH_SCREEN)
                         val isExcept = isExcept(pkgName)
-                        val forceEnableSplashScreen = pref.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)
-                        val context = instance.getField("mContext").cast<Context>()!!
-                        val mSplashscreenContentDrawer = instance.getField("this\$0").any()!!
+                        val forceEnableSplashScreen = prefs.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)
+                        val context = instance.getField<Context>("mContext")!!
+                        val mSplashscreenContentDrawer = instance.getField("this\$0")!!
                         val mTmpAttrs = mSplashscreenContentDrawer
-                            .getField("mTmpAttrs").any()!!
+                            .getField("mTmpAttrs")!!
 
                         /**
                          * 强制开启启动遮罩
@@ -135,7 +139,7 @@ object SystemUIHooker: BaseHooker() {
                         }
 
                         // 打印日志
-                        printLog("info: build(): mSuggestType is ${instance.getField("mSuggestType").int()}")
+                        printLog("info: build(): mSuggestType is ${instance.getField("mSuggestType")}")
 
                         // 重置因实现自定义作用域而影响到的 mTmpAttrs
                         mSplashscreenContentDrawer.current {
@@ -147,9 +151,9 @@ object SystemUIHooker: BaseHooker() {
                         printLog("2. build(): call getWindowAttrs() to reset mTmpAttrs")
 
                         // 将作用域外的应用替换为空白启动遮罩
-                        if (isReplaceToEmptySplashScreen && isExcept && mTmpAttrs.getField("mSplashScreenIcon").any() == null) {
+                        if (isReplaceToEmptySplashScreen && isExcept && mTmpAttrs.getField("mSplashScreenIcon") == null) {
                             instance.setField("mSuggestType", 3)
-                            instance.setField("mOverlayDrawable", context.getDrawable(mTmpAttrs.getField("mWindowBgResId").int()))
+                            instance.setField("mOverlayDrawable", context.getDrawable(mTmpAttrs.getField<Int>("mWindowBgResId")!!))
                         }
                         printLog("2.1. build(): ${if (isReplaceToEmptySplashScreen && isExcept) "set mSuggestType to 3;" else "Not"} replace to empty splash screen")
 
@@ -188,30 +192,30 @@ object SystemUIHooker: BaseHooker() {
                         )
 
                         // 减少重复调用
-                        if (instance.getField("mSuggestType").int() == 1 &&
-                            mTmpAttrs.getField("mSplashScreenIcon").any() == null) {
+                        if (instance.getField("mSuggestType") == 1 &&
+                            mTmpAttrs.getField("mSplashScreenIcon") == null) {
                             instance.current().method { name = "createIconDrawable" }.apply {
-                                if (Build.VERSION.SDK_INT == 33)
+                                if (isAtLeastT)
                                     call(
                                         null,
                                         true,
-                                        mSplashscreenContentDrawer.getField("mHighResIconProvider").any()!!
-                                            .getField("mLoadInDetail").boolean()
+                                        mSplashscreenContentDrawer.getField("mHighResIconProvider")!!
+                                            .getField("mLoadInDetail")
                                     )
                                 else call(null, true)
                             }
                             result = instance.current().method { name = "fillViewWithIcon" }.run {
-                                if (Build.VERSION.SDK_INT == 33)
+                                if (isAtLeastT)
                                     call(
-                                        instance.getField("mFinalIconSize").any(),
-                                        instance.getField("mFinalIconDrawables").any(),
-                                        instance.getField("mUiThreadInitTask").any()
+                                        instance.getField("mFinalIconSize"),
+                                        instance.getField("mFinalIconDrawables"),
+                                        instance.getField("mUiThreadInitTask")
                                     )
                                 else
                                     call(
-                                        instance.getField("mFinalIconSize").any(),
-                                        instance.getField("mFinalIconDrawables").any(),
-                                        mTmpAttrs.getField("mAnimationDuration").any()
+                                        instance.getField("mFinalIconSize"),
+                                        instance.getField("mFinalIconDrawables"),
+                                        mTmpAttrs.getField("mAnimationDuration")
                                     )
                             }
                         }
@@ -230,48 +234,44 @@ object SystemUIHooker: BaseHooker() {
                 injectMember {
                     method {
                         name = "createIconDrawable"
-                        when (Build.VERSION.SDK_INT) {
-                            33 -> param(DrawableClass, BooleanType, BooleanType)
-                            else -> param(DrawableClass, BooleanType)
-                        }
+                        if (isAtLeastT) param(DrawableClass, BooleanType, BooleanType)
+                        else param(DrawableClass, BooleanType)
                     }
                     beforeHook {
-                        val bgColorType = pref.get(DataConst.CHANG_BG_COLOR_TYPE)
-                        val ignoreDarkMode = pref.get(DataConst.IGNORE_DARK_MODE)
-                        val colorMode = pref.get(DataConst.BG_COLOR_MODE)
-                        val enableDataCache = pref.get(DataConst.ENABLE_DATA_CACHE)
+                        val bgColorType = prefs.get(DataConst.CHANG_BG_COLOR_TYPE)
+                        val ignoreDarkMode = prefs.get(DataConst.IGNORE_DARK_MODE)
+                        val colorMode = prefs.get(DataConst.BG_COLOR_MODE)
+                        val enableDataCache = prefs.get(DataConst.ENABLE_DATA_CACHE)
                         val isDarkMode = (appContext!!.resources
                             .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES)
                             .also { checkDarkModeChanged(it) }
-                        val individualBgColorAppMap = pref.getPrefsData(
-                            if (!isDarkMode) DataConst.INDIVIDUAL_BG_COLOR_APP_MAP.key
-                            else DataConst.INDIVIDUAL_BG_COLOR_APP_MAP_DARK.key,
-                            mapOf<String, String>()
-                        ) as Map<*, *>
+                        val individualBgColorAppMap = getMapPrefs(
+                            if (!isDarkMode) DataConst.INDIVIDUAL_BG_COLOR_APP_MAP
+                            else DataConst.INDIVIDUAL_BG_COLOR_APP_MAP_DARK)
                         val pkgName =
-                            instance.getField("mActivityInfo").cast<ActivityInfo>()?.packageName!!
-                        val mSplashscreenContentDrawer = instance.getField("this\$0").any()!!
+                            instance.getField<ActivityInfo>("mActivityInfo")!!.packageName
+                        val mSplashscreenContentDrawer = instance.getField("this\$0")!!
                         val isInExceptList =
-                            pkgName in pref.get(DataConst.BG_EXCEPT_LIST) || isExcept(pkgName)
+                            pkgName in prefs.get(DataConst.BG_EXCEPT_LIST) || isExcept(pkgName)
 
                         /**
                          * 替换系统处理过的图标，防止出现图标有白边，错位等问题
                          */
                         if (args(1).boolean()) {
-                            val iconScale = mSplashscreenContentDrawer.getField("mIconSize").int().toFloat() /
-                                    mSplashscreenContentDrawer.getField("mDefaultIconSize").int().toFloat()
-                            val densityDpi = instance.getField("mContext").cast<Context>()!!.resources.configuration.densityDpi
+                            val iconScale = mSplashscreenContentDrawer.getField<Int>("mIconSize")!!.toFloat() /
+                                    mSplashscreenContentDrawer.getField<Int>("mDefaultIconSize")!!.toFloat()
+                            val densityDpi = instance.getField<Context>("mContext")!!.resources.configuration.densityDpi
                             val scaledIconDpi = (0.5f + iconScale * densityDpi * 1.2f).toInt()
-                            if (Build.VERSION.SDK_INT == 33) {
-                                mSplashscreenContentDrawer.getField("mHighResIconProvider").any()!!.current {
+                            if (isAtLeastT) {
+                                mSplashscreenContentDrawer.getField("mHighResIconProvider")!!.current {
                                     args(0).set(method { name = "getIcon"; param(ActivityInfoClass, IntType, IntType) }
-                                        .invoke<Drawable>(instance.getField("mActivityInfo").any(), densityDpi, scaledIconDpi))
+                                        .invoke<Drawable>(instance.getField("mActivityInfo"), densityDpi, scaledIconDpi))
                                     printLog("9. createIconDrawable(): replace the icons processed by the system")
                                 }
                             } else{
-                                mSplashscreenContentDrawer.getField("mIconProvider").any()!!.current {
+                                mSplashscreenContentDrawer.getField("mIconProvider")!!.current {
                                     args(0).set(method { name = "getIcon"; param(ActivityInfoClass, IntType) }
-                                        .invoke<Drawable>(instance.getField("mActivityInfo").any(), scaledIconDpi))
+                                        .invoke<Drawable>(instance.getField("mActivityInfo"), scaledIconDpi))
                                     printLog("9. createIconDrawable(): replace the icons processed by the system")
                                 }
                             }
@@ -286,7 +286,7 @@ object SystemUIHooker: BaseHooker() {
                          * 在此处就可以通过 Palette API 自动从图标中选取颜色或手动指定颜色，并将背景颜色设置到 mThemeColor
                          * 成员变量中，以备后续调用
                          */
-                        if (pref.get(DataConst.REMOVE_BG_COLOR)) return@beforeHook
+                        if (prefs.get(DataConst.REMOVE_BG_COLOR)) return@beforeHook
 
                         fun getColor() = if (pkgName in individualBgColorAppMap.keys) {
                             printLog("10. createIconDrawable(): set individual background color, ${individualBgColorAppMap[pkgName]}")
@@ -351,15 +351,15 @@ object SystemUIHooker: BaseHooker() {
             injectMember {
                 method {
                     name = "getIcon"
-                    if (Build.VERSION.SDK_INT == 33) param(ActivityInfoClass, IntType, IntType)
+                    if (isAtLeastT) param(ActivityInfoClass, IntType, IntType)
                     else param(ActivityInfoClass, IntType)
                 }
                 afterHook {
-                    val enableDataCache = pref.get(DataConst.ENABLE_DATA_CACHE)
-                    val enableReplaceIcon = pref.get(DataConst.ENABLE_REPLACE_ICON)
-                    val shrinkIconType = pref.get(DataConst.SHRINK_ICON)
-                    val iconPackPackageName = pref.get(DataConst.ICON_PACK_PACKAGE_NAME)
-                    val isDrawIconRoundCorner = pref.get(DataConst.ENABLE_DRAW_ROUND_CORNER)
+                    val enableDataCache = prefs.get(DataConst.ENABLE_DATA_CACHE)
+                    val enableReplaceIcon = prefs.get(DataConst.ENABLE_REPLACE_ICON)
+                    val shrinkIconType = prefs.get(DataConst.SHRINK_ICON)
+                    val iconPackPackageName = prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)
+                    val isDrawIconRoundCorner = prefs.get(DataConst.ENABLE_DRAW_ROUND_CORNER)
                     val pkgName = args(0).cast<ActivityInfo>()?.packageName!!
                     val pkgActivity = args(0).cast<ActivityInfo>()?.targetActivity
                     val iconSize = appResources!!.getDimensionPixelSize(
@@ -442,7 +442,7 @@ object SystemUIHooker: BaseHooker() {
          */
 
         val ignoreDarkModeHook: HookParam.() -> Unit = {
-            if (pref.get(DataConst.IGNORE_DARK_MODE)) {
+            if (prefs.get(DataConst.IGNORE_DARK_MODE)) {
                 resultFalse()
                 printLog("11. isStaringWindowUnderNightMode(): ignore dark mode")
             }
@@ -472,15 +472,12 @@ object SystemUIHooker: BaseHooker() {
             injectMember {
                 method { name = "removeStartingWindow" }
                 beforeHook {
-                    val packageName = if (Build.VERSION.SDK_INT == 31) {
-                        args(1).any()
-                            ?.getField("mName")?.string()
-                            ?: ""
+                    val packageName = if (isAndroidS) {
+                        args(1).any()?.getField<String>("mName") ?: ""
                     } else {
                         args(0).any()
-                            ?.getField("windowAnimationLeash")?.any()
-                            ?.getField("mName")?.string()
-                            ?: ""
+                            ?.getField("windowAnimationLeash")
+                            ?.getField<String>("mName") ?: ""
                     }.run {
                         printLog("12.1. removeStartingWindow(): mName ->$this")
                         runCatching {
@@ -490,11 +487,8 @@ object SystemUIHooker: BaseHooker() {
                             .getOrDefault("")
                     }.also { printLog("12.2. removeStartingWindow(): pkgName -> $it") }
 
-                    if (packageName in pref.get(DataConst.MIN_DURATION_LIST)) {
-                        val configMap = pref.getPrefsData(
-                            DataConst.MIN_DURATION_CONFIG_MAP.key,
-                            mapOf<String, String>()
-                        ) as Map<*, *>
+                    if (packageName in prefs.get(DataConst.MIN_DURATION_LIST)) {
+                        val configMap = getMapPrefs(DataConst.MIN_DURATION_CONFIG_MAP)
                         try {
                             configMap[packageName].toString().toLong().let {
                                 if (it != 0L) {
@@ -506,7 +500,7 @@ object SystemUIHooker: BaseHooker() {
                             printLog("12.3. removeStartingWindow(): $packageName: a NumberFormatException is threw")
                         }
                     } else
-                        pref.get(DataConst.MIN_DURATION).let {
+                        prefs.get(DataConst.MIN_DURATION).let {
                             if (it != 0) {
                                 printLog("12.3. removeStartingWindow(): remove splash screen of $packageName after $it ms (default value)")
                                 Thread.sleep(it.toLong())
@@ -533,7 +527,7 @@ object SystemUIHooker: BaseHooker() {
                     param(StringType)
                 }
                 beforeHook {
-                    if (pref.get(DataConst.REMOVE_BG_DRAWABLE)) {
+                    if (prefs.get(DataConst.REMOVE_BG_DRAWABLE)) {
                         resultFalse()
                         printLog(
                             "12. isMiuiHome(): set isMiuiHome() false"

@@ -1,6 +1,7 @@
 package com.gswxxn.restoresplashscreen.utils
 
 import android.content.Context
+import android.os.Build
 import android.widget.Toast
 import java.io.DataOutputStream
 
@@ -72,4 +73,10 @@ object CommonUtils {
         forEach { if (it !in second) return false }
         return true
     }
+
+    /**
+     * 检查 SDK 版本
+     */
+    val isAtLeastT = Build.VERSION.SDK_INT >= 33
+    val isAndroidS = Build.VERSION.SDK_INT == 31
 }

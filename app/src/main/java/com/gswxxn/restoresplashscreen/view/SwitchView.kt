@@ -65,7 +65,7 @@ class SwitchView(
                 callBacks?.let { it1 -> it1() }
                 onClickListener?.let { it(b) }
                 context.modulePrefs.put(pref, b)
-                context.sendToHost(pref)
+                context.sendToHost()
             }
         }
     }

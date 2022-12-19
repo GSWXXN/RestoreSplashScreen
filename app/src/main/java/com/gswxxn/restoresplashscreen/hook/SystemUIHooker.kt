@@ -253,6 +253,9 @@ object SystemUIHooker: YukiBaseHooker() {
                         val mSplashscreenContentDrawer = instance.getField("this\$0")!!
                         val isInExceptList =
                             pkgName in prefs.get(DataConst.BG_EXCEPT_LIST) || isExcept(pkgName)
+                        val skipAppWithBgColor = bgColorType != 0 &&
+                                prefs.get(DataConst.SKIP_APP_WITH_BG_COLOR) &&
+                                mSplashscreenContentDrawer.getField("mTmpAttrs")!!.getField("mWindowBgColor") != 0
 
                         /**
                          * 替换系统处理过的图标，防止出现图标有白边，错位等问题
@@ -286,7 +289,9 @@ object SystemUIHooker: YukiBaseHooker() {
                          * 在此处就可以通过 Palette API 自动从图标中选取颜色或手动指定颜色，并将背景颜色设置到 mThemeColor
                          * 成员变量中，以备后续调用
                          */
-                        if (prefs.get(DataConst.REMOVE_BG_COLOR)) return@beforeHook
+                        if (prefs.get(DataConst.REMOVE_BG_COLOR).also { if (it) printLog("10. createIconDrawable(): skip set bg color cuz REMOVE_BG_COLOR is on")} ||
+                            skipAppWithBgColor.also { if (it) printLog("10. createIconDrawable(): skip set bg color cuz app has been set bg color") })
+                            return@beforeHook
 
                         fun getColor() = if (pkgName in individualBgColorAppMap.keys) {
                             printLog("10. createIconDrawable(): set individual background color, ${individualBgColorAppMap[pkgName]}")
@@ -319,7 +324,7 @@ object SystemUIHooker: YukiBaseHooker() {
                                             dynamicDarkColorScheme(appContext!!).primaryContainer.toArgb()
                                     }
                                 }
-                                else -> null
+                                else -> { printLog("10. createIconDrawable(): not replace background color"); null }
                             } else null
 
                         val color = if (enableDataCache && bgColorType != 2) colorData.getOrPut(pkgName) { getColor() }

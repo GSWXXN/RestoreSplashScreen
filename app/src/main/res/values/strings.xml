@@ -77,6 +77,7 @@
     <string name="light_color">浅色</string>
     <string name="dark_color">暗色</string>
     <string name="follow_system">跟随系统</string>
+    <string name="skip_app_with_bg_color">跳过已主动设置背景颜色的应用</string>
     <string name="change_bg_color_list">配置排除列表</string>
     <string name="configure_bg_colors_individually">单独配置应用背景颜色</string>
     <string name="ignore_dark_mode">忽略 MIUI 深色模式</string>

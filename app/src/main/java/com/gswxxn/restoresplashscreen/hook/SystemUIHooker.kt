@@ -491,7 +491,8 @@ object SystemUIHooker: YukiBaseHooker() {
                             .getOrDefault("")
                     }.also { printLog("12.2. removeStartingWindow(): pkgName -> $it") }
 
-                    if (packageName in prefs.get(DataConst.MIN_DURATION_LIST)) {
+                    if (packageName.isEmpty()) return@beforeHook
+                    else if (packageName in prefs.get(DataConst.MIN_DURATION_LIST)) {
                         val configMap = getMapPrefs(DataConst.MIN_DURATION_CONFIG_MAP)
                         try {
                             configMap[packageName].toString().toLong().let {

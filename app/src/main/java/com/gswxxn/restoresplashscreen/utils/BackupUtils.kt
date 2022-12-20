@@ -33,11 +33,11 @@ object BackupUtils {
     fun handleReadDocument(activity: Activity, data: Uri?) {
         val uri = data ?: return
         try {
+            activity.modulePrefs.clear()
             activity.contentResolver.openInputStream(uri)?.let { loadFile ->
                 BufferedReader(InputStreamReader(loadFile)).apply {
                     val sb = StringBuffer()
                     var line = readLine()
-                    sb.append(line)
                     do {
                         sb.append(line)
                         line = readLine()

@@ -254,6 +254,7 @@ object SystemUIHooker: YukiBaseHooker() {
                         val isInExceptList =
                             pkgName in prefs.get(DataConst.BG_EXCEPT_LIST) || isExcept(pkgName)
                         val skipAppWithBgColor = bgColorType != 0 &&
+                                pkgName !in individualBgColorAppMap.keys &&
                                 prefs.get(DataConst.SKIP_APP_WITH_BG_COLOR) &&
                                 mSplashscreenContentDrawer.getField("mTmpAttrs")!!.getField("mWindowBgColor") != 0
 
@@ -295,7 +296,7 @@ object SystemUIHooker: YukiBaseHooker() {
 
                         fun getColor() = if (pkgName in individualBgColorAppMap.keys) {
                             printLog("10. createIconDrawable(): set individual background color, ${individualBgColorAppMap[pkgName]}")
-                            Color.parseColor(individualBgColorAppMap[pkgName] as String)
+                            Color.parseColor(individualBgColorAppMap[pkgName])
                         } else if (!isInExceptList && (!isDarkMode || ignoreDarkMode))
                             when (bgColorType) {
 
@@ -325,12 +326,10 @@ object SystemUIHooker: YukiBaseHooker() {
                                     }
                                 }
                                 else -> { printLog("10. createIconDrawable(): not replace background color"); null }
-                            } else null
+                            } else { printLog("10. createIconDrawable(): skip set bg color cuz app in except list"); null }
 
-                        val color = if (enableDataCache && bgColorType != 2) colorData.getOrPut(pkgName) { getColor() }
-                        else getColor()
-
-                        color?.let {
+                        if (enableDataCache && bgColorType != 2) { colorData.getOrPut(pkgName) { getColor() } }
+                        else { getColor() }?.let {
                             printLog("action: createIconDrawable(): ${if (enableDataCache) "(from cache)" else ""}set background color")
                             instance.setField("mThemeColor", it)
                         }

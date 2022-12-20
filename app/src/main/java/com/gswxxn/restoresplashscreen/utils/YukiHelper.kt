@@ -65,6 +65,7 @@ object YukiHelper {
         dataChannel.wait<String>(key = "${packageName.replace('.', '_')}_config_change") {
             prefs.clearCache()
             stringMapData.clear()
+            DataCacheUtils.clear()
         }
     }
 

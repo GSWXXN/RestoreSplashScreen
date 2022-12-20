@@ -9,6 +9,7 @@
     <application
             android:name="com.highcapable.yukihookapi.hook.xposed.application.ModuleApplication"
             android:icon="@mipmap/ic_launcher"
+            android:theme="@style/Starting"
             android:label="@string/app_name">
 
         <activity
@@ -28,7 +29,6 @@
             android:launchMode="singleTask"/>
         <activity
                 android:name=".ui.MainSettingsActivity"
-                android:theme="@style/Starting"
                 android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

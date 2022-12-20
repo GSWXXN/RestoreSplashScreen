@@ -22,3 +22,4 @@
 -keepclassmembers class * implements androidx.viewbinding.ViewBinding {
     *** inflate(android.view.LayoutInflater);
 }
+-keep class kotlin.Unit

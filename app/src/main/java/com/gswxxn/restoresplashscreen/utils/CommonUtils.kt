@@ -78,5 +78,4 @@ object CommonUtils {
      * 检查 SDK 版本
      */
     val isAtLeastT = Build.VERSION.SDK_INT >= 33
-    val isAndroidS = Build.VERSION.SDK_INT == 31
 }

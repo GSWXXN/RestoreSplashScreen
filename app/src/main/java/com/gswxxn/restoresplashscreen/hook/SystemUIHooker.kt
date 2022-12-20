@@ -12,7 +12,6 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.ui.graphics.toArgb
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.RoundDegree
-import com.gswxxn.restoresplashscreen.utils.CommonUtils.isAndroidS
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.isAtLeastT
 import com.gswxxn.restoresplashscreen.utils.DataCacheUtils.checkDarkModeChanged
 import com.gswxxn.restoresplashscreen.utils.DataCacheUtils.colorData
@@ -34,6 +33,9 @@ import com.highcapable.yukihookapi.hook.type.android.DrawableClass
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
 import com.highcapable.yukihookapi.hook.type.java.IntType
 import com.highcapable.yukihookapi.hook.type.java.StringType
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 object SystemUIHooker: YukiBaseHooker() {
     private val iconPackManager by lazy { IconPackManager(
@@ -50,6 +52,8 @@ object SystemUIHooker: YukiBaseHooker() {
 
     override fun onHook() {
         register()
+
+        var currentPackageName: String? = null
 
         /**
          * 自定义作用域
@@ -107,6 +111,7 @@ object SystemUIHooker: YukiBaseHooker() {
                     }
                     beforeHook {
                         val pkgName = instance.getField<ActivityInfo>("mActivityInfo")!!.packageName!!
+                            .also { currentPackageName = it }
                         val isDefaultStyle = prefs.get(DataConst.ENABLE_DEFAULT_STYLE)
                                 && pkgName in prefs.get(DataConst.DEFAULT_STYLE_LIST)
                         val isRemoveBrandingImage = prefs.get(DataConst.REMOVE_BRANDING_IMAGE)
@@ -475,42 +480,39 @@ object SystemUIHooker: YukiBaseHooker() {
         findClass("com.android.wm.shell.startingsurface.StartingWindowController").hook {
             injectMember {
                 method { name = "removeStartingWindow" }
-                beforeHook {
-                    val packageName = if (isAndroidS) {
-                        args(1).any()?.getField<String>("mName") ?: ""
-                    } else {
-                        args(0).any()
-                            ?.getField("windowAnimationLeash")
-                            ?.getField<String>("mName") ?: ""
-                    }.run {
-                        printLog("12.1. removeStartingWindow(): mName ->$this")
-                        runCatching {
-                            substring(indexOfFirst { s -> s == ' ' } + 1,
-                                indexOfFirst { s -> s == '/' })
-                        }
-                            .getOrDefault("")
-                    }.also { printLog("12.2. removeStartingWindow(): pkgName -> $it") }
-
-                    if (packageName.isEmpty()) return@beforeHook
-                    else if (packageName in prefs.get(DataConst.MIN_DURATION_LIST)) {
-                        val configMap = getMapPrefs(DataConst.MIN_DURATION_CONFIG_MAP)
-                        try {
-                            configMap[packageName].toString().toLong().let {
-                                if (it != 0L) {
-                                    printLog("12.3. removeStartingWindow(): remove splash screen of $packageName after $it ms")
-                                    Thread.sleep(it)
+                replaceUnit {
+                    when (currentPackageName) {
+                        null -> { callOriginal(); return@replaceUnit }
+                        // 单独配置应用最小持续时长
+                        in prefs.get(DataConst.MIN_DURATION_LIST) -> {
+                            val configMap = getMapPrefs(DataConst.MIN_DURATION_CONFIG_MAP)
+                            try {
+                                configMap[currentPackageName].toString().toLong().let { duration ->
+                                    if (duration != 0L) {
+                                        printLog("12. removeStartingWindow(): remove splash screen of $currentPackageName after $duration ms")
+                                        MainScope().launch {
+                                            delay(duration)
+                                            callOriginal()
+                                        }
+                                    } else callOriginal()
                                 }
-                            }
-                        } catch (_: NumberFormatException) {
-                            printLog("12.3. removeStartingWindow(): $packageName: a NumberFormatException is threw")
-                        }
-                    } else
-                        prefs.get(DataConst.MIN_DURATION).let {
-                            if (it != 0) {
-                                printLog("12.3. removeStartingWindow(): remove splash screen of $packageName after $it ms (default value)")
-                                Thread.sleep(it.toLong())
+                            } catch (_: NumberFormatException) {
+                                callOriginal()
+                                printLog("12. removeStartingWindow(): $currentPackageName: a NumberFormatException is threw")
                             }
                         }
+                        // 默认值
+                        else -> prefs.get(DataConst.MIN_DURATION).let { duration ->
+                            if (duration != 0) {
+                                printLog("12. removeStartingWindow(): remove splash screen of $currentPackageName after $duration ms (default value)")
+                                MainScope().launch {
+                                    delay(duration.toLong())
+                                    callOriginal()
+                                }
+                            } else callOriginal()
+                        }
+                    }
+                    currentPackageName = null
                 }
             }
         }

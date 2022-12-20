@@ -8,12 +8,10 @@ import android.graphics.drawable.*
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.SeekBar
-import android.widget.TextView
+import android.widget.*
 import androidx.palette.graphics.Palette
 import cn.fkj233.ui.activity.data.LayoutPair
 import cn.fkj233.ui.activity.data.Padding
@@ -76,6 +74,7 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
             statusS.text = "%.2f / 100".format(hsvColor[1] * 100)
             statusV.text = "%.2f / 100".format(hsvColor[2] * 100)
         }
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate() {
         drawHuePanel()
         pkgName = intent.getStringExtra(ConstValue.EXTRA_MESSAGE_PACKAGE_NAME)!!
@@ -99,6 +98,35 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
         val icon = packageManager.getApplicationIcon(pkgName).let {
             binding.demoIcon.setImageDrawable(it)
             drawable2Bitmap(it, 48)!!
+        }
+
+        val magnifierSize = dp2px(this@ColorSelectActivity, 100f)
+        val magnifier = Magnifier.Builder(binding.demoLayout)
+            .setDefaultSourceToMagnifierOffset(0, -dp2px(this@ColorSelectActivity, 80f))
+            .setInitialZoom(5f)
+            .setOverlay(getDrawable(R.drawable.ic_collimation))
+            .setSize(magnifierSize, magnifierSize)
+            .setCornerRadius((magnifierSize / 2).toFloat())
+            .build()
+
+        binding.demoIcon.setOnTouchListener { v, event ->
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
+                    val viewPosition = IntArray(2)
+                    binding.demoLayout.getLocationOnScreen(viewPosition)
+                    magnifier.show(event.rawX - viewPosition[0], event.rawY - viewPosition[1])
+                    val iconX = event.x / v.width * icon.width
+                    val iconY = event.y / v.height * icon.height
+                    if (iconX >= 0 && iconX < icon.width && iconY >= 0 && iconY < icon.height) {
+                        selectedColor = true
+                        setRGBColor(icon.getPixel(iconX.toInt(), iconY.toInt()))
+                    }
+                }
+                MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> {
+                    magnifier.dismiss()
+                }
+            }
+            true
         }
         val palette = Palette.from(icon).maximumColorCount(8).generate()
         val defaultColor = getBgColor(icon,
@@ -198,11 +226,14 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
     }
 
     private fun setRGBColor(colorInt: Int) {
-        val hsv = FloatArray(3).also { Color.colorToHSV(colorInt, it) }.also { hsvColor = it }
-        seekBarH.progress = hsv[0].toInt()
-        seekBarS.progress = (hsv[1] * 10000).toInt()
-        seekBarV.progress = (hsv[2] * 10000).toInt()
-        color = colorInt
+        if (colorInt == 0) setRGBColor(0xFFFFFFFF.toInt())
+        else {
+            val hsv = FloatArray(3).also { Color.colorToHSV(colorInt, it) }.also { hsvColor = it }
+            seekBarH.progress = hsv[0].toInt()
+            seekBarS.progress = (hsv[1] * 10000).toInt()
+            seekBarV.progress = (hsv[2] * 10000).toInt()
+            color = colorInt
+        }
     }
 
     private fun drawHuePanel() {

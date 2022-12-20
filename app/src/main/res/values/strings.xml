@@ -129,7 +129,7 @@
     <string name="mode_conflict">模式冲突，请保持应用列表与颜色选择界面相同的模式，配置未保存</string>
 
     <!--颜色配置界面-->
-    <string name="please_select">请选择：</string>
+    <string name="please_select">长按图标取色或选择下列颜色：</string>
     <string name="manual_input">手动输入</string>
     <string name="manual_input_hint">请输入 16 进制颜色代码</string>
     <string name="color_input_invalid">请输入正确的颜色代码</string>

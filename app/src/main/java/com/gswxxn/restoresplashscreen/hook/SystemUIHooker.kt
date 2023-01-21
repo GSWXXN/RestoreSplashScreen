@@ -469,7 +469,6 @@ object SystemUIHooker: YukiBaseHooker() {
             injectMember {
                 method {
                     name = "updateForceDarkSplashScreen"
-                    paramCount(3)
                 }
                 beforeHook(ignoreDarkModeHook)
             }.ignoredNoSuchMemberFailure()

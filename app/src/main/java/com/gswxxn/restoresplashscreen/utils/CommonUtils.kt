@@ -46,8 +46,11 @@ object CommonUtils {
     fun Set<String>.toMap(): MutableMap<String, String> {
         val result = mutableMapOf<String, String>()
         forEach { item ->
-            item.split("_").let {
-                result += it[0] to it[1]
+            val separatorIndex = item.lastIndexOf("_")
+            if (separatorIndex != -1 && separatorIndex < item.length - 1) {
+                val packageName = item.substring(0, separatorIndex)
+                val duration = item.substring(separatorIndex + 1)
+                result[packageName] = duration
             }
         }
         return result

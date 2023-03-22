@@ -330,6 +330,12 @@ object SystemUIHooker: YukiBaseHooker() {
                                             dynamicDarkColorScheme(appContext!!).primaryContainer.toArgb()
                                     }
                                 }
+
+                                // 自定义颜色
+                                3 -> {
+                                    printLog("10. createIconDrawable(): set overall background color")
+                                    Color.parseColor(prefs.get(if (isDarkMode) DataConst.OVERALL_BG_COLOR_NIGHT else DataConst.OVERALL_BG_COLOR))
+                                }
                                 else -> { printLog("10. createIconDrawable(): not replace background color"); null }
                             } else { printLog("10. createIconDrawable(): skip set bg color cuz app in except list"); null }
 

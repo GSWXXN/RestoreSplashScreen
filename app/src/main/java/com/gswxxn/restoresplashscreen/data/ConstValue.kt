@@ -2,6 +2,7 @@ package com.gswxxn.restoresplashscreen.data
 
 object ConstValue {
     const val EXTRA_MESSAGE = "com.gswxxn.MainActivity.MESSAGE"
+    const val EXTRA_MESSAGE_OVERALL_BG_COLOR = "OVERALL BG COLOR"
     const val EXTRA_MESSAGE_PACKAGE_NAME = "PACKAGE NAME"
     const val EXTRA_MESSAGE_APP_INDEX = "APP INDEX"
     const val EXTRA_MESSAGE_CURRENT_COLOR = "CURRENT COLOR"

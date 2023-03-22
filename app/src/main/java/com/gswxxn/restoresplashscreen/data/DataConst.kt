@@ -12,6 +12,8 @@ object DataConst {
     val ENABLE_HIDE_ICON = PrefsData("enable_hide_icon", false)
     val ENABLE_REPLACE_ICON = PrefsData("enable_replace_icon", false)
     val ICON_PACK_PACKAGE_NAME = PrefsData("icon_pack_package_name", "None")
+    val OVERALL_BG_COLOR = PrefsData("overall_bg_color", "#FFFFFF")
+    val OVERALL_BG_COLOR_NIGHT = PrefsData("overall_bg_color_night", "#000000")
     val IGNORE_DARK_MODE = PrefsData("ignore_dark_mode", false)
     val REMOVE_BG_DRAWABLE = PrefsData("remove_bg_drawable", false)
     val SKIP_APP_WITH_BG_COLOR = PrefsData("skip_app_with_bg_color", true)

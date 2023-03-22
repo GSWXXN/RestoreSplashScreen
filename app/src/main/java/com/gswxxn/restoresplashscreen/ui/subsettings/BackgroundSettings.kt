@@ -10,6 +10,7 @@ import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.ConstValue
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.databinding.ActivitySubSettingsBinding
+import com.gswxxn.restoresplashscreen.ui.ColorSelectActivity
 import com.gswxxn.restoresplashscreen.ui.ConfigAppsActivity
 import com.gswxxn.restoresplashscreen.ui.SubSettings
 import com.gswxxn.restoresplashscreen.ui.`interface`.ISubSettings
@@ -27,13 +28,15 @@ object BackgroundSettings : ISubSettings {
             when (flags) {
                 0 -> if ((data as String) == context.getString(R.string.follow_system)) (view as Switch).isChecked = true
                 1 -> view.visibility = if ((data as String) == context.getString(R.string.not_change_bg_color)) View.GONE else View.VISIBLE
+                2 -> view.visibility = if ((data as String) == context.getString(R.string.from_custom)) View.VISIBLE else View.GONE
             }
         }
         // 替换背景颜色
         val changeColorTypeItems = mapOf(
             0 to context.getString(R.string.not_change_bg_color),
             1 to context.getString(R.string.from_icon),
-            2 to context.getString(R.string.from_monet))
+            2 to context.getString(R.string.from_monet),
+            3 to context.getString(R.string.from_custom))
         val changeBGColorTypeBinding = getDataBinding(changeColorTypeItems[context.modulePrefs.get(DataConst.CHANG_BG_COLOR_TYPE)]!!)
         TextWithSpinner(
             TextV(textId = R.string.change_bg_color), SpinnerV(changeColorTypeItems[context.modulePrefs.get(
@@ -45,6 +48,12 @@ object BackgroundSettings : ISubSettings {
                 }
             }
         })
+        // 替换背景颜色 - 自定义
+        TextSummaryArrow(TextSummaryV(textId = R.string.set_custom_bg_color, onClickListener = {
+            context.startActivity(Intent(context, ColorSelectActivity::class.java).apply {
+                putExtra(ConstValue.EXTRA_MESSAGE_OVERALL_BG_COLOR, true)
+            })
+        }), dataBindingRecv = changeBGColorTypeBinding.getRecv(2))
 
         // 如果应用主动设置了背景颜色则不替换
         TextSummaryWithSwitch(

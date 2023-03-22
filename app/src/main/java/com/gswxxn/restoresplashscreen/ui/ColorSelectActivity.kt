@@ -22,12 +22,15 @@ import cn.fkj233.ui.activity.view.TextV
 import cn.fkj233.ui.dialog.MIUIDialog
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.ConstValue
+import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.databinding.ActivityColorSelectBinding
 import com.gswxxn.restoresplashscreen.utils.BlockMIUIHelper.addBlockMIUIView
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.gswxxn.restoresplashscreen.utils.GraphicUtils.drawable2Bitmap
 import com.gswxxn.restoresplashscreen.utils.GraphicUtils.getBgColor
+import com.gswxxn.restoresplashscreen.utils.YukiHelper.sendToHost
 import com.highcapable.yukihookapi.hook.factory.method
+import com.highcapable.yukihookapi.hook.factory.modulePrefs
 import java.util.*
 import java.util.regex.Pattern
 
@@ -37,9 +40,12 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
         fun isHuePanelInitialized() = ::huePanel.isInitialized
     }
     private var currentColor: Int? = null
+    private var isSettingOverallBgColor = false
     private lateinit var pkgName: String
     private var resetColor = false
     private var selectedColor = false
+
+    private var isDarkMode = false
 
     private lateinit var seekBarR: SeekBar
     private lateinit var seekBarG: SeekBar
@@ -76,9 +82,23 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
         }
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate() {
+        isDarkMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+
         drawHuePanel()
-        pkgName = intent.getStringExtra(ConstValue.EXTRA_MESSAGE_PACKAGE_NAME)!!
-        currentColor = intent.getStringExtra(ConstValue.EXTRA_MESSAGE_CURRENT_COLOR)?.let { Color.parseColor(it) }
+
+        if (intent.getBooleanExtra(ConstValue.EXTRA_MESSAGE_OVERALL_BG_COLOR, false)) {
+            isSettingOverallBgColor = true
+            pkgName = packageName
+            currentColor = Color.parseColor( modulePrefs.get(
+                if (isDarkMode)
+                    DataConst.OVERALL_BG_COLOR_NIGHT
+                else
+                    DataConst.OVERALL_BG_COLOR
+            ))
+        } else {
+            pkgName = intent.getStringExtra(ConstValue.EXTRA_MESSAGE_PACKAGE_NAME)!!
+            currentColor = intent.getStringExtra(ConstValue.EXTRA_MESSAGE_CURRENT_COLOR)?.let { Color.parseColor(it) }
+        }
 
         seekBarR = createSeekBar(255, 0xFFF36060.toInt()) { Color.valueOf(color).apply { setRGBColor(Color.valueOf(((it - 0.5)/255).toFloat(), green(), blue()).toArgb()) } }
         seekBarG = createSeekBar(255, 0xFF5FF25F.toInt()) { Color.valueOf(color).apply { setRGBColor(Color.valueOf(red(), ((it - 0.5)/255).toFloat(), blue()).toArgb()) } }
@@ -129,9 +149,11 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
             true
         }
         val palette = Palette.from(icon).maximumColorCount(8).generate()
-        val defaultColor = getBgColor(icon,
-            resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK != Configuration.UI_MODE_NIGHT_YES
-        )
+        val defaultColor = when {
+            !isSettingOverallBgColor -> getBgColor(icon, !isDarkMode)
+            isDarkMode -> Color.parseColor("#000000")
+            else -> Color.parseColor("#FFFFFF")
+        }
 
         setRGBColor(currentColor ?: defaultColor)
 
@@ -191,7 +213,8 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
             Text(textId = R.string.reset, colorInt = 0xFFD73E37.toInt()) { setRGBColor(defaultColor); resetColor = true; onBackPressed()}
         }
 
-        binding.appName.text = packageManager.run { getApplicationInfo(pkgName, 0).loadLabel(this).toString() }
+        binding.title.text = if (isSettingOverallBgColor) getString(R.string.set_custom_bg_color)
+        else packageManager.run { getApplicationInfo(pkgName, 0).loadLabel(this).toString() }
 
         val colors = listOf(
             palette.getDominantColor(0),
@@ -328,17 +351,30 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
     }
 
     override fun onBackPressed() {
-        setResult(
-            when {
-                resetColor -> ConstValue.DEFAULT_COLOR
-                color == currentColor || !selectedColor -> ConstValue.UNDO_MODIFY
-                else -> ConstValue.SELECTED_COLOR
-                 },
-            Intent().apply {
-                putExtra(ConstValue.EXTRA_MESSAGE_SELECTED_COLOR, binding.colorString.text)
-                putExtra(ConstValue.EXTRA_MESSAGE_PACKAGE_NAME, pkgName)
-                putExtra(ConstValue.EXTRA_MESSAGE_APP_INDEX, intent.getIntExtra(ConstValue.EXTRA_MESSAGE_APP_INDEX, -1))
-            })
+        if (!isSettingOverallBgColor)
+            setResult(
+                when {
+                    resetColor -> ConstValue.DEFAULT_COLOR
+                    color == currentColor || !selectedColor -> ConstValue.UNDO_MODIFY
+                    else -> ConstValue.SELECTED_COLOR
+                     },
+                Intent().apply {
+                    putExtra(ConstValue.EXTRA_MESSAGE_SELECTED_COLOR, binding.colorString.text)
+                    putExtra(ConstValue.EXTRA_MESSAGE_PACKAGE_NAME, pkgName)
+                    putExtra(ConstValue.EXTRA_MESSAGE_APP_INDEX, intent.getIntExtra(ConstValue.EXTRA_MESSAGE_APP_INDEX, -1))
+                })
+        else {
+            modulePrefs.put(
+                if (isDarkMode)
+                    DataConst.OVERALL_BG_COLOR_NIGHT
+                else
+                    DataConst.OVERALL_BG_COLOR,
+                binding.colorString.text.toString())
+
+            sendToHost()
+        }
+
+
         super.onBackPressed()
     }
 }

@@ -2,7 +2,9 @@ package com.gswxxn.restoresplashscreen.ui.subsettings
 
 import android.content.Intent
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.Switch
+import android.widget.TextView
 import cn.fkj233.ui.activity.view.SpinnerV
 import cn.fkj233.ui.activity.view.TextSummaryV
 import cn.fkj233.ui.activity.view.TextV
@@ -27,7 +29,22 @@ object BackgroundSettings : ISubSettings {
         fun getDataBinding(pref : Any) = GetDataBinding({ pref }) { view, flags, data ->
             when (flags) {
                 0 -> if ((data as String) == context.getString(R.string.follow_system)) (view as Switch).isChecked = true
-                1 -> view.visibility = if ((data as String) == context.getString(R.string.not_change_bg_color)) View.GONE else View.VISIBLE
+                1 -> {
+                    when ((data as String)) {
+                        context.getString(R.string.not_change_bg_color) -> {
+                            view.visibility = View.GONE
+                        }
+                        context.getString(R.string.from_custom) -> {
+                            val subView = ((view as LinearLayout).getChildAt(0) as LinearLayout).getChildAt(0)
+                            if (subView is TextView && subView.text.toString() == context.getString(R.string.color_mode))
+                                view.visibility = View.GONE
+                        }
+                        else -> {
+                            view.visibility = View.VISIBLE
+                        }
+                    }
+
+                }
                 2 -> view.visibility = if ((data as String) == context.getString(R.string.from_custom)) View.VISIBLE else View.GONE
             }
         }

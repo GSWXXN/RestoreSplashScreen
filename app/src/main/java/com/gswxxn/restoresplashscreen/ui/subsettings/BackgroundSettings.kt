@@ -65,8 +65,8 @@ object BackgroundSettings : ISubSettings {
                 }
             }
         })
-        // 替换背景颜色 - 自定义
-        TextSummaryArrow(TextSummaryV(textId = R.string.set_custom_bg_color, onClickListener = {
+        // 自定义背景颜色
+        TextSummaryArrow(TextSummaryV(textId = R.string.set_custom_bg_color, tipsId = R.string.set_custom_bg_color_tips, onClickListener = {
             context.startActivity(Intent(context, ColorSelectActivity::class.java).apply {
                 putExtra(ConstValue.EXTRA_MESSAGE_OVERALL_BG_COLOR, true)
             })

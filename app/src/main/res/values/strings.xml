@@ -79,6 +79,7 @@
     <string name="dark_color">暗色</string>
     <string name="follow_system">跟随系统</string>
     <string name="set_custom_bg_color">自定义背景颜色</string>
+    <string name="set_custom_bg_color_tips">如需设置深色模式下的颜色，请在手机系统设置中开启深色模式后进入此界面进行配置</string>
     <string name="skip_app_with_bg_color">跳过已主动设置背景颜色的应用</string>
     <string name="change_bg_color_list">配置排除列表</string>
     <string name="configure_bg_colors_individually">单独配置应用背景颜色</string>

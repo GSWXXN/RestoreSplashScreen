@@ -88,6 +88,7 @@ object SystemUIHooker: YukiBaseHooker() {
             }
         }
 
+        var exceptCurrentApp = false
         /**
          * 此处实现功能：
          * - 强制开启启动遮罩
@@ -118,7 +119,7 @@ object SystemUIHooker: YukiBaseHooker() {
                                 && pkgName in prefs.get(DataConst.REMOVE_BRANDING_IMAGE_LIST)
                         val isRemoveBGColor = prefs.get(DataConst.REMOVE_BG_COLOR)
                         val isReplaceToEmptySplashScreen = prefs.get(DataConst.REPLACE_TO_EMPTY_SPLASH_SCREEN)
-                        val isExcept = isExcept(pkgName)
+                        val isExcept = isExcept(pkgName).also { exceptCurrentApp = it }
                         val forceEnableSplashScreen = prefs.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)
                         val context = instance.getField<Context>("mContext")!!
                         val mSplashscreenContentDrawer = instance.getField("this\$0")!!
@@ -457,7 +458,7 @@ object SystemUIHooker: YukiBaseHooker() {
          */
 
         val ignoreDarkModeHook: HookParam.() -> Unit = {
-            if (prefs.get(DataConst.IGNORE_DARK_MODE)) {
+            if (!exceptCurrentApp && prefs.get(DataConst.IGNORE_DARK_MODE)) {
                 resultFalse()
                 printLog("11. isStaringWindowUnderNightMode(): ignore dark mode")
             }

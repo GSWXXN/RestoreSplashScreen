@@ -17,6 +17,7 @@ import com.gswxxn.restoresplashscreen.utils.GraphicUtils.shrinkIcon
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.checkingHostVersion
 import com.gswxxn.restoresplashscreen.view.NewMIUIDialog
 import com.highcapable.yukihookapi.YukiHookAPI
+import com.highcapable.yukihookapi.YukiHookAPI.Status.Executor
 
 class MainSettingsActivity : BaseActivity<ActivityMainSettingsBinding>() {
     private var systemUIRestartNeeded: Boolean = true
@@ -142,8 +143,9 @@ class MainSettingsActivity : BaseActivity<ActivityMainSettingsBinding>() {
         showView(YukiHookAPI.Status.isXposedModuleActive, binding.mainTextApiWay)
         binding.mainTextApiWay.text =
             getString(R.string.xposed_framework_version,
-                YukiHookAPI.Status.executorName,
-                YukiHookAPI.Status.executorVersion)
+                Executor.name,
+                Executor.apiLevel
+            )
 
         window.statusBarColor = getColor(
             when {

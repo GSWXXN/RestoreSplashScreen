@@ -1,6 +1,5 @@
 package com.gswxxn.restoresplashscreen.hook
 
-import android.content.ComponentName
 import android.os.Build
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.getField
@@ -36,29 +35,34 @@ object AndroidHooker : YukiBaseHooker() {
                    }
             }
 
-            // 彻底关闭 Splash Screen
             injectMember {
                 method {
-                    name = "addStartingWindow"
+                    name = "showStartingWindow"
                     paramCount(when (Build.VERSION.SDK_INT) {
-                        33 -> 10
-                        else -> 15
+                        33 -> 7
+                        else -> 5
                     })
                 }
                 beforeHook {
+                    // 彻底关闭 Splash Screen
                     val isDisableSS = prefs.get(DataConst.DISABLE_SPLASH_SCREEN)
-                    if (isDisableSS) resultFalse()
                     printLog("[Android] addStartingWindow():${if (isDisableSS) "" else "Not"} disable ${args(0).string()} splash screen")
+                    if (isDisableSS) {
+                        resultNull()
+                        return@beforeHook
+                    }
 
-                    // 关闭支付宝小程序遮罩
-                    if (prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN) &&
-                        "com.eg.android.AlipayGphone" in prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST) &&
+                    // 如果当前 Activity 是由相同应用启动时, 则不展示启动遮罩
+                    val sourceRecord = args(when (Build.VERSION.SDK_INT) {
+                        33 -> 5
+                        else -> 4
+                    }).any() ?: return@beforeHook
+                    val sourcePkgName = sourceRecord.getField("packageName")
+                    val currentPkgName = instance.getField("packageName")
 
-                        instance.getField<ComponentName>("mActivityComponent")!!.let {
-                            "com.eg.android.AlipayGphone" == it.packageName && "nebula" in it.flattenToShortString()
-                        }) {
-                        printLog("[Android] addStartingWindow(): disable splash screen of Alipay Nebula")
-                        resultFalse()
+                    if (sourcePkgName == currentPkgName) {
+                        printLog("[Android] showStartingWindow(): intercept showStartingWindow(). sourcePkgName: $sourcePkgName, currentPkgName: $currentPkgName")
+                        resultNull()
                     }
                 }
             }

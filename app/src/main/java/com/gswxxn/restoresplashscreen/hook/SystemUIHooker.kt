@@ -32,7 +32,7 @@ import com.highcapable.yukihookapi.hook.type.android.ActivityInfoClass
 import com.highcapable.yukihookapi.hook.type.android.DrawableClass
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
 import com.highcapable.yukihookapi.hook.type.java.IntType
-import com.highcapable.yukihookapi.hook.type.java.StringType
+import com.highcapable.yukihookapi.hook.type.java.StringClass
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -543,7 +543,7 @@ object SystemUIHooker: YukiBaseHooker() {
             injectMember {
                 method {
                     name = "isMiuiHome"
-                    param(StringType)
+                    param(StringClass)
                 }
                 beforeHook {
                     if (prefs.get(DataConst.REMOVE_BG_DRAWABLE)) {

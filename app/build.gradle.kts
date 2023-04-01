@@ -86,11 +86,11 @@ android {
 dependencies {
     implementation(project(mapOf("path" to ":blockmiui")))
     compileOnly("de.robv.android.xposed:api:82")
-    implementation("com.highcapable.yukihookapi:api:1.1.4")
-    ksp("com.highcapable.yukihookapi:ksp-xposed:1.1.4")
+    implementation("com.highcapable.yukihookapi:api:1.1.8")
+    ksp("com.highcapable.yukihookapi:ksp-xposed:1.1.8")
 
     implementation("androidx.palette:palette-ktx:1.0.0")
-    implementation("androidx.compose.material3:material3:1.0.0-rc01")
+    implementation("androidx.compose.material3:material3:1.1.0-beta01")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 }

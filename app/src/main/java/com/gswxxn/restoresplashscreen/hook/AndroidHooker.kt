@@ -44,9 +44,11 @@ object AndroidHooker : YukiBaseHooker() {
                     })
                 }
                 beforeHook {
+                    val currentPkgName = instance.getField("packageName")
+
                     // 彻底关闭 Splash Screen
                     val isDisableSS = prefs.get(DataConst.DISABLE_SPLASH_SCREEN)
-                    printLog("[Android] addStartingWindow():${if (isDisableSS) "" else "Not"} disable ${args(0).string()} splash screen")
+                    printLog("[Android] addStartingWindow():${if (isDisableSS) "" else "Not"} disable $currentPkgName splash screen")
                     if (isDisableSS) {
                         resultNull()
                         return@beforeHook
@@ -58,7 +60,6 @@ object AndroidHooker : YukiBaseHooker() {
                         else -> 4
                     }).any() ?: return@beforeHook
                     val sourcePkgName = sourceRecord.getField("packageName")
-                    val currentPkgName = instance.getField("packageName")
 
                     if (sourcePkgName == currentPkgName) {
                         printLog("[Android] showStartingWindow(): intercept showStartingWindow(). sourcePkgName: $sourcePkgName, currentPkgName: $currentPkgName")

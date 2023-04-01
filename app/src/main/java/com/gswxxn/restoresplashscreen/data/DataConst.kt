@@ -7,6 +7,8 @@ object DataConst {
     val ENABLE_DATA_CACHE = PrefsData("enable_data_cache", false)
     val ENABLE_CUSTOM_SCOPE = PrefsData("enable_custom_scope", false)
     val IS_CUSTOM_SCOPE_EXCEPTION_MODE = PrefsData("is_custom_scope_exception_mode", true)
+    val IS_REMOVE_BRANDING_IMAGE_EXCEPTION_MODE = PrefsData("is_remove_branding_image_exception_mode", false)
+    val IS_DEFAULT_STYLE_LIST_EXCEPTION_MODE = PrefsData("is_default_style_list_exception_mode", false)
     val REPLACE_TO_EMPTY_SPLASH_SCREEN = PrefsData("replace_to_empty_splash_screen", false)
     val ENABLE_DEFAULT_STYLE = PrefsData("enable_default_style", false) // 忽略应用主动设置的图标
     val ENABLE_HIDE_ICON = PrefsData("enable_hide_icon", false)

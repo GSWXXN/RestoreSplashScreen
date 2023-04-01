@@ -47,9 +47,12 @@
     <string name="custom_scope">自定义模块作用域</string>
     <string name="custom_scope_message">记得配置应用列表 ^_^</string>
     <string name="exception_mode">排除模式</string>
-    <string name="exception_mode_message">当前模块 %s 作用在列表中的应用</string>
+    <string name="custom_scope_exception_mode_message">当前模块 %s 作用在选中的应用上</string>
     <string name="will_not">不会</string>
     <string name="will_only">仅会</string>
+    <string name="exception_mode_message">当前设置仅适用于以下 %s 的应用</string>
+    <string name="not_chosen">未选中</string>
+    <string name="chosen">选中</string>
     <string name="exception_mode_list">配置应用列表</string>
     <string name="replace_to_empty_splash_screen">将作用域外的应用替换为空白启动遮罩</string>
     <string name="replace_to_empty_splash_screen_tips">如不开启此选项则模块对作用域外的应用不作处理。</string>

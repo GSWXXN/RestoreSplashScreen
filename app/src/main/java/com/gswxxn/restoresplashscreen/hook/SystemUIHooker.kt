@@ -113,10 +113,16 @@ object SystemUIHooker: YukiBaseHooker() {
                     beforeHook {
                         val pkgName = instance.getField<ActivityInfo>("mActivityInfo")!!.packageName!!
                             .also { currentPackageName = it }
-                        val isDefaultStyle = prefs.get(DataConst.ENABLE_DEFAULT_STYLE)
-                                && pkgName in prefs.get(DataConst.DEFAULT_STYLE_LIST)
-                        val isRemoveBrandingImage = prefs.get(DataConst.REMOVE_BRANDING_IMAGE)
-                                && pkgName in prefs.get(DataConst.REMOVE_BRANDING_IMAGE_LIST)
+                        val isDefaultStyle = prefs.get(DataConst.ENABLE_DEFAULT_STYLE) &&
+                                if (prefs.get(DataConst.IS_DEFAULT_STYLE_LIST_EXCEPTION_MODE))
+                                    pkgName !in prefs.get(DataConst.DEFAULT_STYLE_LIST)
+                                else
+                                    pkgName in prefs.get(DataConst.DEFAULT_STYLE_LIST)
+                        val isRemoveBrandingImage = prefs.get(DataConst.REMOVE_BRANDING_IMAGE) &&
+                                if (prefs.get(DataConst.IS_REMOVE_BRANDING_IMAGE_EXCEPTION_MODE))
+                                    pkgName !in prefs.get(DataConst.REMOVE_BRANDING_IMAGE_LIST)
+                                else
+                                    pkgName in prefs.get(DataConst.REMOVE_BRANDING_IMAGE_LIST)
                         val isRemoveBGColor = prefs.get(DataConst.REMOVE_BG_COLOR)
                         val isReplaceToEmptySplashScreen = prefs.get(DataConst.REPLACE_TO_EMPTY_SPLASH_SCREEN)
                         val isExcept = isExcept(pkgName).also { exceptCurrentApp = it }

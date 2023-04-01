@@ -38,6 +38,8 @@ object BackgroundSettings : ISubSettings {
                             val subView = ((view as LinearLayout).getChildAt(0) as LinearLayout).getChildAt(0)
                             if (subView is TextView && subView.text.toString() == context.getString(R.string.color_mode))
                                 view.visibility = View.GONE
+                            else
+                                view.visibility = View.VISIBLE
                         }
                         else -> {
                             view.visibility = View.VISIBLE

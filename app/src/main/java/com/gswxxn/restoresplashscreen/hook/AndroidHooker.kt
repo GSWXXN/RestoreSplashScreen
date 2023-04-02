@@ -74,7 +74,9 @@ object AndroidHooker : YukiBaseHooker() {
                     }).any() ?: return@beforeHook
                     val sourcePkgName = sourceRecord.getField("packageName")
 
-                    if (sourcePkgName == currentPkgName) {
+                    if (prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN) &&
+                        currentPkgName in prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST) &&
+                        sourcePkgName == currentPkgName) {
                         printLog("[Android] showStartingWindow(): intercept showStartingWindow(). sourcePkgName: $sourcePkgName, currentPkgName: $currentPkgName")
                         resultNull()
                     }

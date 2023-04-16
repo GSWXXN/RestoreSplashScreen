@@ -90,7 +90,7 @@ dependencies {
     ksp("com.highcapable.yukihookapi:ksp-xposed:1.1.8")
 
     implementation("androidx.palette:palette-ktx:1.0.0")
-    implementation("androidx.compose.material3:material3:1.1.0-beta01")
+    implementation("androidx.compose.material3:material3:1.1.0-beta02")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 }

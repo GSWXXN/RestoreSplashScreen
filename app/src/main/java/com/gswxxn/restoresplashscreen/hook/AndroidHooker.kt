@@ -30,7 +30,7 @@ object AndroidHooker : YukiBaseHooker() {
                 beforeHook {
                     val pkgName = args(1).string()
                     val isLaunchedFromSystemSurface = instance.current().method {
-                        name = "isLaunchedFromSystemSurface"
+                        name = "launchedFromSystemSurface"
                         emptyParam()
                     }.boolean()
                     val isForceShowSS = prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN) && pkgName in prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST) && isLaunchedFromSystemSurface

@@ -71,19 +71,16 @@ object SystemUIHooker: YukiBaseHooker() {
                     paramCount(2)
                 }
                 beforeHook {
-                    appContext
-                    if (!prefs.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)) {
-                        val pkgName = args(0).cast<ActivityInfo>()?.packageName!!
-                        val isExcept = isExcept(pkgName)
-                        if (!isExcept)
-                            instance.getField("mTmpAttrs")!!.setField("mIconBgColor", 1)
-                        printLog(
-                            "****** ${pkgName}:",
-                            "1. getBGColorFromCache(): ${
-                                if (isExcept) "Except this app" else "Not Except, Set mIconBgColor 1"
-                            }"
-                        )
-                    }
+                    val pkgName = args(0).cast<ActivityInfo>()?.packageName!!
+                    val isExcept = isExcept(pkgName)
+                    if (!isExcept)
+                        instance.getField("mTmpAttrs")!!.setField("mIconBgColor", 1)
+                    printLog(
+                        "****** ${pkgName}:",
+                        "1. getBGColorFromCache(): ${
+                            if (isExcept) "Except this app" else "Not Except, Set mIconBgColor 1"
+                        }"
+                    )
                 }
             }
         }

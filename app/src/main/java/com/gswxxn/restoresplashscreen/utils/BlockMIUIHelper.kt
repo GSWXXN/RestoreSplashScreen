@@ -12,6 +12,7 @@ import cn.fkj233.ui.activity.dp2px
 import cn.fkj233.ui.activity.view.*
 import com.gswxxn.restoresplashscreen.view.*
 import com.highcapable.yukihookapi.YukiHookAPI
+import com.highcapable.yukihookapi.hook.factory.current
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -87,11 +88,11 @@ object BlockMIUIHelper {
                 is TitleTextV -> addView(item.create(context, callBacks)) // 标题文字
                 is LineV -> addView(item.create(context, callBacks)) // 分割线
                 is LinearContainerV -> addView(item.create(context, callBacks)) // 布局创建
-                is AuthorV -> { // 作者框
+                is ImageTextV -> { // 作者框
                     addView(item.create(context, callBacks).apply {
                         (layoutParams as LinearLayout.LayoutParams).setMargins(0, 0,0,0)
                     })
-                    item.onClick?.let { unit ->
+                    item.current().field { type = Function0::class.java }.cast<(() -> Unit)?>()?.let { unit ->
                         setOnClickListener {
                             unit()
                             callBacks?.let { it1 -> it1() }
@@ -114,10 +115,10 @@ object BlockMIUIHelper {
                     addView(item.create(context, callBacks))
                     setOnClickListener {}
                     val spinner = when (item) {
-                        is TextSummaryWithSpinnerV -> item.spinnerV
-                        is TextWithSpinnerV -> item.spinnerV
+                        is TextSummaryWithSpinnerV -> item.current().field { type = SpinnerV::class.java }.cast<SpinnerV>()
+                        is TextWithSpinnerV -> item.current().field { type = SpinnerV::class.java }.cast<SpinnerV>()
                         else -> throw IllegalAccessException("Not is TextSummaryWithSpinnerV or TextWithSpinnerV")
-                    }
+                    }!!
                     setOnTouchListener { view, motionEvent ->
                         if (motionEvent.action == MotionEvent.ACTION_UP) {
                             if (!YukiHookAPI.Status.isXposedModuleActive) {
@@ -146,9 +147,9 @@ object BlockMIUIHelper {
                         false
                     }
                 }
-                is TextSummaryArrowV -> {
+                is TextSummaryWithArrowV -> {
                     addView(item.create(context, callBacks))
-                    item.textSummaryV.onClickListener?.let { unit ->
+                    item.current().field { type = TextSummaryV::class.java }.cast<TextSummaryV>()!!.onClickListener?.let { unit ->
                         setOnClickListener {
                             if (!YukiHookAPI.Status.isXposedModuleActive) {
                                 Toast.makeText(context, com.gswxxn.restoresplashscreen.R.string.make_sure_active, Toast.LENGTH_SHORT).show()

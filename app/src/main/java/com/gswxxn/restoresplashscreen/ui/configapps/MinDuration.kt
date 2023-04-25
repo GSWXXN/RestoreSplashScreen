@@ -3,9 +3,9 @@ package com.gswxxn.restoresplashscreen.ui.configapps
 import android.annotation.SuppressLint
 import android.text.method.DigitsKeyListener
 import android.view.View
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import cn.fkj233.ui.activity.view.MIUIEditText
 import cn.fkj233.ui.activity.view.TextSummaryV
 import cn.fkj233.ui.dialog.MIUIDialog
 import com.gswxxn.restoresplashscreen.R
@@ -16,8 +16,8 @@ import com.gswxxn.restoresplashscreen.ui.`interface`.IConfigApps
 import com.gswxxn.restoresplashscreen.utils.AppInfoHelper
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.sendToHost
 import com.gswxxn.restoresplashscreen.view.BlockMIUIItemData
-import com.highcapable.yukihookapi.hook.factory.method
-import com.highcapable.yukihookapi.hook.factory.modulePrefs
+import com.highcapable.yukihookapi.hook.factory.current
+import com.highcapable.yukihookapi.hook.factory.prefs
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 
 object MinDuration : IConfigApps {
@@ -40,16 +40,18 @@ object MinDuration : IConfigApps {
             MIUIDialog(context) {
                 setTitle(R.string.set_default_min_duration)
                 setMessage(R.string.set_min_duration_unit)
-                setEditText(context.modulePrefs.get(DataConst.MIN_DURATION).toString(), "")
-                this.javaClass.method {
+                setEditText(context.prefs().get(DataConst.MIN_DURATION).toString(), "")
+                current().method {
                     emptyParam()
-                    returnType = EditText::class.java
-                }.get(this).invoke<EditText>()?.keyListener = DigitsKeyListener.getInstance("1234567890")
+                    returnType = MIUIEditText::class.java
+                }.invoke<MIUIEditText>()?.keyListener = DigitsKeyListener.getInstance("1234567890")
                 setRButton(R.string.button_okay) {
-                    if (getEditText().isNotBlank())
-                        context.modulePrefs.put(DataConst.MIN_DURATION, getEditText().toInt())
-                    else
-                        context.modulePrefs.put(DataConst.MIN_DURATION, 0)
+                    context.prefs().edit {
+                        if (getEditText().isNotBlank())
+                            put(DataConst.MIN_DURATION, getEditText().toInt())
+                        else
+                            put(DataConst.MIN_DURATION, 0)
+                    }
                     context.sendToHost()
                     dismiss()
                 }
@@ -81,10 +83,10 @@ object MinDuration : IConfigApps {
             setTitle(R.string.set_min_duration)
             setMessage(R.string.set_min_duration_unit)
             setEditText(item.config ?: "", "")
-            this@MIUIDialog.javaClass.method {
+            current().method {
                 emptyParam()
-                returnType = EditText::class.java
-            }.get(this@MIUIDialog).invoke<EditText>()?.keyListener = DigitsKeyListener.getInstance("1234567890")
+                returnType = MIUIEditText::class.java
+            }.invoke<MIUIEditText>()?.keyListener = DigitsKeyListener.getInstance("1234567890")
             setRButton(R.string.button_okay) {
                 if (getEditText().isEmpty() || getEditText() == "0") {
                     context.appInfo.setConfig(item, null)

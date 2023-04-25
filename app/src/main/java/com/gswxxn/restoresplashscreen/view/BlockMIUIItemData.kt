@@ -22,7 +22,11 @@ class BlockMIUIItemData {
     }
 
     fun Author(authorHead: Drawable, authorName: String, authorTips: String? = null, round: Float = 30f, onClickListener: (() -> Unit)? = null, dataBindingRecv: DataBinding.Binding.Recv? = null) {
-        itemList.add(AuthorV(authorHead, authorName, authorTips, round, onClickListener, dataBindingRecv))
+        itemList.add(ImageTextV(authorHead, authorName, authorTips, round, onClickListener, dataBindingRecv))
+    }
+
+    fun Page(pageHead: Drawable, pageName: String?, pageNameId: Int?, round: Float = 0f, onClickListener: (() -> Unit)? = null, dataBindingRecv: DataBinding.Binding.Recv? = null) {
+        itemList.add(PageV(pageHead, pageName, pageNameId, round, onClickListener, dataBindingRecv))
     }
 
     fun Line() {
@@ -46,19 +50,23 @@ class BlockMIUIItemData {
     }
 
     fun TextSummaryArrow(textSummaryV: TextSummaryV, dataBindingRecv: DataBinding.Binding.Recv? = null) {
-        itemList.add(TextSummaryArrowV(textSummaryV, dataBindingRecv))
+        itemList.add(TextSummaryWithArrowV(textSummaryV, dataBindingRecv))
     }
 
     fun TextA(text: String? = null, textId: Int? = null, onClickListener: (() -> Unit)? = null, dataBindingRecv: DataBinding.Binding.Recv? = null) {
-        itemList.add(TextSummaryArrowV(TextSummaryV(text, textId, onClickListener = onClickListener), dataBindingRecv))
+        itemList.add(TextSummaryWithArrowV(TextSummaryV(text, textId, onClickListener = onClickListener), dataBindingRecv))
     }
 
-    fun TextSummaryWithSwitch(textSummaryV: TextSummaryV, switchV: SwitchView, dataBindingRecv: DataBinding.Binding.Recv? = null) {
-        itemList.add(TextSummaryWithSwitchView(textSummaryV, switchV, dataBindingRecv))
+    fun TextSummaryWithSwitch(textSummaryV: TextSummaryV, switchView: SwitchView, dataBindingRecv: DataBinding.Binding.Recv? = null) {
+        itemList.add(TextSummaryWithSwitchView(textSummaryV, switchView, dataBindingRecv))
     }
 
-    fun TitleText(text: String? = null, textId: Int? = null, dataBindingRecv: DataBinding.Binding.Recv? = null, onClickListener: (() -> Unit)? = null) {
-        itemList.add(TitleTextV(text, textId, dataBindingRecv, onClickListener))
+    fun TitleText(text: String? = null, textId: Int? = null,colorInt: Int? = null, colorId: Int? = null, dataBindingRecv: DataBinding.Binding.Recv? = null, onClickListener: (() -> Unit)? = null) {
+        itemList.add(TitleTextV(text, textId,colorInt, colorId,dataBindingRecv, onClickListener))
+    }
+
+    fun TextWithSwitch(textV: TextV, switchV: SwitchV, dataBindingRecv: DataBinding.Binding.Recv? = null) {
+        itemList.add(TextWithSwitchV(textV, switchV, dataBindingRecv))
     }
 
     fun TextS(text: String? = null, textId: Int? = null, key: String, defValue: Boolean=false, onClickListener: ((Boolean) -> Unit)? = null, dataBindingRecv: DataBinding.Binding.Recv? = null) {

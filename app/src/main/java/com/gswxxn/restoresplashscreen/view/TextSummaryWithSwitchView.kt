@@ -33,7 +33,7 @@ import cn.fkj233.ui.activity.view.BaseView
 import cn.fkj233.ui.activity.view.LinearContainerV
 import cn.fkj233.ui.activity.view.TextSummaryV
 
-class TextSummaryWithSwitchView(private val textV: TextSummaryV, val switchV: SwitchView, private val dataBindingRecv: DataBinding.Binding.Recv? = null): BaseView() {
+class TextSummaryWithSwitchView(private val textV: TextSummaryV, val switchV: SwitchView, private val dataBindingRecv: DataBinding.Binding.Recv? = null): BaseView {
 
     override fun getType(): BaseView = this
 

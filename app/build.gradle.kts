@@ -62,7 +62,6 @@ android {
 
     buildFeatures {
         viewBinding = true
-        buildConfig = true
     }
 
     applicationVariants.all {

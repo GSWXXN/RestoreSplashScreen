@@ -207,8 +207,8 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineS
             MIUIDialog(this) {
                 setTitle(getString(R.string.not_saved_title))
                 setMessage(getString(R.string.not_saved_hint))
-                setRButton(getString(R.string.button_okay)) { this@ConfigAppsActivity.cancel(); super.onBackPressed() }
-                setLButton(getString(R.string.button_cancel)) { dismiss() }
+                setRButton(getString(R.string.button_abandonment)) { this@ConfigAppsActivity.cancel(); super.onBackPressed() }
+                setLButton(getString(R.string.button_reedit)) { dismiss() }
             }.show()
         } else {
             cancel()

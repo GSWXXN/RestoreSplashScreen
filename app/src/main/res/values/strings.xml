@@ -20,6 +20,8 @@
     <string name="restart_system_ui">重启系统界面</string>
     <string name="button_okay">确定</string>
     <string name="button_cancel">取消</string>
+    <string name="button_abandonment">舍弃修改</string>
+    <string name="button_reedit">返回编辑</string>
 
     <string name="basic_settings">基础设置</string>
     <string name="custom_scope_settings">作用域</string>

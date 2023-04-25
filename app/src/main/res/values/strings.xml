@@ -95,6 +95,8 @@
     <string name="force_show_splash_screen">强制显示遮罩</string>
     <string name="force_show_splash_screen_tips">如果有部分应用没有显示Splash Screen, 请尝试开启此选项并将其加入到应用列表。\n注意：开启此选项需要在Xposed管理器的作用域中勾选 系统框架，并重启手机。</string>
     <string name="force_show_splash_screen_list">配置应用列表</string>
+    <string name="reduce_splash_screen">减少不必要的启动遮罩</string>
+    <string name="reduce_splash_screen_tips">减少因加入 强制显示遮罩 列表而使进入应用子进程也显示了的遮罩, 如微信小视频、支付宝小程序</string>
     <string name="force_enable_splash_screen">强制开启启动遮罩</string>
     <string name="force_enable_splash_screen_tips">如果模块显示成功激活但是不起作用，请尝试开启此选项。\n如果模块可以正常运行，请 不要 开启此选项。\n开启此选项可能导致的问题：\n1. 可能会在不需要显示Splash Screen的场景显示启动遮罩。\n2. 如果应用主动设置了Splash Screen的背景图片，可能将无法显示。</string>
     <string name="hot_start_compatible">将启动遮罩适用于热启动</string>

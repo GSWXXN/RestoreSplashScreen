@@ -48,6 +48,16 @@ object LabSettings : ISubSettings {
             })
         }), dataBindingRecv = forceShowSplashScreenBinding.getRecv(0))
 
+        // 减少不必要的启动遮罩
+        TextSummaryWithSwitch(
+            TextSummaryV(
+                textId = R.string.reduce_splash_screen,
+                tipsId = R.string.reduce_splash_screen_tips
+            ),
+            SwitchView(DataConst.REDUCE_SPLASH_SCREEN),
+            dataBindingRecv = forceShowSplashScreenBinding.getRecv(0)
+        )
+
         Line()
 
         // 强制开启启动遮罩

@@ -33,10 +33,14 @@ object AndroidHooker : YukiBaseHooker() {
                         name = "launchedFromSystemSurface"
                         emptyParam()
                     }.boolean()
-                    val isForceShowSS = prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN) && pkgName in prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST) && isLaunchedFromSystemSurface
+                    val isForceShowSS = prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN)
+                            && pkgName in prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST)
+                            && (!prefs.get(DataConst.REDUCE_SPLASH_SCREEN) || isLaunchedFromSystemSurface)
 
                     if (isForceShowSS) resultTrue()
-                    printLog("[Android] validateStartingWindowTheme():${if (isForceShowSS) "" else "Not"} force show $pkgName splash screen, isLaunchedFromSystemSurface: $isLaunchedFromSystemSurface")
+                    printLog("[Android] validateStartingWindowTheme():" +
+                            "${if (isForceShowSS) "" else "Not"} force show $pkgName splash screen, " +
+                            "isLaunchedFromSystemSurface: $isLaunchedFromSystemSurface")
                    }
             }
 

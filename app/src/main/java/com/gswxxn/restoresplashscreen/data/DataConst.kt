@@ -20,6 +20,7 @@ object DataConst {
     val SKIP_APP_WITH_BG_COLOR = PrefsData("skip_app_with_bg_color", true)
     val REMOVE_BG_COLOR = PrefsData("remove_bg_color", false)
     val REMOVE_BRANDING_IMAGE = PrefsData("remove_branding_image", false)
+    val REDUCE_SPLASH_SCREEN = PrefsData("reduce_splash_screen", true)
     val FORCE_ENABLE_SPLASH_SCREEN = PrefsData("force_enable_splash_screen", false)
     val FORCE_SHOW_SPLASH_SCREEN = PrefsData("force_show_splash_screen", false)
     val DISABLE_SPLASH_SCREEN = PrefsData("disable_splash_screen", false)

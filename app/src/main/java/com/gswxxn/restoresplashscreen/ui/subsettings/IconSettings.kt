@@ -18,7 +18,7 @@ import com.gswxxn.restoresplashscreen.utils.IconPackManager
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.sendToHost
 import com.gswxxn.restoresplashscreen.view.BlockMIUIItemData
 import com.gswxxn.restoresplashscreen.view.SwitchView
-import com.highcapable.yukihookapi.hook.factory.modulePrefs
+import com.highcapable.yukihookapi.hook.factory.prefs
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -42,10 +42,10 @@ object IconSettings : ISubSettings {
             0 to context.getString(R.string.not_shrink_icon),
             1 to context.getString(R.string.shrink_low_resolution_icon),
             2 to context.getString(R.string.shrink_all_icon))
-        TextWithSpinner(TextV(textId = R.string.shrink_icon), SpinnerV(shrinkIconItems[context.modulePrefs.get(DataConst.SHRINK_ICON)]!!, 180F) {
+        TextWithSpinner(TextV(textId = R.string.shrink_icon), SpinnerV(shrinkIconItems[context.prefs().get(DataConst.SHRINK_ICON)]!!, 180F) {
             for (item in shrinkIconItems) {
                 add(item.value) {
-                    context.modulePrefs.put(DataConst.SHRINK_ICON, item.key)
+                    context.prefs().edit { put(DataConst.SHRINK_ICON, item.key) }
                     context.sendToHost()
                 }
             }
@@ -60,11 +60,11 @@ object IconSettings : ISubSettings {
         // 使用图标包
         val availableIconPacks = IconPackManager(context).getAvailableIconPacks()
         TextWithSpinner(
-            TextV(textId = R.string.use_icon_pack), SpinnerV(availableIconPacks[context.modulePrefs.get(DataConst.ICON_PACK_PACKAGE_NAME)]?:context.getString(
+            TextV(textId = R.string.use_icon_pack), SpinnerV(availableIconPacks[context.prefs().get(DataConst.ICON_PACK_PACKAGE_NAME)]?:context.getString(
                 R.string.icon_pack_is_removed)) {
             for (item in availableIconPacks) {
                 add(item.value) {
-                    context.modulePrefs.put(DataConst.ICON_PACK_PACKAGE_NAME, item.key)
+                    context.prefs().edit { put(DataConst.ICON_PACK_PACKAGE_NAME, item.key) }
                     context.sendToHost()
                 }
             }
@@ -73,7 +73,7 @@ object IconSettings : ISubSettings {
         Line()
 
         // 忽略应用主动设置的图标
-        val defaultStyleBinding = getDataBinding(context.modulePrefs.get(DataConst.ENABLE_DEFAULT_STYLE))
+        val defaultStyleBinding = getDataBinding(context.prefs().get(DataConst.ENABLE_DEFAULT_STYLE))
         TextSummaryWithSwitch(
             TextSummaryV(
                 textId = R.string.default_style,

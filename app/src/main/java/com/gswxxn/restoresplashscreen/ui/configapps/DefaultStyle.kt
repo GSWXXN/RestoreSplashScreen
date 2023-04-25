@@ -9,7 +9,7 @@ import com.gswxxn.restoresplashscreen.ui.ConfigAppsActivity
 import com.gswxxn.restoresplashscreen.ui.`interface`.IConfigApps
 import com.gswxxn.restoresplashscreen.view.BlockMIUIItemData
 import com.gswxxn.restoresplashscreen.view.SwitchView
-import com.highcapable.yukihookapi.hook.factory.modulePrefs
+import com.highcapable.yukihookapi.hook.factory.prefs
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 
 object DefaultStyle : IConfigApps {
@@ -28,7 +28,7 @@ object DefaultStyle : IConfigApps {
 
         // 排除模式
         val exceptionModePrefs = DataConst.IS_DEFAULT_STYLE_LIST_EXCEPTION_MODE
-        val exceptionModeBinding = getDataBinding(context.modulePrefs.get(exceptionModePrefs))
+        val exceptionModeBinding = getDataBinding(context.prefs().get(exceptionModePrefs))
         TextSummaryWithSwitch(TextSummaryV(textId = R.string.exception_mode), SwitchView(exceptionModePrefs, dataBindingSend = exceptionModeBinding.bindingSend))
 
         CustomView(

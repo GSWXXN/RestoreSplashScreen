@@ -15,8 +15,14 @@ import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.ConstValue
 import com.gswxxn.restoresplashscreen.databinding.ActivityConfigAppsBinding
 import com.gswxxn.restoresplashscreen.databinding.AdapterConfigBinding
+import com.gswxxn.restoresplashscreen.ui.configapps.BGColorIndividualConfig
+import com.gswxxn.restoresplashscreen.ui.configapps.BackgroundExcept
+import com.gswxxn.restoresplashscreen.ui.configapps.BrandingImage
+import com.gswxxn.restoresplashscreen.ui.configapps.CustomScope
+import com.gswxxn.restoresplashscreen.ui.configapps.DefaultStyle
+import com.gswxxn.restoresplashscreen.ui.configapps.ForceShowSplashScreen
+import com.gswxxn.restoresplashscreen.ui.configapps.MinDuration
 import com.gswxxn.restoresplashscreen.ui.`interface`.IConfigApps
-import com.gswxxn.restoresplashscreen.ui.configapps.*
 import com.gswxxn.restoresplashscreen.utils.AppInfoHelper
 import com.gswxxn.restoresplashscreen.utils.BlockMIUIHelper.addBlockMIUIView
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.notEqualsTo
@@ -24,8 +30,13 @@ import com.gswxxn.restoresplashscreen.utils.CommonUtils.toMap
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toSet
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.sendToHost
-import com.highcapable.yukihookapi.hook.factory.modulePrefs
-import kotlinx.coroutines.*
+import com.highcapable.yukihookapi.hook.factory.prefs
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineScope by MainScope() {
     companion object {
@@ -59,9 +70,9 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineS
         }
 
         // 已勾选的应用包名 Set
-        checkedList = modulePrefs.get(instance.checkedListPrefs).toMutableSet()
+        checkedList = prefs().get(instance.checkedListPrefs).toMutableSet()
         // 应用配置信息
-        configMap = modulePrefs.get(instance.configMapPrefs).toMap()
+        configMap = prefs().get(instance.configMapPrefs).toMap()
         // AppInfoHelper 实例
         appInfo = AppInfoHelper(this, checkedList, configMap)
         // 在列表中的条目
@@ -168,10 +179,12 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineS
 
         // 保存按钮点击事件
         binding.configSaveButton.setOnClickListener {
-            if (instance.submitSet)
-                modulePrefs.put(instance.checkedListPrefs, checkedList)
-            if (instance.submitMap)
-                modulePrefs.put(instance.configMapPrefs, configMap.toSet())
+            prefs().edit {
+                if (instance.submitSet)
+                    put(instance.checkedListPrefs, checkedList)
+                if (instance.submitMap)
+                    put(instance.configMapPrefs, configMap.toSet())
+            }
             sendToHost()
             toast(getString(R.string.save_successful))
             finish()
@@ -189,8 +202,8 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineS
                 text = null
             }
             showView(true, binding.appListTitle, binding.configDescription, binding.configTitleFilter, binding.overallSettings)
-        } else if ((instance.submitSet && modulePrefs.get(instance.checkedListPrefs) notEqualsTo checkedList) ||
-            (instance.submitMap && modulePrefs.get(instance.configMapPrefs) notEqualsTo configMap.toSet())) {
+        } else if ((instance.submitSet && prefs().get(instance.checkedListPrefs) notEqualsTo checkedList) ||
+            (instance.submitMap && prefs().get(instance.configMapPrefs) notEqualsTo configMap.toSet())) {
             MIUIDialog(this) {
                 setTitle(getString(R.string.not_saved_title))
                 setMessage(getString(R.string.not_saved_hint))

@@ -13,7 +13,7 @@ import com.gswxxn.restoresplashscreen.ui.`interface`.ISubSettings
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.gswxxn.restoresplashscreen.view.BlockMIUIItemData
 import com.gswxxn.restoresplashscreen.view.SwitchView
-import com.highcapable.yukihookapi.hook.factory.modulePrefs
+import com.highcapable.yukihookapi.hook.factory.prefs
 
 object BottomSettings : ISubSettings {
     override val titleID: Int = R.string.bottom_settings
@@ -27,7 +27,7 @@ object BottomSettings : ISubSettings {
         }
 
         // 移除底部图片
-        val removeBrandingImageBinding = getDataBinding(context.modulePrefs.get(DataConst.REMOVE_BRANDING_IMAGE))
+        val removeBrandingImageBinding = getDataBinding(context.prefs().get(DataConst.REMOVE_BRANDING_IMAGE))
         TextSummaryWithSwitch(
             TextSummaryV(
                 textId = R.string.remove_branding_image,

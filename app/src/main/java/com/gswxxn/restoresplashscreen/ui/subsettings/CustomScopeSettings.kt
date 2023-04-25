@@ -13,7 +13,7 @@ import com.gswxxn.restoresplashscreen.ui.`interface`.ISubSettings
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.gswxxn.restoresplashscreen.view.BlockMIUIItemData
 import com.gswxxn.restoresplashscreen.view.SwitchView
-import com.highcapable.yukihookapi.hook.factory.modulePrefs
+import com.highcapable.yukihookapi.hook.factory.prefs
 
 object CustomScopeSettings : ISubSettings {
     override val titleID: Int = R.string.custom_scope_settings
@@ -27,7 +27,7 @@ object CustomScopeSettings : ISubSettings {
         }
 
         // 自定义模块作用域
-        val customScopeBinding = getDataBinding(context.modulePrefs.get(DataConst.ENABLE_CUSTOM_SCOPE))
+        val customScopeBinding = getDataBinding(context.prefs().get(DataConst.ENABLE_CUSTOM_SCOPE))
         TextSummaryWithSwitch(TextSummaryV(textId = R.string.custom_scope), SwitchView(DataConst.ENABLE_CUSTOM_SCOPE, dataBindingSend = customScopeBinding.bindingSend) {
             if (it) context.toast(context.getString(R.string.custom_scope_message))
         })

@@ -14,7 +14,7 @@ import com.gswxxn.restoresplashscreen.ui.`interface`.ISubSettings
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.gswxxn.restoresplashscreen.view.BlockMIUIItemData
 import com.gswxxn.restoresplashscreen.view.SwitchView
-import com.highcapable.yukihookapi.hook.factory.modulePrefs
+import com.highcapable.yukihookapi.hook.factory.prefs
 
 object LabSettings : ISubSettings {
     override val titleID: Int = R.string.lab_settings
@@ -30,7 +30,7 @@ object LabSettings : ISubSettings {
         }
 
         // 强制显示遮罩
-        val forceShowSplashScreenBinding = getDataBinding(context.modulePrefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN))
+        val forceShowSplashScreenBinding = getDataBinding(context.prefs().get(DataConst.FORCE_SHOW_SPLASH_SCREEN))
         TextSummaryWithSwitch(
             TextSummaryV(
                 textId = R.string.force_show_splash_screen,
@@ -51,8 +51,8 @@ object LabSettings : ISubSettings {
         Line()
 
         // 强制开启启动遮罩
-        val hotStartBinding = getDataBinding(context.modulePrefs.get(DataConst.ENABLE_HOT_START_COMPATIBLE))
-        val forceEnableSplashScreenBinding = getDataBinding(context.modulePrefs.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN))
+        val hotStartBinding = getDataBinding(context.prefs().get(DataConst.ENABLE_HOT_START_COMPATIBLE))
+        val forceEnableSplashScreenBinding = getDataBinding(context.prefs().get(DataConst.FORCE_ENABLE_SPLASH_SCREEN))
         TextSummaryWithSwitch(
             TextSummaryV(
                 textId = R.string.force_enable_splash_screen,

@@ -8,7 +8,7 @@ import com.gswxxn.restoresplashscreen.data.ConstValue.CREATE_DOCUMENT_CODE
 import com.gswxxn.restoresplashscreen.data.ConstValue.OPEN_DOCUMENT_CODE
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.sendToHost
-import com.highcapable.yukihookapi.hook.factory.modulePrefs
+import com.highcapable.yukihookapi.hook.factory.prefs
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.BufferedWriter
@@ -33,31 +33,36 @@ object BackupUtils {
     fun handleReadDocument(activity: Activity, data: Uri?) {
         val uri = data ?: return
         try {
-            activity.modulePrefs.clear()
-            activity.contentResolver.openInputStream(uri)?.let { loadFile ->
-                BufferedReader(InputStreamReader(loadFile)).apply {
-                    val sb = StringBuffer()
-                    var line = readLine()
-                    do {
-                        sb.append(line)
-                        line = readLine()
-                    } while (line != null)
-                    JSONObject(sb.toString()).apply {
-                        val key = keys()
-                        while (key.hasNext()) {
-                            val keys = key.next()
-                            when (val value = get(keys)) {
-                                is String -> {
-                                    if (value.firstOrNull() == '[' && value.lastOrNull() == ']')
-                                        activity.modulePrefs.putStringSet(keys, parseStringArray(value))
-                                    else activity.modulePrefs.putString(keys, value)
+            activity.prefs().edit {
+                clear()
+                activity.contentResolver.openInputStream(uri)?.let { loadFile ->
+                    BufferedReader(InputStreamReader(loadFile)).apply {
+                        val sb = StringBuffer()
+                        var line = readLine()
+                        do {
+                            sb.append(line)
+                            line = readLine()
+                        } while (line != null)
+                        JSONObject(sb.toString()).apply {
+                            val key = keys()
+                            while (key.hasNext()) {
+                                val keys = key.next()
+                                when (val value = get(keys)) {
+                                    is String -> {
+                                        if (value.firstOrNull() == '[' && value.lastOrNull() == ']')
+                                            putStringSet(
+                                                keys,
+                                                parseStringArray(value)
+                                            )
+                                        else putString(keys, value)
+                                    }
+                                    is Boolean -> putBoolean(keys, value)
+                                    is Int -> putInt(keys, value)
                                 }
-                                is Boolean -> activity.modulePrefs.putBoolean(keys, value)
-                                is Int -> activity.modulePrefs.putInt(keys, value)
                             }
                         }
+                        close()
                     }
-                    close()
                 }
             }
             activity.sendToHost()
@@ -72,7 +77,7 @@ object BackupUtils {
             activity.contentResolver.openOutputStream(uri)?.let { saveFile ->
                 BufferedWriter(OutputStreamWriter(saveFile)).apply {
                     write(JSONObject().also {
-                        for (entry: Map.Entry<String, *> in activity.modulePrefs.all()) {
+                        for (entry: Map.Entry<String, *> in activity.prefs().all()) {
                             it.put(entry.key, entry.value)
                         }
                     }.toString())

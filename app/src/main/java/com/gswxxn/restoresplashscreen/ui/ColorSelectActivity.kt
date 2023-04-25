@@ -30,7 +30,7 @@ import com.gswxxn.restoresplashscreen.utils.GraphicUtils.drawable2Bitmap
 import com.gswxxn.restoresplashscreen.utils.GraphicUtils.getBgColor
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.sendToHost
 import com.highcapable.yukihookapi.hook.factory.method
-import com.highcapable.yukihookapi.hook.factory.modulePrefs
+import com.highcapable.yukihookapi.hook.factory.prefs
 import java.util.*
 import java.util.regex.Pattern
 
@@ -89,7 +89,7 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
         if (intent.getBooleanExtra(ConstValue.EXTRA_MESSAGE_OVERALL_BG_COLOR, false)) {
             isSettingOverallBgColor = true
             pkgName = packageName
-            currentColor = Color.parseColor( modulePrefs.get(
+            currentColor = Color.parseColor( prefs().get(
                 if (isDarkMode)
                     DataConst.OVERALL_BG_COLOR_NIGHT
                 else
@@ -364,12 +364,15 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
                     putExtra(ConstValue.EXTRA_MESSAGE_APP_INDEX, intent.getIntExtra(ConstValue.EXTRA_MESSAGE_APP_INDEX, -1))
                 })
         else {
-            modulePrefs.put(
-                if (isDarkMode)
-                    DataConst.OVERALL_BG_COLOR_NIGHT
-                else
-                    DataConst.OVERALL_BG_COLOR,
-                binding.colorString.text.toString())
+            prefs().edit {
+                put(
+                    if (isDarkMode)
+                        DataConst.OVERALL_BG_COLOR_NIGHT
+                    else
+                        DataConst.OVERALL_BG_COLOR,
+                    binding.colorString.text.toString()
+                )
+            }
 
             sendToHost()
         }

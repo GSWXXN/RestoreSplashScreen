@@ -33,7 +33,7 @@ abstract class BaseActivity<VB : ViewBinding> : Activity() {
         }
         javaClass.genericSuperclass.also { type ->
             if (type is ParameterizedType) {
-                binding = (type.actualTypeArguments[0] as Class<VB>).method {
+                binding = (type.actualTypeArguments[0] as Class<*>).method {
                     name = "inflate"
                     param(LayoutInflaterClass)
                 }.get().invoke<VB>(layoutInflater) ?: error("binding failed")

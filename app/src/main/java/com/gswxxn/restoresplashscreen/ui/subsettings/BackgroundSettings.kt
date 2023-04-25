@@ -19,7 +19,7 @@ import com.gswxxn.restoresplashscreen.ui.`interface`.ISubSettings
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.sendToHost
 import com.gswxxn.restoresplashscreen.view.BlockMIUIItemData
 import com.gswxxn.restoresplashscreen.view.SwitchView
-import com.highcapable.yukihookapi.hook.factory.modulePrefs
+import com.highcapable.yukihookapi.hook.factory.prefs
 
 object BackgroundSettings : ISubSettings {
     override val titleID = R.string.background_settings
@@ -56,13 +56,13 @@ object BackgroundSettings : ISubSettings {
             1 to context.getString(R.string.from_icon),
             2 to context.getString(R.string.from_monet),
             3 to context.getString(R.string.from_custom))
-        val changeBGColorTypeBinding = getDataBinding(changeColorTypeItems[context.modulePrefs.get(DataConst.CHANG_BG_COLOR_TYPE)]!!)
+        val changeBGColorTypeBinding = getDataBinding(changeColorTypeItems[context.prefs().get(DataConst.CHANG_BG_COLOR_TYPE)]!!)
         TextWithSpinner(
-            TextV(textId = R.string.change_bg_color), SpinnerV(changeColorTypeItems[context.modulePrefs.get(
+            TextV(textId = R.string.change_bg_color), SpinnerV(changeColorTypeItems[context.prefs().get(
                 DataConst.CHANG_BG_COLOR_TYPE)]!!, 180F, dataBindingSend = changeBGColorTypeBinding.bindingSend){
             for (item in changeColorTypeItems) {
                 add(item.value) {
-                    context.modulePrefs.put(DataConst.CHANG_BG_COLOR_TYPE, item.key)
+                    context.prefs().edit { put(DataConst.CHANG_BG_COLOR_TYPE, item.key) }
                     context.sendToHost()
                 }
             }
@@ -92,13 +92,13 @@ object BackgroundSettings : ISubSettings {
             0 to context.getString(R.string.light_color),
             1 to context.getString(R.string.dark_color),
             2 to context.getString(R.string.follow_system))
-        val colorModeBinding = getDataBinding(colorModeItems[context.modulePrefs.get(DataConst.BG_COLOR_MODE)]!!)
+        val colorModeBinding = getDataBinding(colorModeItems[context.prefs().get(DataConst.BG_COLOR_MODE)]!!)
         TextSummaryWithSpinner(
-            TextSummaryV(textId = R.string.color_mode, tipsId = R.string.color_mode_tips), SpinnerV(colorModeItems[context.modulePrefs.get(
+            TextSummaryV(textId = R.string.color_mode, tipsId = R.string.color_mode_tips), SpinnerV(colorModeItems[context.prefs().get(
                 DataConst.BG_COLOR_MODE)]!!, dataBindingSend = colorModeBinding.bindingSend) {
             for (item in colorModeItems) {
                 add(item.value) {
-                    context.modulePrefs.put(DataConst.BG_COLOR_MODE, item.key)
+                    context.prefs().edit { put(DataConst.BG_COLOR_MODE, item.key) }
                     context.sendToHost()
                 }
             }

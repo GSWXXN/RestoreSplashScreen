@@ -32,7 +32,7 @@ import cn.fkj233.ui.switch.MIUISwitch
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.sendToHost
 import com.highcapable.yukihookapi.YukiHookAPI
-import com.highcapable.yukihookapi.hook.factory.modulePrefs
+import com.highcapable.yukihookapi.hook.factory.prefs
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 
 class SwitchView(
@@ -40,7 +40,7 @@ class SwitchView(
     private val dataBindingRecv: DataBinding.Binding.Recv? = null,
     private val dataBindingSend: DataBinding.Binding.Send? = null,
     private val onClickListener: ((Boolean) -> Unit)? = null
-): BaseView() {
+): BaseView {
     private lateinit var context : Context
 
     lateinit var switch: MIUISwitch
@@ -52,7 +52,7 @@ class SwitchView(
             switch = it
             dataBindingRecv?.setView(it)
             this.context = context
-            it.isChecked = context.modulePrefs.get(pref)
+            it.isChecked = context.prefs().get(pref)
             it.setOnCheckedChangeListener { v, b ->
                 if (!YukiHookAPI.Status.isXposedModuleActive) {
                     v.isChecked = !b
@@ -64,7 +64,7 @@ class SwitchView(
                 }
                 callBacks?.let { it1 -> it1() }
                 onClickListener?.let { it(b) }
-                context.modulePrefs.put(pref, b)
+                context.prefs().edit { put(pref, b) }
                 context.sendToHost()
             }
         }

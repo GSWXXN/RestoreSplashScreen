@@ -1,9 +1,9 @@
-import java.util.*
+import java.util.Properties
 
 plugins {
     id("com.android.application")
     kotlin("android")
-    id("com.google.devtools.ksp") version "1.8.10-1.0.9"
+    id("com.google.devtools.ksp") version "1.8.20-1.0.11"
 }
 
 android {
@@ -90,7 +90,7 @@ dependencies {
     ksp("com.highcapable.yukihookapi:ksp-xposed:1.1.8")
 
     implementation("androidx.palette:palette-ktx:1.0.0")
-    implementation("androidx.compose.material3:material3:1.1.0-beta02")
+    implementation("androidx.compose.material3:material3:1.1.0-rc01")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 }

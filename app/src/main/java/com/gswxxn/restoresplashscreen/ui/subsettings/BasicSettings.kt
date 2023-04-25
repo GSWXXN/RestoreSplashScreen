@@ -42,13 +42,6 @@ object BasicSettings : ISubSettings {
             })
         })
 
-        // 启用缓存
-        TextSummaryWithSwitch(
-            TextSummaryV(textId = R.string.enable_data_cache, tipsId = R.string.enable_data_cache_tips), SwitchView(
-                DataConst.ENABLE_DATA_CACHE
-            )
-        )
-
         Line()
         TitleText(textId = R.string.backup_restore_title)
 

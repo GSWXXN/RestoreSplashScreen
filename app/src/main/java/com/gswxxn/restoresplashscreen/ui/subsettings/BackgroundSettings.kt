@@ -16,7 +16,6 @@ import com.gswxxn.restoresplashscreen.ui.ColorSelectActivity
 import com.gswxxn.restoresplashscreen.ui.ConfigAppsActivity
 import com.gswxxn.restoresplashscreen.ui.SubSettings
 import com.gswxxn.restoresplashscreen.ui.`interface`.ISubSettings
-import com.gswxxn.restoresplashscreen.utils.YukiHelper.sendToHost
 import com.gswxxn.restoresplashscreen.view.BlockMIUIItemData
 import com.gswxxn.restoresplashscreen.view.SwitchView
 import com.highcapable.yukihookapi.hook.factory.prefs
@@ -63,7 +62,6 @@ object BackgroundSettings : ISubSettings {
             for (item in changeColorTypeItems) {
                 add(item.value) {
                     context.prefs().edit { put(DataConst.CHANG_BG_COLOR_TYPE, item.key) }
-                    context.sendToHost()
                 }
             }
         })
@@ -99,7 +97,6 @@ object BackgroundSettings : ISubSettings {
             for (item in colorModeItems) {
                 add(item.value) {
                     context.prefs().edit { put(DataConst.BG_COLOR_MODE, item.key) }
-                    context.sendToHost()
                 }
             }
         }, dataBindingRecv = changeBGColorTypeBinding.getRecv(1))

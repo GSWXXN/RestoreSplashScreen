@@ -14,7 +14,6 @@ import com.gswxxn.restoresplashscreen.databinding.AdapterConfigBinding
 import com.gswxxn.restoresplashscreen.ui.ConfigAppsActivity
 import com.gswxxn.restoresplashscreen.ui.`interface`.IConfigApps
 import com.gswxxn.restoresplashscreen.utils.AppInfoHelper
-import com.gswxxn.restoresplashscreen.utils.YukiHelper.sendToHost
 import com.gswxxn.restoresplashscreen.view.BlockMIUIItemData
 import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.factory.prefs
@@ -52,7 +51,6 @@ object MinDuration : IConfigApps {
                         else
                             put(DataConst.MIN_DURATION, 0)
                     }
-                    context.sendToHost()
                     dismiss()
                 }
                 setLButton(R.string.button_cancel) { dismiss() }

@@ -29,7 +29,6 @@ import com.gswxxn.restoresplashscreen.utils.CommonUtils.notEqualsTo
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toMap
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toSet
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
-import com.gswxxn.restoresplashscreen.utils.YukiHelper.sendToHost
 import com.highcapable.yukihookapi.hook.factory.prefs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -185,7 +184,6 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineS
                 if (instance.submitMap)
                     put(instance.configMapPrefs, configMap.toSet())
             }
-            sendToHost()
             toast(getString(R.string.save_successful))
             finish()
         }

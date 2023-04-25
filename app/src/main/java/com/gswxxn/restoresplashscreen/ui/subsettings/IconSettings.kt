@@ -15,7 +15,6 @@ import com.gswxxn.restoresplashscreen.ui.SubSettings
 import com.gswxxn.restoresplashscreen.ui.`interface`.ISubSettings
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
-import com.gswxxn.restoresplashscreen.utils.YukiHelper.sendToHost
 import com.gswxxn.restoresplashscreen.view.BlockMIUIItemData
 import com.gswxxn.restoresplashscreen.view.SwitchView
 import com.highcapable.yukihookapi.hook.factory.prefs
@@ -46,7 +45,6 @@ object IconSettings : ISubSettings {
             for (item in shrinkIconItems) {
                 add(item.value) {
                     context.prefs().edit { put(DataConst.SHRINK_ICON, item.key) }
-                    context.sendToHost()
                 }
             }
         })
@@ -65,7 +63,6 @@ object IconSettings : ISubSettings {
             for (item in availableIconPacks) {
                 add(item.value) {
                     context.prefs().edit { put(DataConst.ICON_PACK_PACKAGE_NAME, item.key) }
-                    context.sendToHost()
                 }
             }
         })

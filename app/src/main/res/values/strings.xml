@@ -38,8 +38,6 @@
     <string name="hide_icon">隐藏桌面图标</string>
     <string name="min_duration">遮罩最小持续时长</string>
     <string name="min_duration_tips">注意：设置此参数会拖慢应用启动时间。如无特殊需求，则不应配置此项。</string>
-    <string name="enable_data_cache">启用缓存</string>
-    <string name="enable_data_cache_tips">开启后会缓存模块绘制的圆角图标、背景取色，可能会缓解在部分机型上开启应用的瞬间会卡顿的问题。</string>
     <string name="backup_restore_title">备份与恢复</string>
     <string name="backup">备份设置项</string>
     <string name="restore">恢复设置项</string>

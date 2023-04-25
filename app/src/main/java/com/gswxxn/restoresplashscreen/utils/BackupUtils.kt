@@ -7,7 +7,6 @@ import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.ConstValue.CREATE_DOCUMENT_CODE
 import com.gswxxn.restoresplashscreen.data.ConstValue.OPEN_DOCUMENT_CODE
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
-import com.gswxxn.restoresplashscreen.utils.YukiHelper.sendToHost
 import com.highcapable.yukihookapi.hook.factory.prefs
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -65,7 +64,6 @@ object BackupUtils {
                     }
                 }
             }
-            activity.sendToHost()
             activity.finish()
             activity.toast(activity.getString(R.string.restore_successful))
         } catch (e: Throwable) { activity.toast(activity.getString(R.string.restore_failed)) }

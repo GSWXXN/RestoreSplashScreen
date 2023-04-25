@@ -28,7 +28,6 @@ import com.gswxxn.restoresplashscreen.utils.BlockMIUIHelper.addBlockMIUIView
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.gswxxn.restoresplashscreen.utils.GraphicUtils.drawable2Bitmap
 import com.gswxxn.restoresplashscreen.utils.GraphicUtils.getBgColor
-import com.gswxxn.restoresplashscreen.utils.YukiHelper.sendToHost
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.factory.prefs
 import java.util.*
@@ -373,8 +372,6 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
                     binding.colorString.text.toString()
                 )
             }
-
-            sendToHost()
         }
 
 

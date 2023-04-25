@@ -12,10 +12,13 @@ import com.highcapable.yukihookapi.hook.log.loggerI
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 
 object YukiHelper {
-    /** 缓存的 [Map]<[String], [String]> 键值数据 */
-    private var stringMapData = HashMap<String, Map<String, String>>()
-    fun YukiBaseHooker.getMapPrefs(p: PrefsData<MutableSet<String>>) =
-        stringMapData.getOrPut(p.key) { prefs.get(p).toMap() }
+    /**
+     * 读取 MapPrefs
+     *
+     * @param p [PrefsData] 实例
+     * @return [MutableMap]
+     */
+    fun YukiBaseHooker.getMapPrefs(p: PrefsData<MutableSet<String>>) = prefs.get(p).toMap()
 
     /**
      * 根据名称获取实例 的 Field 实例处理类
@@ -48,24 +51,11 @@ object YukiHelper {
     }
 
     /**
-     * 给宿主发送通讯，通知配置变化
-     */
-    fun Context.sendToHost() =
-        setOf("android", "com.android.systemui")
-            .forEach { dataChannel(it).put("${it.replace('.', '_')}_config_change") }
-
-    /**
      * 宿主注册接收 DataChannel 通知
      */
     fun YukiBaseHooker.register() {
         dataChannel.wait<String>(key = "${packageName.replace('.', '_')}_version_get") {
             dataChannel.put(key = "${packageName.replace('.', '_')}_version_result", value = YukiHookAPI.Status.compiledTimestamp.toString())
-        }
-
-        dataChannel.wait<String>(key = "${packageName.replace('.', '_')}_config_change") {
-            prefs.clearCache()
-            stringMapData.clear()
-            DataCacheUtils.clear()
         }
     }
 

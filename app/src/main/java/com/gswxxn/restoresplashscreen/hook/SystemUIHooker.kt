@@ -13,9 +13,6 @@ import androidx.compose.ui.graphics.toArgb
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.RoundDegree
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.isAtLeastT
-import com.gswxxn.restoresplashscreen.utils.DataCacheUtils.checkDarkModeChanged
-import com.gswxxn.restoresplashscreen.utils.DataCacheUtils.colorData
-import com.gswxxn.restoresplashscreen.utils.DataCacheUtils.iconData
 import com.gswxxn.restoresplashscreen.utils.GraphicUtils
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.getField
@@ -250,10 +247,8 @@ object SystemUIHooker: YukiBaseHooker() {
                         val bgColorType = prefs.get(DataConst.CHANG_BG_COLOR_TYPE)
                         val ignoreDarkMode = prefs.get(DataConst.IGNORE_DARK_MODE)
                         val colorMode = prefs.get(DataConst.BG_COLOR_MODE)
-                        val enableDataCache = prefs.get(DataConst.ENABLE_DATA_CACHE)
                         val isDarkMode = (appContext!!.resources
                             .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES)
-                            .also { checkDarkModeChanged(it) }
                         val individualBgColorAppMap = getMapPrefs(
                             if (!isDarkMode) DataConst.INDIVIDUAL_BG_COLOR_APP_MAP
                             else DataConst.INDIVIDUAL_BG_COLOR_APP_MAP_DARK)
@@ -343,9 +338,8 @@ object SystemUIHooker: YukiBaseHooker() {
                                 else -> { printLog("10. createIconDrawable(): not replace background color"); null }
                             } else { printLog("10. createIconDrawable(): skip set bg color cuz app in except list"); null }
 
-                        if (enableDataCache && bgColorType != 2) { colorData.getOrPut(pkgName) { getColor() } }
-                        else { getColor() }?.let {
-                            printLog("action: createIconDrawable(): ${if (enableDataCache) "(from cache)" else ""}set background color")
+                        getColor()?.let {
+                            printLog("action: createIconDrawable(): set background color")
                             instance.setField("mThemeColor", it)
                         }
                     }
@@ -374,7 +368,6 @@ object SystemUIHooker: YukiBaseHooker() {
                     else param(ActivityInfoClass, IntType)
                 }
                 afterHook {
-                    val enableDataCache = prefs.get(DataConst.ENABLE_DATA_CACHE)
                     val enableReplaceIcon = prefs.get(DataConst.ENABLE_REPLACE_ICON)
                     val shrinkIconType = prefs.get(DataConst.SHRINK_ICON)
                     val iconPackPackageName = prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)
@@ -444,9 +437,8 @@ object SystemUIHooker: YukiBaseHooker() {
                         return drawable
                     }
 
-                    printLog("action: getIcon(): ${if (enableDataCache) "(from cache)" else ""}set drawable icon")
-                    result = if (enableDataCache) iconData.getOrPut(pkgName) { getDrawable() }
-                    else getDrawable()
+                    printLog("action: getIcon(): set drawable icon")
+                    result = getDrawable()
                 }
             }
         }

@@ -107,7 +107,7 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
         seekBarS = createSeekBar(10000) { setHsvColor(1, it.toFloat() / 10000) }
         seekBarV = createSeekBar(10000){ setHsvColor(2, it.toFloat() / 10000) }
 
-        fun textV() = TextV("", textSize = 13.75f, colorId = cn.fkj233.miui.R.color.author_tips, padding = Padding(0, 0, 0, 0)).create(this, null) as TextView
+        fun textV() = TextV("", textSize = 13.75f, colorId = R.color.author_tips, padding = Padding(0, 0, 0, 0)).create(this, null) as TextView
         statusR = textV()
         statusG = textV()
         statusB = textV()
@@ -307,7 +307,7 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
             view.background = null
             view.isIndeterminate = false
 
-            view.progressDrawable = (getDrawable(cn.fkj233.miui.R.drawable.seekbar_progress_drawable) as LayerDrawable).apply {
+            view.progressDrawable = (getDrawable(R.drawable.seekbar_progress_drawable) as LayerDrawable).apply {
                 if (progressColor == 0) setDrawable(0, huePanel)
                 ((getDrawable(1) as ClipDrawable).drawable as GradientDrawable).setColor(progressColor)
             }

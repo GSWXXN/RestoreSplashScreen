@@ -23,3 +23,4 @@
     *** inflate(android.view.LayoutInflater);
 }
 -keep class kotlin.Unit
+-keep class com.gswxxn.restoresplashscreen.ui.BaseActivity

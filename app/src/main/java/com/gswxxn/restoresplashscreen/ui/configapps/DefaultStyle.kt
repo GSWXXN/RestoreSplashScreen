@@ -12,6 +12,9 @@ import com.gswxxn.restoresplashscreen.view.SwitchView
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 
+/**
+ * 图标 - 忽略应用主动谁知的图标 - 配置应用列表
+ */
 object DefaultStyle : IConfigApps {
     override val titleID: Int
         get() = R.string.default_style_title

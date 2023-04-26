@@ -1,15 +1,3 @@
-[
-    "# MIUI遮罩进化",
-    "## 测试环境",
-    "## 模块功能",
-    "## 使用方法",
-    "## 已知问题",
-    "## 常见问题解答",
-    "## 无法使用",
-    "## 捐赠支持",
-    "## 致谢"
-]
-
 # MIUI遮罩进化
 
 [![Xposed](https://img.shields.io/badge/-Xposed-green?style=flat&logo=Android&logoColor=white)](https://github.com/Xposed-Modules-Repo/com.gswxxn.restoresplashscreen/)
@@ -30,27 +18,26 @@
 
 ## 模块功能
 
-1.  为所有应用显示原生Splash Screen界面
-2.  对于主动适配Splash Screen的应用使用默认静态图标
-3.  替换获取图标方式 使Splash Screen的图标与桌面图标一致(多用于主题)
-4.  根据图标自适应Splash Screen背景颜色
-5.  彻底关闭 Splash Screen 特性
+1. 为所有应用显示原生Splash Screen界面
+2. 对于主动适配Splash Screen的应用使用默认静态图标
+3. 替换获取图标方式 使Splash Screen的图标与桌面图标一致(多用于主题)
+4. 根据图标自适应Splash Screen背景颜色
+5. 彻底关闭 Splash Screen 特性
 
 ## 使用方法
 
-1.  在Xposed管理器(LSPosed)中激活模块
-2.  作用域勾选`com.android.systemui`
-3.  重启系统界面或者重启手机
+1. 在Xposed管理器(LSPosed)中激活模块
+2. 作用域勾选`com.android.systemui`
+3. 重启系统界面或者重启手机
 
 ## 已知问题
 
--  ~~微信、QQ、支付宝的Splash Screen只能在MIUI内测22.4.25后显示~~ (v1.9 已支持)
+- ~~微信、QQ、支付宝的Splash Screen只能在MIUI内测22.4.25后显示~~ (v1.9 已支持)
 
--  开启模块后出现启动应用卡顿可能与调度模块同时开启有关，这个我也在想办法优化 (v2.0 优化过，反馈似乎还不错)
+- 开启模块后出现启动应用卡顿可能与调度模块同时开启有关，这个我也在想办法优化 (v2.0 优化过，反馈似乎还不错)
 
--  ~~部分机型 (如Redmi Note 10 Pro、小米12Pro) 的系统版本 (如稳定版、开发版) 可能无法使用本模块，
+- ~~部分机型 (如Redmi Note 10 Pro、小米12Pro) 的系统版本 (如稳定版、开发版) 可能无法使用本模块，
 请等待系统更新~~ (v1.9 已支持)
-
 
 ## 常见问题解答
 
@@ -69,7 +56,7 @@
 
 如果你想捐赠，觉得这个模块好用的不得了，我会非常感谢你的！！！如果这个模块对你来说只要还差一点点意思，就不要捐赠啦
 
-<img src="https://raw.githubusercontent.com/GSWXXN/RestoreSplashScreen/master/Doc/donate.png" width = "250" alt="donate" />
+<img src="./Doc/donate.png" width = "250" alt="donate" />
 
 
 ## 致谢

@@ -15,6 +15,9 @@ import com.gswxxn.restoresplashscreen.view.BlockMIUIItemData
 import com.gswxxn.restoresplashscreen.view.SwitchView
 import com.highcapable.yukihookapi.hook.factory.prefs
 
+/**
+ * 底部 界面
+ */
 object BottomSettings : ISubSettings {
     override val titleID: Int = R.string.bottom_settings
     override val demoImageID: Int = R.drawable.demo_branding

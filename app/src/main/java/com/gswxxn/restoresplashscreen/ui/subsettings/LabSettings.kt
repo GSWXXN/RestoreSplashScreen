@@ -16,6 +16,9 @@ import com.gswxxn.restoresplashscreen.view.BlockMIUIItemData
 import com.gswxxn.restoresplashscreen.view.SwitchView
 import com.highcapable.yukihookapi.hook.factory.prefs
 
+/**
+ * 实验功能 界面
+ */
 object LabSettings : ISubSettings {
     override val titleID: Int = R.string.lab_settings
     override val demoImageID: Int = R.drawable.demo_lab

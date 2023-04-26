@@ -20,6 +20,9 @@ import com.gswxxn.restoresplashscreen.view.BlockMIUIItemData
 import com.gswxxn.restoresplashscreen.view.SwitchView
 import com.highcapable.yukihookapi.hook.factory.prefs
 
+/**
+ * 背景 界面
+ */
 object BackgroundSettings : ISubSettings {
     override val titleID = R.string.background_settings
     override val demoImageID = R.drawable.demo_background

@@ -19,6 +19,9 @@ import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 
+/**
+ * 基础设置 - 遮罩最小持续时长
+ */
 object MinDuration : IConfigApps {
     override val titleID: Int = R.string.min_duration_title
     override val subSettingHint: Int

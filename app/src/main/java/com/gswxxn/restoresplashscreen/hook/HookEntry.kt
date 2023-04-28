@@ -6,8 +6,9 @@ import com.highcapable.yukihookapi.hook.factory.configs
 import com.highcapable.yukihookapi.hook.factory.encase
 import com.highcapable.yukihookapi.hook.xposed.proxy.IYukiHookXposedInit
 
+/** Hook 入口类 */
 @InjectYukiHookWithXposed(isUsingResourcesHook = false)
-class HookEntry : IYukiHookXposedInit {
+object HookEntry : IYukiHookXposedInit {
     override fun onInit() = configs {
         debugLog { tag = "RestoreSplashScreen" }
         isDebug = BuildConfig.DEBUG

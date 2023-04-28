@@ -33,9 +33,13 @@ import com.highcapable.yukihookapi.hook.factory.prefs
 import java.util.*
 import java.util.regex.Pattern
 
+/**
+ * 选择颜色的 Activity
+ */
 class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
     companion object {
         lateinit var huePanel: Drawable
+        /** 判断 [huePanel] 是否被初始化 */
         fun isHuePanelInitialized() = ::huePanel.isInitialized
     }
     private var currentColor: Int? = null
@@ -321,7 +325,7 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
                     if (p2) callBacks?.let { it(p1); selectedColor = true }
                 }
                 override fun onStartTrackingTouch(p0: SeekBar?) {}
-                override fun onStopTrackingTouch(p0: SeekBar?) {}
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {}
             })
             view.setPadding(0, 0, 0, 0)
             view.invalidate()

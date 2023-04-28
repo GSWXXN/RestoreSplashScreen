@@ -1,5 +1,6 @@
 package com.gswxxn.restoresplashscreen.data
 
+/** Constants used in the app. */
 object ConstValue {
     const val EXTRA_MESSAGE = "com.gswxxn.MainActivity.MESSAGE"
     const val EXTRA_MESSAGE_OVERALL_BG_COLOR = "OVERALL BG COLOR"

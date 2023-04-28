@@ -37,6 +37,9 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+/**
+ * 配置应用列表 Activity
+ */
 class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineScope by MainScope() {
     companion object {
         var isDarkMode: Boolean = false
@@ -193,6 +196,9 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineS
     }
 
     override fun onBackPressed() {
+        fun isNeedSavePrompt() = (instance.submitSet && prefs().get(instance.checkedListPrefs) notEqualsTo checkedList) ||
+                (instance.submitMap && prefs().get(instance.configMapPrefs) notEqualsTo configMap.toSet())
+
         if (binding.searchEditText.isFocused){
             binding.searchEditText.apply {
                 clearFocus()
@@ -200,8 +206,7 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineS
                 text = null
             }
             showView(true, binding.appListTitle, binding.configDescription, binding.configTitleFilter, binding.overallSettings)
-        } else if ((instance.submitSet && prefs().get(instance.checkedListPrefs) notEqualsTo checkedList) ||
-            (instance.submitMap && prefs().get(instance.configMapPrefs) notEqualsTo configMap.toSet())) {
+        } else if (isNeedSavePrompt()) {
             MIUIDialog(this) {
                 setTitle(getString(R.string.not_saved_title))
                 setMessage(getString(R.string.not_saved_hint))

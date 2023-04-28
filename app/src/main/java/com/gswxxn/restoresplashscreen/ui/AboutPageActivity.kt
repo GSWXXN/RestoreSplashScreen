@@ -14,6 +14,9 @@ import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.gswxxn.restoresplashscreen.utils.GraphicUtils.drawable2Bitmap
 import com.gswxxn.restoresplashscreen.utils.GraphicUtils.roundBitmapByShader
 
+/**
+ * 关于页面
+ */
 class AboutPageActivity : BaseActivity<ActivityAboutPageBinding>() {
 
     override fun onCreate() {
@@ -106,7 +109,7 @@ class AboutPageActivity : BaseActivity<ActivityAboutPageBinding>() {
     }
 
     @SuppressLint("SetTextI18n")
-    fun LinearLayout.addLicenseV(
+    private fun LinearLayout.addLicenseV(
         projectName: String,
         author: String,
         url: String,

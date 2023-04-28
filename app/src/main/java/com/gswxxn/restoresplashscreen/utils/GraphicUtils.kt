@@ -1,7 +1,13 @@
 package com.gswxxn.restoresplashscreen.utils
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.BitmapShader
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.RectF
+import android.graphics.Shader
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
@@ -9,6 +15,9 @@ import androidx.palette.graphics.Palette
 import cn.fkj233.ui.activity.dp2px
 import com.gswxxn.restoresplashscreen.data.RoundDegree
 
+/**
+ * 图形工具类
+ */
 object GraphicUtils {
     /**
      * Drawable 图标转 Bitmap
@@ -79,6 +88,12 @@ object GraphicUtils {
         return  targetBitmap
     }
 
+    /**
+     * 缩小图标尺寸的一半
+     *
+     * @param id 图标资源 id
+     * @return [Drawable]
+     */
     fun Context.shrinkIcon(@DrawableRes id : Int) : Drawable {
         val px = dp2px(this, 50f)
 

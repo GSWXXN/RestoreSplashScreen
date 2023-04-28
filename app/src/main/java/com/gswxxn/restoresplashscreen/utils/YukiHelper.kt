@@ -11,6 +11,8 @@ import com.highcapable.yukihookapi.hook.factory.dataChannel
 import com.highcapable.yukihookapi.hook.log.loggerI
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 
+/**
+ * YukiHookAPI 工具类 */
 object YukiHelper {
     /**
      * 读取 MapPrefs
@@ -29,6 +31,14 @@ object YukiHelper {
      */
     @JvmName("getFieldAny")
     fun Any.getField(fieldName : String) = current().field { name = fieldName }.any()
+
+    /**
+     * 根据名称获取实例 的 Field 实例处理类, 并转换为指定类型
+     *
+     * 需要获取 Field 的实例
+     * @param fieldName Field 名称
+     * @return [Instance]
+     */
     fun <T> Any.getField(fieldName : String) = current().field { name = fieldName }.cast<T>()
 
     /**

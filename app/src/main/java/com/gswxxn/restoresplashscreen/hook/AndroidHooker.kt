@@ -9,6 +9,9 @@ import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.log.loggerE
 
+/**
+ * Android 系统相关 Hook
+ */
 object AndroidHooker : YukiBaseHooker() {
     override fun onHook() {
 
@@ -60,7 +63,6 @@ object AndroidHooker : YukiBaseHooker() {
                     printLog("[Android] addStartingWindow():${if (isDisableSS) "" else "Not"} disable $currentPkgName splash screen")
                     if (isDisableSS) {
                         resultNull()
-                        return@beforeHook
                     }
                 }
             }

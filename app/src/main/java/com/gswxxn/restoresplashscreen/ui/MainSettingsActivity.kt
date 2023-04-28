@@ -19,6 +19,7 @@ import com.gswxxn.restoresplashscreen.view.NewMIUIDialog
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.YukiHookAPI.Status.Executor
 
+/** 主界面 */
 class MainSettingsActivity : BaseActivity<ActivityMainSettingsBinding>() {
     private var systemUIRestartNeeded: Boolean = true
     private var androidRestartNeeded: Boolean? = null

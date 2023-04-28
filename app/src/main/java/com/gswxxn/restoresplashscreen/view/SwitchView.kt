@@ -59,17 +59,18 @@ class SwitchView(
                 if (!YukiHookAPI.Status.isXposedModuleActive) {
                     v.isChecked = !b
                     Toast.makeText(context, R.string.make_sure_active, Toast.LENGTH_SHORT).show()
-                    return@setOnCheckedChangeListener
+                } else {
+                    dataBindingSend?.let { send ->
+                        send.send(b)
+                    }
+                    callBacks?.let { it1 -> it1() }
+                    onClickListener?.let { it(b) }
+                    context.prefs().edit { put(pref, b) }
                 }
-                dataBindingSend?.let { send ->
-                    send.send(b)
-                }
-                callBacks?.let { it1 -> it1() }
-                onClickListener?.let { it(b) }
-                context.prefs().edit { put(pref, b) }
             }
         }
     }
 
+    /** 切换开关状态 */
     fun click() { switch.isChecked = !switch.isChecked }
 }

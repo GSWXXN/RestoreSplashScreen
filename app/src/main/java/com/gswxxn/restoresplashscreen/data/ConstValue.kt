@@ -24,6 +24,7 @@ object ConstValue {
     const val BRANDING_IMAGE = 400
     const val FORCE_SHOW_SPLASH_SCREEN = 500
     const val MIN_DURATION = 600
+    const val HIDE_SPLASH_SCREEN_ICON = 700
 
     const val BASIC_SETTINGS = 1100
     const val CUSTOM_SCOPE_SETTINGS = 1200

@@ -67,6 +67,7 @@
     <string name="icon_pack_is_removed">图标包被删除, 请重新选择</string>
     <string name="default_style">忽略应用主动设置的图标</string>
     <string name="default_style_tips">开启此选项并后，选中的应用即使主动适配Splash Screen, 也按未设置图标处理。开启此选项也可以解决以下问题：\n1. 使用第三方主题会出现图标方角问题。\n2. 部分应用没有将图标背景设置成透明导致图标方角问题。</string>
+    <string name="hide_splash_screen_icon">不显示图标</string>
     <string name="default_style_list">配置应用列表</string>
     <string name="remove_branding_image">移除底部图片</string>
     <string name="remove_branding_image_tips">开启此选项后，将会移除列表中应用的 Splash Screen 底部 Branding Image</string>
@@ -111,6 +112,7 @@
     <string name="background_image_title">移除列表</string>
     <string name="force_show_splash_screen_title">应用列表</string>
     <string name="min_duration_title">最小持续时长</string>
+    <string name="hide_splash_screen_icon_title"> 隐藏图标</string>
     <string name="unavailable">Unavailable</string>
 
     <string name="select_system_apps">选中系统应用</string>

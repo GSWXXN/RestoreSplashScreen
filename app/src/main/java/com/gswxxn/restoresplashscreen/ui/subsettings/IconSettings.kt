@@ -82,6 +82,26 @@ object IconSettings : ISubSettings {
             SwitchView(DataConst.ENABLE_DEFAULT_STYLE, dataBindingSend = defaultStyleBinding.bindingSend) {
                 if (it) {
                     context.toast(context.getString(R.string.custom_scope_message))
+                }
+            }
+        )
+
+        // 配置应用列表
+        TextSummaryArrow(TextSummaryV(textId = R.string.default_style_list, onClickListener = {
+            context.startActivity(Intent(context, ConfigAppsActivity::class.java).apply {
+                putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.DEFAULT_STYLE)
+            })
+        }), dataBindingRecv = defaultStyleBinding.getRecv(0))
+
+        Line()
+
+        // 不显示图标
+        val hideSplashScreenIconBinding = getDataBinding(context.prefs().get(DataConst.ENABLE_HIDE_SPLASH_SCREEN_ICON))
+        TextSummaryWithSwitch(
+            TextSummaryV(textId = R.string.hide_splash_screen_icon),
+            SwitchView(DataConst.ENABLE_HIDE_SPLASH_SCREEN_ICON, dataBindingSend = hideSplashScreenIconBinding.bindingSend) {
+                if (it) {
+                    context.toast(context.getString(R.string.custom_scope_message))
                     MainScope().launch {
                         delay(100)
                         binding.nestedScrollView.fullScroll(NestedScrollView.FOCUS_DOWN)
@@ -93,8 +113,8 @@ object IconSettings : ISubSettings {
         // 配置应用列表
         TextSummaryArrow(TextSummaryV(textId = R.string.default_style_list, onClickListener = {
             context.startActivity(Intent(context, ConfigAppsActivity::class.java).apply {
-                putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.DEFAULT_STYLE)
+                putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.HIDE_SPLASH_SCREEN_ICON)
             })
-        }), dataBindingRecv = defaultStyleBinding.getRecv(0))
+        }), dataBindingRecv = hideSplashScreenIconBinding.getRecv(0))
     }
 }

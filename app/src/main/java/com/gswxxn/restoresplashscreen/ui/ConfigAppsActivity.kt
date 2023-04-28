@@ -21,6 +21,7 @@ import com.gswxxn.restoresplashscreen.ui.configapps.BrandingImage
 import com.gswxxn.restoresplashscreen.ui.configapps.CustomScope
 import com.gswxxn.restoresplashscreen.ui.configapps.DefaultStyle
 import com.gswxxn.restoresplashscreen.ui.configapps.ForceShowSplashScreen
+import com.gswxxn.restoresplashscreen.ui.configapps.HideSplashScreenIcon
 import com.gswxxn.restoresplashscreen.ui.configapps.MinDuration
 import com.gswxxn.restoresplashscreen.ui.`interface`.IConfigApps
 import com.gswxxn.restoresplashscreen.utils.AppInfoHelper
@@ -64,6 +65,7 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineS
             ConstValue.FORCE_SHOW_SPLASH_SCREEN -> ForceShowSplashScreen
             ConstValue.MIN_DURATION -> MinDuration
             ConstValue.BACKGROUND_INDIVIDUALLY_CONFIG -> BGColorIndividualConfig
+            ConstValue.HIDE_SPLASH_SCREEN_ICON -> HideSplashScreenIcon
             else -> { object : IConfigApps {
                 override val titleID: Int get() = R.string.unavailable
                 override val submitSet: Boolean

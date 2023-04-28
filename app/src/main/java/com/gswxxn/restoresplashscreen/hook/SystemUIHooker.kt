@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -377,10 +378,21 @@ object SystemUIHooker: YukiBaseHooker() {
                     val iconSize = appResources!!.getDimensionPixelSize(
                         "com.android.internal.R\$dimen".toClass().field { name = "starting_surface_icon_size" }.get().int()
                     )
+                    val isHideSplashScreenIcon = prefs.get(DataConst.ENABLE_HIDE_SPLASH_SCREEN_ICON) &&
+                            if (prefs.get(DataConst.IS_HIDE_SPLASH_SCREEN_ICON_EXCEPTION_MODE))
+                                pkgName !in prefs.get(DataConst.HIDE_SPLASH_SCREEN_ICON_LIST)
+                            else
+                                pkgName in prefs.get(DataConst.HIDE_SPLASH_SCREEN_ICON_LIST)
 
                     if (isExcept(pkgName)) return@afterHook
 
                     fun getDrawable(): Drawable {
+                        // 不显示 Splash Screen 图标
+                        if (isHideSplashScreenIcon) {
+                            printLog("6. getIcon(): draw TRANSPARENT icon")
+                            return ColorDrawable(Color.TRANSPARENT)
+                        }
+
                         /**
                          * 替换获取图标方式
                          *

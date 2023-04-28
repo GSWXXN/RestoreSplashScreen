@@ -16,6 +16,10 @@ import com.highcapable.yukihookapi.hook.factory.current
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
+/**
+ * 复制自 [BlockMIUI](https://github.com/Block-Network/blockmiui/blob/6a2cf743d5c6904f6807634750e03ce3ecc6bbad/src/main/java/cn/fkj233/ui/activity/fragment/MIUIFragment.kt)
+ *
+ */
 object BlockMIUIHelper {
 
     fun LinearLayout.addBlockMIUIView(context: Context, itemData: BlockMIUIItemData.() -> Unit) =

@@ -10,6 +10,9 @@ import cn.fkj233.ui.activity.data.DataBinding
 import cn.fkj233.ui.activity.data.Padding
 import cn.fkj233.ui.activity.view.*
 
+/**
+ * 复制自 [cn.fkj233.ui.activity.data.InitView], 后续可能会使用更优办法实现, 而不是复制整个类
+ */
 class BlockMIUIItemData {
     companion object {
         val datalist = mutableMapOf<Int, ArrayList<BaseView>>()

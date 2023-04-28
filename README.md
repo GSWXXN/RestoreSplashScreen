@@ -55,7 +55,7 @@ SystemUI, 最好一并提交。
 
 如果你想捐赠，觉得这个模块好用的不得了，我会非常感谢你的！！！如果这个模块对你来说只要还差一点点意思，就不要捐赠啦
 
-![donate](doc/donate.png)
+<img src="https://raw.githubusercontent.com/GSWXXN/RestoreSplashScreen/master/Doc/donate.png" width = "250" alt="donate" />
 
 ## 致谢
 

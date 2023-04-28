@@ -1,5 +1,6 @@
 # MIUI遮罩进化
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/ffbf5a0bdf954416a2e1d4347b1ea797)](https://app.codacy.com/gh/GSWXXN/RestoreSplashScreen?utm_source=github.com&utm_medium=referral&utm_content=GSWXXN/RestoreSplashScreen&utm_campaign=Badge_Grade)
 [![Xposed](https://img.shields.io/badge/-Xposed-green?style=flat&logo=Android&logoColor=white)](https://github.com/Xposed-Modules-Repo/com.gswxxn.restoresplashscreen/)
 [![GitHub](https://img.shields.io/github/license/GSWXXN/RestoreSplashScreen)](https://github.com/GSWXXN/RestoreSplashScreen/blob/master/LICENSE)
 [![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/GSWXXN/RestoreSplashScreen?label=version)](https://github.com/Xposed-Modules-Repo/com.gswxxn.restoresplashscreen/releases)

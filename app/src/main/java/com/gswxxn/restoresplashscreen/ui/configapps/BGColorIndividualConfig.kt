@@ -19,6 +19,7 @@ import com.gswxxn.restoresplashscreen.utils.AppInfoHelper
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toastL
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 
+/** 单独配置背景颜色 */
 object BGColorIndividualConfig : IConfigApps {
     override val titleID: Int
         get() = R.string.configure_bg_colors_individually

@@ -12,6 +12,9 @@ import com.gswxxn.restoresplashscreen.view.SwitchView
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 
+/**
+ * 底部 - 移除底部图片 - 配置移除列表
+ */
 object BrandingImage : IConfigApps {
     override val titleID: Int
         get() = R.string.background_image_title

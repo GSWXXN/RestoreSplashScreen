@@ -95,7 +95,10 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 }
 
-// from https://github.com/qqlittleice/MiuiHome_R/blob/main/app/build.gradle.kts
+/**
+ * from [MiuiHomeR](https://github.com/qqlittleice/MiuiHome_R/blob/main/app/build.gradle.kts)
+ * 用于获取 git commit id
+ */
 fun getGitHeadRefsSuffix(project: Project): String {
     // .git/HEAD描述当前目录所指向的分支信息，内容示例："ref: refs/heads/master\n"
     val headFile = File(project.rootProject.projectDir, ".git" + File.separator + "HEAD")

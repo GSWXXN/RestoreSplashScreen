@@ -4,9 +4,15 @@ import android.content.Intent
 import com.gswxxn.restoresplashscreen.data.ConstValue
 import com.gswxxn.restoresplashscreen.databinding.ActivitySubSettingsBinding
 import com.gswxxn.restoresplashscreen.ui.`interface`.ISubSettings
-import com.gswxxn.restoresplashscreen.ui.subsettings.*
+import com.gswxxn.restoresplashscreen.ui.subsettings.BackgroundSettings
+import com.gswxxn.restoresplashscreen.ui.subsettings.BasicSettings
+import com.gswxxn.restoresplashscreen.ui.subsettings.BottomSettings
+import com.gswxxn.restoresplashscreen.ui.subsettings.CustomScopeSettings
+import com.gswxxn.restoresplashscreen.ui.subsettings.IconSettings
+import com.gswxxn.restoresplashscreen.ui.subsettings.LabSettings
 import com.gswxxn.restoresplashscreen.utils.BlockMIUIHelper.addBlockMIUIView
 
+/** 子界面 */
 class SubSettings : BaseActivity<ActivitySubSettingsBinding>() {
     private lateinit var instance: ISubSettings
 

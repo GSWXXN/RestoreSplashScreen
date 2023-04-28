@@ -2,6 +2,11 @@ package com.gswxxn.restoresplashscreen.data
 
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 
+/**
+ * 模板类定义模块与宿主需要使用的键值数据
+ *
+ *  [YukiHookAPI](https://fankes.github.io/YukiHookAPI/zh-cn/api/public/com/highcapable/yukihookapi/hook/xposed/prefs/data/PrefsData.html)
+ */
 object DataConst {
     val ENABLE_LOG = PrefsData("enable_log", false)
     val ENABLE_CUSTOM_SCOPE = PrefsData("enable_custom_scope", false)

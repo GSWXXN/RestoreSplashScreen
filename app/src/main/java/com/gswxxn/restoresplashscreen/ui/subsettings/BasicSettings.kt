@@ -18,6 +18,9 @@ import com.gswxxn.restoresplashscreen.utils.BackupUtils
 import com.gswxxn.restoresplashscreen.view.BlockMIUIItemData
 import com.gswxxn.restoresplashscreen.view.SwitchView
 
+/**
+ * 基础设置 界面
+ */
 object BasicSettings : ISubSettings {
     override val titleID: Int = R.string.basic_settings
     override val demoImageID: Int = R.drawable.demo_basic

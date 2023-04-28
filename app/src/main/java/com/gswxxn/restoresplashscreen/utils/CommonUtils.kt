@@ -5,12 +5,15 @@ import android.os.Build
 import android.widget.Toast
 import java.io.DataOutputStream
 
+/**
+ * 通用工具类
+ */
 object CommonUtils {
 
     /**
      * 显示 Toast
      *
-     * 需要显示 Toast 应用的 Context
+     * @receiver 需要显示 Toast 应用的 Context
      * @param message 显示文本内容
      * @return [Toast]
      */
@@ -18,6 +21,13 @@ object CommonUtils {
         .makeText(this, message, Toast.LENGTH_SHORT)
         .apply { show() }
 
+    /**
+     * 显示长时间 Toast
+     *
+     * @receiver [Context] 需要显示 Toast 应用的 Context
+     * @param message 显示文本内容
+     * @return [Toast]
+     */
     fun Context.toastL(message: CharSequence): Toast = Toast
         .makeText(this, message, Toast.LENGTH_LONG)
         .apply { show() }

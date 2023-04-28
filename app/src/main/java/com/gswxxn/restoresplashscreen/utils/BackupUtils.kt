@@ -15,13 +15,30 @@ import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.time.LocalDateTime
 
+/**
+ * 改自 [MiuiHomeR](https://github.com/qqlittleice/MiuiHome_R/blob/9f3a298df6427b3a8ea6a47aaabfa0a56c4dd11e/app/src/main/java/com/yuk/miuiHomeR/utils/BackupUtils.kt#L47)
+ * 用于备份和恢复数据
+ */
 object BackupUtils {
+
+    /**
+     * 打开文件, 用于选择备份文件
+     *
+     * @param activity [Activity]
+     * @return [Unit]
+     */
     fun openFile(activity: Activity) =
         activity.startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "application/json"
         }, OPEN_DOCUMENT_CODE)
 
+    /**
+     * 读取文件, 用于恢复数据
+     *
+     * @param activity [Activity]
+     * @return [Unit]
+     */
     fun saveFile(activity: Activity) =
         activity.startActivityForResult(Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
@@ -29,6 +46,12 @@ object BackupUtils {
             putExtra(Intent.EXTRA_TITLE, "RestoreSplashScreen_${LocalDateTime.now()}.json")
         }, CREATE_DOCUMENT_CODE)
 
+    /**
+     * 处理打开文件, 处理并写出数据
+     *
+     * @param activity [Activity]
+     * @param data [Uri]
+     */
     fun handleReadDocument(activity: Activity, data: Uri?) {
         val uri = data ?: return
         try {
@@ -69,6 +92,12 @@ object BackupUtils {
         } catch (e: Throwable) { activity.toast(activity.getString(R.string.restore_failed)) }
     }
 
+    /**
+     * 处理保存文件, 写出数据
+     *
+     * @param activity [Activity]
+     * @param data [Uri]
+     */
     fun handleCreateDocument(activity: Activity, data: Uri?) {
         val uri = data ?: return
         try {
@@ -86,6 +115,12 @@ object BackupUtils {
         } catch (_: Throwable) { activity.toast(activity.getString(R.string.save_failed)) }
     }
 
+    /**
+     * 解析字符串数组 "[value1, value2, value3]" 为 [MutableSet]
+     *
+     * @param value [String]
+     * @return [MutableSet]<[String]>
+     */
     private fun parseStringArray(value: String) =
         value.substring(1, value.lastIndex).split(", ").toMutableSet().apply { remove("") }
 }

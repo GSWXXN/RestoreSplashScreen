@@ -65,4 +65,3 @@ UI界面改自 [MIUI 原生通知图标](https://github.com/fankes/MIUINativeNot
 获取应用列表方式参考 [Hide My Applist](https://github.com/Dr-TSNG/Hide-My-Applist)  
 曾使用 [libsu](https://github.com/topjohnwu/libsu) 执行Shell命令  
 参考 [MIUIHomeR](https://github.com/qqlittleice/MiuiHome_R) 优化部分代码
-

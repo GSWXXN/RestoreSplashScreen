@@ -12,6 +12,9 @@ import com.gswxxn.restoresplashscreen.view.SwitchView
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 
+/**
+ * 作用域 - 自定义模块作用域 - 配置应用列表
+ */
 object CustomScope : IConfigApps {
     override val titleID: Int
         get() = R.string.custom_scope_title

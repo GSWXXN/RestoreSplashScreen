@@ -34,6 +34,9 @@ import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 
+/**
+ * 改自 BlockMIUI, 为了适配 YukiHookAPI 的配置存储方式, 后续可能通过反射实现而不是把这个类复制过来
+ */
 class SwitchView(
     private val pref: PrefsData<Boolean>,
     private val dataBindingRecv: DataBinding.Binding.Recv? = null,

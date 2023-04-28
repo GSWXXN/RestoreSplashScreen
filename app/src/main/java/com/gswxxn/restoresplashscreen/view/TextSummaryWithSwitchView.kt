@@ -33,6 +33,9 @@ import cn.fkj233.ui.activity.view.BaseView
 import cn.fkj233.ui.activity.view.LinearContainerV
 import cn.fkj233.ui.activity.view.TextSummaryV
 
+/**
+ * 改自 BlockMIUI, 为了将适应 [SwitchView]
+ */
 class TextSummaryWithSwitchView(private val textV: TextSummaryV, val switchV: SwitchView, private val dataBindingRecv: DataBinding.Binding.Recv? = null): BaseView {
 
     override fun getType(): BaseView = this

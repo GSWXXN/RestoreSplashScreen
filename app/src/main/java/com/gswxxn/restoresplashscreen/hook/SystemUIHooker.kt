@@ -25,6 +25,7 @@ import com.highcapable.yukihookapi.hook.bean.VariousClass
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.factory.field
+import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.param.HookParam
 import com.highcapable.yukihookapi.hook.type.android.ActivityInfoClass
 import com.highcapable.yukihookapi.hook.type.android.DrawableClass
@@ -272,9 +273,26 @@ object SystemUIHooker: YukiBaseHooker() {
                             val densityDpi = instance.getField<Context>("mContext")!!.resources.configuration.densityDpi
                             val scaledIconDpi = (0.5f + iconScale * densityDpi * 1.2f).toInt()
                             if (isAtLeastT) {
-                                mSplashscreenContentDrawer.getField("mHighResIconProvider")!!.current {
-                                    args(0).set(method { name = "getIcon"; param(ActivityInfoClass, IntType, IntType) }
-                                        .invoke<Drawable>(instance.getField("mActivityInfo"), densityDpi, scaledIconDpi))
+                                val mHighResIconProvider = mSplashscreenContentDrawer.getField("mHighResIconProvider")!!
+                                var isFindMethodWith6Args = false
+                                mHighResIconProvider::class.java.method {
+                                    name = "getIcon"
+                                    param(ActivityInfoClass, IntType, IntType)
+                                }.remedys {
+                                    method {  name = "getIcon"; param(ActivityInfoClass, IntType, IntType, BooleanType, BooleanType) }.onFind { isFindMethodWith6Args = true }
+                                }.wait(mHighResIconProvider) {
+                                    // coloros 13.1 增加后两个参数
+                                    val icon = if (isFindMethodWith6Args)
+                                        invoke<Drawable>(
+                                            instance.getField("mActivityInfo"),
+                                            densityDpi,
+                                            scaledIconDpi,
+                                            instance.getField("mIsSystemApp"),
+                                            instance.getField("mIsSupportSplashScreenPreview")
+                                        )
+                                    else
+                                        invoke<Drawable>(instance.getField("mActivityInfo"), densityDpi, scaledIconDpi)
+                                    args(0).set(icon)
                                     printLog("9. createIconDrawable(): replace the icons processed by the system")
                                 }
                             } else{
@@ -365,7 +383,7 @@ object SystemUIHooker: YukiBaseHooker() {
             injectMember {
                 method {
                     name = "getIcon"
-                    if (isAtLeastT) param(ActivityInfoClass, IntType, IntType)
+                    if (isAtLeastT) paramCount(3..5)
                     else param(ActivityInfoClass, IntType)
                 }
                 afterHook {

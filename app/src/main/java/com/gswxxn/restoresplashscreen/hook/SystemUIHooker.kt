@@ -274,15 +274,17 @@ object SystemUIHooker: YukiBaseHooker() {
                             val scaledIconDpi = (0.5f + iconScale * densityDpi * 1.2f).toInt()
                             if (isAtLeastT) {
                                 val mHighResIconProvider = mSplashscreenContentDrawer.getField("mHighResIconProvider")!!
-                                var isFindMethodWith6Args = false
+                                var isFindMethodWith5Args = false
+                                var isFindMethodWith4Args = false
                                 mHighResIconProvider::class.java.method {
                                     name = "getIcon"
                                     param(ActivityInfoClass, IntType, IntType)
                                 }.remedys {
-                                    method {  name = "getIcon"; param(ActivityInfoClass, IntType, IntType, BooleanType, BooleanType) }.onFind { isFindMethodWith6Args = true }
+                                    method {  name = "getIcon"; param(ActivityInfoClass, IntType, IntType, BooleanType, BooleanType) }.onFind { isFindMethodWith5Args = true }
+                                    method {  name = "getIcon"; param(ActivityInfoClass, IntType, IntType, BooleanType) }.onFind { isFindMethodWith4Args = true }
                                 }.wait(mHighResIconProvider) {
                                     // coloros 13.1 增加后两个参数
-                                    val icon = if (isFindMethodWith6Args)
+                                    val icon = if (isFindMethodWith5Args) {
                                         invoke<Drawable>(
                                             instance.getField("mActivityInfo"),
                                             densityDpi,
@@ -290,8 +292,21 @@ object SystemUIHooker: YukiBaseHooker() {
                                             instance.getField("mIsSystemApp"),
                                             instance.getField("mIsSupportSplashScreenPreview")
                                         )
-                                    else
-                                        invoke<Drawable>(instance.getField("mActivityInfo"), densityDpi, scaledIconDpi)
+                                    // 部分coloros 13.1 只增加一个参数
+                                    } else if (isFindMethodWith4Args) {
+                                        invoke<Drawable>(
+                                            instance.getField("mActivityInfo"),
+                                            densityDpi,
+                                            scaledIconDpi,
+                                            instance.getField("mIsSystemApp")
+                                        )
+                                    } else {
+                                        invoke<Drawable>(
+                                            instance.getField("mActivityInfo"),
+                                            densityDpi,
+                                            scaledIconDpi
+                                        )
+                                    }
                                     args(0).set(icon)
                                     printLog("9. createIconDrawable(): replace the icons processed by the system")
                                 }

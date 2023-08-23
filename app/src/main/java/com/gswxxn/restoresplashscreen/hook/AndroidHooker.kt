@@ -1,7 +1,7 @@
 package com.gswxxn.restoresplashscreen.hook
 
-import android.os.Build
 import com.gswxxn.restoresplashscreen.data.DataConst
+import com.gswxxn.restoresplashscreen.utils.CommonUtils.isAtLeastT
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.getField
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.printLog
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.register
@@ -50,10 +50,7 @@ object AndroidHooker : YukiBaseHooker() {
             injectMember {
                 method {
                     name = "showStartingWindow"
-                    paramCount(when (Build.VERSION.SDK_INT) {
-                        33 -> 7
-                        else -> 5
-                    })
+                    paramCount(if (isAtLeastT) 7 else  5)
                 }
                 beforeHook {
                     val currentPkgName = instance.getField<String>("packageName")
@@ -71,10 +68,7 @@ object AndroidHooker : YukiBaseHooker() {
             injectMember {
                 method {
                     name = "getStartingWindowType"
-                    paramCount(when (Build.VERSION.SDK_INT) {
-                        33 -> 7
-                        else -> 6
-                    })
+                    paramCount(if (isAtLeastT) 7 else  6)
                 }
                 beforeHook {
                     val isHotStartCompatible = prefs.get(DataConst.ENABLE_HOT_START_COMPATIBLE) && args(1).boolean()

@@ -93,8 +93,10 @@ object SystemUIHooker: YukiBaseHooker() {
          * - 替换背景颜色
          * - 单独配置应用背景颜色
          */
-        findClass("com.android.wm.shell.startingsurface.SplashscreenContentDrawer\$StartingWindowViewBuilder")
-            .hook {
+        VariousClass(
+            "com.android.wm.shell.startingsurface.SplashscreenContentDrawer\$StartingWindowViewBuilder",
+            "com.android.wm.shell.startingsurface.SplashscreenContentDrawer\$SplashViewBuilder"
+        ).hook {
 
                 /**
                  * 此处实现功能：

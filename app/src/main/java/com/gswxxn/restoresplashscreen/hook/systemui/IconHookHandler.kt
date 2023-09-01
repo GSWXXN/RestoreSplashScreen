@@ -17,6 +17,8 @@ import com.gswxxn.restoresplashscreen.hook.systemui.GenerateHookHandler.currentA
 import com.gswxxn.restoresplashscreen.hook.systemui.GenerateHookHandler.currentPackageName
 import com.gswxxn.restoresplashscreen.utils.GraphicUtils
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
+import com.gswxxn.restoresplashscreen.utils.LargeIconsHelper
+import com.gswxxn.restoresplashscreen.utils.YukiHelper.atLeastMIUI14
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.printLog
 import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.factory.field
@@ -28,7 +30,9 @@ object IconHookHandler: BaseHookHandler() {
     var currentIconDominantColor: Int? = null
     private var currentActualBitmapIconSize = 0
     private var currentIsNeedShrinkIcon = false
+    private var currentUseMIUILagerIcon = false
     private val iconPackManager by lazy { IconPackManager(appContext!!, prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)) }
+    private val largeIcons by lazy { LargeIconsHelper(appContext!!) }
 
     /**
      * 重置当前应用的属性
@@ -37,6 +41,7 @@ object IconHookHandler: BaseHookHandler() {
         currentIconDominantColor = null
         currentActualBitmapIconSize = 0
         currentIsNeedShrinkIcon = false
+        currentUseMIUILagerIcon = false
     }
 
     /** 开始 Hook */
@@ -63,7 +68,11 @@ object IconHookHandler: BaseHookHandler() {
 
         // 执行缩小图标
         NewSystemUIHooker.Members.createIconDrawable?.addBeforeHook {
-            if (currentIsNeedShrinkIcon) {
+            if (currentUseMIUILagerIcon) {
+                val mFinalIconSize = instance.current().field { name = "mFinalIconSize" }
+                mFinalIconSize.set((mFinalIconSize.int() * 1.35).toInt())
+                printLog("createIconDrawable(): execute enlarge icon")
+            } else if (currentIsNeedShrinkIcon) {
                 val mFinalIconSize = instance.current().field { name = "mFinalIconSize" }
                 mFinalIconSize.set((mFinalIconSize.int() / 1.5).toInt())
                 printLog("createIconDrawable(): execute shrink icon")
@@ -118,12 +127,27 @@ object IconHookHandler: BaseHookHandler() {
             return ColorDrawable(Color.TRANSPARENT)
         }
 
-        /**
-         * 替换获取图标方式
-         *
-         * 使用 Context.packageManager.getApplicationIcon() 的方式获取图标
-         */
-        if (enableReplaceIcon || currentPackageName == "com.android.settings") {
+        if (atLeastMIUI14) {
+            // MIUI 大图标
+            largeIcons.getOriginLargeIconDrawable(currentPackageName, "2x2")?.let {
+                iconDrawable = it
+                currentUseMIUILagerIcon = true
+                printLog("getIcon(): use MIUI Large Icon")
+            }
+        } else if (iconPackPackageName != "None") {
+            // 使用图标包
+            iconDrawable = when {
+                currentPackageName == "com.android.contacts" && currentActivity == "com.android.contacts.activities.PeopleActivity" ->
+                    iconPackManager.getIconByComponentName("ComponentInfo{com.android.contacts/com.android.contacts.activities.TwelveKeyDialer}")
+                else -> iconPackManager.getIconByPackageName(currentPackageName)
+            } ?: iconDrawable
+            printLog("getIcon(): use Icon Pack")
+        } else if (enableReplaceIcon || currentPackageName == "com.android.settings") {
+            /**
+             * 替换获取图标方式
+             *
+             * 使用 Context.packageManager.getApplicationIcon() 的方式获取图标
+             */
             iconDrawable = when {
                 currentPackageName == "com.android.contacts" && currentActivity == "com.android.contacts.activities.PeopleActivity" ->
                     appContext!!.packageManager.getActivityIcon(
@@ -132,22 +156,11 @@ object IconHookHandler: BaseHookHandler() {
                 currentPackageName == "com.android.settings" && currentActivity == "com.android.settings.BackgroundApplicationsManager" ->
                     appContext!!.packageManager.getApplicationIcon("com.android.settings")
                 else -> appContext!!.packageManager.getApplicationIcon(currentPackageName)
-
             }
+            printLog("getIcon(): replace way of getting icon")
         }
-        printLog("getIcon(): ${if (enableReplaceIcon || currentPackageName == "com.android.settings") "" else "Not"} replace way of getting icon")
 
-        // 使用图标包
-        if (iconPackPackageName != "None") {
-            iconDrawable = when {
-                currentPackageName == "com.android.contacts" && currentActivity == "com.android.contacts.activities.PeopleActivity" ->
-                    iconPackManager.getIconByComponentName("ComponentInfo{com.android.contacts/com.android.contacts.activities.TwelveKeyDialer}")
-                else -> iconPackManager.getIconByPackageName(currentPackageName)
-            } ?: iconDrawable
-        }
-        printLog("getIcon(): ${if (iconPackPackageName != "None") "" else "Not"} use Icon Pack")
-
-        val bitmap = GraphicUtils.drawable2Bitmap(iconDrawable, iconSize)
+        val bitmap = GraphicUtils.drawable2Bitmap(iconDrawable, if (currentUseMIUILagerIcon) iconSize * 2 else iconSize)
 
         // 判断是否需要缩小图标
         when (shrinkIconType) {
@@ -158,12 +171,14 @@ object IconHookHandler: BaseHookHandler() {
         }
         printLog("getIcon(): currentIsNeedShrinkIcon: $currentIsNeedShrinkIcon")
 
-
         // 绘制图标圆角
-        if (isDrawIconRoundCorner) {
+        if (currentUseMIUILagerIcon) {
+            iconDrawable = BitmapDrawable(appResources, GraphicUtils.roundBitmapByShader(bitmap, RoundDegree.MIUIWidget))
+            printLog("getIcon(): draw MIUI large icon round corner")
+        } else if (isDrawIconRoundCorner) {
             iconDrawable = BitmapDrawable(appResources, GraphicUtils.roundBitmapByShader(bitmap, RoundDegree.RoundCorner))
+            printLog("getIcon(): draw icon round corner")
         }
-        printLog("getIcon(): ${if (isDrawIconRoundCorner) "" else "Not"} draw icon round corner")
 
         // 获取图标颜色
         currentIconDominantColor = GraphicUtils.getBgColor(bitmap,

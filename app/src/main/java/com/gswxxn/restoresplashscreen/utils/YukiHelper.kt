@@ -2,6 +2,7 @@ package com.gswxxn.restoresplashscreen.utils
 
 import android.content.Context
 import com.gswxxn.restoresplashscreen.data.DataConst
+import com.gswxxn.restoresplashscreen.hook.NewSystemUIHooker.toClass
 import com.gswxxn.restoresplashscreen.hook.base.BaseHookHandler
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toMap
 import com.highcapable.yukihookapi.YukiHookAPI
@@ -10,7 +11,9 @@ import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.factory.dataChannel
 import com.highcapable.yukihookapi.hook.factory.hasClass
+import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.log.loggerI
+import com.highcapable.yukihookapi.hook.type.java.StringClass
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 
 /**
@@ -97,6 +100,22 @@ object YukiHelper {
     * @return [Boolean] 是否符合条件
     */
     val isMIUI by lazy { "android.miui.R".hasClass() }
+
+    /**
+     * 检测 MIUI 版本是否至少为 14
+     *
+     * @return [Boolean] 是否符合条件
+     */
+    val atLeastMIUI14 by lazy {
+        isMIUI && try {
+            "android.os.SystemProperties".toClass().method {
+                name = "get"
+                param(StringClass)
+            }.get().invoke<String>("ro.miui.ui.version.code") ?: ""
+        } catch (e: Throwable) {
+            ""
+        }.toInt() >= 14
+    }
 
     /**
      * 当前设备是否是 ColorOS 定制 Android 系统

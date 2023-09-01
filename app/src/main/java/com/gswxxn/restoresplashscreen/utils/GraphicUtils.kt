@@ -52,6 +52,7 @@ object GraphicUtils {
         val radius = when (roundDegree) {
             RoundDegree.RoundCorner -> bitmap.width / 4
             RoundDegree.Circle -> bitmap.width / 2
+            RoundDegree.MIUIWidget -> bitmap.width / 10
             else -> 0
         }
 

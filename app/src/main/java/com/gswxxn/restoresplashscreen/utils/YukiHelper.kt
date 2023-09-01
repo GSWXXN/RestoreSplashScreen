@@ -2,6 +2,7 @@ package com.gswxxn.restoresplashscreen.utils
 
 import android.content.Context
 import com.gswxxn.restoresplashscreen.data.DataConst
+import com.gswxxn.restoresplashscreen.hook.base.BaseHookHandler
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toMap
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.core.finder.members.FieldFinder.Result.Instance
@@ -22,6 +23,13 @@ object YukiHelper {
      * @return [MutableMap]
      */
     fun YukiBaseHooker.getMapPrefs(p: PrefsData<MutableSet<String>>) = prefs.get(p).toMap()
+    /**
+     * 读取 MapPrefs
+     *
+     * @param p [PrefsData] 实例
+     * @return [MutableMap]
+     */
+    fun BaseHookHandler.getMapPrefs(p: PrefsData<MutableSet<String>>) = prefs.get(p).toMap()
 
     /**
      * 根据名称获取实例 的 Field 实例处理类
@@ -78,8 +86,31 @@ object YukiHelper {
     }
 
     /**
+     * 打印日志
+     */
+    fun BaseHookHandler.printLog(vararg msg: String) {
+        if (prefs.get(DataConst.ENABLE_LOG)) msg.forEach { loggerI(msg = it) }
+    }
+
+    /**
     * 当前设备是否是 MIUI 定制 Android 系统
     * @return [Boolean] 是否符合条件
     */
     val isMIUI by lazy { "android.miui.R".hasClass() }
+
+    /**
+     * 当前设备是否是 ColorOS 定制 Android 系统
+     * @return [Boolean] 是否符合条件
+     */
+    val isColorOS by lazy { "oppo.R".hasClass() || "com.color.os.ColorBuild".hasClass() || "oplus.R".hasClass() }
+
+    /**
+     * 加载 HookHandler
+     */
+    fun YukiBaseHooker.loadHookHandler(vararg hookHandler: BaseHookHandler) {
+        hookHandler.forEach {
+            it.baseHooker = this
+            it.onHook()
+        }
+    }
 }

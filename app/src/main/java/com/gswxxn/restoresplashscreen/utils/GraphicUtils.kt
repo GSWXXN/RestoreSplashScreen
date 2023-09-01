@@ -23,16 +23,15 @@ object GraphicUtils {
      * Drawable 图标转 Bitmap
      *
      * @param drawable 待转换的 Drawable 图标
-     * @param _size 如果图标为自适应图标，则生成此大小的 Bitmap；否则，此项无用
+     * @param size 生成此大小的 Bitmap
      * @return [Bitmap]
      */
-    fun drawable2Bitmap(drawable: Drawable, _size : Int): Bitmap? {
+    fun drawable2Bitmap(drawable: Drawable, size : Int): Bitmap {
         if (drawable is BitmapDrawable) {
             return drawable.bitmap
         }
-        val size = _size / 2
         val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas().apply { setBitmap(bitmap) }
+        val canvas = Canvas(bitmap)
         drawable.setBounds(0, 0, size, size)
         drawable.draw(canvas)
         canvas.setBitmap(null)
@@ -97,7 +96,7 @@ object GraphicUtils {
     fun Context.shrinkIcon(@DrawableRes id : Int) : Drawable {
         val px = dp2px(this, 50f)
 
-        val bitmap = drawable2Bitmap(this.getDrawable(id)!!, px)!!
+        val bitmap = drawable2Bitmap(this.getDrawable(id)!!, px / 2)
         val shrankBitmap = Bitmap.createBitmap(
             (px * 1.5).toInt(),
             (px * 1.5).toInt(),

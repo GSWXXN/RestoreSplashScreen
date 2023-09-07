@@ -51,22 +51,23 @@ class LargeIconsHelper(private val context: Context) {
      * 获取指定包名和大小的原始大图标
      *
      * @param packageName 应用程序的包名
+     * @param activityName 当前活动名称
      * @param size        图标的大小, 如 "1x2", "2x1", "2x2"
      * @return 原始大图标可绘制对象，如果未找到则为 null
      */
-    fun getOriginLargeIconDrawable(packageName: String, size: String ) = try {
+    fun getOriginLargeIconDrawable(packageName: String, activityName: String, size: String) = try {
         largeIconsHelperClazz.method { name = "getOriginLargeIconDrawable" }.get().call(
             context,
             packageName,
-            context.packageManager.getLaunchIntentForPackage(packageName)!!.component!!.className,
+            activityName.ifBlank { context.packageManager.getLaunchIntentForPackage(packageName)?.component?.className },
             "desktop",
             "",
             size,
             0L,
             UserHandleClass.field { name = "OWNER" }.get().any()
-        )!!.current().method { name = "getDrawable" }.invoke<Drawable>()
+        )?.current()?.method { name = "getDrawable" }?.invoke<Drawable>()
     } catch (e: Throwable) {
-        loggerE(e = e)
+        loggerE(msg = "Failed to get original large icon drawable for package $packageName and activity $activityName", e = e)
         null
     }
 
@@ -74,17 +75,18 @@ class LargeIconsHelper(private val context: Context) {
      * 从指定的应用程序包中获取完美的图标 Drawable
      *
      * @param packageName 要获取图标的应用程序包的包名。
-     * @return 如果成功获取到精美的图标，则返回一个 BitmapDrawable；如果发生错误，则返回 null。
+     * @param activityName 当前活动名称
+     * @return 如果成功获取到完美图标，则返回一个 BitmapDrawable；如果发生错误，则返回 null。
      */
-    fun getFancyIconDrawable(packageName: String) = try {
+    fun getFancyIconDrawable(packageName: String, activityName: String) = try {
         val drawable = appIconsHelper.method {
             name = "getIconDrawable"
             param(ContextClass, StringClass, StringClass, LongType)
         }.get().call(
             context,
             packageName,
-            context.packageManager.getLaunchIntentForPackage(packageName)!!.component!!.className,
-            3600000L,
+            activityName.ifBlank { context.packageManager.getLaunchIntentForPackage(packageName)?.component?.className },
+            0L,
         )
 
         if (drawable is AdaptiveIconDrawable && drawable.javaClass.name == "com.miui.maml.MamlAdaptiveIconDrawable"){
@@ -102,7 +104,7 @@ class LargeIconsHelper(private val context: Context) {
             drawable
         } else null
     } catch (e: Throwable) {
-        loggerE(e = e)
+        loggerE(msg = "Failed to get FancyIconDrawable with package: $packageName, activity name: $activityName", e = e)
         null
     } as Drawable?
 }

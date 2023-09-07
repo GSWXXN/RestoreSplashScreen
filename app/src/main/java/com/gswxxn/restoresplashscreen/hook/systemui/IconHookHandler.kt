@@ -130,7 +130,7 @@ object IconHookHandler: BaseHookHandler() {
 
         if (atLeastMIUI14) {
             // MIUI 大图标
-            largeIcons.getOriginLargeIconDrawable(currentPackageName, "2x2")?.let {
+            largeIcons.getOriginLargeIconDrawable(currentPackageName, currentActivity, "2x2")?.let {
                 iconDrawable = it
                 currentUseMIUILagerIcon = true
                 printLog("getIcon(): use MIUI Large Icon")
@@ -163,7 +163,7 @@ object IconHookHandler: BaseHookHandler() {
                         appContext!!.packageManager.getApplicationIcon("com.android.settings")
 
                     isMIUI && largeIcons.isSupportMIUIModeIcon && currentPackageName != "com.android.fileexplorer" -> { // 在 MIUI 上优先获取完美图标
-                        largeIcons.getFancyIconDrawable(currentPackageName) ?:
+                        largeIcons.getFancyIconDrawable(currentPackageName, currentActivity) ?:
                         appContext!!.packageManager.getApplicationIcon(currentPackageName)
                     }
 

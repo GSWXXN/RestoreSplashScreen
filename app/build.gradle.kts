@@ -7,31 +7,28 @@ plugins {
 }
 
 android {
-    namespace = "com.gswxxn.restoresplashscreen"
-    compileSdk = 33
+    namespace = property.project.namespace
+    compileSdk = property.project.compileSdk
 
     defaultConfig {
-        applicationId = "com.gswxxn.restoresplashscreen"
-        minSdk = 31
-        targetSdk = 33
-        versionCode = 2730
-        versionName = "2.7.3"
+        applicationId = property.project.applicationId
+        minSdk = property.project.minSdk
+        targetSdk = property.project.targetSdk
+        versionCode = property.project.versionCode
+        versionName = property.project.versionName
     }
 
-    val properties = Properties()
-    runCatching { properties.load(project.rootProject.file("local.properties").inputStream()) }
-    val keystorePath = properties.getProperty("KEYSTORE_PATH") ?: System.getenv("KEYSTORE_PATH")
-    val keystorePwd = properties.getProperty("KEYSTORE_PASS") ?: System.getenv("KEYSTORE_PASS")
-    val alias = properties.getProperty("KEY_ALIAS") ?: System.getenv("KEY_ALIAS")
-    val pwd = properties.getProperty("KEY_PASSWORD") ?: System.getenv("KEY_PASSWORD")
-    val isKeyStoreAvailable = keystorePath != null && keystorePwd != null && alias != null && pwd != null
+    val isKeyStoreAvailable = property.keystore.path.isNotBlank() &&
+            property.keystore.pass.isNotBlank() &&
+            property.key.alias.isNotBlank()&&
+            property.key.password.isNotBlank()
     if (isKeyStoreAvailable) {
         signingConfigs {
             create("release") {
-                storeFile = file(keystorePath)
-                storePassword = keystorePwd
-                keyAlias = alias
-                keyPassword = pwd
+                storeFile = file(property.keystore.path)
+                storePassword = property.keystore.pass
+                keyAlias = property.key.alias
+                keyPassword = property.key.password
                 enableV3Signing = true
             }
         }

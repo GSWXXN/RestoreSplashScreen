@@ -1,6 +1,7 @@
 package com.gswxxn.restoresplashscreen.utils
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapShader
 import android.graphics.Canvas
@@ -112,6 +113,38 @@ object GraphicUtils {
         )
 
         return BitmapDrawable(this.resources, shrankBitmap)
+    }
+
+    /**
+     * 从给定的 Drawable 中获取中心部分，并返回一个新的 BitmapDrawable。
+     *
+     * @param drawable 要提取中心部分的 Drawable。
+     * @param centerPercentage 中心部分相对于原始 Drawable 的尺寸比例，范围在 0 到 1 之间。
+     * @param resources 用于创建 BitmapDrawable 的 Resources 对象。可以为 null，但需要为可绘制资源提供资源。
+     * @return 包含中心部分的新 BitmapDrawable。
+     */
+    fun getCenterDrawable(drawable: Drawable, centerPercentage: Float, resources: Resources): BitmapDrawable {
+        // Create a bitmap with the same size as the LayerDrawable
+        val width = drawable.intrinsicWidth
+        val height = drawable.intrinsicHeight
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+
+        // Draw the LayerDrawable on the canvas
+        drawable.setBounds(0, 0, width, height)
+        drawable.draw(canvas)
+
+        // Calculate the bounds of the center part
+        val centerWidth = (width * centerPercentage).toInt()
+        val centerHeight = (height * centerPercentage).toInt()
+        val left = (width - centerWidth) / 2
+        val top = (height - centerHeight) / 2
+
+        // Crop the center part of the bitmap
+        val centerBitmap = Bitmap.createBitmap(bitmap, left, top, centerWidth, centerHeight)
+
+        // Convert the bitmap to a Drawable
+        return BitmapDrawable(resources, centerBitmap)
     }
 
     /**

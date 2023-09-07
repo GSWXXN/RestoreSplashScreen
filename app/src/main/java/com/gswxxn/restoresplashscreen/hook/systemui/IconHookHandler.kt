@@ -19,6 +19,7 @@ import com.gswxxn.restoresplashscreen.utils.GraphicUtils
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
 import com.gswxxn.restoresplashscreen.utils.LargeIconsHelper
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.atLeastMIUI14
+import com.gswxxn.restoresplashscreen.utils.YukiHelper.isMIUI
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.printLog
 import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.factory.field
@@ -134,30 +135,42 @@ object IconHookHandler: BaseHookHandler() {
                 currentUseMIUILagerIcon = true
                 printLog("getIcon(): use MIUI Large Icon")
             }
-        } else if (iconPackPackageName != "None") {
-            // 使用图标包
-            iconDrawable = when {
-                currentPackageName == "com.android.contacts" && currentActivity == "com.android.contacts.activities.PeopleActivity" ->
-                    iconPackManager.getIconByComponentName("ComponentInfo{com.android.contacts/com.android.contacts.activities.TwelveKeyDialer}")
-                else -> iconPackManager.getIconByPackageName(currentPackageName)
-            } ?: iconDrawable
-            printLog("getIcon(): use Icon Pack")
-        } else if (enableReplaceIcon || currentPackageName == "com.android.settings") {
-            /**
-             * 替换获取图标方式
-             *
-             * 使用 Context.packageManager.getApplicationIcon() 的方式获取图标
-             */
-            iconDrawable = when {
-                currentPackageName == "com.android.contacts" && currentActivity == "com.android.contacts.activities.PeopleActivity" ->
-                    appContext!!.packageManager.getActivityIcon(
-                        ComponentName("com.android.contacts", "com.android.contacts.activities.TwelveKeyDialer")
-                    )
-                currentPackageName == "com.android.settings" && currentActivity == "com.android.settings.BackgroundApplicationsManager" ->
-                    appContext!!.packageManager.getApplicationIcon("com.android.settings")
-                else -> appContext!!.packageManager.getApplicationIcon(currentPackageName)
+        }
+
+        if (!currentUseMIUILagerIcon) {
+            if (iconPackPackageName != "None") {
+                // 使用图标包
+                iconDrawable = when {
+                    currentPackageName == "com.android.contacts" && currentActivity == "com.android.contacts.activities.PeopleActivity" ->
+                        iconPackManager.getIconByComponentName("ComponentInfo{com.android.contacts/com.android.contacts.activities.TwelveKeyDialer}")
+
+                    else -> iconPackManager.getIconByPackageName(currentPackageName)
+                } ?: iconDrawable
+                printLog("getIcon(): use Icon Pack")
+            } else if (enableReplaceIcon || currentPackageName == "com.android.settings") {
+                /**
+                 * 替换获取图标方式
+                 *
+                 * 使用 Context.packageManager.getApplicationIcon() 的方式获取图标
+                 */
+                iconDrawable = when {
+                    currentPackageName == "com.android.contacts" && currentActivity == "com.android.contacts.activities.PeopleActivity" ->
+                        appContext!!.packageManager.getActivityIcon(
+                            ComponentName("com.android.contacts", "com.android.contacts.activities.TwelveKeyDialer")
+                        )
+
+                    currentPackageName == "com.android.settings" && currentActivity == "com.android.settings.BackgroundApplicationsManager" ->
+                        appContext!!.packageManager.getApplicationIcon("com.android.settings")
+
+                    isMIUI && largeIcons.isSupportMIUIModeIcon && currentPackageName != "com.android.fileexplorer" -> { // 在 MIUI 上优先获取完美图标
+                        largeIcons.getFancyIconDrawable(currentPackageName) ?:
+                        appContext!!.packageManager.getApplicationIcon(currentPackageName)
+                    }
+
+                    else -> appContext!!.packageManager.getApplicationIcon(currentPackageName)
+                }
+                printLog("getIcon(): replace way of getting icon")
             }
-            printLog("getIcon(): replace way of getting icon")
         }
 
         val bitmap = GraphicUtils.drawable2Bitmap(iconDrawable, if (currentUseMIUILagerIcon) iconSize * 2 else iconSize)

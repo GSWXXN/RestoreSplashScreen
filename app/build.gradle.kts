@@ -1,5 +1,3 @@
-import java.util.Properties
-
 plugins {
     autowire(libs.plugins.com.android.application)
     autowire(libs.plugins.org.jetbrains.kotlin.android)
@@ -16,6 +14,22 @@ android {
         targetSdk = property.project.targetSdk
         versionCode = property.project.versionCode
         versionName = property.project.versionName
+    }
+
+    packaging.resources {
+        excludes += "META-INF/**"
+        excludes += "okhttp3/**"
+        excludes += "kotlin/**"
+        excludes += "org/**"
+        excludes += "kotlin-tooling-metadata.json"
+        excludes += "**.properties"
+        excludes += "**.bin"
+        merges += "META-INF/yukihookapi_init"
+    }
+
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
     }
 
     val isKeyStoreAvailable = property.keystore.path.isNotBlank() &&
@@ -50,7 +64,7 @@ android {
         create("CI") {
             dimension = "tier"
             versionCode = defaultConfig.versionCode?.plus(1)
-            versionName = "${defaultConfig.versionName?.split(" - ")?.get(0)}${getGitHeadRefsSuffix(rootProject)}"
+            versionName = "${defaultConfig.versionName?.split(" - ")?.get(0)}-CI.${getGitHeadRefsSuffix(rootProject)}"
         }
         create("app") {
             dimension = "tier"
@@ -58,6 +72,7 @@ android {
     }
 
     buildFeatures {
+        buildConfig = true
         viewBinding = true
     }
 
@@ -111,7 +126,7 @@ fun getGitHeadRefsSuffix(project: Project): String {
             string.substring(0, 7)
         }
         println("commit_id: $result")
-        return "-CI.$result"
+        return result.toString()
     } else {
         println("WARN: .git/HEAD does NOT exist")
         return ""

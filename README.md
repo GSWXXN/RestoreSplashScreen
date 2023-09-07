@@ -69,6 +69,6 @@ UI界面改自 [MIUI 原生通知图标](https://github.com/fankes/MIUINativeNot
 使用 [BlockMIUI](https://github.com/Block-Network/blockmiui) 的部分资源构建UI  
 获取应用列表方式参考 [Hide My Applist](https://github.com/Dr-TSNG/Hide-My-Applist)  
 曾使用 [libsu](https://github.com/topjohnwu/libsu) 执行Shell命令  
-参考 [MIUIHomeR](https://github.com/qqlittleice/MiuiHome_R) 优化部分代码
-使用 [Sweet Dependency](https://github.com/HighCapable/SweetDependency) 自动装配和管理依赖
+参考 [MIUIHomeR](https://github.com/qqlittleice/MiuiHome_R) 优化部分代码  
+使用 [Sweet Dependency](https://github.com/HighCapable/SweetDependency) 自动装配和管理依赖  
 使用 [Sweet Property](https://github.com/HighCapable/SweetProperty) 管理项目属性

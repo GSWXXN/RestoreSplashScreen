@@ -1,9 +1,9 @@
 import java.util.Properties
 
 plugins {
-    id("com.android.application")
-    kotlin("android")
-    id("com.google.devtools.ksp") version "1.8.20-1.0.11"
+    autowire(libs.plugins.com.android.application)
+    autowire(libs.plugins.org.jetbrains.kotlin.android)
+    autowire(libs.plugins.com.google.devtools.ksp)
 }
 
 android {
@@ -84,15 +84,13 @@ android {
 }
 
 dependencies {
-    implementation(project(mapOf("path" to ":blockmiui")))
-    compileOnly("de.robv.android.xposed:api:82")
-    implementation("com.highcapable.yukihookapi:api:1.1.11")
-    ksp("com.highcapable.yukihookapi:ksp-xposed:1.1.11")
-
-    implementation("androidx.palette:palette-ktx:1.0.0")
-    implementation("androidx.compose.material3:material3:1.1.0-rc01")
-
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation(projects.blockmiui)
+    compileOnly(de.robv.android.xposed.api)
+    implementation(com.highcapable.yukihookapi.api)
+    ksp(com.highcapable.yukihookapi.ksp.xposed)
+    implementation(androidx.palette.palette.ktx)
+    implementation(androidx.compose.material3.material3)
+    implementation(org.jetbrains.kotlinx.kotlinx.coroutines.android)
 }
 
 /**

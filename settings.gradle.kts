@@ -1,3 +1,5 @@
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -5,15 +7,9 @@ pluginManagement {
         mavenCentral()
     }
 }
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://jitpack.io")
-        maven("https://api.xposed.info/")
-    }
+plugins {
+    id("com.highcapable.sweetdependency") version "1.0.1"
 }
-rootProject.name = "MIUI遮罩进化"
+rootProject.name = "RestoreSplashScreen"
 include(":app")
 include(":blockmiui")

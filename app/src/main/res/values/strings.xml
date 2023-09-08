@@ -62,6 +62,7 @@
     <string name="shrink_low_resolution_icon">仅缩小分辨率较低的图标</string>
     <string name="shrink_all_icon">缩小全部图标</string>
     <string name="replace_icon">替换图标获取方式</string>
+    <string name="add_icon_blur_bg">为缩小的图标添加模糊背景</string>
     <string name="replace_icon_tips">开启此选项后，Splash Screen的图标可以跟随主题设定。但是通常获取到的主题图标分辨率较低，经过放大后图标可能会比较模糊。</string>
     <string name="use_icon_pack">使用图标包</string>
     <string name="icon_pack_is_removed">图标包被删除, 请重新选择</string>

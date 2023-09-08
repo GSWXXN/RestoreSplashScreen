@@ -7,6 +7,7 @@ import android.graphics.BitmapShader
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.PorterDuff
 import android.graphics.RectF
 import android.graphics.Shader
 import android.graphics.drawable.BitmapDrawable
@@ -168,5 +169,42 @@ object GraphicUtils {
             hsv[2] = hsv[2] - 0.7f // 减小明度
         }
         return Color.HSVToColor(hsv)
+    }
+
+    /**
+     * 缩小图标, 以避免后续使用 setRenderEffect 模糊图标时出现毛边问题
+     *
+     * @param context 上下文，用于获取资源和创建RenderScript
+     * @param drawable 需要创建阴影的Drawable
+     * @param oriIconSize 原始图标大小
+     * @param blurIconSize 待模糊图标大小
+     * @return 待模糊图标Drawable，如果输入的Drawable或者Context为空则返回null
+     */
+    fun createShadowedIcon(context: Context?, drawable: Drawable?, oriIconSize: Int, blurIconSize: Int): Drawable? {
+        if (drawable == null || context == null) {
+            return null
+        }
+
+        // 计算缩放比例
+        val originalSize = drawable.intrinsicWidth
+        val ratio = (oriIconSize.toDouble() / originalSize).coerceAtMost(1.0).toFloat()
+
+        // 创建缩放后的位图
+        val scaledSize = (originalSize * ratio).toInt()
+        val scaledBitmap = Bitmap.createBitmap(scaledSize, scaledSize, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(scaledBitmap)
+        drawable.setBounds(0, 0, scaledSize, scaledSize)
+        drawable.draw(canvas)
+
+        // 创建带阴影的位图
+        val shadowSize = blurIconSize / 4
+        val shadowBitmap = Bitmap.createBitmap(scaledSize + shadowSize, scaledSize + shadowSize, Bitmap.Config.ARGB_8888)
+        shadowBitmap.setHasAlpha(true)
+        val paint = Paint(3).apply { alpha = 90 }
+        canvas.setBitmap(shadowBitmap)
+        canvas.drawColor(0, PorterDuff.Mode.CLEAR)
+        canvas.drawBitmap(scaledBitmap, ((shadowSize) / 2).toFloat(), ((shadowSize) / 2).toFloat(), paint)
+
+        return BitmapDrawable(context.resources, shadowBitmap)
     }
 }

@@ -33,6 +33,7 @@ object IconSettings : ISubSettings {
         fun getDataBinding(pref : Any) = GetDataBinding({ pref }) { view, flags, data ->
             when (flags) {
                 0 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
+                1 -> view.visibility = if (data as String != context.getString(R.string.not_shrink_icon)) View.VISIBLE else View.GONE
             }
         }
 
@@ -43,8 +44,10 @@ object IconSettings : ISubSettings {
         val shrinkIconItems = mapOf(
             0 to context.getString(R.string.not_shrink_icon),
             1 to context.getString(R.string.shrink_low_resolution_icon),
-            2 to context.getString(R.string.shrink_all_icon))
-        TextWithSpinner(TextV(textId = R.string.shrink_icon), SpinnerV(shrinkIconItems[context.prefs().get(DataConst.SHRINK_ICON)]!!, 180F) {
+            2 to context.getString(R.string.shrink_all_icon)
+        )
+        val shrinkIconBinding = getDataBinding(shrinkIconItems[context.prefs().get(DataConst.SHRINK_ICON)]!!)
+        TextWithSpinner(TextV(textId = R.string.shrink_icon), SpinnerV(shrinkIconItems[context.prefs().get(DataConst.SHRINK_ICON)]!!, 180F, dataBindingSend = shrinkIconBinding.bindingSend) {
             for (item in shrinkIconItems) {
                 add(item.value) {
                     context.prefs().edit { put(DataConst.SHRINK_ICON, item.key) }
@@ -52,10 +55,17 @@ object IconSettings : ISubSettings {
             }
         })
 
+        // 为缩小的图标添加模糊背景
+        TextSummaryWithSwitch(
+            TextSummaryV(textId = R.string.add_icon_blur_bg),
+            SwitchView(DataConst.ENABLE_ADD_ICON_BLUR_BG),
+            dataBindingRecv = shrinkIconBinding.getRecv(1)
+        )
+
         // 替换图标获取方式
         TextSummaryWithSwitch(
-            TextSummaryV(textId = R.string.replace_icon, tipsId = R.string.replace_icon_tips), SwitchView(
-                DataConst.ENABLE_REPLACE_ICON)
+            TextSummaryV(textId = R.string.replace_icon, tipsId = R.string.replace_icon_tips),
+            SwitchView(DataConst.ENABLE_REPLACE_ICON)
         )
 
         // 使用图标包

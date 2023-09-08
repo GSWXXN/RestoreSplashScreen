@@ -4,10 +4,14 @@ import android.content.ComponentName
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.RectF
+import android.graphics.RenderEffect
+import android.graphics.Shader
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.widget.FrameLayout
+import android.widget.ImageView
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.RoundDegree
 import com.gswxxn.restoresplashscreen.hook.NewSystemUIHooker
@@ -29,9 +33,9 @@ import com.highcapable.yukihookapi.hook.factory.field
  */
 object IconHookHandler: BaseHookHandler() {
     var currentIconDominantColor: Int? = null
-    private var currentActualBitmapIconSize = 0
     private var currentIsNeedShrinkIcon = false
     private var currentUseMIUILagerIcon = false
+    private var currentIconDrawable: Drawable? = null
     private val iconPackManager by lazy { IconPackManager(appContext!!, prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)) }
     private val largeIcons by lazy { LargeIconsHelper(appContext!!) }
 
@@ -40,9 +44,9 @@ object IconHookHandler: BaseHookHandler() {
      */
     fun resetCache() {
         currentIconDominantColor = null
-        currentActualBitmapIconSize = 0
         currentIsNeedShrinkIcon = false
         currentUseMIUILagerIcon = false
+        currentIconDrawable = null
     }
 
     /** 开始 Hook */
@@ -64,7 +68,8 @@ object IconHookHandler: BaseHookHandler() {
         // 处理 Drawable 图标
         NewSystemUIHooker.Members.getIcon_IconProvider?.addAfterHook {
             val currentIconSize = getIconSize(result as Drawable)
-            result = processIconDrawable(result as Drawable, currentIconSize)
+            currentIconDrawable = processIconDrawable(result as Drawable, currentIconSize)
+            result = currentIconDrawable
         }
 
         // 执行缩小图标
@@ -78,6 +83,43 @@ object IconHookHandler: BaseHookHandler() {
                 mFinalIconSize.set((mFinalIconSize.int() / 1.5).toInt())
                 printLog("createIconDrawable(): execute shrink icon")
             }
+        }
+
+        // 创建模糊背景 View
+        NewSystemUIHooker.Members.build_SplashScreenViewBuilder?.addAfterHook {
+            if (prefs.get(DataConst.SHRINK_ICON) == 0 || !prefs.get(DataConst.ENABLE_ADD_ICON_BLUR_BG)) {
+                printLog("build_SplashScreenViewBuilder(): not enable add icon blur bg")
+                return@addAfterHook
+            } else if (!currentIsNeedShrinkIcon || currentUseMIUILagerIcon) {
+                printLog("build_SplashScreenViewBuilder(): not need add icon blur bg")
+                return@addAfterHook
+            }
+
+            val splashScreenView = result<FrameLayout>()!!
+            val iconView = splashScreenView.current().field { name = "mIconView" }.cast<ImageView>()
+                ?: return@addAfterHook
+
+            val iconSize = (appResources!!.getDimensionPixelSize(
+                "com.android.internal.R\$dimen".toClass().field { name = "starting_surface_icon_size" }.get().int()
+            ) / 1.5).toInt()
+            val bgIconSize = iconSize * 4
+
+            val blurBgDrawable =
+                GraphicUtils.createShadowedIcon(appContext, currentIconDrawable, iconSize, iconSize * 4)
+                    ?: return@addAfterHook
+
+            val iconBlurBGView = ImageView(appContext).apply {
+                setImageDrawable(blurBgDrawable)
+                setRenderEffect(RenderEffect.createBlurEffect(bgIconSize.toFloat() / 10, bgIconSize.toFloat() / 10, Shader.TileMode.DECAL))
+                z = -1f
+            }
+
+            val layoutParams = FrameLayout.LayoutParams(bgIconSize, bgIconSize)
+                .apply { gravity = android.view.Gravity.CENTER }
+
+            splashScreenView.addView(iconBlurBGView, layoutParams)
+            iconView.alpha = 0.9f
+            printLog("build_SplashScreenViewBuilder(): add icon blur bg")
         }
 
         // 不使用自带的图标缩放, 防止在 MIUI 上出现图标白边及图标错位

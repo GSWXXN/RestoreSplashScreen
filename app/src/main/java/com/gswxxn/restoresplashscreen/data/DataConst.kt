@@ -20,6 +20,7 @@ object DataConst {
     val ENABLE_HIDE_SPLASH_SCREEN_ICON = PrefsData("enable_hide_splash_screen_icon", false)
     val ENABLE_HIDE_ICON = PrefsData("enable_hide_icon", false)
     val ENABLE_REPLACE_ICON = PrefsData("enable_replace_icon", false)
+    val ENABLE_ADD_ICON_BLUR_BG = PrefsData("enable_add_blur_bg", false)
     val ICON_PACK_PACKAGE_NAME = PrefsData("icon_pack_package_name", "None")
     val OVERALL_BG_COLOR = PrefsData("overall_bg_color", "#FFFFFF")
     val OVERALL_BG_COLOR_NIGHT = PrefsData("overall_bg_color_night", "#000000")

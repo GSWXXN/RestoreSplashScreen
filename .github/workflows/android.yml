@@ -3,8 +3,11 @@ name: Android CI
 on:
   push:
     branches: ["master"]
+    tags: 
+      - 'v*'
     paths-ignore:
       - 'README.md'
+      - 'app/gradle.properties'
   pull_request:
     branches: ["master"]
 
@@ -47,6 +50,9 @@ jobs:
       - name: Build
         run: bash ./gradlew build
 
+      - name: Get Reease Tag Name
+        run: echo "RELEASE_TAG_NAME=$(bash ./gradlew -q getVersionCode 2>&1 | tail -n 1)" >> "$GITHUB_ENV"
+
       - name: Build with Gradle
         run: |
           echo ${{ secrets.SIGNING_KEY }} | base64 -d > keystore.jks
@@ -58,7 +64,18 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
       - name: Upload release
+        if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
         uses: actions/upload-artifact@v3
         with:
           name: RestoreSplashScreen_Release
           path: "app/build/outputs/apk/CI/release/*.apk"
+
+      - name: Create Release
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          tag_name: ${{ github.RELEASE_TAG_NAME }}
+          repository: MILU0000/RestoreSplashScreen
+          token: ${{ github.token }}
+          files: "app/build/outputs/apk/app/release/*.apk"

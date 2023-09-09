@@ -56,7 +56,6 @@ jobs:
       - name: Get Reease Tag Name
         run: |
           echo "RELEASE_TAG_NAME=$(bash ./gradlew -q getVersionCode 2>&1 | tail -n 1)" >> "$GITHUB_ENV"
-          echo ${{ env.RELEASE_TAG_NAME }}
 
       - name: Build with Gradle
         run: |
@@ -80,7 +79,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           draft: true
+          name: ${{ github.ref }}
           tag_name: ${{ env.RELEASE_TAG_NAME }}
-          repository: MILU0000/RestoreSplashScreen
+          repository: MILU0000/test
           token: ${{ github.token }}
           files: "app/build/outputs/apk/app/release/*.apk"

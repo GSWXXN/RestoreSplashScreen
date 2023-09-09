@@ -3,8 +3,12 @@ name: Android CI
 on:
   push:
     branches: ["master"]
+    tags:
+      - 'v*'
     paths-ignore:
       - 'README.md'
+      - 'app/gradle.properties'
+      - '.github/workflows/android.yml'
   pull_request:
     branches: ["master"]
 
@@ -13,15 +17,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - name: set up JDK 17
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: "17"
           distribution: "temurin"
           cache: gradle
 
-      - uses: actions/cache@v3
+      - name: Cache Gradle Dependencies
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -30,24 +37,29 @@ jobs:
           key: gradle-deps-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: gradle-deps
 
-      - uses: actions/cache@v3
+      - name: Cache Gradle Builds
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches/build-cache-*
           key: gradle-builds-${{ github.sha }}
 
-      - name: Init Submodule
+      - name: Initialize Submodule
         run: |
           git submodule init
           git submodule update
 
-      - name: Grant execute permission for gradlew
+      - name: Grant Execute Permission to gradlew
         run: chmod +x gradlew
-        
-      - name: Build
+
+      - name: Build Project
         run: bash ./gradlew build
 
-      - name: Build with Gradle
+      - name: Get Release Tag Name
+        run: |
+          echo "RELEASE_TAG_NAME=$(bash ./gradlew -q getVersionCode 2>&1 | tail -n 1)" >> "$GITHUB_ENV"
+
+      - name: Build with Gradle and Sign
         run: |
           echo ${{ secrets.SIGNING_KEY }} | base64 -d > keystore.jks
           bash ./gradlew assemble
@@ -57,8 +69,20 @@ jobs:
           KEY_ALIAS: ${{ secrets.ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
-      - name: Upload release
+      - name: Upload CI Artifact
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
         uses: actions/upload-artifact@v3
         with:
           name: RestoreSplashScreen_Release
           path: "app/build/outputs/apk/CI/release/*.apk"
+
+      - name: Create LSPosed Repository Release
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          name: ${{ github.ref_name }}
+          tag_name: ${{ env.RELEASE_TAG_NAME }}
+          repository: Xposed-Modules-Repo/com.gswxxn.restoresplashscreen
+          token: ${{ secrets.GH_TOKEN }}
+          files: "app/build/outputs/apk/app/release/*.apk"

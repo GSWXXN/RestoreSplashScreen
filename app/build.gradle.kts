@@ -4,6 +4,10 @@ plugins {
     autowire(libs.plugins.com.google.devtools.ksp)
 }
 
+tasks.register("getVersionCode") {
+    println("${property.project.versionCode}-${property.project.versionName}")
+}
+
 android {
     namespace = property.project.namespace
     compileSdk = property.project.compileSdk

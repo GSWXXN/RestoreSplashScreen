@@ -23,6 +23,19 @@
     <string name="button_abandonment">舍弃修改</string>
     <string name="button_reedit">返回编辑</string>
 
+    <string name="switch_hook_title">切换 Hook</string>
+    <string name="switch_hook_message">
+        模块在 v2.8 版本重构了 SystemUI Hook.\n\n
+        如果你使用新版 Hook 出现问题但不想降级, 可以在此切换旧版 Hook, 旧版 Hook 不包含 v2.8 及以后的新功能 \n\n
+        请注意: 旧版 Hook 将不再被维护, 且后期会被移除, 请优先向开发者反馈新版 Hook 的问题 \n\n
+        切换 Hook 将会重启系统界面\n\n
+        当前为%s
+    </string>
+    <string name="switch_hook_button">切换至%s</string>
+    <string name="old_system_ui_hook">旧版 SystemUI Hook</string>
+    <string name="new_system_ui_hook">新版 SystemUI Hook</string>
+
+
     <string name="basic_settings">基础设置</string>
     <string name="custom_scope_settings">作用域</string>
     <string name="icon_settings">图标</string>

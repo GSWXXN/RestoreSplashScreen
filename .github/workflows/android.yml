@@ -15,6 +15,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    permissions: 
+      contents: write
+
     steps:
       - uses: actions/checkout@v3
       - name: set up JDK 17
@@ -51,7 +54,9 @@ jobs:
         run: bash ./gradlew build
 
       - name: Get Reease Tag Name
-        run: echo "RELEASE_TAG_NAME=$(bash ./gradlew -q getVersionCode 2>&1 | tail -n 1)" >> "$GITHUB_ENV"
+        run: |
+          echo "RELEASE_TAG_NAME=$(bash ./gradlew -q getVersionCode 2>&1 | tail -n 1)" >> "$GITHUB_ENV"
+          echo ${{ env.RELEASE_TAG_NAME }}
 
       - name: Build with Gradle
         run: |
@@ -75,7 +80,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           draft: true
-          tag_name: ${{ github.RELEASE_TAG_NAME }}
+          tag_name: ${{ env.RELEASE_TAG_NAME }}
           repository: MILU0000/RestoreSplashScreen
           token: ${{ github.token }}
           files: "app/build/outputs/apk/app/release/*.apk"

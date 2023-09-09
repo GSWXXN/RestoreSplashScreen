@@ -26,7 +26,10 @@ class LargeIconsHelper(private val context: Context) {
         "com.miui.home",
         Context.CONTEXT_INCLUDE_CODE or Context.CONTEXT_IGNORE_SECURITY
     )
-    private val largeIconsHelperClazz = "com.miui.maml.util.LargeIconsHelper".toClass(miuiHomeContext.classLoader)
+    private val largeIconsHelperClazz =
+        if (YukiHelper.atLeastMIUI14)
+            "com.miui.maml.util.LargeIconsHelper".toClass(miuiHomeContext.classLoader)
+        else null
     private val appIconsHelper = "com.miui.maml.util.AppIconsHelper".toClass(miuiHomeContext.classLoader)
     /** 当前是否启用 MIUI 完美图标 */
     val isSupportMIUIModeIcon by lazy {
@@ -56,7 +59,7 @@ class LargeIconsHelper(private val context: Context) {
      * @return 原始大图标可绘制对象，如果未找到则为 null
      */
     fun getOriginLargeIconDrawable(packageName: String, activityName: String, size: String) = try {
-        largeIconsHelperClazz.method { name = "getOriginLargeIconDrawable" }.get().call(
+        largeIconsHelperClazz?.method { name = "getOriginLargeIconDrawable" }?.get()?.call(
             context,
             packageName,
             activityName.ifBlank { context.packageManager.getLaunchIntentForPackage(packageName)?.component?.className },

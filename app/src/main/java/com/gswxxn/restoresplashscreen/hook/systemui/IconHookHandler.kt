@@ -170,8 +170,8 @@ object IconHookHandler: BaseHookHandler() {
             return ColorDrawable(Color.TRANSPARENT)
         }
 
-        if (atLeastMIUI14) {
-            // MIUI 大图标
+        // 使用 MIUI 大图标
+        if (atLeastMIUI14 && prefs.get(DataConst.ENABLE_USE_MIUI_LARGE_ICON)) {
             largeIcons.getOriginLargeIconDrawable(currentPackageName, currentActivity, "2x2")?.let {
                 iconDrawable = it
                 currentUseMIUILagerIcon = true

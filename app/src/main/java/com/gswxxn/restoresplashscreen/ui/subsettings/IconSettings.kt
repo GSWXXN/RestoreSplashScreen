@@ -15,6 +15,7 @@ import com.gswxxn.restoresplashscreen.ui.SubSettings
 import com.gswxxn.restoresplashscreen.ui.`interface`.ISubSettings
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
+import com.gswxxn.restoresplashscreen.utils.YukiHelper
 import com.gswxxn.restoresplashscreen.view.BlockMIUIItemData
 import com.gswxxn.restoresplashscreen.view.SwitchView
 import com.highcapable.yukihookapi.hook.factory.prefs
@@ -67,6 +68,13 @@ object IconSettings : ISubSettings {
             TextSummaryV(textId = R.string.replace_icon, tipsId = R.string.replace_icon_tips),
             SwitchView(DataConst.ENABLE_REPLACE_ICON)
         )
+
+        // 使用 MIUI 大图标
+        if (YukiHelper.atLeastMIUI14)
+            TextSummaryWithSwitch(
+                TextSummaryV(textId = R.string.use_miui_large_icon, tipsId = R.string.use_miui_large_icon_tips),
+                SwitchView(DataConst.ENABLE_USE_MIUI_LARGE_ICON)
+            )
 
         // 使用图标包
         val availableIconPacks = IconPackManager(context).getAvailableIconPacks()

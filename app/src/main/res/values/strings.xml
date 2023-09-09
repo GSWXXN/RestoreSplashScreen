@@ -64,6 +64,8 @@
     <string name="replace_icon">替换图标获取方式</string>
     <string name="add_icon_blur_bg">为缩小的图标添加模糊背景</string>
     <string name="replace_icon_tips">开启此选项后，Splash Screen的图标可以跟随主题设定。但是通常获取到的主题图标分辨率较低，经过放大后图标可能会比较模糊。</string>
+    <string name="use_miui_large_icon">使用 MIUI 大图标</string>
+    <string name="use_miui_large_icon_tips">目前仅显示 2x2 的大图标, 且此选项不受 \"缩小图标\" 的影响</string>
     <string name="use_icon_pack">使用图标包</string>
     <string name="icon_pack_is_removed">图标包被删除, 请重新选择</string>
     <string name="default_style">忽略应用主动设置的图标</string>

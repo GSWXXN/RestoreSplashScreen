@@ -72,7 +72,7 @@ object IconSettings : ISubSettings {
         // 使用 MIUI 大图标
         if (YukiHelper.atLeastMIUI14)
             TextSummaryWithSwitch(
-                TextSummaryV(textId = R.string.use_miui_large_icon, tipsId = R.string.use_miui_large_icon_tips),
+                TextSummaryV(textId = R.string.use_miui_large_icon),
                 SwitchView(DataConst.ENABLE_USE_MIUI_LARGE_ICON)
             )
 

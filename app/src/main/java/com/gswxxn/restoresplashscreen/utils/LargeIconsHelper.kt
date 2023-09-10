@@ -15,6 +15,7 @@ import com.highcapable.yukihookapi.hook.factory.toClass
 import com.highcapable.yukihookapi.hook.log.loggerE
 import com.highcapable.yukihookapi.hook.type.android.ContextClass
 import com.highcapable.yukihookapi.hook.type.android.UserHandleClass
+import com.highcapable.yukihookapi.hook.type.java.BooleanType
 import com.highcapable.yukihookapi.hook.type.java.LongType
 import com.highcapable.yukihookapi.hook.type.java.StringClass
 
@@ -48,29 +49,79 @@ class LargeIconsHelper(private val context: Context) {
                 }
             }
         }
+
+        // 由于大图标的变更通知不到系统界面, 所以只能每次都重新读取配置
+        if (YukiHelper.atLeastMIUI14) {
+            NewSystemUIHooker.findClass("com.miui.maml.util.LargeIconsHelper", miuiHomeContext.classLoader).hook {
+                injectMember {
+                    method { name = "hasLargeIcon" }
+                    beforeHook { largeIconsHelperClazz?.field { name = "sManagerList" }?.get()?.set(null) }
+                }
+            }
+        }
     }
 
     /**
-     * 获取指定包名和大小的原始大图标
+     * 检查给定的程序是否存在大图标
+     *
+     * @param packageName 要检查的程序包的名称。
+     * @return 如果程序包有大图标则返回 `true`，否则返回 `false`。
+     */
+    fun hasLargeIcon(packageName: String) = try {
+        largeIconsHelperClazz?.method {
+            name = "hasLargeIcon"
+            param(StringClass, StringClass, StringClass, UserHandleClass)
+        }?.get()?.boolean (
+            packageName,
+            null,
+            "desktop",
+            UserHandleClass.field { name = "CURRENT" }.get().any()
+        ) ?: false
+    } catch (e: Throwable) {
+        loggerE(msg = "Failed to get hasLargeIcon for package $packageName", e = e)
+        false
+    }
+
+    /**
+     * 获取指定程序包的大图标的尺寸。
+     *
+     * @param packageName 需要获取大图标尺寸的程序包的名称。
+     * @return 如果成功获取大图标的尺寸则返回该尺寸，否则在捕获异常后返回null。
+     */
+    fun getLargeIconSize(packageName: String) = try {
+        val iconsConfigs = largeIconsHelperClazz?.method {
+            name = "getLargeIconConfigFile"
+            param(StringClass, BooleanType)
+        }?.get()?.call("desktop", false)?.current()
+            ?.method { name = "getIconsConfigs" }
+            ?.invoke<HashMap<String, Any>>()
+        iconsConfigs?.get(packageName)?.current()?.field { name = "size" }?.string()
+    } catch (e: Throwable) {
+        loggerE(msg = "Failed to get hasLargeIcon for package $packageName", e = e)
+        null
+    }
+
+    /**
+     * 获取指定包名的大图标
      *
      * @param packageName 应用程序的包名
-     * @param activityName 当前活动名称
-     * @param size        图标的大小, 如 "1x2", "2x1", "2x2"
      * @return 原始大图标可绘制对象，如果未找到则为 null
      */
-    fun getOriginLargeIconDrawable(packageName: String, activityName: String, size: String) = try {
-        largeIconsHelperClazz?.method { name = "getOriginLargeIconDrawable" }?.get()?.call(
-            context,
+    fun getLargeIconDrawable(packageName: String) = try {
+        largeIconsHelperClazz?.method {
+            name = "getLargeIconDrawable"
+            param(ContextClass, StringClass, StringClass, StringClass, StringClass, LongType, UserHandleClass)
+        }?.get()?.call(
+            miuiHomeContext,
             packageName,
-            activityName.ifBlank { context.packageManager.getLaunchIntentForPackage(packageName)?.component?.className },
+            null,
             "desktop",
-            "",
-            size,
+            null,
             0L,
-            UserHandleClass.field { name = "OWNER" }.get().any()
+            UserHandleClass.field { name = "CURRENT" }.get().any()
         )?.current()?.method { name = "getDrawable" }?.invoke<Drawable>()
     } catch (e: Throwable) {
-        loggerE(msg = "Failed to get original large icon drawable for package $packageName and activity $activityName", e = e)
+        loggerE(msg = "Failed to get large icon drawable for package $packageName", e = e)
         null
     }
 
@@ -78,17 +129,16 @@ class LargeIconsHelper(private val context: Context) {
      * 从指定的应用程序包中获取完美的图标 Drawable
      *
      * @param packageName 要获取图标的应用程序包的包名。
-     * @param activityName 当前活动名称
      * @return 如果成功获取到完美图标，则返回一个 BitmapDrawable；如果发生错误，则返回 null。
      */
-    fun getFancyIconDrawable(packageName: String, activityName: String) = try {
+    fun getFancyIconDrawable(packageName: String) = try {
         val drawable = appIconsHelper.method {
             name = "getIconDrawable"
             param(ContextClass, StringClass, StringClass, LongType)
         }.get().call(
             context,
             packageName,
-            activityName.ifBlank { context.packageManager.getLaunchIntentForPackage(packageName)?.component?.className },
+            null,
             0L,
         )
 
@@ -107,7 +157,7 @@ class LargeIconsHelper(private val context: Context) {
             drawable
         } else null
     } catch (e: Throwable) {
-        loggerE(msg = "Failed to get FancyIconDrawable with package: $packageName, activity name: $activityName", e = e)
+        loggerE(msg = "Failed to get FancyIconDrawable with package: $packageName", e = e)
         null
     } as Drawable?
 }

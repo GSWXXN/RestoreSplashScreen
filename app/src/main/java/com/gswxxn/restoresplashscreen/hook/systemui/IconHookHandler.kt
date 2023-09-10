@@ -34,7 +34,17 @@ import com.highcapable.yukihookapi.hook.factory.field
 object IconHookHandler: BaseHookHandler() {
     var currentIconDominantColor: Int? = null
     private var currentIsNeedShrinkIcon = false
-    private var currentUseMIUILagerIcon = false
+    /**
+     * currentUseSmallMIUILagerIcon 有三种状态:
+     *
+     * null: 当前没有使用 MIUI 大图标
+     *
+     * true: 当前使用 1x2 或 2x1 或 2x2 的图标
+     *
+     * false: 当前使用 1x1 的图标
+     *
+     */
+    private var currentUseBigMIUILagerIcon: Boolean? = null
     private var currentIconDrawable: Drawable? = null
     private val iconPackManager by lazy { IconPackManager(appContext!!, prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)) }
     private val largeIcons by lazy { LargeIconsHelper(appContext!!) }
@@ -45,7 +55,7 @@ object IconHookHandler: BaseHookHandler() {
     fun resetCache() {
         currentIconDominantColor = null
         currentIsNeedShrinkIcon = false
-        currentUseMIUILagerIcon = false
+        currentUseBigMIUILagerIcon = null
         currentIconDrawable = null
     }
 
@@ -81,7 +91,7 @@ object IconHookHandler: BaseHookHandler() {
 
         // 执行缩小图标
         NewSystemUIHooker.Members.createIconDrawable?.addBeforeHook {
-            if (currentUseMIUILagerIcon) {
+            if (currentUseBigMIUILagerIcon == true) {
                 val mFinalIconSize = instance.current().field { name = "mFinalIconSize" }
                 mFinalIconSize.set((mFinalIconSize.int() * 1.35).toInt())
                 printLog("createIconDrawable(): execute enlarge icon")
@@ -97,7 +107,7 @@ object IconHookHandler: BaseHookHandler() {
             if (prefs.get(DataConst.SHRINK_ICON) == 0 || !prefs.get(DataConst.ENABLE_ADD_ICON_BLUR_BG)) {
                 printLog("build_SplashScreenViewBuilder(): not enable add icon blur bg")
                 return@addAfterHook
-            } else if (!currentIsNeedShrinkIcon || currentUseMIUILagerIcon) {
+            } else if (!currentIsNeedShrinkIcon || currentUseBigMIUILagerIcon == true) {
                 printLog("build_SplashScreenViewBuilder(): not need add icon blur bg")
                 return@addAfterHook
             }
@@ -176,7 +186,7 @@ object IconHookHandler: BaseHookHandler() {
 
         // 检索图标优先级: 使用 MIUI 大图标 -> 使用图标包 -> 替换获取图标方式 -> 原始图标
         var iconDrawable = getMIUILargeIcon() ?: getIconFromIconPack() ?: replaceWayOfGetIcons() ?: oriDrawable
-        val bitmap = GraphicUtils.drawable2Bitmap(iconDrawable, if (currentUseMIUILagerIcon) iconSize * 2 else iconSize)
+        val bitmap = GraphicUtils.drawable2Bitmap(iconDrawable, if (currentUseBigMIUILagerIcon == true) iconSize * 2 else iconSize)
 
         // 判断是否需要缩小图标
         when (shrinkIconType) {
@@ -188,10 +198,7 @@ object IconHookHandler: BaseHookHandler() {
         printLog("getIcon(): currentIsNeedShrinkIcon: $currentIsNeedShrinkIcon")
 
         // 绘制图标圆角
-        if (currentUseMIUILagerIcon) {
-            iconDrawable = BitmapDrawable(appResources, GraphicUtils.roundBitmapByShader(bitmap, RoundDegree.MIUIWidget))
-            printLog("getIcon(): draw MIUI large icon round corner")
-        } else if (isDrawIconRoundCorner) {
+        if (currentUseBigMIUILagerIcon == null && isDrawIconRoundCorner) {
             iconDrawable = BitmapDrawable(appResources, GraphicUtils.roundBitmapByShader(bitmap, RoundDegree.RoundCorner))
             printLog("getIcon(): draw icon round corner")
         }
@@ -224,11 +231,14 @@ object IconHookHandler: BaseHookHandler() {
 
     /** 使用 MIUI 大图标 */
     private fun getMIUILargeIcon(): Drawable? {
-        if (atLeastMIUI14 && prefs.get(DataConst.ENABLE_USE_MIUI_LARGE_ICON)) {
+        if (atLeastMIUI14 && prefs.get(DataConst.ENABLE_USE_MIUI_LARGE_ICON) && largeIcons.hasLargeIcon(currentPackageName)) {
             printLog("getIcon(): use MIUI Large Icon")
-
-            return largeIcons.getOriginLargeIconDrawable(currentPackageName, currentActivity, "2x2")
-                ?.also { currentUseMIUILagerIcon = true }
+            return largeIcons.getLargeIconDrawable(currentPackageName)?.also {
+                val largeIconSize = largeIcons.getLargeIconSize(currentPackageName)
+                printLog("getIcon(): large icon size: $largeIconSize")
+                currentUseBigMIUILagerIcon =
+                    if (largeIconSize in arrayOf("1x1", "1x2", "2x1", "2x2")) largeIconSize != "1x1" else null
+            }
         }
         return null
     }
@@ -265,7 +275,7 @@ object IconHookHandler: BaseHookHandler() {
                     appContext!!.packageManager.getApplicationIcon("com.android.settings")
 
                 isMIUI && largeIcons.isSupportMIUIModeIcon && currentPackageName != "com.android.fileexplorer" -> { // 在 MIUI 上优先获取完美图标
-                    largeIcons.getFancyIconDrawable(currentPackageName, currentActivity) ?:
+                    largeIcons.getFancyIconDrawable(currentPackageName) ?:
                     appContext!!.packageManager.getApplicationIcon(currentPackageName)
                 }
 

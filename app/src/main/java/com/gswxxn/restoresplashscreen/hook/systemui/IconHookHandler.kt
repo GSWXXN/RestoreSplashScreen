@@ -71,6 +71,13 @@ object IconHookHandler: BaseHookHandler() {
             currentIconDrawable = processIconDrawable(result as Drawable, currentIconSize)
             result = currentIconDrawable
         }
+        // 处理 ColorOS 图标
+        NewSystemUIHooker.Members.getIconExt_OplusShellStartingWindowManager?.addAfterHook {
+            printLog("getIconExt_OplusShellStartingWindowManager(): current method is getIconExt")
+            val currentIconSize = getIconSize(result as Drawable)
+            currentIconDrawable = processIconDrawable(result as Drawable, currentIconSize)
+            result = currentIconDrawable
+        }
 
         // 执行缩小图标
         NewSystemUIHooker.Members.createIconDrawable?.addBeforeHook {

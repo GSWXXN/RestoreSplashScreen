@@ -93,6 +93,12 @@ object NewSystemUIHooker: YukiBaseHooker() {
                 name = "setContentViewBackground"
             }.give()!!
         }
+        val getIconExt_OplusShellStartingWindowManager = HookManager.create(isColorOS) {
+            "com.android.wm.shell.startingsurface.OplusShellStartingWindowManager".toClass().method {
+                name = "getIconExt"
+                paramCount(4..5)
+            }.give()!!
+        }
     }
 
     /** 开始 Hook */

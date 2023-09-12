@@ -1,5 +1,6 @@
 package com.gswxxn.restoresplashscreen.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.Drawable
@@ -22,6 +23,7 @@ import com.highcapable.yukihookapi.hook.type.java.StringClass
 /**
  * 用于从 MIUI 桌面检索大图标的辅助类
  */
+@SuppressLint("DiscouragedApi")
 class LargeIconsHelper(private val context: Context) {
     private val miuiHomeContext = context.createPackageContext(
         "com.miui.home",
@@ -47,6 +49,14 @@ class LargeIconsHelper(private val context: Context) {
                     val id = resources.getIdentifier("week_days", "array", "com.miui.home")
                     resources.getStringArray(id)
                 }
+            }
+        }
+
+        // 为获取完美图标时设置一个缓存时间, 避免获取费时图标(如天气)时, 经常显示不出数据的问题 原调用为固定值 0.
+        NewSystemUIHooker.findClass("com.miui.maml.util.AppIconsHelper", miuiHomeContext.classLoader).hook {
+            injectMember {
+                method { name = "getFancyIconDrawable" }
+                beforeHook { args(args.indexOfFirst { it is Long }).set(3600000L) }
             }
         }
 
@@ -139,7 +149,7 @@ class LargeIconsHelper(private val context: Context) {
             context,
             packageName,
             null,
-            0L,
+            3600000L,
         )
 
         if (drawable is AdaptiveIconDrawable && drawable.javaClass.name == "com.miui.maml.MamlAdaptiveIconDrawable"){

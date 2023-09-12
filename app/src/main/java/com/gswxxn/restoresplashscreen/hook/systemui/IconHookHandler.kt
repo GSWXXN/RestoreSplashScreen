@@ -21,7 +21,7 @@ import com.gswxxn.restoresplashscreen.hook.systemui.GenerateHookHandler.currentA
 import com.gswxxn.restoresplashscreen.hook.systemui.GenerateHookHandler.currentPackageName
 import com.gswxxn.restoresplashscreen.utils.GraphicUtils
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
-import com.gswxxn.restoresplashscreen.utils.LargeIconsHelper
+import com.gswxxn.restoresplashscreen.utils.MIUIIconsHelper
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.atLeastMIUI14
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.isMIUI
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.printLog
@@ -47,7 +47,7 @@ object IconHookHandler: BaseHookHandler() {
     private var currentUseBigMIUILagerIcon: Boolean? = null
     private var currentIconDrawable: Drawable? = null
     private val iconPackManager by lazy { IconPackManager(appContext!!, prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)) }
-    private val largeIcons by lazy { LargeIconsHelper(appContext!!) }
+    private val miuiIcons by lazy { MIUIIconsHelper(appContext!!) }
 
     /**
      * 重置当前应用的属性
@@ -231,10 +231,10 @@ object IconHookHandler: BaseHookHandler() {
 
     /** 使用 MIUI 大图标 */
     private fun getMIUILargeIcon(): Drawable? {
-        if (atLeastMIUI14 && prefs.get(DataConst.ENABLE_USE_MIUI_LARGE_ICON) && largeIcons.hasLargeIcon(currentPackageName)) {
+        if (atLeastMIUI14 && prefs.get(DataConst.ENABLE_USE_MIUI_LARGE_ICON) && miuiIcons.hasLargeIcon(currentPackageName)) {
             printLog("getIcon(): use MIUI Large Icon")
-            return largeIcons.getLargeIconDrawable(currentPackageName)?.also {
-                val largeIconSize = largeIcons.getLargeIconSize(currentPackageName)
+            return miuiIcons.getLargeIconDrawable(currentPackageName)?.also {
+                val largeIconSize = miuiIcons.getLargeIconSize(currentPackageName)
                 printLog("getIcon(): large icon size: $largeIconSize")
                 currentUseBigMIUILagerIcon =
                     if (largeIconSize in arrayOf("1x1", "1x2", "2x1", "2x2")) largeIconSize != "1x1" else null
@@ -274,8 +274,8 @@ object IconHookHandler: BaseHookHandler() {
                 currentPackageName == "com.android.settings" && currentActivity == "com.android.settings.BackgroundApplicationsManager" ->
                     appContext!!.packageManager.getApplicationIcon("com.android.settings")
 
-                isMIUI && largeIcons.isSupportMIUIModeIcon && currentPackageName != "com.android.fileexplorer" -> { // 在 MIUI 上优先获取完美图标
-                    largeIcons.getFancyIconDrawable(currentPackageName) ?:
+                isMIUI && miuiIcons.isSupportMIUIModeIcon && currentPackageName != "com.android.fileexplorer" -> { // 在 MIUI 上优先获取完美图标
+                    miuiIcons.getFancyIconDrawable(currentPackageName) ?:
                     appContext!!.packageManager.getApplicationIcon(currentPackageName)
                 }
 

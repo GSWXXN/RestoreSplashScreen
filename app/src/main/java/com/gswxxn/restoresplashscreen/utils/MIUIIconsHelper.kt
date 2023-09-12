@@ -24,7 +24,7 @@ import com.highcapable.yukihookapi.hook.type.java.StringClass
  * 用于从 MIUI 桌面检索大图标的辅助类
  */
 @SuppressLint("DiscouragedApi")
-class LargeIconsHelper(private val context: Context) {
+class MIUIIconsHelper(private val context: Context) {
     private val miuiHomeContext = context.createPackageContext(
         "com.miui.home",
         Context.CONTEXT_INCLUDE_CODE or Context.CONTEXT_IGNORE_SECURITY

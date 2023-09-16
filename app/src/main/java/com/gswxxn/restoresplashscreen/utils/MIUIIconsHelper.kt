@@ -56,7 +56,22 @@ class MIUIIconsHelper(private val context: Context) {
         NewSystemUIHooker.findClass("com.miui.maml.util.AppIconsHelper", miuiHomeContext.classLoader).hook {
             injectMember {
                 method { name = "getFancyIconDrawable" }
-                beforeHook { args(args.indexOfFirst { it is Long }).set(3600000L) }
+                beforeHook {
+                    val packageName = args(args.indexOfFirst { it is String }).string()
+                    val cacheTimeIndex = args.indexOfFirst { it is Long }
+                    args(cacheTimeIndex).set(getCacheTime(packageName))
+                }
+            }
+        }
+
+        // 只获取本地天气数据, 不获取网络数据; 参考 https://zhuti.designer.xiaomi.com/docs/blog/weatherApi.html
+        NewSystemUIHooker.findClass("com.miui.maml.data.ContentProviderBinder", miuiHomeContext.classLoader).hook {
+            injectMember {
+                method { name = "getUriText" }
+                afterHook {
+                    if (result == "content://weather/actualWeatherData/1")
+                        result = "content://weather/actualWeatherData/2"
+                }
             }
         }
 
@@ -149,7 +164,7 @@ class MIUIIconsHelper(private val context: Context) {
             context,
             packageName,
             null,
-            3600000L,
+            getCacheTime(packageName),
         )
 
         if (drawable is AdaptiveIconDrawable && drawable.javaClass.name == "com.miui.maml.MamlAdaptiveIconDrawable"){
@@ -170,4 +185,16 @@ class MIUIIconsHelper(private val context: Context) {
         loggerE(msg = "Failed to get FancyIconDrawable with package: $packageName", e = e)
         null
     } as Drawable?
+
+    /**
+     * 返回给定包名的缓存时间。
+     *
+     * @param packageName 要获取缓存时间的包名。
+     * @return 缓存时间(毫秒)。
+     */
+    private fun getCacheTime(packageName: String) = when (packageName) {
+        "com.miui.weather2" ->  3600000L
+        "com.android.deskclock" -> 0L
+        else -> 86400000L
+    }
 }

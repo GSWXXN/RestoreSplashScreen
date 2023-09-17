@@ -62,7 +62,7 @@
                 android:resource="@array/xposed_scope"/>
         <meta-data
                 android:name="xposeddescription"
-                android:value="自定义MIUI的SplashScreen\n酷安@迷璐"/>
+                android:value="为 Splash Screen 添加自定义选项\n酷安@迷璐"/>
     </application>
 
 </manifest>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MIUI遮罩进化</string>
+    <string name="app_name">启动遮罩进化</string>
 
     <!--主页-->
     <string name="module_version">模块版本：%s</string>
@@ -25,8 +25,8 @@
 
     <string name="switch_hook_title">切换 Hook</string>
     <string name="switch_hook_message">
-        模块在 v2.8 版本重构了 SystemUI Hook.\n\n
-        如果你使用新版 Hook 出现问题但不想降级, 可以在此切换旧版 Hook, 旧版 Hook 不包含 v2.8 及以后的新功能 \n\n
+        模块在 v3.0 版本重构了 SystemUI Hook.\n\n
+        如果你使用新版 Hook 出现问题但不想降级, 可以在此切换旧版 Hook, 旧版 Hook 不包含 v3.0 及以后的新功能 \n\n
         请注意: 旧版 Hook 将不再被维护, 且后期会被移除, 请优先向开发者反馈新版 Hook 的问题 \n\n
         切换 Hook 将会重启系统界面\n\n
         当前为%s

@@ -35,11 +35,12 @@ object NewSystemUIHooker: YukiBaseHooker() {
         }
         val startingWindowViewBuilderConstructor = HookManager.create {
             ("com.android.wm.shell.startingsurface.SplashscreenContentDrawer\$StartingWindowViewBuilder".toClassOrNull()
-                ?: "com.android.wm.shell.startingsurface.SplashscreenContentDrawer\$SplashViewBuilder".toClass()) // ColorOS 13.1 (Android 14)
+                ?: "com.android.wm.shell.startingsurface.SplashscreenContentDrawer\$SplashViewBuilder".toClass()) // Android 14
                 .constructor { paramCount(2..3) }.give()!!
         }
         val createIconDrawable = HookManager.create {
-            "com.android.wm.shell.startingsurface.SplashscreenContentDrawer\$StartingWindowViewBuilder".toClass()
+            ("com.android.wm.shell.startingsurface.SplashscreenContentDrawer\$StartingWindowViewBuilder".toClassOrNull()
+                ?: "com.android.wm.shell.startingsurface.SplashscreenContentDrawer\$SplashViewBuilder".toClass()) // Android 14
                 .method { name = "createIconDrawable" }.give()!!
         }
         val getIcon_IconProvider = HookManager.create {

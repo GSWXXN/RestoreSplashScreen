@@ -12,7 +12,7 @@ import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.factory.dataChannel
 import com.highcapable.yukihookapi.hook.factory.hasClass
 import com.highcapable.yukihookapi.hook.factory.method
-import com.highcapable.yukihookapi.hook.log.loggerI
+import com.highcapable.yukihookapi.hook.log.YLog
 import com.highcapable.yukihookapi.hook.type.java.StringClass
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 
@@ -85,14 +85,14 @@ object YukiHelper {
      * 打印日志
      */
     fun YukiBaseHooker.printLog(vararg msg: String) {
-        if (prefs.get(DataConst.ENABLE_LOG)) msg.forEach { loggerI(msg = it) }
+        if (prefs.get(DataConst.ENABLE_LOG)) msg.forEach { YLog.info(it) }
     }
 
     /**
      * 打印日志
      */
     fun BaseHookHandler.printLog(vararg msg: String) {
-        if (prefs.get(DataConst.ENABLE_LOG)) msg.forEach { loggerI(msg = it) }
+        if (prefs.get(DataConst.ENABLE_LOG)) msg.forEach { YLog.info(it) }
     }
 
     /**

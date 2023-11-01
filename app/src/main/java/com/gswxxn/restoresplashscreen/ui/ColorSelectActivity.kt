@@ -120,7 +120,7 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
 
         val icon = packageManager.getApplicationIcon(pkgName).let {
             binding.demoIcon.setImageDrawable(it)
-            drawable2Bitmap(it, 48)!!
+            drawable2Bitmap(it, 48)
         }
 
         val magnifierSize = dp2px(this@ColorSelectActivity, 100f)

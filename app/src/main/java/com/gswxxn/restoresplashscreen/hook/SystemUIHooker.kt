@@ -22,6 +22,7 @@ import com.gswxxn.restoresplashscreen.utils.YukiHelper.printLog
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.register
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.setField
 import com.highcapable.yukihookapi.hook.bean.VariousClass
+import com.highcapable.yukihookapi.hook.core.annotation.LegacyHookApi
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.factory.field
@@ -49,6 +50,7 @@ object SystemUIHooker: YukiBaseHooker() {
                 && ((isExceptionMode && (pkgName in list)) || (!isExceptionMode && pkgName !in list))
     }
 
+    @OptIn(LegacyHookApi::class)
     override fun onHook() {
         register()
 
@@ -62,7 +64,7 @@ object SystemUIHooker: YukiBaseHooker() {
          * 原理：干预 makeSplashScreenContentView() 中的 if 判断
          * - 核心功能， 若此处无法正常运行，则模块大部分功能将失效
          */
-        findClass("com.android.wm.shell.startingsurface.SplashscreenContentDrawer").hook {
+        "com.android.wm.shell.startingsurface.SplashscreenContentDrawer".toClass().hook {
 
             injectMember {
                 method {
@@ -344,7 +346,7 @@ object SystemUIHooker: YukiBaseHooker() {
                                 1 -> {
                                     printLog("10. createIconDrawable(): get adaptive background color")
                                     GraphicUtils.getBgColor(
-                                        GraphicUtils.drawable2Bitmap(args(0).cast<Drawable>()!!, 100)!!,
+                                        GraphicUtils.drawable2Bitmap(args(0).cast<Drawable>()!!, 100),
                                         when (colorMode) {
                                             1 -> false
                                             2 -> !isDarkMode
@@ -505,7 +507,7 @@ object SystemUIHooker: YukiBaseHooker() {
                 printLog("11. isStaringWindowUnderNightMode(): ignore dark mode")
             }
         }
-        findClass("android.window.SplashScreenView\$Builder").hook {
+        "android.window.SplashScreenView\$Builder".toClass().hook {
             injectMember {
                 method {
                     name = "isStaringWindowUnderNightMode"
@@ -514,7 +516,7 @@ object SystemUIHooker: YukiBaseHooker() {
                 beforeHook(ignoreDarkModeHook)
             }.ignoredNoSuchMemberFailure()
         }
-        findClass("android.view.ForceDarkHelperStubImpl").hook {
+        "android.view.ForceDarkHelperStubImpl".toClass().hook {
             injectMember {
                 method {
                     name = "updateForceDarkSplashScreen"
@@ -525,7 +527,7 @@ object SystemUIHooker: YukiBaseHooker() {
 
 
         // 遮罩最小持续时间
-        findClass("com.android.wm.shell.startingsurface.StartingWindowController").hook {
+        "com.android.wm.shell.startingsurface.StartingWindowController".toClass().hook {
             injectMember {
                 method { name = "removeStartingWindow" }
                 replaceUnit {
@@ -575,7 +577,7 @@ object SystemUIHooker: YukiBaseHooker() {
          *
          * 原理为干预 fillViewWithIcon() 中的 if 判断，使其将启动器判断为不是 MIUI 桌面
          */
-        findClass("android.app.TaskSnapshotHelperImpl").hook {
+        "android.app.TaskSnapshotHelperImpl".toClass().hook {
             injectMember {
                 method {
                     name = "isMiuiHome"
@@ -592,7 +594,7 @@ object SystemUIHooker: YukiBaseHooker() {
             }.ignoredNoSuchMemberFailure()
         }
 
-        findClass("com.android.wm.shell.startingsurface.OplusShellStartingWindowManager").hook {
+        "com.android.wm.shell.startingsurface.OplusShellStartingWindowManager".toClass().hook {
             injectMember {
                 method { name = "setContentViewBackground" }
                 beforeHook {

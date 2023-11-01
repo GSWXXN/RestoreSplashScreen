@@ -17,6 +17,8 @@ repositories:
   maven-central:
   maven-xposed:
     url: https://api.xposed.info/
+  jitpack:
+    url: https://jitpack.io
 
 plugins:
   com.android.application:
@@ -32,9 +34,9 @@ libraries:
       version: 82
   com.highcapable.yukihookapi:
     api:
-      version: 1.1.11
+      version: 1.2.0
     ksp-xposed:
-      version: 1.1.11
+      version: 1.2.0
   androidx.palette:
     palette-ktx:
       version: 1.0.0

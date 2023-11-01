@@ -9,8 +9,7 @@ import com.gswxxn.restoresplashscreen.utils.YukiHelper.register
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.constructor
 import com.highcapable.yukihookapi.hook.factory.method
-import com.highcapable.yukihookapi.hook.log.loggerE
-import com.highcapable.yukihookapi.hook.log.loggerW
+import com.highcapable.yukihookapi.hook.log.YLog
 import com.highcapable.yukihookapi.hook.type.android.ActivityInfoClass
 import com.highcapable.yukihookapi.hook.type.java.IntType
 import com.highcapable.yukihookapi.hook.type.java.StringClass
@@ -74,7 +73,7 @@ object NewSystemUIHooker: YukiBaseHooker() {
                     param(StringClass)
                 }.give()!!
             } catch (e: NoClassDefFoundError) {
-                loggerW(msg = "Class android.app.TaskSnapshotHelperImpl not found, be relax, this is not a requirement")
+                YLog.warn("Class android.app.TaskSnapshotHelperImpl not found, be relax, this is not a requirement")
                 null
             }
         }
@@ -125,7 +124,7 @@ object NewSystemUIHooker: YukiBaseHooker() {
             if (hookManager is HookManager) try {
                 hookManager.startHook()
             } catch (e: Throwable) {
-                loggerE(e = e)
+                YLog.error(e = e)
             }
         }
     }

@@ -1,8 +1,7 @@
 package com.gswxxn.restoresplashscreen.hook.base
 
 import com.gswxxn.restoresplashscreen.hook.AndroidHooker.hook
-import com.highcapable.yukihookapi.hook.log.loggerE
-import com.highcapable.yukihookapi.hook.log.loggerW
+import com.highcapable.yukihookapi.hook.log.YLog
 import com.highcapable.yukihookapi.hook.param.HookParam
 import java.lang.reflect.Member
 
@@ -26,7 +25,7 @@ class HookManager private constructor(private val member: Member) {
             return if (createCondition) try {
                 block()?.let { HookManager(it) }
             } catch (e: Throwable) {
-                loggerE(e = e)
+                YLog.error(e = e)
                 null
             } else null
         }
@@ -81,22 +80,18 @@ class HookManager private constructor(private val member: Member) {
      * 将 beforeHooks 和 afterHooks 分别整合到一起
      */
     fun startHook() {
-        member.declaringClass.hook {
-            injectMember {
-                members(member)
+        member.hook {
+            val hasReplaceHook = replaceHook != null
+            val hasBeforeHooks = beforeHooks.isNotEmpty()
+            val hasAfterHooks = afterHooks.isNotEmpty()
 
-                val hasReplaceHook = replaceHook != null
-                val hasBeforeHooks = beforeHooks.isNotEmpty()
-                val hasAfterHooks = afterHooks.isNotEmpty()
+            if (hasReplaceHook && (hasBeforeHooks || hasAfterHooks))
+                YLog.warn("Conflict detected: ReplaceHook and Before/After Hooks cannot coexist. The before/after hooks will be ignored. Affected class: ${member.declaringClass}. Affected member: ${member.name}. Please ensure that only one type of hook is used at a time.")
 
-                if (hasReplaceHook && (hasBeforeHooks || hasAfterHooks))
-                    loggerW(msg = "Conflict detected: ReplaceHook and Before/After Hooks cannot coexist. The before/after hooks will be ignored. Affected class: ${member.declaringClass}. Affected member: ${member.name}. Please ensure that only one type of hook is used at a time.")
-
-                if (hasReplaceHook) replaceAny { replaceHook!!() }
-                else {
-                    if (hasBeforeHooks) beforeHook { beforeHooks.forEach { it() } }
-                    if (hasAfterHooks) afterHook { afterHooks.forEach { it() } }
-                }
+            if (hasReplaceHook) replaceAny { replaceHook!!() }
+            else {
+                if (hasBeforeHooks) before { beforeHooks.forEach { it() } }
+                if (hasAfterHooks) after { afterHooks.forEach { it() } }
             }
         }
     }

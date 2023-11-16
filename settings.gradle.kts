@@ -8,11 +8,11 @@ pluginManagement {
     }
 }
 plugins {
-    id("com.highcapable.sweetdependency") version "1.0.1"
-    id("com.highcapable.sweetproperty") version "1.0.2"
+    id("com.highcapable.sweetdependency") version "1.0.4"
+    id("com.highcapable.sweetproperty") version "1.0.5"
 }
 sweetProperty {
-    project("app") {
+    project(":app") {
         sourcesCode {
             isEnable = false
         }

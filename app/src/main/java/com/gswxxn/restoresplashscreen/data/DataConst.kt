@@ -35,7 +35,7 @@ object DataConst {
     val FORCE_SHOW_SPLASH_SCREEN = PrefsData("force_show_splash_screen", false)
     val DISABLE_SPLASH_SCREEN = PrefsData("disable_splash_screen", false)
     val ENABLE_HOT_START_COMPATIBLE = PrefsData("enable_hot_start_compatible", false)
-    val ENABLE_DRAW_ROUND_CORNER = PrefsData("draw_round_corner", true)
+    val ENABLE_DRAW_ROUND_CORNER = PrefsData("draw_round_corner", false)
     val SHRINK_ICON = PrefsData("shrink_icon", 0)
     val BG_COLOR_MODE = PrefsData("color_mode", 0)
     val CHANG_BG_COLOR_TYPE = PrefsData("change_bg_color_type", 0)

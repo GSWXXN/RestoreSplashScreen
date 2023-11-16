@@ -3,19 +3,19 @@ package com.gswxxn.restoresplashscreen.hook.systemui
 import android.content.ComponentName
 import android.content.res.Configuration
 import android.graphics.Color
+import android.graphics.Outline
 import android.graphics.RectF
 import android.graphics.RenderEffect
 import android.graphics.Shader
 import android.graphics.drawable.AdaptiveIconDrawable
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.view.View
+import android.view.ViewOutlineProvider
 import android.widget.FrameLayout
 import android.widget.ImageView
 import com.gswxxn.restoresplashscreen.data.DataConst
-import com.gswxxn.restoresplashscreen.data.RoundDegree
 import com.gswxxn.restoresplashscreen.hook.NewSystemUIHooker
-import com.gswxxn.restoresplashscreen.hook.NewSystemUIHooker.toClass
 import com.gswxxn.restoresplashscreen.hook.base.BaseHookHandler
 import com.gswxxn.restoresplashscreen.hook.systemui.GenerateHookHandler.currentActivity
 import com.gswxxn.restoresplashscreen.hook.systemui.GenerateHookHandler.currentPackageName
@@ -27,6 +27,7 @@ import com.gswxxn.restoresplashscreen.utils.YukiHelper.isMIUI
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.printLog
 import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.factory.field
+import com.highcapable.yukihookapi.hook.factory.toClass
 
 /**
  * 此对象用于处理图标 Hook
@@ -130,6 +131,32 @@ object IconHookHandler: BaseHookHandler() {
             printLog("build_SplashScreenViewBuilder(): add icon blur bg")
         }
 
+        // 绘制圆角
+        NewSystemUIHooker.Members.build_SplashScreenViewBuilder?.addAfterHook {
+            val splashScreenView = result<FrameLayout>()!!
+            val iconView = splashScreenView.current().field { name = "mIconView" }.cast<ImageView>()
+                ?: return@addAfterHook
+            val iconSize = instance.current().field { name = "mIconSize" }.int()
+            val iconDrawable = instance.current().field { name = "mIconDrawable" }.cast<Drawable>()
+                ?: return@addAfterHook
+            val isNeedDrawRoundCorner = prefs.get(DataConst.ENABLE_DRAW_ROUND_CORNER) && // 用户配置
+                    "android.window.SplashScreenView\$IconAnimateListener".toClass() !in iconDrawable.javaClass.interfaces && // 不为动态图标绘制圆角
+                    iconSize != 0 // 如果没有图标 则不绘制圆角
+
+            if (!isNeedDrawRoundCorner) {
+                return@addAfterHook
+            }
+
+            // 为 view 添加轮廓
+            iconView.outlineProvider = object : ViewOutlineProvider() {
+                override fun getOutline(view: View, outline: Outline) {
+                    outline.setRoundRect(0, 0, view.width, view.height, iconSize.toFloat() / 4)
+                }
+            }
+            iconView.setClipToOutline(true) // 启用轮廓剪裁
+            printLog("build_SplashScreenViewBuilder(): draw icon round corner")
+        }
+
         // 不使用自带的图标缩放, 防止在 MIUI 上出现图标白边及图标错位
         NewSystemUIHooker.Members.normalizeAndWrapToAdaptiveIcon?.addBeforeHook {
             val scale = instance.current()
@@ -140,6 +167,12 @@ object IconHookHandler: BaseHookHandler() {
             args(args.indexOfFirst { it is FloatArray }).cast<FloatArray>()!![0] = scale
             printLog("normalizeAndWrapToAdaptiveIcon(): avoid shrink icon by system ui")
             result = args.first { it is Drawable } as Drawable
+        }
+        NewSystemUIHooker.Members.createIconBitmap_BaseIconFactory?.addBeforeHook {
+            args(0).cast<Drawable>()?.let { drawable ->
+                printLog("createIconBitmap_BaseIconFactory(): avoid shrink icon by system ui")
+                result = GraphicUtils.drawable2Bitmap(drawable, getIconSize(drawable))
+            }
         }
     }
 
@@ -158,7 +191,6 @@ object IconHookHandler: BaseHookHandler() {
     fun processIconDrawable(oriDrawable: Drawable): Drawable {
         val shrinkIconType = prefs.get(DataConst.SHRINK_ICON)
         val colorMode = prefs.get(DataConst.BG_COLOR_MODE)
-        val isDrawIconRoundCorner = prefs.get(DataConst.ENABLE_DRAW_ROUND_CORNER)
         val isDarkMode = (appContext!!.resources
             .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES)
 
@@ -177,7 +209,7 @@ object IconHookHandler: BaseHookHandler() {
         }
 
         // 检索图标优先级: 使用 MIUI 大图标 -> 使用图标包 -> 替换获取图标方式 -> 原始图标
-        var iconDrawable = getMIUILargeIcon() ?: getIconFromIconPack() ?: replaceWayOfGetIcons() ?: oriDrawable
+        val iconDrawable = getMIUILargeIcon() ?: getIconFromIconPack() ?: replaceWayOfGetIcons() ?: oriDrawable
         val bitmap = GraphicUtils.drawable2Bitmap(iconDrawable, if (currentUseBigMIUILagerIcon == true) iconSize * 2 else iconSize)
 
         // 判断是否需要缩小图标
@@ -188,12 +220,6 @@ object IconHookHandler: BaseHookHandler() {
             2 -> currentIsNeedShrinkIcon = true                                          // 缩小全部图标
         }
         printLog("getIcon(): currentIsNeedShrinkIcon: $currentIsNeedShrinkIcon")
-
-        // 绘制图标圆角
-        if (currentUseBigMIUILagerIcon == null && isDrawIconRoundCorner) {
-            iconDrawable = BitmapDrawable(appResources, GraphicUtils.roundBitmapByShader(bitmap, RoundDegree.RoundCorner))
-            printLog("getIcon(): draw icon round corner")
-        }
 
         // 获取图标颜色
         currentIconDominantColor = GraphicUtils.getBgColor(bitmap,

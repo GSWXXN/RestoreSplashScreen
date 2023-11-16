@@ -11,6 +11,8 @@ import com.highcapable.yukihookapi.hook.factory.constructor
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.log.YLog
 import com.highcapable.yukihookapi.hook.type.android.ActivityInfoClass
+import com.highcapable.yukihookapi.hook.type.android.DrawableClass
+import com.highcapable.yukihookapi.hook.type.java.FloatType
 import com.highcapable.yukihookapi.hook.type.java.IntType
 import com.highcapable.yukihookapi.hook.type.java.StringClass
 
@@ -52,6 +54,12 @@ object NewSystemUIHooker: YukiBaseHooker() {
         val normalizeAndWrapToAdaptiveIcon = HookManager.create {
             "com.android.launcher3.icons.BaseIconFactory".toClass().method {
                 name = "normalizeAndWrapToAdaptiveIcon"
+            }.give()!!
+        }
+        val createIconBitmap_BaseIconFactory = HookManager.create {
+            "com.android.launcher3.icons.BaseIconFactory".toClass().method {
+                name = "createIconBitmap"
+                param (DrawableClass, FloatType, IntType)
             }.give()!!
         }
         val build_SplashScreenViewBuilder = HookManager.create {

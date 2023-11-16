@@ -36,18 +36,26 @@ android {
         includeInBundle = false
     }
 
-    val isKeyStoreAvailable = property.keystore.path.isNotBlank() &&
-            property.keystore.pass.isNotBlank() &&
-            property.key.alias.isNotBlank()&&
-            property.key.password.isNotBlank()
+    val isKeyStoreAvailable = try {
+        property.keystore.path.isNotBlank() &&
+        property.keystore.pass.isNotBlank() &&
+        property.key.alias.isNotBlank() &&
+        property.key.password.isNotBlank()
+    } catch (_: Exception) {
+        false
+    }
     if (isKeyStoreAvailable) {
         signingConfigs {
-            create("release") {
-                storeFile = file(property.keystore.path)
-                storePassword = property.keystore.pass
-                keyAlias = property.key.alias
-                keyPassword = property.key.password
-                enableV3Signing = true
+            arrayOf("release", "debug").forEach {
+                maybeCreate(it).apply {
+                    storeFile = file(property.keystore.path)
+                    storePassword = property.keystore.pass
+                    keyAlias = property.key.alias
+                    keyPassword = property.key.password
+                    enableV1Signing = true
+                    enableV2Signing = true
+                    enableV3Signing = true
+                }
             }
         }
     }

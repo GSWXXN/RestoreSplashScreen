@@ -35,13 +35,13 @@ object IconHookHandler: BaseHookHandler() {
     var currentIconDominantColor: Int? = null
     private var currentIsNeedShrinkIcon = false
     /**
-     * currentUseSmallMIUILagerIcon 有三种状态:
+     * currentUseBigMIUILagerIcon 有三种状态:
      *
      * null: 当前没有使用 MIUI 大图标
      *
-     * true: 当前使用 1x2 或 2x1 或 2x2 的图标
+     * false: 当前使用 1x2 或 2x1 或 2x2 的图标
      *
-     * false: 当前使用 1x1 的图标
+     * true: 当前使用 1x1 的图标
      *
      */
     private var currentUseBigMIUILagerIcon: Boolean? = null
@@ -77,16 +77,7 @@ object IconHookHandler: BaseHookHandler() {
 
         // 处理 Drawable 图标
         NewSystemUIHooker.Members.getIcon_IconProvider?.addAfterHook {
-            val currentIconSize = getIconSize(result as Drawable)
-            currentIconDrawable = processIconDrawable(result as Drawable, currentIconSize)
-            result = currentIconDrawable
-        }
-        // 处理 ColorOS 图标
-        NewSystemUIHooker.Members.getIconExt_OplusShellStartingWindowManager?.addAfterHook {
-            printLog("getIconExt_OplusShellStartingWindowManager(): current method is getIconExt")
-            val currentIconSize = getIconSize(result as Drawable)
-            currentIconDrawable = processIconDrawable(result as Drawable, currentIconSize)
-            result = currentIconDrawable
+            result = processIconDrawable(result as Drawable)
         }
 
         // 执行缩小图标
@@ -162,10 +153,9 @@ object IconHookHandler: BaseHookHandler() {
      * - 绘制图标圆角
      *
      * @param oriDrawable  原始 Drawable 对象
-     * @param iconSize     图标的大小
      * @return 处理后的 Drawable 对象
      */
-    private fun processIconDrawable(oriDrawable: Drawable, iconSize: Int): Drawable {
+    fun processIconDrawable(oriDrawable: Drawable): Drawable {
         val shrinkIconType = prefs.get(DataConst.SHRINK_ICON)
         val colorMode = prefs.get(DataConst.BG_COLOR_MODE)
         val isDrawIconRoundCorner = prefs.get(DataConst.ENABLE_DRAW_ROUND_CORNER)
@@ -177,6 +167,8 @@ object IconHookHandler: BaseHookHandler() {
                     currentPackageName !in prefs.get(DataConst.HIDE_SPLASH_SCREEN_ICON_LIST)
                 else
                     currentPackageName in prefs.get(DataConst.HIDE_SPLASH_SCREEN_ICON_LIST)
+
+        val iconSize = getIconSize(oriDrawable)
 
         // 不显示 Splash Screen 图标
         if (isHideSplashScreenIcon) {
@@ -211,6 +203,8 @@ object IconHookHandler: BaseHookHandler() {
                 else -> true
             }
         )
+
+        currentIconDrawable = iconDrawable
         return iconDrawable
     }
 

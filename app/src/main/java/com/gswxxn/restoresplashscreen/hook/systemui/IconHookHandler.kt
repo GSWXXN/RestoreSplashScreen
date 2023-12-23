@@ -23,7 +23,6 @@ import com.gswxxn.restoresplashscreen.utils.GraphicUtils
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
 import com.gswxxn.restoresplashscreen.utils.MIUIIconsHelper
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.atLeastMIUI14
-import com.gswxxn.restoresplashscreen.utils.YukiHelper.isMIUI
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.printLog
 import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.factory.field
@@ -294,10 +293,10 @@ object IconHookHandler: BaseHookHandler() {
                 currentPackageName == "com.android.settings" && currentActivity == "com.android.settings.BackgroundApplicationsManager" ->
                     appContext!!.packageManager.getApplicationIcon("com.android.settings")
 
-                isMIUI && miuiIcons.isSupportMIUIModeIcon && currentPackageName != "com.android.fileexplorer" -> { // 在 MIUI 上优先获取完美图标
-                    miuiIcons.getFancyIconDrawable(currentPackageName) ?:
-                    appContext!!.packageManager.getApplicationIcon(currentPackageName)
-                }
+//                isMIUI && miuiIcons.isSupportMIUIModeIcon && currentPackageName != "com.android.fileexplorer" -> { // 在 MIUI 上优先获取完美图标
+//                    miuiIcons.getFancyIconDrawable(currentPackageName) ?:
+//                    appContext!!.packageManager.getApplicationIcon(currentPackageName)
+//                }
 
                 else -> appContext!!.packageManager.getApplicationIcon(currentPackageName)
             }

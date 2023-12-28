@@ -172,7 +172,7 @@ class MIUIIconsHelper(private val context: Context) {
 
             getCenterDrawable(
                 LayerDrawable(layerFancyDrawables.toTypedArray()),
-                0.60f,
+                0.65f,
                 context.resources
             )
         } else if (drawable?.javaClass?.name == "com.miui.maml.FancyDrawable") {

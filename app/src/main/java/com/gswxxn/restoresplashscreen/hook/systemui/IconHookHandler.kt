@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewOutlineProvider
 import android.widget.FrameLayout
 import android.widget.ImageView
+import cn.fkj233.ui.activity.dp2px
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.hook.NewSystemUIHooker
 import com.gswxxn.restoresplashscreen.hook.base.BaseHookHandler
@@ -149,7 +150,8 @@ object IconHookHandler: BaseHookHandler() {
             // 为 view 添加轮廓
             iconView.outlineProvider = object : ViewOutlineProvider() {
                 override fun getOutline(view: View, outline: Outline) {
-                    outline.setRoundRect(0, 0, view.width, view.height, iconSize.toFloat() / 4)
+                    val border = dp2px(appContext!!, 1f)
+                    outline.setRoundRect(border, border, view.width - border, view.height - border, iconSize.toFloat() / 4.2f)
                 }
             }
             iconView.setClipToOutline(true) // 启用轮廓剪裁

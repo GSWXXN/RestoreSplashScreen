@@ -44,6 +44,10 @@ object NewSystemUIHooker: YukiBaseHooker() {
                 ?: "com.android.wm.shell.startingsurface.SplashscreenContentDrawer\$SplashViewBuilder".toClass()) // Android 14
                 .method { name = "createIconDrawable" }.give()!!
         }
+        val iconColor_constructor = HookManager.create {
+            "com.android.wm.shell.startingsurface.SplashscreenContentDrawer\$ColorCache\$IconColor".toClass()
+                .constructor().give()!!
+        }
         val getIcon_IconProvider = HookManager.create {
             "com.android.launcher3.icons.IconProvider".toClass().method {
                 name = "getIcon"

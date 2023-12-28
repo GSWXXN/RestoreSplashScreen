@@ -173,6 +173,11 @@ object IconHookHandler: BaseHookHandler() {
                 result = GraphicUtils.drawable2Bitmap(drawable, getIconSize(drawable))
             }
         }
+
+        // 强制使图标背景被判断为复杂, 以防止安卓抹去简单的图标背景
+        NewSystemUIHooker.Members.iconColor_constructor?.addAfterHook {
+            instance.current().field { name = "mIsBgComplex" }.set(true)
+        }
     }
 
     /**

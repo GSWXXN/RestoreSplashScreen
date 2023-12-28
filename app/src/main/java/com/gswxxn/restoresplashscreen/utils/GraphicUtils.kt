@@ -16,6 +16,7 @@ import androidx.annotation.DrawableRes
 import androidx.palette.graphics.Palette
 import cn.fkj233.ui.activity.dp2px
 import com.gswxxn.restoresplashscreen.data.RoundDegree
+import android.graphics.Path
 
 /**
  * 图形工具类
@@ -193,17 +194,25 @@ object GraphicUtils {
         val scaledSize = (originalSize * ratio).toInt()
         val scaledBitmap = Bitmap.createBitmap(scaledSize, scaledSize, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(scaledBitmap)
+
+        // 应用圆角裁剪
+        val cornerRadius = scaledSize / 4f
+        val path = Path().apply {
+            addRoundRect(RectF(0f, 0f, scaledSize.toFloat(), scaledSize.toFloat()), cornerRadius, cornerRadius, Path.Direction.CW)
+        }
+        canvas.clipPath(path)
+
         drawable.setBounds(0, 0, scaledSize, scaledSize)
         drawable.draw(canvas)
 
         // 创建带阴影的位图
         val shadowSize = blurIconSize / 4
         val shadowBitmap = Bitmap.createBitmap(scaledSize + shadowSize, scaledSize + shadowSize, Bitmap.Config.ARGB_8888)
+        val shadowCanvas = Canvas(shadowBitmap)
         shadowBitmap.setHasAlpha(true)
         val paint = Paint(3).apply { alpha = 90 }
-        canvas.setBitmap(shadowBitmap)
-        canvas.drawColor(0, PorterDuff.Mode.CLEAR)
-        canvas.drawBitmap(scaledBitmap, ((shadowSize) / 2).toFloat(), ((shadowSize) / 2).toFloat(), paint)
+        shadowCanvas.drawColor(0, PorterDuff.Mode.CLEAR)
+        shadowCanvas.drawBitmap(scaledBitmap, ((shadowSize) / 2).toFloat(), ((shadowSize) / 2).toFloat(), paint)
 
         return BitmapDrawable(context.resources, shadowBitmap)
     }

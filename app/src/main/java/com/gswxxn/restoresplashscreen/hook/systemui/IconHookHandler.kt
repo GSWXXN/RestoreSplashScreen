@@ -141,7 +141,8 @@ object IconHookHandler: BaseHookHandler() {
                 ?: return@addAfterHook
             val isNeedDrawRoundCorner = prefs.get(DataConst.ENABLE_DRAW_ROUND_CORNER) && // 用户配置
                     "android.window.SplashScreenView\$IconAnimateListener".toClass() !in iconDrawable.javaClass.interfaces && // 不为动态图标绘制圆角
-                    iconSize != 0 // 如果没有图标 则不绘制圆角
+                    iconSize != 0  && // 如果没有图标 则不绘制圆角
+                    currentUseBigMIUILagerIcon == null // 如果当前使用 MIUI 大图标, 则不绘制圆角
 
             if (!isNeedDrawRoundCorner) {
                 return@addAfterHook
@@ -150,7 +151,7 @@ object IconHookHandler: BaseHookHandler() {
             // 为 view 添加轮廓
             iconView.outlineProvider = object : ViewOutlineProvider() {
                 override fun getOutline(view: View, outline: Outline) {
-                    val border = dp2px(appContext!!, 1f)
+                    val border = dp2px(appContext!!, 1.5f)
                     outline.setRoundRect(border, border, view.width - border, view.height - border, iconSize.toFloat() / 4.2f)
                 }
             }
@@ -259,11 +260,18 @@ object IconHookHandler: BaseHookHandler() {
     private fun getMIUILargeIcon(): Drawable? {
         if (atLeastMIUI14 && prefs.get(DataConst.ENABLE_USE_MIUI_LARGE_ICON) && miuiIcons.hasLargeIcon(currentPackageName)) {
             printLog("getIcon(): use MIUI Large Icon")
-            return miuiIcons.getLargeIconDrawable(currentPackageName)?.also {
+            return miuiIcons.getLargeIconDrawable(currentPackageName)?.let {
                 val largeIconSize = miuiIcons.getLargeIconSize(currentPackageName)
                 printLog("getIcon(): large icon size: $largeIconSize")
                 currentUseBigMIUILagerIcon =
                     if (largeIconSize in arrayOf("1x1", "1x2", "2x1", "2x2")) largeIconSize != "1x1" else null
+
+                // 转换成正方形图标
+                if (largeIconSize in arrayOf("1x2", "2x1")) {
+                    GraphicUtils.convertToSquareDrawable(it, appResources!!)
+                } else {
+                    it
+                }
             }
         }
         return null

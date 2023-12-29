@@ -216,4 +216,48 @@ object GraphicUtils {
 
         return BitmapDrawable(context.resources, shadowBitmap)
     }
+
+    /**
+     * 将给定的 Drawable 转换为一个新的正方形 Drawable，其空白区域用透明色填充。
+     *
+     * @param drawable 需要转换的 Drawable。如果为 null，则函数返回 null。
+     * @param resources 应用程序的资源，用于将 Bitmap 转换回 Drawable。
+     * @return 返回一个新的正方形 Drawable，其空白区域用透明色填充。如果传入的 Drawable 为 null，则返回 null。
+     */
+    fun convertToSquareDrawable(drawable: Drawable?, resources: Resources): Drawable? {
+        // 如果传入的 Drawable 是 null，直接返回 null
+        drawable ?: return null
+
+        // 将 Drawable 转换为 Bitmap
+        val originalBitmap = if (drawable is BitmapDrawable) {
+            drawable.bitmap
+        } else {
+            // 如果不是 BitmapDrawable，创建一个新的 Bitmap 并绘制原始 Drawable
+            Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888).apply {
+                val canvas = Canvas(this)
+                drawable.setBounds(0, 0, canvas.width, canvas.height)
+                drawable.draw(canvas)
+            }
+        }
+
+        // 计算新的正方形 Bitmap 的尺寸
+        val size = maxOf(originalBitmap.width, originalBitmap.height)
+
+        // 创建一个新的正方形 Bitmap
+        val squareBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+
+        // 在新的 Bitmap 上创建一个 Canvas 用于绘图
+        val canvas = Canvas(squareBitmap)
+
+        // 计算原始 Bitmap 在新 Bitmap 上的位置
+        val x = (size - originalBitmap.width) / 2
+        val y = (size - originalBitmap.height) / 2
+
+        // 将原始 Bitmap 绘制到新的 Canvas 上
+        canvas.drawBitmap(originalBitmap, x.toFloat(), y.toFloat(), null)
+
+        // 将新的正方形 Bitmap 转换回 Drawable 并返回
+        return BitmapDrawable(resources, squareBitmap)
+    }
+
 }

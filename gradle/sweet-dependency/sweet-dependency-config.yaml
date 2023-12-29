@@ -22,11 +22,11 @@ repositories:
 
 plugins:
   com.android.application:
-    version: 8.1.3
+    version: 8.2.0
   org.jetbrains.kotlin.android:
-    version: 1.9.20
+    version: 1.9.22
   com.google.devtools.ksp:
-    version: 1.9.20-1.0.14
+    version: 1.9.22-1.0.16
 
 libraries:
   de.robv.android.xposed:
@@ -48,4 +48,4 @@ libraries:
       version: 1.7.3
   androidx.annotation:
     annotation:
-      version: 1.7.0
+      version: 1.7.1

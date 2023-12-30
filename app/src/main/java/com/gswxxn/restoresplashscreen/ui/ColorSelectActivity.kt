@@ -28,6 +28,7 @@ import com.gswxxn.restoresplashscreen.utils.BlockMIUIHelper.addBlockMIUIView
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.gswxxn.restoresplashscreen.utils.GraphicUtils.drawable2Bitmap
 import com.gswxxn.restoresplashscreen.utils.GraphicUtils.getBgColor
+import com.gswxxn.restoresplashscreen.utils.IconPackManager
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.factory.prefs
 import java.util.*
@@ -118,10 +119,15 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
         statusS = textV()
         statusV = textV()
 
-        val icon = packageManager.getApplicationIcon(pkgName).let {
-            binding.demoIcon.setImageDrawable(it)
-            drawable2Bitmap(it, 48)
-        }
+        // 配置中间图标
+        val icon = (
+                IconPackManager(this, prefs().get(DataConst.ICON_PACK_PACKAGE_NAME))
+                    .getIconByPackageName(pkgName)                      // 优先获取图标包中的图标
+                    ?:packageManager.getApplicationIcon(pkgName)        // 使用默认方式获取图标
+                ).let {
+                    binding.demoIcon.setImageDrawable(it)
+                    drawable2Bitmap(it, 48)
+                }
 
         val magnifierSize = dp2px(this@ColorSelectActivity, 100f)
         val magnifier = Magnifier.Builder(binding.demoLayout)

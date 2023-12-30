@@ -1,4 +1,6 @@
-# MIUI遮罩进化
+<img src="https://raw.githubusercontent.com/GSWXXN/RestoreSplashScreen/master/doc/icon.svg" width="160">
+
+# 启动遮罩进化
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ffbf5a0bdf954416a2e1d4347b1ea797)](https://app.codacy.com/gh/GSWXXN/RestoreSplashScreen?utm_source=github.com&utm_medium=referral&utm_content=GSWXXN/RestoreSplashScreen&utm_campaign=Badge_Grade)
 [![Xposed](https://img.shields.io/badge/-Xposed-green?style=flat&logo=Android&logoColor=white)](https://github.com/Xposed-Modules-Repo/com.gswxxn.restoresplashscreen/)
@@ -7,29 +9,30 @@
 [![GitHub all releases](https://img.shields.io/github/downloads/Xposed-Modules-Repo/com.gswxxn.restoresplashscreen/total?label=Downloads)](https://github.com/Xposed-Modules-Repo/com.gswxxn.restoresplashscreen/releases)
 
 ~~尝试恢复被MIUI阉割的SplashScreen~~  
-自定义MIUI的Splash Screen
+~~自定义MIUI的Splash Screen~~  
+为 Splash Screen 添加自定义选项
 
-目前模块功能已趋于完善，如果你有好玩的新功能建议，欢迎反馈
+模块适配大部分安卓系统, 但目前还是以运行在高通 SoC 的 MIUI/HyperOS 为主, 如果在其他系统中使用遇到问题也欢迎反馈  
 
 ## 测试环境
 
-> 小米11 Ultra  
-> Android 12  
-> MIUI 13
+> 小米12 Ultra  
+> Android 14  
+> HyperOS 1.0
 
 ## 模块功能
 
-1. 为所有应用显示原生Splash Screen界面
-2. 对于主动适配Splash Screen的应用使用默认静态图标
-3. 替换获取图标方式 使Splash Screen的图标与桌面图标一致(多用于主题)
-4. 根据图标自适应Splash Screen背景颜色
+1. 为所有应用显示原生 Splash Screen 界面
+2. 对于主动适配 Splash Screen 的应用使用默认静态图标
+3. 替换获取图标方式, 使 Splash Screen 的图标与桌面图标一致(多用于主题)
+4. 根据图标自适应 Splash Screen 背景颜色
 5. 彻底关闭 Splash Screen 特性
 
 ## 使用方法
 
-1. 在Xposed管理器(LSPosed)中激活模块
-2. 作用域勾选`com.android.systemui`
-3. 重启系统界面或者重启手机
+1. 在 Xposed 管理器 (LSPosed) 中激活模块
+2. 作用域勾选: 系统界面(`com.android.systemui`) 和 系统框架(`android`)
+3. 重启手机
 
 ## 已知问题
 
@@ -46,9 +49,9 @@
 
 ## 无法使用
 
-请先检查模块是否正常激活，并且作用域是否勾选。如果排查后仍有错误，请提交issue，并附上LSPosed的日志，如有能力提取
+请先检查模块是否正常激活，并且作用域是否勾选。如果排查后仍有错误，请提交 issue，并附上 LSPosed 的日志，如有能力提取
 SystemUI, 最好一并提交。  
-或联系酷安[@迷璐](http://www.coolapk.com/u/1189245)
+也可以联系酷安 [@迷璐](http://www.coolapk.com/u/1189245)
 
 ## 捐赠支持
 

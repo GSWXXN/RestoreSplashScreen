@@ -109,11 +109,11 @@ object BgHookHandler: BaseHookHandler() {
                     printLog("SplashScreenViewBuilder(): get monet background color")
                     when (bgColorMode) {
                         0 -> dynamicLightColorScheme(appContext!!).primaryContainer.toArgb()
-                        1 -> dynamicDarkColorScheme(appContext!!).primaryContainer.toArgb()
+                        1 -> dynamicDarkColorScheme(appContext!!).surface.toArgb()
                         else -> if (!isDarkMode)
                             dynamicLightColorScheme(appContext!!).primaryContainer.toArgb()
                         else
-                            dynamicDarkColorScheme(appContext!!).primaryContainer.toArgb()
+                            dynamicDarkColorScheme(appContext!!).surface.toArgb()
                     }
                 }
 

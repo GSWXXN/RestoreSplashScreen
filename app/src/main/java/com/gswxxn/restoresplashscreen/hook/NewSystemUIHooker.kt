@@ -111,6 +111,11 @@ object NewSystemUIHooker: YukiBaseHooker() {
                 paramCount(4..5)
             }.give()!!
         }
+        val getWindowAttrsIfPresent_OplusShellStartingWindowManager = HookManager.create(isColorOS) {
+            "com.android.wm.shell.startingsurface.OplusShellStartingWindowManager".toClass().method {
+                name = "getWindowAttrsIfPresent"
+            }.give()!!
+        }
     }
 
     /** 开始 Hook */

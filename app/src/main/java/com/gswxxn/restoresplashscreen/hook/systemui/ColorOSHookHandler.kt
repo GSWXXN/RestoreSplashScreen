@@ -22,5 +22,11 @@ object ColorOSHookHandler: BaseHookHandler() {
             printLog("getIconExt_OplusShellStartingWindowManager(): current method is getIconExt")
             result = IconHookHandler.processIconDrawable(result as Drawable)
         }
+
+        // 禁止读取 WindowAttrs 缓存
+        NewSystemUIHooker.Members.getWindowAttrsIfPresent_OplusShellStartingWindowManager?.addBeforeHook {
+            printLog("getWindowAttrsIfPresent_OplusShellStartingWindowManager(): return false")
+            resultFalse()
+        }
     }
 }

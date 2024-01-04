@@ -83,13 +83,6 @@ object BackgroundSettings : ISubSettings {
                 DataConst.SKIP_APP_WITH_BG_COLOR), dataBindingRecv = changeBGColorTypeBinding.getRecv(1)
         )
 
-        // 单独配置应用背景颜色
-        TextSummaryArrow(TextSummaryV(textId = R.string.configure_bg_colors_individually, onClickListener = {
-            context.startActivity(Intent(context, ConfigAppsActivity::class.java).apply {
-                putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.BACKGROUND_INDIVIDUALLY_CONFIG)
-            })
-        }), dataBindingRecv = changeBGColorTypeBinding.getRecv(1))
-
         // 颜色模式
         val colorModeItems = mapOf(
             0 to context.getString(R.string.light_color),
@@ -112,6 +105,13 @@ object BackgroundSettings : ISubSettings {
                 putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.BACKGROUND_EXCEPT)
             })
         }), dataBindingRecv = changeBGColorTypeBinding.getRecv(1))
+
+        // 单独配置应用背景颜色
+        TextSummaryArrow(TextSummaryV(textId = R.string.configure_bg_colors_individually, onClickListener = {
+            context.startActivity(Intent(context, ConfigAppsActivity::class.java).apply {
+                putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.BACKGROUND_INDIVIDUALLY_CONFIG)
+            })
+        }))
 
         Line()
 

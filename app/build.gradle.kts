@@ -4,10 +4,6 @@ plugins {
     autowire(libs.plugins.com.google.devtools.ksp)
 }
 
-tasks.register("getVersionCode") {
-    println("${property.project.versionCode}-${property.project.versionName}")
-}
-
 android {
     namespace = property.project.namespace
     compileSdk = property.project.compileSdk
@@ -46,28 +42,24 @@ android {
     }
     if (isKeyStoreAvailable) {
         signingConfigs {
-            arrayOf("release", "debug").forEach {
-                maybeCreate(it).apply {
-                    storeFile = file(property.keystore.path)
-                    storePassword = property.keystore.pass
-                    keyAlias = property.key.alias
-                    keyPassword = property.key.password
-                    enableV1Signing = true
-                    enableV2Signing = true
-                    enableV3Signing = true
-                }
+            create("universal") {
+                storeFile = file(property.keystore.path)
+                storePassword = property.keystore.pass
+                keyAlias = property.key.alias
+                keyPassword = property.key.password
+                enableV1Signing = true
+                enableV2Signing = true
+                enableV3Signing = true
             }
         }
     }
 
     buildTypes {
+        all { if (isKeyStoreAvailable) signingConfig = signingConfigs.getByName("universal") }
         getByName("release") {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
-            if (isKeyStoreAvailable) {
-                signingConfig = signingConfigs.getByName("release")
-            }
         }
     }
 
@@ -92,7 +84,7 @@ android {
         val buildType = buildType.name
         outputs.all {
             if (this is com.android.build.gradle.internal.api.ApkVariantOutputImpl) {
-                this.outputFileName = "${if (versionName.contains("Preview") && buildType != "debug") "启动遮罩进化" else "RestoreSplashScreen"}_${versionName}${if (buildType == "debug") "_debug" else ""}.apk"
+                this.outputFileName = "RestoreSplashScreen_${versionName}${if (buildType == "debug") "_debug" else ""}.apk"
             }
         }
     }
@@ -103,7 +95,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = JavaVersion.VERSION_17.majorVersion
     }
 }
 
@@ -115,6 +107,10 @@ dependencies {
     implementation(androidx.palette.palette.ktx)
     implementation(androidx.compose.material3.material3)
     implementation(org.jetbrains.kotlinx.kotlinx.coroutines.android)
+}
+
+tasks.register("getVersionCode") {
+    println("${property.project.versionCode}-${property.project.versionName}")
 }
 
 /**

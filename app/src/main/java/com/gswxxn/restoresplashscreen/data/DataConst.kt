@@ -55,4 +55,5 @@ object DataConst {
 
     // 开发者设置
     val ENABLE_DEV_SETTINGS = PrefsData("enable_dev_settings", false)
+    val DEV_ICON_ROUND_CORNER_RATE = PrefsData("dev_icon_round_corner", 25)
 }

@@ -171,4 +171,8 @@
     <string name="open_source_repo">开源仓库</string>
     <string name="icon_resource">使用图标来源</string>
     <string name="open_source_license">开放源代码许可</string>
+
+
+    <!--开发者选项-->
+    <string name="dev_icon_round_corner_rate">图标圆角率</string>
 </resources>

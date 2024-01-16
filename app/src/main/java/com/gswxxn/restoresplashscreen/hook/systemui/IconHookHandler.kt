@@ -24,6 +24,7 @@ import com.gswxxn.restoresplashscreen.utils.GraphicUtils
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
 import com.gswxxn.restoresplashscreen.utils.MIUIIconsHelper
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.atLeastMIUI14
+import com.gswxxn.restoresplashscreen.utils.YukiHelper.getDevPrefs
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.printLog
 import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.factory.field
@@ -113,9 +114,13 @@ object IconHookHandler: BaseHookHandler() {
             ) / 1.5).toInt()
             val bgIconSize = iconSize * 4
 
-            val blurBgDrawable =
-                GraphicUtils.createShadowedIcon(appContext, currentIconDrawable, iconSize, iconSize * 4)
-                    ?: return@addAfterHook
+            val blurBgDrawable = GraphicUtils.createShadowedIcon(
+                appContext,
+                currentIconDrawable,
+                iconSize,
+                iconSize * 4,
+                iconSize * getDevPrefs(DataConst.DEV_ICON_ROUND_CORNER_RATE) / 100f
+            ) ?: return@addAfterHook
 
             val iconBlurBGView = ImageView(appContext).apply {
                 setImageDrawable(blurBgDrawable)
@@ -152,7 +157,10 @@ object IconHookHandler: BaseHookHandler() {
             iconView.outlineProvider = object : ViewOutlineProvider() {
                 override fun getOutline(view: View, outline: Outline) {
                     val border = dp2px(appContext!!, 1.5f)
-                    outline.setRoundRect(border, border, view.width - border, view.height - border, iconSize.toFloat() / 4.2f)
+                    outline.setRoundRect(
+                        border, border, view.width - border, view.height - border,
+                        iconSize.toFloat() * getDevPrefs(DataConst.DEV_ICON_ROUND_CORNER_RATE) / 100
+                    )
                 }
             }
             iconView.setClipToOutline(true) // 启用轮廓剪裁

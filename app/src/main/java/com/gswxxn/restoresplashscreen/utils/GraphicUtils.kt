@@ -179,9 +179,10 @@ object GraphicUtils {
      * @param drawable 需要创建阴影的Drawable
      * @param oriIconSize 原始图标大小
      * @param blurIconSize 待模糊图标大小
+     * @param cornerRadius 模糊图标圆角大小
      * @return 待模糊图标Drawable，如果输入的Drawable或者Context为空则返回null
      */
-    fun createShadowedIcon(context: Context?, drawable: Drawable?, oriIconSize: Int, blurIconSize: Int): Drawable? {
+    fun createShadowedIcon(context: Context?, drawable: Drawable?, oriIconSize: Int, blurIconSize: Int, cornerRadius: Float): Drawable? {
         if (drawable == null || context == null) {
             return null
         }
@@ -196,7 +197,6 @@ object GraphicUtils {
         val canvas = Canvas(scaledBitmap)
 
         // 应用圆角裁剪
-        val cornerRadius = scaledSize / 4f
         val path = Path().apply {
             addRoundRect(RectF(0f, 0f, scaledSize.toFloat(), scaledSize.toFloat()), cornerRadius, cornerRadius, Path.Direction.CW)
         }

@@ -28,6 +28,17 @@ class DevSettings: BaseActivity<ActivityDevSettingsBinding>() {
                 onBackPressed()
             }
         )
+
+        Line()
+        TitleText(textId = R.string.icon_settings)
+
+        SeekBarWithStatus(
+            titleID = R.string.dev_icon_round_corner_rate,
+            pref = DataConst.DEV_ICON_ROUND_CORNER_RATE,
+            min = 0,
+            max = 50,
+            isPercentage = true
+        )
     }
 
     /** onCreate 事件 */

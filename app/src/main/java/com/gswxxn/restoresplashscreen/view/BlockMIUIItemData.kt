@@ -9,6 +9,7 @@ import android.widget.TextView
 import cn.fkj233.ui.activity.data.DataBinding
 import cn.fkj233.ui.activity.data.Padding
 import cn.fkj233.ui.activity.view.*
+import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 
 /**
  * 复制自 [cn.fkj233.ui.activity.data.InitView], 后续可能会使用更优办法实现, 而不是复制整个类
@@ -90,5 +91,21 @@ class BlockMIUIItemData {
 
     fun TextSummary(text: String? = null, textId: Int? = null, tips: String? = null, colorInt: Int? = null, colorId: Int? = null, tipsId: Int? = null, dataBindingRecv: DataBinding.Binding.Recv? = null, onClickListener: (() -> Unit)? = null) {
         itemList.add(TextSummaryV(text, textId, tips, colorInt, colorId, tipsId, dataBindingRecv, onClickListener))
+    }
+
+    fun SeekBarWithStatus(
+        titleID: Int,
+        pref: PrefsData<Int>? = null,
+        min: Int,
+        max: Int,
+        defaultProgress: Int = 0,
+        isPercentage: Boolean = false,
+        progressColor: Int = 0xFF0d7AEC.toInt(),
+        drawHuePanel: Boolean = false,
+        dataBindingRecv: DataBinding.Binding.Recv? = null,
+        dataBindingSend: DataBinding.Binding.Send? = null,
+        onProgressChanged: ((value: Int) -> Unit)? = null
+    ) {
+        itemList.add(SeekBarWithTitleView(titleID, pref, min, max, defaultProgress, isPercentage, progressColor, drawHuePanel, dataBindingRecv, dataBindingSend, onProgressChanged))
     }
 }

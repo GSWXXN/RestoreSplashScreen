@@ -171,6 +171,7 @@ object BlockMIUIHelper {
                     setPadding(0, 0, 0, 0)
                     addView(item.create(context, callBacks))
                 }
+                is SeekBarWithTitleView -> addView(item.create(context, callBacks))
             }
         })
     }

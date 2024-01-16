@@ -23,18 +23,8 @@
     <string name="button_abandonment">舍弃修改</string>
     <string name="button_reedit">返回编辑</string>
 
-    <string name="switch_hook_title">切换 Hook</string>
-    <string name="switch_hook_message">
-        模块在 v3.0 版本重构了 SystemUI Hook.\n\n
-        如果你使用新版 Hook 出现问题但不想降级, 可以在此切换旧版 Hook, 旧版 Hook 不包含 v3.0 及以后的新功能 \n\n
-        请注意: 旧版 Hook 将不再被维护, 且后期会被移除, 请优先向开发者反馈新版 Hook 的问题 \n\n
-        切换 Hook 将会重启系统界面\n\n
-        当前为%s
-    </string>
-    <string name="switch_hook_button">切换至%s</string>
-    <string name="old_system_ui_hook">旧版 SystemUI Hook</string>
-    <string name="new_system_ui_hook">新版 SystemUI Hook</string>
-
+    <string name="enable_dev_settings">开发者选项已启用</string>
+    <string name="disabled_dev_settings">开发者选项已关闭</string>
 
     <string name="basic_settings">基础设置</string>
     <string name="custom_scope_settings">作用域</string>
@@ -42,6 +32,7 @@
     <string name="bottom_settings">底部</string>
     <string name="background_settings">背景</string>
     <string name="lab_settings">实验功能</string>
+    <string name="dev_settings">开发者选项</string>
     <string name="faq">常见问题</string>
     <string name="faq_url">https://gswxxn.coding.net/public/restoresplashscreen/faq/git</string>
 

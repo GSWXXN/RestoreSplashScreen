@@ -5,17 +5,16 @@ import android.content.Intent
 import android.net.Uri
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import cn.fkj233.ui.activity.dp2px
 import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.RoundDegree
 import com.gswxxn.restoresplashscreen.databinding.ActivityAboutPageBinding
-import com.gswxxn.restoresplashscreen.utils.CommonUtils
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.gswxxn.restoresplashscreen.utils.GraphicUtils.drawable2Bitmap
 import com.gswxxn.restoresplashscreen.utils.GraphicUtils.roundBitmapByShader
-import com.gswxxn.restoresplashscreen.view.NewMIUIDialog
 import com.highcapable.yukihookapi.hook.factory.prefs
 
 /**
@@ -49,33 +48,21 @@ class AboutPageActivity : BaseActivity<ActivityAboutPageBinding>() {
 
                 if (count != 5) return@setOnClickListener
                 count = 0
-                NewMIUIDialog(this@AboutPageActivity) {
-                    setTitle(R.string.switch_hook_title)
-                    setMessage(
-                        getString(
-                            R.string.switch_hook_message,
-                            if (prefs().get(DataConst.ENABLE_NEW_SYSTEM_UI_HOOKER)) getString(R.string.new_system_ui_hook) else getString(
-                                R.string.old_system_ui_hook
-                            )
-                        )
-                    )
-                    Button(
-                        getString(
-                            R.string.switch_hook_button,
-                            if (prefs().get(DataConst.ENABLE_NEW_SYSTEM_UI_HOOKER)) getString(R.string.old_system_ui_hook) else getString(
-                                R.string.new_system_ui_hook
-                            )
-                        )
-                    ) {
-                        prefs().edit { put(DataConst.ENABLE_NEW_SYSTEM_UI_HOOKER, !prefs().get(DataConst.ENABLE_NEW_SYSTEM_UI_HOOKER)) }
-                        Thread.sleep(100)
-                        CommonUtils.execShell("pkill -f com.android.systemui && pkill -f com.gswxxn.restoresplashscreen")
-                        Thread.sleep(300)
-                        toast(getString(R.string.no_root))
-                        dismiss()
-                    }
-                    Button(getString(R.string.button_cancel), cancelStyle = true) { dismiss() }
-                }.apply { setCanceledOnTouchOutside(false) }.show()
+
+                if (!prefs().get(DataConst.ENABLE_DEV_SETTINGS) ) {
+                    prefs().edit { put(DataConst.ENABLE_DEV_SETTINGS, true) }
+                    Toast.makeText(
+                        this@AboutPageActivity,
+                        getString(R.string.enable_dev_settings),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        this@AboutPageActivity,
+                        getString(R.string.enable_dev_settings),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
 
             miluIcon.setImageBitmap(roundBitmapByShader(

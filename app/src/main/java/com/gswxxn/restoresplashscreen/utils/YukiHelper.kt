@@ -132,4 +132,14 @@ object YukiHelper {
             it.onHook()
         }
     }
+
+    /**
+     * 获取 开发者选项 Prefs 值
+     */
+    inline fun <reified T> BaseHookHandler.getDevPrefs(prefsData: PrefsData<T>): T {
+        if (prefs.get(DataConst.ENABLE_DEV_SETTINGS)) {
+           return prefs.get(prefsData)
+        }
+        return prefsData.value
+    }
 }

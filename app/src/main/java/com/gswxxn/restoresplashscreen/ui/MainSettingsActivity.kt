@@ -2,13 +2,16 @@ package com.gswxxn.restoresplashscreen.ui
 
 import android.content.Intent
 import android.net.Uri
+import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.LinearLayout
 import cn.fkj233.ui.activity.dp2px
+import cn.fkj233.ui.activity.view.ImageTextV
 import cn.fkj233.ui.activity.view.LineV
 import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.ConstValue
+import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.databinding.ActivityMainSettingsBinding
 import com.gswxxn.restoresplashscreen.utils.BlockMIUIHelper.addBlockMIUIView
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.execShell
@@ -18,12 +21,15 @@ import com.gswxxn.restoresplashscreen.utils.YukiHelper.checkingHostVersion
 import com.gswxxn.restoresplashscreen.view.NewMIUIDialog
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.YukiHookAPI.Status.Executor
+import com.highcapable.yukihookapi.hook.factory.prefs
 
 /** 主界面 */
 class MainSettingsActivity : BaseActivity<ActivityMainSettingsBinding>() {
     private var systemUIRestartNeeded: Boolean = true
     private var androidRestartNeeded: Boolean? = null
     private var isReady = false
+
+    private var devSettingsView: View? = null
 
     override fun onCreate() {
         binding.root.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
@@ -111,6 +117,17 @@ class MainSettingsActivity : BaseActivity<ActivityMainSettingsBinding>() {
                 })
             })
 
+            CustomView(
+                ImageTextV(shrinkIcon(R.drawable.ic_lab), getString(R.string.dev_settings), null, 0f)
+                    .create(this@MainSettingsActivity, null)
+                    .also {
+                        it.setOnClickListener {
+                            startActivity(Intent(this@MainSettingsActivity, DevSettings::class.java))
+                        }
+                        devSettingsView = it
+                    }
+            )
+
             line()
 
             Author(shrinkIcon(R.drawable.ic_help), getString(R.string.faq), null, 0f, {
@@ -169,5 +186,8 @@ class MainSettingsActivity : BaseActivity<ActivityMainSettingsBinding>() {
             androidRestartNeeded = !it
             refreshState()
         }
+
+        devSettingsView?.visibility =
+            if (prefs().get(DataConst.ENABLE_DEV_SETTINGS)) View.VISIBLE else View.GONE
     }
 }

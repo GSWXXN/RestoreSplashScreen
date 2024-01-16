@@ -52,4 +52,7 @@ object DataConst {
     val MIN_DURATION_CONFIG_MAP = PrefsData("min_duration_config_map", mutableSetOf<String>())
     val INDIVIDUAL_BG_COLOR_APP_MAP = PrefsData("individual_bg_color_app_map", mutableSetOf<String>())
     val INDIVIDUAL_BG_COLOR_APP_MAP_DARK = PrefsData("individual_bg_color_app_map_dark", mutableSetOf<String>())
+
+    // 开发者设置
+    val ENABLE_DEV_SETTINGS = PrefsData("enable_dev_settings", false)
 }

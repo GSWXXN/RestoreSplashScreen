@@ -34,6 +34,11 @@
             android:parentActivityName=".ui.MainSettingsActivity"
             android:launchMode="singleTask"/>
         <activity
+            android:name=".ui.DevSettings"
+            android:exported="true"
+            android:parentActivityName=".ui.MainSettingsActivity"
+            android:launchMode="singleTask"/>
+        <activity
                 android:name=".ui.MainSettingsActivity"
                 android:exported="true">
             <intent-filter>

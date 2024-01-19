@@ -17,6 +17,7 @@ import com.gswxxn.restoresplashscreen.ui.`interface`.ISubSettings
 import com.gswxxn.restoresplashscreen.utils.BackupUtils
 import com.gswxxn.restoresplashscreen.view.BlockMIUIItemData
 import com.gswxxn.restoresplashscreen.view.SwitchView
+import com.highcapable.yukihookapi.hook.factory.prefs
 
 /**
  * 基础设置 界面
@@ -27,7 +28,17 @@ object BasicSettings : ISubSettings {
 
     override fun create(context: SubSettings, binding: ActivitySubSettingsBinding): BlockMIUIItemData.() -> Unit = {
         // 启用日志
-        TextSummaryWithSwitch(TextSummaryV(textId = R.string.enable_log), SwitchView(DataConst.ENABLE_LOG))
+        if (System.currentTimeMillis() - context.prefs().get(DataConst.ENABLE_LOG_TIMESTAMP) > 86400000) {
+            context.prefs().edit().put(DataConst.ENABLE_LOG, false).commit()
+        }
+        TextSummaryWithSwitch(
+            TextSummaryV(textId = R.string.enable_log, tipsId = R.string.enable_log_tips),
+            SwitchView(DataConst.ENABLE_LOG) {
+                if (it) {
+                    context.prefs().edit { put(DataConst.ENABLE_LOG_TIMESTAMP, System.currentTimeMillis()) }
+                }
+            }
+        )
 
         // 隐藏桌面图标
         TextSummaryWithSwitch(TextSummaryV(textId = R.string.hide_icon), SwitchView(DataConst.ENABLE_HIDE_ICON) {

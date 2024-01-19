@@ -39,6 +39,7 @@
     <!--Sub Settings-->
     <string name="make_sure_active">请确保模块已激活再进行配置</string>
     <string name="enable_log">启用日志</string>
+    <string name="enable_log_tips">启用日志 24 小时后自动关闭</string>
     <string name="hide_icon">隐藏桌面图标</string>
     <string name="min_duration">遮罩最小持续时长</string>
     <string name="min_duration_tips">注意：设置此参数会拖慢应用启动时间。如无特殊需求，则不应配置此项。</string>

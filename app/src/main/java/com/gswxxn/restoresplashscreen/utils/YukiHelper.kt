@@ -14,6 +14,7 @@ import com.highcapable.yukihookapi.hook.factory.hasClass
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.log.YLog
 import com.highcapable.yukihookapi.hook.type.java.StringClass
+import com.highcapable.yukihookapi.hook.xposed.prefs.YukiHookPrefsBridge
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 
 /**
@@ -84,17 +85,21 @@ object YukiHelper {
     /**
      * 打印日志
      */
-    fun YukiBaseHooker.printLog(vararg msg: String) {
-        if (prefs.get(DataConst.ENABLE_LOG)) msg.forEach { YLog.info(it) }
-    }
+    fun YukiBaseHooker.printLog(vararg msg: String) = printLog(prefs, *msg)
 
     /**
      * 打印日志
      */
-    fun BaseHookHandler.printLog(vararg msg: String) {
-        if (prefs.get(DataConst.ENABLE_LOG)) msg.forEach { YLog.info(it) }
-    }
+    fun BaseHookHandler.printLog(vararg msg: String) = printLog(prefs, *msg)
 
+    /**
+     * 打印日志
+     */
+    fun printLog(prefs: YukiHookPrefsBridge, vararg msg: String) {
+        if (!prefs.get(DataConst.ENABLE_LOG)) return
+        if (System.currentTimeMillis() - prefs.get(DataConst.ENABLE_LOG_TIMESTAMP) > 86400000) return
+        msg.forEach { YLog.info(it) }
+    }
     /**
     * 当前设备是否是 MIUI 定制 Android 系统
     * @return [Boolean] 是否符合条件

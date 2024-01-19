@@ -10,6 +10,7 @@ import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 object DataConst {
     val ENABLE_NEW_SYSTEM_UI_HOOKER = PrefsData("enable_new_system_ui_hooker", true)
     val ENABLE_LOG = PrefsData("enable_log", false)
+    val ENABLE_LOG_TIMESTAMP = PrefsData("enable_log_timestamp", 0L)
     val ENABLE_CUSTOM_SCOPE = PrefsData("enable_custom_scope", false)
     val IS_CUSTOM_SCOPE_EXCEPTION_MODE = PrefsData("is_custom_scope_exception_mode", true)
     val IS_REMOVE_BRANDING_IMAGE_EXCEPTION_MODE = PrefsData("is_remove_branding_image_exception_mode", false)

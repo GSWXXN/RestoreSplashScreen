@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/GSWXXN/RestoreSplashScreen/master/doc/icon.svg" width="160">
+<img src="https://raw.githubusercontent.com/GSWXXN/RestoreSplashScreen/master/doc/icon.svg" width="160" alt="icon">
 
 # 启动遮罩进化
 
@@ -7,6 +7,8 @@
 [![GitHub](https://img.shields.io/github/license/GSWXXN/RestoreSplashScreen)](https://github.com/GSWXXN/RestoreSplashScreen/blob/master/LICENSE)
 [![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/GSWXXN/RestoreSplashScreen?label=version)](https://github.com/Xposed-Modules-Repo/com.gswxxn.restoresplashscreen/releases)
 [![GitHub all releases](https://img.shields.io/github/downloads/Xposed-Modules-Repo/com.gswxxn.restoresplashscreen/total?label=Downloads)](https://github.com/Xposed-Modules-Repo/com.gswxxn.restoresplashscreen/releases)
+[![Telegram CI](https://img.shields.io/badge/CI%20builds-Telegram-blue.svg?logo=telegram)](https://t.me/GSWXXN_Channel)
+[![Telegram](https://img.shields.io/badge/discussion-Telegram-blue.svg?logo=telegram)](https://t.me/GSWXXN_Chat)
 
 ~~尝试恢复被MIUI阉割的SplashScreen~~  
 ~~自定义MIUI的Splash Screen~~  

@@ -1,5 +1,6 @@
 package com.gswxxn.restoresplashscreen.hook
 
+import androidx.annotation.Keep
 import com.gswxxn.restoresplashscreen.hook.base.HookManager
 import com.gswxxn.restoresplashscreen.hook.systemui.*
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.isColorOS
@@ -18,6 +19,7 @@ import com.highcapable.yukihookapi.hook.type.java.IntType
 import com.highcapable.yukihookapi.hook.type.java.StringClass
 
 object NewSystemUIHooker: YukiBaseHooker() {
+    @Keep
     object Members {
         val makeSplashScreenContentView = HookManager {
             "com.android.wm.shell.startingsurface.SplashscreenContentDrawer".toClass()

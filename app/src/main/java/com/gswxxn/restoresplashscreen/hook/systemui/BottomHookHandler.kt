@@ -16,7 +16,7 @@ object BottomHookHandler: BaseHookHandler() {
         /**
          * 移除底部图片
          */
-        NewSystemUIHooker.Members.build_SplashScreenViewBuilder?.addBeforeHook {
+        NewSystemUIHooker.Members.build_SplashScreenViewBuilder.addBeforeHook {
             val isRemoveBrandingImage = prefs.get(DataConst.REMOVE_BRANDING_IMAGE) &&
                     if (prefs.get(DataConst.IS_REMOVE_BRANDING_IMAGE_EXCEPTION_MODE))
                         GenerateHookHandler.currentPackageName !in prefs.get(DataConst.REMOVE_BRANDING_IMAGE_LIST)

@@ -63,7 +63,7 @@ object IconHookHandler: BaseHookHandler() {
 
     /** 开始 Hook */
     override fun onHook() {
-        NewSystemUIHooker.Members.getWindowAttrs?.addAfterHook {
+        NewSystemUIHooker.Members.getWindowAttrs.addAfterHook {
 
             //忽略应用主动设置的图标
             val isDefaultStyle = prefs.get(DataConst.ENABLE_DEFAULT_STYLE) &&
@@ -78,12 +78,12 @@ object IconHookHandler: BaseHookHandler() {
         }
 
         // 处理 Drawable 图标
-        NewSystemUIHooker.Members.getIcon_IconProvider?.addAfterHook {
+        NewSystemUIHooker.Members.getIcon_IconProvider.addAfterHook {
             result = processIconDrawable(result as Drawable)
         }
 
         // 执行缩小图标
-        NewSystemUIHooker.Members.createIconDrawable?.addBeforeHook {
+        NewSystemUIHooker.Members.createIconDrawable.addBeforeHook {
             if (currentUseBigMIUILagerIcon == true) {
                 val mFinalIconSize = instance.current().field { name = "mFinalIconSize" }
                 mFinalIconSize.set((mFinalIconSize.int() * 1.35).toInt())
@@ -96,7 +96,7 @@ object IconHookHandler: BaseHookHandler() {
         }
 
         // 创建模糊背景 View
-        NewSystemUIHooker.Members.build_SplashScreenViewBuilder?.addAfterHook {
+        NewSystemUIHooker.Members.build_SplashScreenViewBuilder.addAfterHook {
             if (prefs.get(DataConst.SHRINK_ICON) == 0 || !prefs.get(DataConst.ENABLE_ADD_ICON_BLUR_BG)) {
                 printLog("build_SplashScreenViewBuilder(): not enable add icon blur bg")
                 return@addAfterHook
@@ -137,7 +137,7 @@ object IconHookHandler: BaseHookHandler() {
         }
 
         // 绘制圆角
-        NewSystemUIHooker.Members.build_SplashScreenViewBuilder?.addAfterHook {
+        NewSystemUIHooker.Members.build_SplashScreenViewBuilder.addAfterHook {
             val splashScreenView = result<FrameLayout>()!!
             val iconView = splashScreenView.current().field { name = "mIconView" }.cast<ImageView>()
                 ?: return@addAfterHook
@@ -168,7 +168,7 @@ object IconHookHandler: BaseHookHandler() {
         }
 
         // 不使用自带的图标缩放, 防止在 MIUI 上出现图标白边及图标错位
-        NewSystemUIHooker.Members.normalizeAndWrapToAdaptiveIcon?.addBeforeHook {
+        NewSystemUIHooker.Members.normalizeAndWrapToAdaptiveIcon.addBeforeHook {
             val scale = instance.current()
                 .method { name = "getNormalizer"; superClass() }.call()!!.current()
                 .method { name = "getScale"; paramCount(4); superClass() }
@@ -178,7 +178,7 @@ object IconHookHandler: BaseHookHandler() {
             printLog("normalizeAndWrapToAdaptiveIcon(): avoid shrink icon by system ui")
             result = args.first { it is Drawable } as Drawable
         }
-        NewSystemUIHooker.Members.createIconBitmap_BaseIconFactory?.addBeforeHook {
+        NewSystemUIHooker.Members.createIconBitmap_BaseIconFactory.addBeforeHook {
             args(0).cast<Drawable>()?.let { drawable ->
                 printLog("createIconBitmap_BaseIconFactory(): avoid shrink icon by system ui")
                 result = GraphicUtils.drawable2Bitmap(drawable, getIconSize(drawable))
@@ -186,7 +186,7 @@ object IconHookHandler: BaseHookHandler() {
         }
 
         // 强制使图标背景被判断为复杂, 以防止安卓抹去简单的图标背景
-        NewSystemUIHooker.Members.iconColor_constructor?.addAfterHook {
+        NewSystemUIHooker.Members.iconColor_constructor.addAfterHook {
             instance.current().field { name = "mIsBgComplex" }.set(true)
         }
     }

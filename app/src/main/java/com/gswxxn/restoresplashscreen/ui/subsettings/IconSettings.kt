@@ -27,8 +27,8 @@ import kotlinx.coroutines.launch
  * 图标 界面
  */
 object IconSettings : ISubSettings {
-    override val titleID: Int = R.string.icon_settings
-    override val demoImageID: Int = R.drawable.demo_icon
+    override val titleID = R.string.icon_settings
+    override val demoImageID = R.drawable.demo_icon
 
     override fun create(context: SubSettings, binding: ActivitySubSettingsBinding): BlockMIUIItemData.() -> Unit = {
         fun getDataBinding(pref : Any) = GetDataBinding({ pref }) { view, flags, data ->

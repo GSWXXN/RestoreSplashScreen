@@ -27,7 +27,7 @@ object ScopeHookHandler: BaseHookHandler() {
         HookManager.defaultExecCondition = { isHooking && !exceptCurrentApp }
 
         // 将作用域外的应用替换为空白启动遮罩
-        NewSystemUIHooker.Members.makeSplashScreenContentView?.addBeforeHook({ true }) {
+        NewSystemUIHooker.Members.makeSplashScreenContentView.addBeforeHook({ true }) {
             val isReplaceToEmptySplashScreen = prefs.get(DataConst.REPLACE_TO_EMPTY_SPLASH_SCREEN)
 
             if (isReplaceToEmptySplashScreen && exceptCurrentApp) {
@@ -45,13 +45,13 @@ object ScopeHookHandler: BaseHookHandler() {
          * 所以这里手动指定为只在 MIUI 系统上执行该 Hook, 后续如有返回其他厂商系统需要类似操作, 再手动添加
          */
         if (isMIUI){
-            NewSystemUIHooker.Members.getBGColorFromCache?.addAfterHook {
+            NewSystemUIHooker.Members.getBGColorFromCache.addAfterHook {
                 instance.current().field { name = "mTmpAttrs" }.any()!!.current().field { name = "mIconBgColor" }.set(1)
                 printLog("getBGColorFromCache(): Set mIconBgColor to 1")
             }
 
             // 重置因实现自定义作用域而影响到的 mTmpAttrs
-            NewSystemUIHooker.Members.startingWindowViewBuilderConstructor?.addAfterHook {
+            NewSystemUIHooker.Members.startingWindowViewBuilderConstructor.addAfterHook {
                 val mSplashscreenContentDrawer = instance.current().field { name = "this\$0" }.any()!!
                 val mTmpAttrs = mSplashscreenContentDrawer.current().field { name = "mTmpAttrs" }.any()!!
                 val context = args.first { it is Context }

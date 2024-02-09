@@ -13,7 +13,7 @@ import com.gswxxn.restoresplashscreen.view.BlockMIUIItemData
  */
 interface ISubSettings {
     val titleID: Int
-    val demoImageID: Int
+    val demoImageID: Int?
 
     /**
      * 创建子设置界面

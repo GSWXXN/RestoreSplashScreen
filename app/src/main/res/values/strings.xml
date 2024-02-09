@@ -33,6 +33,7 @@
     <string name="background_settings">背景</string>
     <string name="lab_settings">实验功能</string>
     <string name="dev_settings">开发者选项</string>
+    <string name="hook_info">Hook 信息</string>
     <string name="faq">常见问题</string>
     <string name="faq_url">https://gswxxn.coding.net/public/restoresplashscreen/faq/git</string>
 

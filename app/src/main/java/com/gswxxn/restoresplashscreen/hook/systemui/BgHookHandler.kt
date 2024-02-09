@@ -32,10 +32,10 @@ object BgHookHandler: BaseHookHandler() {
 
     /** 开始 Hook */
     override fun onHook() {
-        NewSystemUIHooker.Members.getBGColorFromCache?.addAfterHook {
+        NewSystemUIHooker.Members.getBGColorFromCache.addAfterHook {
             mTmpAttrsInstance = instance.current().field { name = "mTmpAttrs" }.any()
         }
-        NewSystemUIHooker.Members.build_SplashScreenViewBuilder?.addBeforeHook {
+        NewSystemUIHooker.Members.build_SplashScreenViewBuilder.addBeforeHook {
             val isRemoveBGColor = prefs.get(DataConst.REMOVE_BG_COLOR)
             val builder = SplashScreenViewBuilderWrapper.getInstance(instance)
 

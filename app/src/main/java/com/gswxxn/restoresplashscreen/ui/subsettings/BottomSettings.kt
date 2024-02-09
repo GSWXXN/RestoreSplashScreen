@@ -19,8 +19,8 @@ import com.highcapable.yukihookapi.hook.factory.prefs
  * 底部 界面
  */
 object BottomSettings : ISubSettings {
-    override val titleID: Int = R.string.bottom_settings
-    override val demoImageID: Int = R.drawable.demo_branding
+    override val titleID = R.string.bottom_settings
+    override val demoImageID = R.drawable.demo_branding
 
     override fun create(context: SubSettings, binding: ActivitySubSettingsBinding): BlockMIUIItemData.() -> Unit =  {
         fun getDataBinding(pref : Any) = GetDataBinding({ pref }) { view, flags, data ->

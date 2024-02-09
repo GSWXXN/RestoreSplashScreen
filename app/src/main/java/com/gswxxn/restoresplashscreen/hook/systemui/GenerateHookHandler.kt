@@ -38,7 +38,7 @@ object GenerateHookHandler: BaseHookHandler() {
     override fun onHook() {
 
         // Hook 起始位置, 获取应用信息
-        NewSystemUIHooker.Members.makeSplashScreenContentView?.addBeforeHook({ true }) {
+        NewSystemUIHooker.Members.makeSplashScreenContentView.addBeforeHook({ true }) {
             var activityInfo: ActivityInfo?
 
             if (args[1]!! is ActivityInfo)
@@ -76,7 +76,7 @@ object GenerateHookHandler: BaseHookHandler() {
         }
 
         // 遮罩最小持续时间, 也是 Hook 结束位置, 清除缓存的应用信息
-        NewSystemUIHooker.Members.removeStartingWindow?.addReplaceHook({ true }) {
+        NewSystemUIHooker.Members.removeStartingWindow.addReplaceHook({ true }) {
             if (exceptCurrentApp || !isHooking) callOriginal()
             else when (currentPackageName) {
                 "" -> {

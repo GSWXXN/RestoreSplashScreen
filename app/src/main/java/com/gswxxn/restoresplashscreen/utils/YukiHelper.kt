@@ -4,6 +4,7 @@ import android.content.Context
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.hook.NewSystemUIHooker.toClass
 import com.gswxxn.restoresplashscreen.hook.base.BaseHookHandler
+import com.gswxxn.restoresplashscreen.hook.base.HookManager
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toMap
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.core.finder.members.FieldFinder.Result.Instance
@@ -16,6 +17,10 @@ import com.highcapable.yukihookapi.hook.log.YLog
 import com.highcapable.yukihookapi.hook.type.java.StringClass
 import com.highcapable.yukihookapi.hook.xposed.prefs.YukiHookPrefsBridge
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
 
 /**
  * YukiHookAPI 工具类 */
@@ -74,11 +79,49 @@ object YukiHelper {
     }
 
     /**
+     * 通过 DataChannel 发送消息，获取 Hook 信息
+     * @param packageName 宿主包名
+     * @param result 结果回调
+     */
+    fun Context.getHookInfo(packageName: String, result: (Map<String, HookManager>) -> Unit) {
+        this.dataChannel(packageName).wait<Map<String, ByteArray>>("${packageName.replace('.', '_')}_hook_info_result") {
+            val hookInfo = mutableMapOf<String, HookManager>()
+            it.forEach { (string, byteArray) ->
+                val objectInputStream = ObjectInputStream(ByteArrayInputStream(byteArray))
+                hookInfo += string to objectInputStream.readObject() as HookManager
+            }
+            result(hookInfo)
+        }
+        this.dataChannel(packageName).put("${packageName.replace('.', '_')}_hook_info_get")
+    }
+
+    /**
      * 宿主注册接收 DataChannel 通知
      */
     fun YukiBaseHooker.register() {
         dataChannel.wait<String>(key = "${packageName.replace('.', '_')}_version_get") {
             dataChannel.put(key = "${packageName.replace('.', '_')}_version_result", value = YukiHookAPI.Status.compiledTimestamp.toString())
+        }
+    }
+
+    /**
+     * 宿主注册接收获取HookInfo 的 DataChannel 通知
+     */
+    fun YukiBaseHooker.registerHookInfo(membersObject: Any) {
+        dataChannel.wait<String>(key = "${packageName.replace('.', '_')}_hook_info_get") {
+            val hookInfo: Map<String, ByteArray> = membersObject.javaClass.declaredFields
+                .filter { field -> field.apply { isAccessible = true }.get(null) is HookManager }
+                .associateBy({ field -> field.name }, { field ->
+                    val byteArrayOutputStream = ByteArrayOutputStream()
+                    val objectOutputStream = ObjectOutputStream(byteArrayOutputStream)
+                    objectOutputStream.writeObject(field.get(null))
+                    objectOutputStream.flush()
+                    byteArrayOutputStream.toByteArray()
+                })
+            dataChannel.put(
+                key = "${packageName.replace('.', '_')}_hook_info_result",
+                value = hookInfo
+            )
         }
     }
 

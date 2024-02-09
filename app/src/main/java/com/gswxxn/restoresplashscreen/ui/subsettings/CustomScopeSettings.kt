@@ -19,8 +19,8 @@ import com.highcapable.yukihookapi.hook.factory.prefs
  * 作用域 界面
  */
 object CustomScopeSettings : ISubSettings {
-    override val titleID: Int = R.string.custom_scope_settings
-    override val demoImageID: Int = R.drawable.demo_scope
+    override val titleID = R.string.custom_scope_settings
+    override val demoImageID = R.drawable.demo_scope
 
     override fun create(context: SubSettings, binding: ActivitySubSettingsBinding): BlockMIUIItemData.() -> Unit = {
         fun getDataBinding(pref : Any) = GetDataBinding({ pref }) { view, flags, data ->

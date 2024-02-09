@@ -6,6 +6,7 @@ import com.gswxxn.restoresplashscreen.utils.YukiHelper.isColorOS
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.isMIUI
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.loadHookHandler
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.register
+import com.gswxxn.restoresplashscreen.utils.YukiHelper.registerHookInfo
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.constructor
 import com.highcapable.yukihookapi.hook.factory.method
@@ -18,78 +19,75 @@ import com.highcapable.yukihookapi.hook.type.java.StringClass
 
 object NewSystemUIHooker: YukiBaseHooker() {
     object Members {
-        val makeSplashScreenContentView = HookManager.create {
+        val makeSplashScreenContentView = HookManager {
             "com.android.wm.shell.startingsurface.SplashscreenContentDrawer".toClass()
                 .method { name = "makeSplashScreenContentView" }.give()!!
         }
-        val getWindowAttrs = HookManager.create {
+        val getWindowAttrs = HookManager {
             "com.android.wm.shell.startingsurface.SplashscreenContentDrawer".toClass()
                 .method { name = "getWindowAttrs"
                     paramCount(2)
                 }.give()!!
         }
-        val getBGColorFromCache = HookManager.create {
+        val getBGColorFromCache = HookManager {
             "com.android.wm.shell.startingsurface.SplashscreenContentDrawer".toClass().method {
                 name = "getBGColorFromCache"
                 paramCount(2)
             }.give()!!
         }
-        val startingWindowViewBuilderConstructor = HookManager.create {
+        val startingWindowViewBuilderConstructor = HookManager {
             ("com.android.wm.shell.startingsurface.SplashscreenContentDrawer\$StartingWindowViewBuilder".toClassOrNull()
                 ?: "com.android.wm.shell.startingsurface.SplashscreenContentDrawer\$SplashViewBuilder".toClass()) // Android 14
                 .constructor { paramCount(2..3) }.give()!!
         }
-        val createIconDrawable = HookManager.create {
+        val createIconDrawable = HookManager {
             ("com.android.wm.shell.startingsurface.SplashscreenContentDrawer\$StartingWindowViewBuilder".toClassOrNull()
                 ?: "com.android.wm.shell.startingsurface.SplashscreenContentDrawer\$SplashViewBuilder".toClass()) // Android 14
                 .method { name = "createIconDrawable" }.give()!!
         }
-        val iconColor_constructor = HookManager.create {
+        val iconColor_constructor = HookManager {
             "com.android.wm.shell.startingsurface.SplashscreenContentDrawer\$ColorCache\$IconColor".toClass()
                 .constructor().give()!!
         }
-        val getIcon_IconProvider = HookManager.create {
+        val getIcon_IconProvider = HookManager {
             "com.android.launcher3.icons.IconProvider".toClass().method {
                 name = "getIcon"
                 paramCount(2)
                 param { IntType in it && ActivityInfoClass in it }
             }.give()!!
         }
-        val normalizeAndWrapToAdaptiveIcon = HookManager.create {
+        val normalizeAndWrapToAdaptiveIcon = HookManager {
             "com.android.launcher3.icons.BaseIconFactory".toClass().method {
                 name = "normalizeAndWrapToAdaptiveIcon"
             }.give()!!
         }
-        val createIconBitmap_BaseIconFactory = HookManager.create {
+        val createIconBitmap_BaseIconFactory = HookManager {
             "com.android.launcher3.icons.BaseIconFactory".toClass().method {
                 name = "createIconBitmap"
                 param (DrawableClass, FloatType, IntType)
             }.give()!!
         }
-        val build_SplashScreenViewBuilder = HookManager.create {
+        val build_SplashScreenViewBuilder = HookManager {
             "android.window.SplashScreenView\$Builder".toClass().method {
                 name = "build"
             }.give()!!
         }
-        val removeStartingWindow = HookManager.create {
+        val removeStartingWindow = HookManager {
             "com.android.wm.shell.ShellTaskOrganizer".toClass().method {
                 name = "removeStartingWindow"
             }.give()!!
         }
 
         // MIUI
-        val isMiuiHome_TaskSnapshotHelperImpl = HookManager.create(isMIUI) {
-            try {
-                "android.app.TaskSnapshotHelperImpl".toClass().method {
-                    name = "isMiuiHome"
-                    param(StringClass)
-                }.give()!!
-            } catch (e: NoClassDefFoundError) {
-                YLog.warn("Class android.app.TaskSnapshotHelperImpl not found, be relax, this is not a requirement")
-                null
-            }
+        val isMiuiHome_TaskSnapshotHelperImpl = HookManager(
+            isMIUI && "android.app.TaskSnapshotHelperImpl".hasClass()
+        ) {
+            "android.app.TaskSnapshotHelperImpl".toClass().method {
+                name = "isMiuiHome"
+                param(StringClass)
+            }.give()!!
         }
-        val updateForceDarkSplashScreen_ForceDarkHelperStubImpl = HookManager.create(isMIUI) {
+        val updateForceDarkSplashScreen_ForceDarkHelperStubImpl = HookManager(isMIUI) {
             "android.window.SplashScreenView\$Builder".toClass().method {
                 name = "isStaringWindowUnderNightMode"
                 emptyParam()
@@ -100,18 +98,18 @@ object NewSystemUIHooker: YukiBaseHooker() {
         }
 
         // ColorOS
-        val setContentViewBackground_OplusShellStartingWindowManager = HookManager.create(isColorOS) {
+        val setContentViewBackground_OplusShellStartingWindowManager = HookManager(isColorOS) {
             "com.android.wm.shell.startingsurface.OplusShellStartingWindowManager".toClass().method {
                 name = "setContentViewBackground"
             }.give()!!
         }
-        val getIconExt_OplusShellStartingWindowManager = HookManager.create(isColorOS) {
+        val getIconExt_OplusShellStartingWindowManager = HookManager(isColorOS) {
             "com.android.wm.shell.startingsurface.OplusShellStartingWindowManager".toClass().method {
                 name = "getIconExt"
                 paramCount(4..5)
             }.give()!!
         }
-        val getWindowAttrsIfPresent_OplusShellStartingWindowManager = HookManager.create(isColorOS) {
+        val getWindowAttrsIfPresent_OplusShellStartingWindowManager = HookManager(isColorOS) {
             "com.android.wm.shell.startingsurface.OplusShellStartingWindowManager".toClass().method {
                 name = "getWindowAttrsIfPresent"
             }.give()!!
@@ -122,6 +120,7 @@ object NewSystemUIHooker: YukiBaseHooker() {
     override fun onHook() {
         // 注册 DataChannel
         register()
+        registerHookInfo(Members)
 
         loadHookHandler(
             GenerateHookHandler,

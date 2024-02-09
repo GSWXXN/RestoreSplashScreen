@@ -130,6 +130,12 @@ class MainSettingsActivity : BaseActivity<ActivityMainSettingsBinding>() {
 
             line()
 
+            Author(shrinkIcon(R.drawable.ic_lab), getString(R.string.hook_info), null, 0f, {
+                startActivity(Intent(this@MainSettingsActivity, SubSettings::class.java).apply {
+                    putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.HOOK_INFO)
+                })
+            })
+
             Author(shrinkIcon(R.drawable.ic_help), getString(R.string.faq), null, 0f, {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.faq_url))))
             })

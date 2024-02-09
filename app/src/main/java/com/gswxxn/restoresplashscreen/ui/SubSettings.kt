@@ -10,6 +10,7 @@ import com.gswxxn.restoresplashscreen.ui.subsettings.BackgroundSettings
 import com.gswxxn.restoresplashscreen.ui.subsettings.BasicSettings
 import com.gswxxn.restoresplashscreen.ui.subsettings.BottomSettings
 import com.gswxxn.restoresplashscreen.ui.subsettings.CustomScopeSettings
+import com.gswxxn.restoresplashscreen.ui.subsettings.DevSettings
 import com.gswxxn.restoresplashscreen.ui.subsettings.HookInfo
 import com.gswxxn.restoresplashscreen.ui.subsettings.IconSettings
 import com.gswxxn.restoresplashscreen.ui.subsettings.LabSettings
@@ -40,6 +41,8 @@ class SubSettings : BaseActivity<ActivitySubSettingsBinding>() {
             ConstValue.LAB_SETTINGS -> LabSettings
             // Hook 信息
             ConstValue.HOOK_INFO -> HookInfo
+            // 开发者选项
+            ConstValue.DEV_SETTINGS -> DevSettings
 
             else -> null
         }?.apply {

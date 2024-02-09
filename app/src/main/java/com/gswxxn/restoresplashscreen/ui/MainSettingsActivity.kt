@@ -122,19 +122,15 @@ class MainSettingsActivity : BaseActivity<ActivityMainSettingsBinding>() {
                     .create(this@MainSettingsActivity, null)
                     .also {
                         it.setOnClickListener {
-                            startActivity(Intent(this@MainSettingsActivity, DevSettings::class.java))
+                            startActivity(Intent(this@MainSettingsActivity, SubSettings::class.java).apply {
+                                putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.DEV_SETTINGS)
+                            })
                         }
                         devSettingsView = it
                     }
             )
 
             line()
-
-            Author(shrinkIcon(R.drawable.ic_lab), getString(R.string.hook_info), null, 0f, {
-                startActivity(Intent(this@MainSettingsActivity, SubSettings::class.java).apply {
-                    putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.HOOK_INFO)
-                })
-            })
 
             Author(shrinkIcon(R.drawable.ic_help), getString(R.string.faq), null, 0f, {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.faq_url))))

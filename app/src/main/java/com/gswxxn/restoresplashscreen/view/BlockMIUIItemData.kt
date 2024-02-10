@@ -29,8 +29,8 @@ class BlockMIUIItemData {
         itemList.add(ImageTextV(authorHead, authorName, authorTips, round, onClickListener, dataBindingRecv))
     }
 
-    fun Page(pageHead: Drawable, pageName: String?, pageNameId: Int?, round: Float = 0f, onClickListener: (() -> Unit)? = null, dataBindingRecv: DataBinding.Binding.Recv? = null) {
-        itemList.add(PageV(pageHead, pageName, pageNameId, round, onClickListener, dataBindingRecv))
+    fun Page(pageHead: Drawable, textSummaryV: TextSummaryV, round: Float = 0f, onClickListener: (() -> Unit)? = null, dataBindingRecv: DataBinding.Binding.Recv? = null) {
+        itemList.add(PageV(pageHead, textSummaryV, round, onClickListener, dataBindingRecv))
     }
 
     fun Line() {

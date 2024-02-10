@@ -37,7 +37,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
-import cn.fkj233.miui.R
+import cn.fkj233.ui.R
 import cn.fkj233.ui.activity.dp2px
 import cn.fkj233.ui.activity.getDisplay
 

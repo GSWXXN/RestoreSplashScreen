@@ -7,7 +7,7 @@ import android.view.MotionEvent
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
-import cn.fkj233.miui.R
+import cn.fkj233.ui.R
 import cn.fkj233.ui.activity.dp2px
 import cn.fkj233.ui.activity.view.*
 import com.gswxxn.restoresplashscreen.view.*
@@ -78,6 +78,14 @@ object BlockMIUIHelper {
                                     R.drawable.ic_main_down_bg
                                 )
                             MotionEvent.ACTION_UP -> {
+                                val touchX: Float = motionEvent.x
+                                val touchY: Float = motionEvent.y
+                                val maxX = width.toFloat()
+                                val maxY = height.toFloat()
+                                if (touchX < 0 || touchX > maxX || touchY < 0 || touchY > maxY) {
+                                    setPressed(false)
+                                    return@setOnTouchListener false
+                                }
                                 if (switch.switch.isEnabled) {
                                     switch.click()
                                     callBacks?.let { it1 -> it1() }

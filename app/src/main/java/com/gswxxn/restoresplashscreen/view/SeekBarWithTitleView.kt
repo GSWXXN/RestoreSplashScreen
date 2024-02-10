@@ -102,7 +102,7 @@ class SeekBarWithTitleView(
         val statusTextView = TextV(
             if (isPercentage) "$defaultProgress% / $max%" else "$defaultProgress / $max",
             textSize = 13.75f,
-            colorId = cn.fkj233.miui.R.color.author_tips,
+            colorId = cn.fkj233.ui.R.color.author_tips,
             padding = Padding(0, 0, 0, 0)
         ).create(context, null) as TextView
 
@@ -134,7 +134,7 @@ class SeekBarWithTitleView(
             view.background = null
             view.isIndeterminate = false
 
-            view.progressDrawable = (context.getDrawable(cn.fkj233.miui.R.drawable.seekbar_progress_drawable) as LayerDrawable).apply {
+            view.progressDrawable = (context.getDrawable(cn.fkj233.ui.R.drawable.seekbar_progress_drawable) as LayerDrawable).apply {
                 if (drawHuePanel) setDrawable(0, huePanel)
                 ((getDrawable(1) as ClipDrawable).drawable as GradientDrawable).setColor(if (drawHuePanel) 0 else progressColor)
             }

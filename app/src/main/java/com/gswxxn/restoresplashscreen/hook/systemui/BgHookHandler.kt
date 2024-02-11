@@ -36,17 +36,10 @@ object BgHookHandler: BaseHookHandler() {
             mTmpAttrsInstance = instance.current().field { name = "mTmpAttrs" }.any()
         }
         NewSystemUIHooker.Members.build_SplashScreenViewBuilder.addBeforeHook {
-            val isRemoveBGColor = prefs.get(DataConst.REMOVE_BG_COLOR)
             val builder = SplashScreenViewBuilderWrapper.getInstance(instance)
 
             // 设置背景颜色
             getColor()?.let { builder.setBackgroundColor(it) }
-
-            /**
-             * 移除背景颜色
-             */
-            if (isRemoveBGColor) builder.setBackgroundColor(Color.parseColor("#F5F5F5"))
-            printLog("SplashScreenViewBuilder(): ${if (isRemoveBGColor) "" else "Not"} remove BG Color")
         }
     }
 
@@ -70,11 +63,6 @@ object BgHookHandler: BaseHookHandler() {
                 prefs.get(DataConst.SKIP_APP_WITH_BG_COLOR) &&
                 mTmpAttrsInstance!!.current().field { name = "mWindowBgColor" }.int() != 0
 
-
-        if (prefs.get(DataConst.REMOVE_BG_COLOR)) {
-            printLog("SplashScreenViewBuilder(): skip set bg color cuz REMOVE_BG_COLOR is on")
-            return null
-        }
         if (skipAppWithBgColor) {
             printLog("SplashScreenViewBuilder(): skip set bg color cuz app has been set bg color")
             return null

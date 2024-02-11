@@ -123,7 +123,6 @@ object SystemUIHooker: YukiBaseHooker() {
                                     pkgName !in prefs.get(DataConst.REMOVE_BRANDING_IMAGE_LIST)
                                 else
                                     pkgName in prefs.get(DataConst.REMOVE_BRANDING_IMAGE_LIST)
-                        val isRemoveBGColor = prefs.get(DataConst.REMOVE_BG_COLOR)
                         val isReplaceToEmptySplashScreen = prefs.get(DataConst.REPLACE_TO_EMPTY_SPLASH_SCREEN)
                         val isExcept = isExcept(pkgName).also { exceptCurrentApp = it }
                         val forceEnableSplashScreen = prefs.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)
@@ -191,16 +190,6 @@ object SystemUIHooker: YukiBaseHooker() {
                         }
                         printLog(
                             "4. build(): ${if (isRemoveBrandingImage) "" else "Not"} remove Branding Image"
-                        )
-
-                        /**
-                         * 移除背景颜色
-                         */
-                        if (isRemoveBGColor) {
-                            instance.setField("mThemeColor", Color.parseColor("#F5F5F5"))
-                        }
-                        printLog(
-                            "5. build(): ${if (isRemoveBGColor) "" else "Not"} remove BG Color"
                         )
 
                         // 减少重复调用
@@ -332,9 +321,10 @@ object SystemUIHooker: YukiBaseHooker() {
                          * 在此处就可以通过 Palette API 自动从图标中选取颜色或手动指定颜色，并将背景颜色设置到 mThemeColor
                          * 成员变量中，以备后续调用
                          */
-                        if (prefs.get(DataConst.REMOVE_BG_COLOR).also { if (it) printLog("10. createIconDrawable(): skip set bg color cuz REMOVE_BG_COLOR is on")} ||
-                            skipAppWithBgColor.also { if (it) printLog("10. createIconDrawable(): skip set bg color cuz app has been set bg color") })
+                        if (skipAppWithBgColor) {
+                            printLog("10. createIconDrawable(): skip set bg color cuz app has been set bg color")
                             return@beforeHook
+                        }
 
                         fun getColor() = if (pkgName in individualBgColorAppMap.keys) {
                             printLog("10. createIconDrawable(): set individual background color, ${individualBgColorAppMap[pkgName]}")

@@ -128,12 +128,5 @@ object BackgroundSettings : ISubSettings {
                 TextSummaryV(textId = R.string.remove_bg_drawable, tipsId = R.string.remove_bg_drawable_tips),
                 SwitchView(DataConst.REMOVE_BG_DRAWABLE)
             )
-
-        // 移除背景颜色
-        TextSummaryWithSwitch(
-            TextSummaryV(textId = R.string.remove_bg_color, tipsId = R.string.remove_bg_color_tips), SwitchView(
-                DataConst.REMOVE_BG_COLOR)
-        )
-
     }
 }

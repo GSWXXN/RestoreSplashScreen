@@ -17,11 +17,11 @@ import com.gswxxn.restoresplashscreen.view.SwitchView
 import com.highcapable.yukihookapi.hook.factory.prefs
 
 /**
- * 实验功能 界面
+ * 显示设置 界面
  */
-object LabSettings : ISubSettings {
-    override val titleID = R.string.lab_settings
-    override val demoImageID = R.drawable.demo_lab
+object DisplaySettings : ISubSettings {
+    override val titleID = R.string.display_settings
+    override val demoImageID = R.drawable.demo_display
 
     override fun create(context: SubSettings, binding: ActivitySubSettingsBinding): BlockMIUIItemData.() -> Unit = {
         fun getDataBinding(pref : Any) = GetDataBinding({ pref }) { view, flags, data ->
@@ -31,6 +31,15 @@ object LabSettings : ISubSettings {
                 2 -> if (!(data as Boolean)) (view as Switch).isChecked = false
                }
         }
+
+        // 遮罩最小持续时间
+        TextSummaryArrow(TextSummaryV(textId = R.string.min_duration, tipsId = R.string.min_duration_tips) {
+            context.startActivity(Intent(context, ConfigAppsActivity::class.java).apply {
+                putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.MIN_DURATION)
+            })
+        })
+
+        Line()
 
         // 强制显示遮罩
         val forceShowSplashScreenBinding = getDataBinding(context.prefs().get(DataConst.FORCE_SHOW_SPLASH_SCREEN))

@@ -13,7 +13,7 @@ import com.gswxxn.restoresplashscreen.ui.subsettings.CustomScopeSettings
 import com.gswxxn.restoresplashscreen.ui.subsettings.DevSettings
 import com.gswxxn.restoresplashscreen.ui.subsettings.HookInfo
 import com.gswxxn.restoresplashscreen.ui.subsettings.IconSettings
-import com.gswxxn.restoresplashscreen.ui.subsettings.LabSettings
+import com.gswxxn.restoresplashscreen.ui.subsettings.DisplaySettings
 import com.gswxxn.restoresplashscreen.utils.BlockMIUIHelper.addBlockMIUIView
 
 /** 子界面 */
@@ -37,8 +37,8 @@ class SubSettings : BaseActivity<ActivitySubSettingsBinding>() {
             ConstValue.BOTTOM_SETTINGS -> BottomSettings
             // 背景
             ConstValue.BACKGROUND_SETTINGS -> BackgroundSettings
-            // 实验功能
-            ConstValue.LAB_SETTINGS -> LabSettings
+            // 显示设置
+            ConstValue.DISPLAY_SETTINGS -> DisplaySettings
             // Hook 信息
             ConstValue.HOOK_INFO -> HookInfo
             // 开发者选项

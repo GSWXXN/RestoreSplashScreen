@@ -6,12 +6,10 @@ import android.content.pm.PackageManager
 import cn.fkj233.ui.activity.view.TextSummaryV
 import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.R
-import com.gswxxn.restoresplashscreen.data.ConstValue
 import com.gswxxn.restoresplashscreen.data.ConstValue.CREATE_DOCUMENT_CODE
 import com.gswxxn.restoresplashscreen.data.ConstValue.OPEN_DOCUMENT_CODE
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.databinding.ActivitySubSettingsBinding
-import com.gswxxn.restoresplashscreen.ui.ConfigAppsActivity
 import com.gswxxn.restoresplashscreen.ui.SubSettings
 import com.gswxxn.restoresplashscreen.ui.`interface`.ISubSettings
 import com.gswxxn.restoresplashscreen.utils.BackupUtils
@@ -47,13 +45,6 @@ object BasicSettings : ISubSettings {
                 if (it) PackageManager.COMPONENT_ENABLED_STATE_DISABLED else PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                 PackageManager.DONT_KILL_APP
             )
-        })
-
-        // 遮罩最小持续时间
-        TextSummaryArrow(TextSummaryV(textId = R.string.min_duration, tipsId = R.string.min_duration_tips) {
-            context.startActivity(Intent(context, ConfigAppsActivity::class.java).apply {
-                putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.MIN_DURATION)
-            })
         })
 
         Line()

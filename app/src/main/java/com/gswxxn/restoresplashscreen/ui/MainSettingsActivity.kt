@@ -111,9 +111,9 @@ class MainSettingsActivity : BaseActivity<ActivityMainSettingsBinding>() {
                 })
             })
 
-            Author(shrinkIcon(R.drawable.ic_lab), getString(R.string.lab_settings), null, 0f, {
+            Author(shrinkIcon(R.drawable.ic_monitor), getString(R.string.display_settings), null, 0f, {
                 startActivity(Intent(this@MainSettingsActivity, SubSettings::class.java).apply {
-                    putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.LAB_SETTINGS)
+                    putExtra(ConstValue.EXTRA_MESSAGE, ConstValue.DISPLAY_SETTINGS)
                 })
             })
 

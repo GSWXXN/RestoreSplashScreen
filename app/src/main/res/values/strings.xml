@@ -31,7 +31,7 @@
     <string name="icon_settings">图标</string>
     <string name="bottom_settings">底部</string>
     <string name="background_settings">背景</string>
-    <string name="lab_settings">实验功能</string>
+    <string name="display_settings">显示</string>
     <string name="dev_settings">开发者选项</string>
     <string name="hook_info">Hook 信息</string>
     <string name="faq">常见问题</string>

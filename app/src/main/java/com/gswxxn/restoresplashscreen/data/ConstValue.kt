@@ -31,7 +31,7 @@ object ConstValue {
     const val ICON_SETTINGS = 1300
     const val BOTTOM_SETTINGS = 1400
     const val BACKGROUND_SETTINGS = 1500
-    const val LAB_SETTINGS = 1600
+    const val DISPLAY_SETTINGS = 1600
     const val HOOK_INFO = 1700
     const val DEV_SETTINGS = 1800
 }

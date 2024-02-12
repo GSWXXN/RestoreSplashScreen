@@ -4,7 +4,6 @@ import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.isAtLeastT
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.getField
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.printLog
-import com.gswxxn.restoresplashscreen.utils.YukiHelper.register
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.factory.method
@@ -14,8 +13,6 @@ import com.highcapable.yukihookapi.hook.factory.method
  */
 object AndroidHooker : YukiBaseHooker() {
     override fun onHook() {
-
-        register()
 
         val activityRecordClass = "com.android.server.wm.ActivityRecord".toClass()
 

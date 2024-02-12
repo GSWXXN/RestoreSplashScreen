@@ -6,7 +6,6 @@ import com.gswxxn.restoresplashscreen.hook.systemui.*
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.isColorOS
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.isMIUI
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.loadHookHandler
-import com.gswxxn.restoresplashscreen.utils.YukiHelper.register
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.registerHookInfo
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.constructor
@@ -121,7 +120,6 @@ object NewSystemUIHooker: YukiBaseHooker() {
     /** 开始 Hook */
     override fun onHook() {
         // 注册 DataChannel
-        register()
         registerHookInfo(Members)
 
         loadHookHandler(

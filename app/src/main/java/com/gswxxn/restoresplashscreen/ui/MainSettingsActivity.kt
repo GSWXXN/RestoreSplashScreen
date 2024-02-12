@@ -17,10 +17,10 @@ import com.gswxxn.restoresplashscreen.utils.BlockMIUIHelper.addBlockMIUIView
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.execShell
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.gswxxn.restoresplashscreen.utils.GraphicUtils.shrinkIcon
-import com.gswxxn.restoresplashscreen.utils.YukiHelper.checkingHostVersion
 import com.gswxxn.restoresplashscreen.view.NewMIUIDialog
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.YukiHookAPI.Status.Executor
+import com.highcapable.yukihookapi.hook.factory.dataChannel
 import com.highcapable.yukihookapi.hook.factory.prefs
 
 /** 主界面 */
@@ -180,11 +180,11 @@ class MainSettingsActivity : BaseActivity<ActivityMainSettingsBinding>() {
         super.onResume()
         refreshState()
 
-        checkingHostVersion("com.android.systemui") {
+        dataChannel("com.android.systemui").checkingVersionEquals {
             systemUIRestartNeeded = !it
             refreshState()
         }
-        checkingHostVersion("android") {
+        dataChannel("android").checkingVersionEquals {
             androidRestartNeeded = !it
             refreshState()
         }

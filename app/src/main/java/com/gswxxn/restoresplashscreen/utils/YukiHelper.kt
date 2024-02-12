@@ -6,7 +6,6 @@ import com.gswxxn.restoresplashscreen.hook.NewSystemUIHooker.toClass
 import com.gswxxn.restoresplashscreen.hook.base.BaseHookHandler
 import com.gswxxn.restoresplashscreen.hook.base.HookManager
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toMap
-import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.core.finder.members.FieldFinder.Result.Instance
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.current
@@ -69,22 +68,12 @@ object YukiHelper {
     fun Any.setField(fieldName : String, value : Any?) = current().field { name = fieldName }.set(value)
 
     /**
-     * 通过 DataChannel 发送消息，检查宿主与模块版本是否一致
-     * @param packageName 宿主包名
-     * @param result 结果回调
-     */
-    fun Context.checkingHostVersion(packageName: String, result: (Boolean) -> Unit) {
-        this.dataChannel(packageName).wait<String>("${packageName.replace('.', '_')}_version_result") { result(it == YukiHookAPI.Status.compiledTimestamp.toString()) }
-        this.dataChannel(packageName).put("${packageName.replace('.', '_')}_version_get")
-    }
-
-    /**
      * 通过 DataChannel 发送消息，获取 Hook 信息
      * @param packageName 宿主包名
      * @param result 结果回调
      */
     fun Context.getHookInfo(packageName: String, result: (Map<String, HookManager>) -> Unit) {
-        this.dataChannel(packageName).wait<Map<String, ByteArray>>("${packageName.replace('.', '_')}_hook_info_result") {
+        dataChannel(packageName).wait<Map<String, ByteArray>>("${packageName.replace('.', '_')}_hook_info_result") {
             val hookInfo = mutableMapOf<String, HookManager>()
             it.forEach { (string, byteArray) ->
                 val objectInputStream = ObjectInputStream(ByteArrayInputStream(byteArray))
@@ -92,16 +81,7 @@ object YukiHelper {
             }
             result(hookInfo)
         }
-        this.dataChannel(packageName).put("${packageName.replace('.', '_')}_hook_info_get")
-    }
-
-    /**
-     * 宿主注册接收 DataChannel 通知
-     */
-    fun YukiBaseHooker.register() {
-        dataChannel.wait<String>(key = "${packageName.replace('.', '_')}_version_get") {
-            dataChannel.put(key = "${packageName.replace('.', '_')}_version_result", value = YukiHookAPI.Status.compiledTimestamp.toString())
-        }
+        dataChannel(packageName).put("${packageName.replace('.', '_')}_hook_info_get")
     }
 
     /**

@@ -99,8 +99,6 @@
     <string name="ignore_dark_mode_tips">在深色模式下，MIUI 会将启动遮罩替换为固定颜色。开启此选项后，将解除此限制。</string>
     <string name="remove_bg_drawable">移除截图背景</string>
     <string name="remove_bg_drawable_tips">如果Splash Screen的背景为应用内截图，可开启此选项移除。</string>
-    <string name="remove_bg_color">移除背景颜色</string>
-    <string name="remove_bg_color_tips">开启此选项后 &quot;自适应背景颜色&quot; 将失效。</string>
     <string name="force_show_splash_screen">强制显示遮罩</string>
     <string name="force_show_splash_screen_tips">如果有部分应用没有显示Splash Screen, 请尝试开启此选项并将其加入到应用列表。\n注意：开启此选项需要在Xposed管理器的作用域中勾选 系统框架，并重启手机。</string>
     <string name="force_show_splash_screen_list">配置应用列表</string>

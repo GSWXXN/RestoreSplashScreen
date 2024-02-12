@@ -19,7 +19,6 @@ import com.gswxxn.restoresplashscreen.utils.IconPackManager
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.getField
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.getMapPrefs
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.printLog
-import com.gswxxn.restoresplashscreen.utils.YukiHelper.register
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.setField
 import com.highcapable.yukihookapi.hook.bean.VariousClass
 import com.highcapable.yukihookapi.hook.core.annotation.LegacyHookApi
@@ -52,7 +51,6 @@ object SystemUIHooker: YukiBaseHooker() {
 
     @OptIn(LegacyHookApi::class)
     override fun onHook() {
-        register()
 
         var currentPackageName: String? = null
 

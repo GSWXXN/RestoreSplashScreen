@@ -25,6 +25,7 @@ import com.gswxxn.restoresplashscreen.utils.IconPackManager
 import com.gswxxn.restoresplashscreen.utils.MIUIIconsHelper
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.atLeastMIUI14
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.getDevPrefs
+import com.gswxxn.restoresplashscreen.utils.YukiHelper.isColorOS
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.printLog
 import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.factory.field
@@ -291,7 +292,8 @@ object IconHookHandler: BaseHookHandler() {
             printLog("getIcon(): use Icon Pack")
             return when {
                 currentPackageName == "com.android.contacts" && currentActivity == "com.android.contacts.activities.PeopleActivity" ->
-                    iconPackManager.getIconByComponentName("ComponentInfo{com.android.contacts/com.android.contacts.activities.TwelveKeyDialer}")
+                    if (isColorOS) iconPackManager.getIconByComponentName("ComponentInfo{com.android.contacts/com.android.contacts.DialtactsActivityAlias}")
+                    else iconPackManager.getIconByComponentName("ComponentInfo{com.android.contacts/com.android.contacts.activities.TwelveKeyDialer}")
 
                 else -> iconPackManager.getIconByPackageName(currentPackageName)
             }
@@ -309,9 +311,8 @@ object IconHookHandler: BaseHookHandler() {
             printLog("getIcon(): replace way of getting icon")
             return when {
                 currentPackageName == "com.android.contacts" && currentActivity == "com.android.contacts.activities.PeopleActivity" ->
-                    appContext!!.packageManager.getActivityIcon(
-                        ComponentName("com.android.contacts", "com.android.contacts.activities.TwelveKeyDialer")
-                    )
+                    if (isColorOS) appContext!!.packageManager.getActivityIcon(ComponentName("com.android.contacts", "com.android.contacts.DialtactsActivityAlias"))
+                    else appContext!!.packageManager.getActivityIcon(ComponentName("com.android.contacts", "com.android.contacts.activities.TwelveKeyDialer"))
 
                 currentPackageName == "com.android.settings" && currentActivity == "com.android.settings.BackgroundApplicationsManager" ->
                     appContext!!.packageManager.getApplicationIcon("com.android.settings")

@@ -385,6 +385,6 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
         }
 
 
-        super.onBackPressed()
+        super.finishAfterTransition()
     }
 }

@@ -24,7 +24,7 @@ class SubSettings : BaseActivity<ActivitySubSettingsBinding>() {
         val message = intent.getIntExtra(ConstValue.EXTRA_MESSAGE, 0)
 
         //返回按钮点击事件
-        binding.titleBackIcon.setOnClickListener { onBackPressed() }
+        binding.titleBackIcon.setOnClickListener { finishAfterTransition() }
 
         when (message) {
             // 基础设置

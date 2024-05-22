@@ -30,7 +30,7 @@ object DevSettings: ISubSettings {
                 if (it) return@SwitchView
 
                 context.toast(context.getString(R.string.disabled_dev_settings))
-                context.onBackPressed()
+                context.finishAfterTransition()
             }
         )
 

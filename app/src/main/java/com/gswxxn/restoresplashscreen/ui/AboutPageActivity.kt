@@ -26,7 +26,7 @@ class AboutPageActivity : BaseActivity<ActivityAboutPageBinding>() {
         window.statusBarColor = getColor(R.color.colorThemeBackground)
         binding.apply {
 
-            titleBackIcon.setOnClickListener { onBackPressed() }
+            titleBackIcon.setOnClickListener { finishAfterTransition() }
 
             appIcon.setImageBitmap(roundBitmapByShader(
                 getDrawable(R.mipmap.ic_launcher)?.let {

@@ -34,9 +34,10 @@ import com.highcapable.yukihookapi.hook.factory.toClass
 /**
  * 此对象用于处理图标 Hook
  */
-object IconHookHandler: BaseHookHandler() {
+object IconHookHandler : BaseHookHandler() {
     var currentIconDominantColor: Int? = null
     private var currentIsNeedShrinkIcon = false
+
     /**
      * currentUseBigMIUILagerIcon 有三种状态:
      *
@@ -147,7 +148,7 @@ object IconHookHandler: BaseHookHandler() {
                 ?: return@addAfterHook
             val isNeedDrawRoundCorner = prefs.get(DataConst.ENABLE_DRAW_ROUND_CORNER) && // 用户配置
                     "android.window.SplashScreenView\$IconAnimateListener".toClass() !in iconDrawable.javaClass.interfaces && // 不为动态图标绘制圆角
-                    iconSize != 0  && // 如果没有图标 则不绘制圆角
+                    iconSize != 0 && // 如果没有图标 则不绘制圆角
                     currentUseBigMIUILagerIcon == null // 如果当前使用 MIUI 大图标, 则不绘制圆角
 
             if (!isNeedDrawRoundCorner) {
@@ -164,7 +165,7 @@ object IconHookHandler: BaseHookHandler() {
                     )
                 }
             }
-            iconView.setClipToOutline(true) // 启用轮廓剪裁
+            iconView.clipToOutline = true // 启用轮廓剪裁
             printLog("build_SplashScreenViewBuilder(): draw icon round corner")
         }
 

@@ -33,10 +33,7 @@ android {
     }
 
     val isKeyStoreAvailable = try {
-        property.keystore.path.isNotBlank() &&
-        property.keystore.pass.isNotBlank() &&
-        property.key.alias.isNotBlank() &&
-        property.key.password.isNotBlank()
+        property.keystore.path.isNotBlank() && property.keystore.pass.isNotBlank() && property.key.alias.isNotBlank() && property.key.password.isNotBlank()
     } catch (_: Exception) {
         false
     }

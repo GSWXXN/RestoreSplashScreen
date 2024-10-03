@@ -1,72 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="com.gswxxn.restoresplashscreen">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission
-            android:name="android.permission.QUERY_ALL_PACKAGES"
-            tools:ignore="QueryAllPackagesPermission"/>
+        android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
     <uses-permission
         android:name="${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
         tools:node="remove" />
+
     <permission
         android:name="${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
         tools:node="remove" />
 
     <application
-            android:name="com.highcapable.yukihookapi.hook.xposed.application.ModuleApplication"
-            android:icon="@mipmap/ic_launcher"
-            android:theme="@style/Starting"
-            android:label="@string/app_name">
+        android:name="com.highcapable.yukihookapi.hook.xposed.application.ModuleApplication"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/Starting">
 
         <activity
-                android:name=".ui.AboutPageActivity"
-                android:exported="true"/>
+            android:name=".ui.AboutPageActivity"
+            android:exported="true" />
         <activity
             android:name=".ui.ColorSelectActivity"
             android:exported="true" />
         <activity
-                android:name=".ui.ConfigAppsActivity"
-                android:exported="true"
-                android:launchMode="singleTask"/>
+            android:name=".ui.ConfigAppsActivity"
+            android:exported="true"
+            android:launchMode="singleTask" />
         <activity
             android:name=".ui.SubSettings"
             android:exported="true"
-            android:parentActivityName=".ui.MainSettingsActivity"/>
+            android:parentActivityName=".ui.MainSettingsActivity" />
         <activity
-                android:name=".ui.MainSettingsActivity"
-                android:exported="true">
+            android:name=".ui.MainSettingsActivity"
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="de.robv.android.xposed.category.MODULE_SETTINGS"/>
+                <category android:name="de.robv.android.xposed.category.MODULE_SETTINGS" />
             </intent-filter>
         </activity>
 
         <activity-alias
-                android:name=".Home"
-                android:enabled="true"
-                android:exported="true"
-                android:label="@string/app_name"
-                android:targetActivity=".ui.MainSettingsActivity">
+            android:name=".Home"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:targetActivity=".ui.MainSettingsActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity-alias>
 
         <meta-data
-                android:name="xposedmodule"
-                android:value="true"/>
+            android:name="xposedmodule"
+            android:value="true" />
         <meta-data
-                android:name="xposedminversion"
-                android:value="93"/>
+            android:name="xposedminversion"
+            android:value="93" />
         <meta-data
-                android:name="xposedscope"
-                android:resource="@array/xposed_scope"/>
+            android:name="xposedscope"
+            android:resource="@array/xposed_scope" />
         <meta-data
-                android:name="xposeddescription"
-                android:value="为 Splash Screen 添加自定义选项\n酷安@迷璐"/>
+            android:name="xposeddescription"
+            android:value="为 Splash Screen 添加自定义选项\n酷安@迷璐" />
     </application>
 
 </manifest>

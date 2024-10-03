@@ -16,3 +16,5 @@ local.properties
 .idea/*
 /app/src/main/assets/yukihookapi_init
 /app/src/main/assets/xposed_init
+/.kotlin
+app/src/main/resources/META-INF/yukihookapi_init

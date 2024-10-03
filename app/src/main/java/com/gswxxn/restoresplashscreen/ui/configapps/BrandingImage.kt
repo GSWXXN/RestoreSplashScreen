@@ -23,7 +23,7 @@ object BrandingImage : IConfigApps {
         get() = DataConst.REMOVE_BRANDING_IMAGE_LIST
 
     override fun blockMIUIView(context: ConfigAppsActivity): BlockMIUIItemData.() -> Unit = {
-        fun getDataBinding(pref : Any) = GetDataBinding({ pref }) { view, flags, data ->
+        fun getDataBinding(pref: Any) = GetDataBinding({ pref }) { view, flags, data ->
             when (flags) {
                 0 -> (view as TextView).text = context.getString(R.string.exception_mode_message, context.getString(if (data as Boolean) R.string.not_chosen else R.string.chosen))
             }

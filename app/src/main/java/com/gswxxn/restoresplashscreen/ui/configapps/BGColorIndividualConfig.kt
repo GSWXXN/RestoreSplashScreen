@@ -43,10 +43,11 @@ object BGColorIndividualConfig : IConfigApps {
         } else {
             text = ""
             width = dp2px(context, 30f)
-            background = GradientDrawable().apply { setColor(
-                Color.parseColor(item.config))
+            background = GradientDrawable().apply {
+                setColor(Color.parseColor(item.config))
                 setStroke(2, context.getColor(R.color.brandColor))
-                cornerRadius = dp2px(context, 15f).toFloat() }
+                cornerRadius = dp2px(context, 15f).toFloat()
+            }
         }
     }
 
@@ -80,11 +81,13 @@ object BGColorIndividualConfig : IConfigApps {
                     context.onRefreshList?.invoke()
                     context.configMap[pkgName] = color
                 }
+
                 ConstValue.DEFAULT_COLOR -> {
                     context.appInfo.setConfig(index, null)
                     context.onRefreshList?.invoke()
                     context.configMap.remove(pkgName)
                 }
+
                 ConstValue.UNDO_MODIFY -> {}
             }
         } catch (_: RuntimeException) {

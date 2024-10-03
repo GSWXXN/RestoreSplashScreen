@@ -12,14 +12,14 @@ import com.gswxxn.restoresplashscreen.view.SwitchView
 import com.highcapable.yukihookapi.hook.factory.prefs
 
 /** 图标 - 不显示图标 */
-object HideSplashScreenIcon: IConfigApps {
+object HideSplashScreenIcon : IConfigApps {
     override val titleID: Int
-        get() =  R.string.hide_splash_screen_icon_title
+        get() = R.string.hide_splash_screen_icon_title
 
     override val checkedListPrefs = DataConst.HIDE_SPLASH_SCREEN_ICON_LIST
 
     override fun blockMIUIView(context: ConfigAppsActivity): BlockMIUIItemData.() -> Unit = {
-        fun getDataBinding(pref : Any) = GetDataBinding({ pref }) { view, flags, data ->
+        fun getDataBinding(pref: Any) = GetDataBinding({ pref }) { view, flags, data ->
             when (flags) {
                 0 -> (view as TextView).text = context.getString(R.string.exception_mode_message, context.getString(if (data as Boolean) R.string.not_chosen else R.string.chosen))
             }

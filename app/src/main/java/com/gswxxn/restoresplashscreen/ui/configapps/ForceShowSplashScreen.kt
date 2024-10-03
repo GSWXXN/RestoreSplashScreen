@@ -8,7 +8,7 @@ import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 /**
  * 实验功能 - 强制显示遮罩 - 配置应用列表
  */
-object ForceShowSplashScreen :IConfigApps {
+object ForceShowSplashScreen : IConfigApps {
     override val titleID: Int
         get() = R.string.force_show_splash_screen_title
     override val checkedListPrefs: PrefsData<MutableSet<String>>

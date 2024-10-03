@@ -10,6 +10,9 @@ import android.graphics.Shader
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.ScaleDrawable
+import android.os.Build
+import android.view.Gravity
 import android.view.View
 import android.view.ViewOutlineProvider
 import android.widget.FrameLayout
@@ -131,7 +134,7 @@ object IconHookHandler : BaseHookHandler() {
             }
 
             val layoutParams = FrameLayout.LayoutParams(bgIconSize, bgIconSize)
-                .apply { gravity = android.view.Gravity.CENTER }
+                .apply { gravity = Gravity.CENTER }
 
             splashScreenView.addView(iconBlurBGView, layoutParams)
             iconView.alpha = 0.9f
@@ -171,14 +174,25 @@ object IconHookHandler : BaseHookHandler() {
 
         // 不使用自带的图标缩放, 防止在 MIUI 上出现图标白边及图标错位
         NewSystemUIHooker.Members.normalizeAndWrapToAdaptiveIcon.addBeforeHook {
-            val scale = instance.current()
-                .method { name = "getNormalizer"; superClass() }.call()!!.current()
-                .method { name = "getScale"; paramCount(4); superClass() }
-                .invoke<Float>(args.first { it is Drawable }, args.first { it is RectF }, null, null)!!
-
-            args(args.indexOfFirst { it is FloatArray }).cast<FloatArray>()!![0] = scale
-            printLog("normalizeAndWrapToAdaptiveIcon(): avoid shrink icon by system ui")
-            result = args.first { it is Drawable } as Drawable
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                val drawable = args.first { it is Drawable } as Drawable
+                if (drawable !is AdaptiveIconDrawable) {
+                    printLog("normalizeAndWrapToAdaptiveIcon(): avoid shrink icon by system ui")
+                    val mWrapperBackgroundColor = this.instance.current().field { name = "mWrapperBackgroundColor" }.int()
+                    val scaleDrawable = ScaleDrawable(drawable, Gravity.CENTER, 0.296f, 0.296f) // 0.296f 刚好看不到黑边
+                    scaleDrawable.level = 1
+                    val adaptiveIconDrawable = AdaptiveIconDrawable(ColorDrawable(mWrapperBackgroundColor), scaleDrawable)
+                    result = adaptiveIconDrawable
+                }
+            } else {
+                val scale = instance.current()
+                    .method { name = "getNormalizer"; superClass() }.call()!!.current()
+                    .method { name = "getScale"; paramCount(4); superClass() }
+                    .invoke<Float>(args.first { it is Drawable }, args.first { it is RectF }, null, null)!!
+                args(args.indexOfFirst { it is FloatArray }).cast<FloatArray>()!![0] = scale
+                printLog("normalizeAndWrapToAdaptiveIcon(): avoid shrink icon by system ui")
+                result = args.first { it is Drawable } as Drawable
+            }
         }
         NewSystemUIHooker.Members.createIconBitmap_BaseIconFactory.addBeforeHook {
             args(0).cast<Drawable>()?.let { drawable ->
@@ -234,12 +248,14 @@ object IconHookHandler : BaseHookHandler() {
             0 -> currentIsNeedShrinkIcon = false                                         // 不缩小图标
             1 -> currentIsNeedShrinkIcon =                                               // 仅缩小分辨率较低的图标
                 if (iconDrawable !is AdaptiveIconDrawable) iconDrawable.intrinsicWidth < iconSize / 1.5 else false
+
             2 -> currentIsNeedShrinkIcon = true                                          // 缩小全部图标
         }
         printLog("getIcon(): currentIsNeedShrinkIcon: $currentIsNeedShrinkIcon")
 
         // 获取图标颜色
-        currentIconDominantColor = GraphicUtils.getBgColor(bitmap,
+        currentIconDominantColor = GraphicUtils.getBgColor(
+            bitmap,
             when (colorMode) {
                 1 -> false
                 2 -> !isDarkMode
@@ -312,8 +328,13 @@ object IconHookHandler : BaseHookHandler() {
             printLog("getIcon(): replace way of getting icon")
             return when {
                 currentPackageName == "com.android.contacts" && currentActivity == "com.android.contacts.activities.PeopleActivity" ->
-                    if (isColorOS) appContext!!.packageManager.getActivityIcon(ComponentName("com.android.contacts", "com.android.contacts.DialtactsActivityAlias"))
-                    else appContext!!.packageManager.getActivityIcon(ComponentName("com.android.contacts", "com.android.contacts.activities.TwelveKeyDialer"))
+                    if (isColorOS) {
+                        appContext!!.packageManager.getActivityIcon(
+                            ComponentName("com.android.contacts", "com.android.contacts.DialtactsActivityAlias")
+                        )
+                    } else appContext!!.packageManager.getActivityIcon(
+                        ComponentName("com.android.contacts", "com.android.contacts.activities.TwelveKeyDialer")
+                    )
 
                 currentPackageName == "com.android.settings" && currentActivity == "com.android.settings.BackgroundApplicationsManager" ->
                     appContext!!.packageManager.getApplicationIcon("com.android.settings")

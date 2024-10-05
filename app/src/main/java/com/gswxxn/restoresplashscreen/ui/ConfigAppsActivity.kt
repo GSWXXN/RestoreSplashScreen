@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.BaseAdapter
-import androidx.core.view.WindowInsetsCompat
 import cn.fkj233.ui.dialog.MIUIDialog
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.ConstValue
@@ -110,17 +109,6 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineS
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             })
             searchEvent()
-        }
-
-        binding.root.setOnApplyWindowInsetsListener { _, insets ->
-            val statusBarHeight = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top
-            binding.mainStatus.setPadding(
-                binding.mainStatus.paddingLeft,
-                statusBarHeight,
-                binding.mainStatus.paddingRight,
-                binding.mainStatus.paddingBottom
-            )
-            insets
         }
 
         // 返回按钮点击事件

@@ -1,10 +1,12 @@
 package com.gswxxn.restoresplashscreen.ui
 
 import android.app.Activity
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.WindowCompat
 import androidx.viewbinding.ViewBinding
+import com.gswxxn.restoresplashscreen.utils.CommonUtils.isDarkMode
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.type.android.LayoutInflaterClass
 import java.lang.reflect.ParameterizedType
@@ -30,9 +32,14 @@ abstract class BaseActivity<VB : ViewBinding> : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // 安卓 15 以下仍需要
+        window.statusBarColor = Color.TRANSPARENT
+        window.navigationBarColor = Color.TRANSPARENT
+        window.isNavigationBarContrastEnforced = false
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         WindowCompat.getInsetsController(window, window.decorView).apply {
-            isAppearanceLightStatusBars = true
-            isAppearanceLightNavigationBars = true
+            isAppearanceLightStatusBars = !isDarkMode(this@BaseActivity)
+            isAppearanceLightNavigationBars = !isDarkMode(this@BaseActivity)
         }
 
         // 通过反射绑定布局

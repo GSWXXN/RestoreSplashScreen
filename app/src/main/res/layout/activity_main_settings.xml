@@ -13,16 +13,14 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_dark_round"
         android:elevation="0dp"
-        android:gravity="center|start"
-        android:orientation="vertical"
-        android:paddingLeft="15dp"
-        android:paddingTop="13dp"
-        android:paddingRight="15dp"
-        android:paddingBottom="5dp">
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:gravity="center|start"
             android:orientation="horizontal">
 
             <TextView
@@ -40,7 +38,7 @@
                 style="?android:attr/selectableItemBackgroundBorderless"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_marginEnd="15dp"
+                android:layout_marginEnd="10dp"
                 android:alpha="0.85"
                 android:src="@drawable/ic_restart"
                 android:tint="@color/white" />
@@ -50,7 +48,6 @@
                 style="?android:attr/selectableItemBackgroundBorderless"
                 android:layout_width="27dp"
                 android:layout_height="27dp"
-                android:layout_marginEnd="5dp"
                 android:alpha="0.85"
                 android:src="@drawable/ic_more"
                 android:tint="@color/white" />
@@ -116,7 +113,9 @@
                     android:textColor="@color/white"
                     android:textSize="11sp" />
             </LinearLayout>
+
         </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -146,6 +145,7 @@
             android:text="@string/main_activity_hint"
             android:textColor="@color/colorTextGray"
             android:textSize="11sp" />
+
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -165,5 +165,7 @@
             android:layout_marginBottom="5dp"
             android:animateLayoutChanges="true"
             android:orientation="vertical" />
+
     </androidx.core.widget.NestedScrollView>
+
 </LinearLayout>

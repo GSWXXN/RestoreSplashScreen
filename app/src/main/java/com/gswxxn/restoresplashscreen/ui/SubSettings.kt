@@ -3,7 +3,6 @@ package com.gswxxn.restoresplashscreen.ui
 import android.content.Intent
 import android.view.View
 import androidx.core.view.WindowInsetsCompat
-import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.ConstValue
 import com.gswxxn.restoresplashscreen.databinding.ActivitySubSettingsBinding
 import com.gswxxn.restoresplashscreen.ui.`interface`.ISubSettings
@@ -48,16 +47,6 @@ class SubSettings : BaseActivity<ActivitySubSettingsBinding>() {
             else -> null
         }?.apply {
             instance = this
-            binding.root.setOnApplyWindowInsetsListener { _, insets ->
-                val statusBarHeight = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top
-                binding.mainStatus.setPadding(
-                    binding.mainStatus.paddingLeft,
-                    statusBarHeight,
-                    binding.mainStatus.paddingRight,
-                    binding.mainStatus.paddingBottom
-                )
-                insets
-            }
             binding.appListTitle.text = getString(titleID)
             demoImageID?.let { binding.demoImage.setImageDrawable(getDrawable(it)) }
                 ?: run {

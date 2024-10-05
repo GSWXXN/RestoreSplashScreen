@@ -1,6 +1,7 @@
 package com.gswxxn.restoresplashscreen.utils
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Build
 import android.widget.Toast
 import java.io.DataOutputStream
@@ -36,7 +37,7 @@ object CommonUtils {
      * 执行 Shell 命令
      * @param command Shell 命令
      */
-    fun execShell(command : String) {
+    fun execShell(command: String) {
         try {
             val p = Runtime.getRuntime().exec("su")
             val outputStream = p.outputStream
@@ -91,4 +92,9 @@ object CommonUtils {
      * 检查 SDK 版本
      */
     val isAtLeastT = Build.VERSION.SDK_INT >= 33
+
+    /**
+     * 是否处于深色模式
+     */
+    fun isDarkMode(context: Context) = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 }

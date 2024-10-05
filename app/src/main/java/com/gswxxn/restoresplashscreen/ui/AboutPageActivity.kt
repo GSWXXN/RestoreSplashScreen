@@ -6,7 +6,6 @@ import android.net.Uri
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.WindowInsetsCompat
 import cn.fkj233.ui.activity.dp2px
 import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.R
@@ -25,17 +24,6 @@ class AboutPageActivity : BaseActivity<ActivityAboutPageBinding>() {
 
     override fun onCreate() {
         binding.apply {
-            root.setOnApplyWindowInsetsListener { _, insets ->
-                val statusBarHeight = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top
-                mainStatus.setPadding(
-                    mainStatus.paddingLeft,
-                    statusBarHeight,
-                    mainStatus.paddingRight,
-                    mainStatus.paddingBottom
-                )
-                insets
-            }
-
             titleBackIcon.setOnClickListener { finishAfterTransition() }
 
             appIcon.setImageBitmap(

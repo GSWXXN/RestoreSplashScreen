@@ -27,7 +27,6 @@ import android.widget.LinearLayout
 import android.widget.Magnifier
 import android.widget.SeekBar
 import android.widget.TextView
-import androidx.core.view.WindowInsetsCompat
 import androidx.palette.graphics.Palette
 import cn.fkj233.ui.activity.data.LayoutPair
 import cn.fkj233.ui.activity.data.Padding
@@ -194,17 +193,6 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
 
         setRGBColor(currentColor ?: defaultColor)
 
-        binding.root.setOnApplyWindowInsetsListener { _, insets ->
-            val statusBarHeight = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top
-            binding.mainStatus.setPadding(
-                binding.mainStatus.paddingLeft,
-                statusBarHeight,
-                binding.mainStatus.paddingRight,
-                binding.mainStatus.paddingBottom
-            )
-            insets
-        }
-
         // 返回按钮点击事件
         binding.titleBackIcon.setOnClickListener { finishAfterTransition() }
         binding.settingItems.addBlockMIUIView(this) {
@@ -212,10 +200,10 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
                 MIUIDialog(this@ColorSelectActivity) {
                     setTitle(R.string.manual_input)
                     setMessage(R.string.manual_input_hint)
-                    setEditText(Integer.toHexString(color).substring(2).uppercase(Locale.ROOT), "", config =
-                    {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) it.isLocalePreferredLineHeightForMinimumUsed = false
-                    }
+                    setEditText(
+                        Integer.toHexString(color).substring(2).uppercase(Locale.ROOT),
+                        "",
+                        config = { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) it.isLocalePreferredLineHeightForMinimumUsed = false }
                     )
                     this.javaClass.method {
                         emptyParam()

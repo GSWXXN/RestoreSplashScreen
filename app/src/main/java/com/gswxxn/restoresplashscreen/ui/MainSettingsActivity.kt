@@ -142,16 +142,6 @@ class MainSettingsActivity : BaseActivity<ActivityMainSettingsBinding>() {
 
     private fun refreshState() {
         val takeAction = androidRestartNeeded == true || systemUIRestartNeeded
-        binding.root.setOnApplyWindowInsetsListener { _, insets ->
-            val statusBarHeight = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top
-            binding.mainStatus.setPadding(
-                binding.mainStatus.paddingLeft,
-                statusBarHeight,
-                binding.mainStatus.paddingRight,
-                binding.mainStatus.paddingBottom
-            )
-            insets
-        }
         binding.mainStatus.setBackgroundResource(
             when {
                 YukiHookAPI.Status.isXposedModuleActive && takeAction -> R.drawable.bg_yellow_round

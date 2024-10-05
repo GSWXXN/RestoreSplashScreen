@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,15 +8,16 @@
     tools:ignore="ContentDescription, UseCompoundDrawables, UseAppTint">
 
     <LinearLayout
+        android:id="@+id/main_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="0dp"
         android:gravity="center|start"
+        android:orientation="horizontal"
         android:paddingLeft="15dp"
         android:paddingTop="13dp"
         android:paddingRight="15dp"
-        android:paddingBottom="5dp"
-        android:orientation="horizontal">
+        android:paddingBottom="5dp">
 
         <ImageView
             android:id="@+id/title_back_icon"
@@ -31,9 +31,9 @@
             android:tooltipText="返回" />
 
         <TextView
-            android:gravity="center_vertical"
             android:layout_width="280dp"
             android:layout_height="45dp"
+            android:gravity="center_vertical"
             android:singleLine="true"
             android:text="@string/about"
             android:textColor="@color/colorTextGray"
@@ -46,8 +46,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/app_icon"
@@ -58,17 +58,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
+            android:text="@string/app_name"
             android:textColor="@color/colorTextGray"
-            android:textSize="15sp"
-            android:text="@string/app_name" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/version"
             android:textColor="@color/colorTextGray"
-            android:textSize="15sp"
-            android:text="@string/version" />
+            android:textSize="15sp" />
 
     </LinearLayout>
 
@@ -113,9 +113,9 @@
                 <LinearLayout
                     android:id="@+id/developer_milu"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:layout_height="wrap_content"
                     android:gravity="center|start"
                     android:orientation="horizontal">
 
@@ -162,17 +162,17 @@
                 <LinearLayout
                     android:id="@+id/github_repo"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:layout_height="wrap_content"
                     android:gravity="center|start"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="45dp"
                         android:layout_height="45dp"
-                        android:tint="@color/colorTextGray"
-                        android:src="@drawable/img_github" />
+                        android:src="@drawable/img_github"
+                        android:tint="@color/colorTextGray" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -229,9 +229,9 @@
                 <LinearLayout
                     android:id="@+id/iconfont"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal">
 

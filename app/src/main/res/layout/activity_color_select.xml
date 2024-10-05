@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorThemeBackground"
     android:orientation="vertical"
-    tools:ignore="UseCompoundDrawables, ContentDescription, UseAppTint">
+    tools:ignore="ContentDescription, UseCompoundDrawables">
 
     <LinearLayout
         android:id="@+id/main_status"
@@ -62,10 +62,10 @@
 
                 <ImageView
                     android:id="@+id/demo_image"
-                    android:src="@drawable/demo_transparency"
-                    android:layout_gravity="center"
                     android:layout_width="250dp"
-                    android:layout_height="250dp" />
+                    android:layout_height="250dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/demo_transparency" />
 
                 <ImageView
                     android:id="@+id/demo_icon"
@@ -78,31 +78,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="40dp"
-                android:gravity="center"
                 android:fillViewport="true"
+                android:gravity="center"
                 android:requiresFadingEdge="vertical">
+
                 <LinearLayout
                     android:id="@+id/sample_color"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:text="@string/please_select" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:text="@string/please_select" />
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
         </LinearLayout>
 
         <TextView
             android:id="@+id/color_string"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_marginBottom="5dp" />
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView

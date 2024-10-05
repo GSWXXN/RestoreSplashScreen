@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
     autowire(libs.plugins.com.android.application)
     autowire(libs.plugins.org.jetbrains.kotlin.android)
@@ -17,13 +19,7 @@ android {
     }
 
     packaging.resources {
-        excludes += "META-INF/**"
-        excludes += "okhttp3/**"
-        excludes += "kotlin/**"
-        excludes += "org/**"
-        excludes += "kotlin-tooling-metadata.json"
-        excludes += "**.properties"
-        excludes += "**.bin"
+        excludes += "**"
         merges += "META-INF/yukihookapi_init"
     }
 
@@ -56,6 +52,7 @@ android {
         getByName("release") {
             isMinifyEnabled = true
             isShrinkResources = true
+            vcsInfo.include = false
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }

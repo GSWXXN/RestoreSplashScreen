@@ -6,6 +6,7 @@ import android.net.Uri
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.WindowInsetsCompat
 import cn.fkj233.ui.activity.dp2px
 import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.R
@@ -23,18 +24,30 @@ import com.highcapable.yukihookapi.hook.factory.prefs
 class AboutPageActivity : BaseActivity<ActivityAboutPageBinding>() {
 
     override fun onCreate() {
-        window.statusBarColor = getColor(R.color.colorThemeBackground)
         binding.apply {
+            root.setOnApplyWindowInsetsListener { _, insets ->
+                val statusBarHeight = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top
+                mainStatus.setPadding(
+                    mainStatus.paddingLeft,
+                    statusBarHeight,
+                    mainStatus.paddingRight,
+                    mainStatus.paddingBottom
+                )
+                insets
+            }
 
             titleBackIcon.setOnClickListener { finishAfterTransition() }
 
-            appIcon.setImageBitmap(roundBitmapByShader(
-                getDrawable(R.mipmap.ic_launcher)?.let {
-                    drawable2Bitmap(
-                        it,
-                        it.intrinsicHeight * 2
-                    )
-                }, RoundDegree.RoundCorner))
+            appIcon.setImageBitmap(
+                roundBitmapByShader(
+                    getDrawable(R.mipmap.ic_launcher)?.let {
+                        drawable2Bitmap(
+                            it,
+                            it.intrinsicHeight * 2
+                        )
+                    }, RoundDegree.RoundCorner
+                )
+            )
 
             var count = 0
             var lastClickTime: Long = 0
@@ -49,7 +62,7 @@ class AboutPageActivity : BaseActivity<ActivityAboutPageBinding>() {
                 if (count != 5) return@setOnClickListener
                 count = 0
 
-                if (!prefs().get(DataConst.ENABLE_DEV_SETTINGS) ) {
+                if (!prefs().get(DataConst.ENABLE_DEV_SETTINGS)) {
                     prefs().edit { put(DataConst.ENABLE_DEV_SETTINGS, true) }
                     Toast.makeText(
                         this@AboutPageActivity,
@@ -65,14 +78,15 @@ class AboutPageActivity : BaseActivity<ActivityAboutPageBinding>() {
                 }
             }
 
-            miluIcon.setImageBitmap(roundBitmapByShader(
-                getDrawable(R.mipmap.img_developer)?.let {
-                    drawable2Bitmap(
-                        it,
-                        it.intrinsicHeight
-                    )
-                }, RoundDegree.Circle
-            )
+            miluIcon.setImageBitmap(
+                roundBitmapByShader(
+                    getDrawable(R.mipmap.img_developer)?.let {
+                        drawable2Bitmap(
+                            it,
+                            it.intrinsicHeight
+                        )
+                    }, RoundDegree.Circle
+                )
             )
 
             version.text = getString(R.string.version, BuildConfig.VERSION_NAME)

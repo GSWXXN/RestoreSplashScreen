@@ -5,6 +5,7 @@ import android.net.Uri
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.LinearLayout
+import androidx.core.view.WindowInsetsCompat
 import cn.fkj233.ui.activity.dp2px
 import cn.fkj233.ui.activity.view.ImageTextV
 import cn.fkj233.ui.activity.view.LineV
@@ -38,6 +39,7 @@ class MainSettingsActivity : BaseActivity<ActivityMainSettingsBinding>() {
                 return isReady
             }
         })
+
         Thread.sleep(400)
         isReady = true
 
@@ -140,6 +142,16 @@ class MainSettingsActivity : BaseActivity<ActivityMainSettingsBinding>() {
 
     private fun refreshState() {
         val takeAction = androidRestartNeeded == true || systemUIRestartNeeded
+        binding.root.setOnApplyWindowInsetsListener { _, insets ->
+            val statusBarHeight = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top
+            binding.mainStatus.setPadding(
+                binding.mainStatus.paddingLeft,
+                statusBarHeight,
+                binding.mainStatus.paddingRight,
+                binding.mainStatus.paddingBottom
+            )
+            insets
+        }
         binding.mainStatus.setBackgroundResource(
             when {
                 YukiHookAPI.Status.isXposedModuleActive && takeAction -> R.drawable.bg_yellow_round
@@ -157,22 +169,15 @@ class MainSettingsActivity : BaseActivity<ActivityMainSettingsBinding>() {
             when {
                 YukiHookAPI.Status.isXposedModuleActive && takeAction ->
                     getString(R.string.module_is_updated, getString(if (androidRestartNeeded == true) R.string.phone else R.string.system_ui))
+
                 YukiHookAPI.Status.isXposedModuleActive -> getString(R.string.module_is_active)
                 else -> getString(R.string.module_is_not_active)
             }
         showView(YukiHookAPI.Status.isXposedModuleActive, binding.mainTextApiWay)
-        binding.mainTextApiWay.text =
-            getString(R.string.xposed_framework_version,
-                Executor.name,
-                Executor.apiLevel
-            )
-
-        window.statusBarColor = getColor(
-            when {
-                YukiHookAPI.Status.isXposedModuleActive && takeAction -> R.color.yellow
-                YukiHookAPI.Status.isXposedModuleActive -> R.color.green
-                else -> R.color.gray
-            }
+        binding.mainTextApiWay.text = getString(
+            R.string.xposed_framework_version,
+            Executor.name,
+            Executor.apiLevel
         )
     }
 

@@ -48,7 +48,7 @@ class NewMIUIDialog(context: Context, val build: NewMIUIDialog.() -> Unit) : Dia
     private val title by lazy {
         TextView(context).also { textView ->
             textView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).also {
-                it.setMargins(0, dp2px(context, 20f), 0, dp2px(context, 25f))
+                it.setMargins(0, dp2px(context, 20f), 0, dp2px(context, 20f))
             }
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19f)
             textView.setTextColor(context.getColor(R.color.whiteText))
@@ -60,7 +60,7 @@ class NewMIUIDialog(context: Context, val build: NewMIUIDialog.() -> Unit) : Dia
     private val message by lazy {
         TextView(context).also { textView ->
             textView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).also {
-                it.setMargins(dp2px(context, 25f), 0, dp2px(context, 25f), dp2px(context, 5f))
+                it.setMargins(dp2px(context, 20f), 0, dp2px(context, 20f), 0)
             }
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17f)
             textView.setTextColor(context.getColor(R.color.author_tips))
@@ -73,7 +73,7 @@ class NewMIUIDialog(context: Context, val build: NewMIUIDialog.() -> Unit) : Dia
     private val editText by lazy {
         EditText(context).also { editText ->
             editText.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp2px(context, 55f)).also {
-                it.setMargins(dp2px(context, 25f), dp2px(context, 10f), dp2px(context, 25f), 0)
+                it.setMargins(dp2px(context, 20f), 0, dp2px(context, 20f), 0)
             }
             editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25f)
             editText.setTextColor(context.getColor(R.color.whiteText))
@@ -143,7 +143,7 @@ class NewMIUIDialog(context: Context, val build: NewMIUIDialog.() -> Unit) : Dia
                     it.gravity = Gravity.CENTER_HORIZONTAL
                 }
                 linearLayout.orientation = LinearLayout.VERTICAL
-                linearLayout.setPadding(0, dp2px(context, 16f), 0, dp2px(context, 35f))
+                linearLayout.setPadding(0, dp2px(context, 10f), 0, dp2px(context, 20f))
                 bView = linearLayout
             })
         })
@@ -152,7 +152,7 @@ class NewMIUIDialog(context: Context, val build: NewMIUIDialog.() -> Unit) : Dia
     fun Button(text: CharSequence?, enable: Boolean = true, cancelStyle: Boolean = false, callBacks: (View) -> Unit) {
         bView.addView(Button(context).also { buttonView ->
             buttonView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp2px(context, 50f), 1f).also {
-                it.setMargins(dp2px(context, 35f), dp2px(context, 10f), dp2px(context, 35f), 0)
+                it.setMargins(dp2px(context, 20f), dp2px(context, 10f), dp2px(context, 20f), 0)
                 it.gravity = Gravity.CENTER
             }
             buttonView.setTextColor(context.getColor(if (cancelStyle) R.color.whiteText else R.color.white))
@@ -171,7 +171,7 @@ class NewMIUIDialog(context: Context, val build: NewMIUIDialog.() -> Unit) : Dia
         window?.setGravity(Gravity.BOTTOM)
         setContentView(root)
         window?.setBackgroundDrawable(GradientDrawable().apply {
-            cornerRadius = dp2px(context, 25f).toFloat()
+            cornerRadius = dp2px(context, 30f).toFloat()
             setColor(context.getColor(R.color.dialog_background))
         })
     }
@@ -194,7 +194,7 @@ class NewMIUIDialog(context: Context, val build: NewMIUIDialog.() -> Unit) : Dia
         super.show()
         val layoutParams = window!!.attributes
         layoutParams.dimAmount = 0.3F
-        layoutParams.width = getDisplay(context).width - dp2px(context, 50f)
+        layoutParams.width = getDisplay(context).width - dp2px(context, 25f)
         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
         layoutParams.verticalMargin = 0.02F
         window!!.attributes = layoutParams

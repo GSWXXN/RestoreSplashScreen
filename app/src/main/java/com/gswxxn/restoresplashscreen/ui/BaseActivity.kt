@@ -3,9 +3,8 @@ package com.gswxxn.restoresplashscreen.ui
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
-import android.view.WindowInsetsController
+import androidx.core.view.WindowCompat
 import androidx.viewbinding.ViewBinding
-import com.gswxxn.restoresplashscreen.R
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.type.android.LayoutInflaterClass
 import java.lang.reflect.ParameterizedType
@@ -30,15 +29,10 @@ abstract class BaseActivity<VB : ViewBinding> : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        actionBar?.hide()
-        window.apply {
-            statusBarColor = getColor(R.color.colorDemoBackground)
-            navigationBarColor = getColor(R.color.colorThemeBackground)
-            setDecorFitsSystemWindows(true)
-            insetsController?.setSystemBarsAppearance(
-                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
-                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
-            )
+
+        WindowCompat.getInsetsController(window, window.decorView).apply {
+            isAppearanceLightStatusBars = true
+            isAppearanceLightNavigationBars = true
         }
 
         // 通过反射绑定布局

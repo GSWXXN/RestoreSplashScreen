@@ -178,10 +178,9 @@ object IconHookHandler : BaseHookHandler() {
                 val drawable = args.first { it is Drawable } as Drawable
                 if (drawable !is AdaptiveIconDrawable) {
                     printLog("normalizeAndWrapToAdaptiveIcon(): avoid shrink icon by system ui")
-                    val mWrapperBackgroundColor = this.instance.current().field { name = "mWrapperBackgroundColor" }.int()
                     val scaleDrawable = ScaleDrawable(drawable, Gravity.CENTER, 0.296f, 0.296f) // 0.296f 刚好看不到黑边
                     scaleDrawable.level = 1
-                    val adaptiveIconDrawable = AdaptiveIconDrawable(ColorDrawable(mWrapperBackgroundColor), scaleDrawable)
+                    val adaptiveIconDrawable = AdaptiveIconDrawable(ColorDrawable(Color.TRANSPARENT), scaleDrawable)
                     result = adaptiveIconDrawable
                 }
             } else {

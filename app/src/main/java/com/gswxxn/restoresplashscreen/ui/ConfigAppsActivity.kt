@@ -48,13 +48,12 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineS
 
     lateinit var appInfo: AppInfoHelper
     lateinit var configMap: MutableMap<String, String>
-    lateinit var checkedList : MutableSet<String>
+    lateinit var checkedList: MutableSet<String>
     lateinit var appInfoFilter: List<AppInfoHelper.MyAppInfo>
     lateinit var instance: IConfigApps
     var onRefreshList: (() -> Unit)? = null
 
     override fun onCreate() {
-        window.statusBarColor = getColor(R.color.colorThemeBackground)
         isDarkMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 
         instance = when (intent.getIntExtra(ConstValue.EXTRA_MESSAGE, 0)) {
@@ -66,11 +65,13 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineS
             ConstValue.MIN_DURATION -> MinDuration
             ConstValue.BACKGROUND_INDIVIDUALLY_CONFIG -> BGColorIndividualConfig
             ConstValue.HIDE_SPLASH_SCREEN_ICON -> HideSplashScreenIcon
-            else -> { object : IConfigApps {
-                override val titleID: Int get() = R.string.unavailable
-                override val submitSet: Boolean
-                    get() = false
-            } }
+            else -> {
+                object : IConfigApps {
+                    override val titleID: Int get() = R.string.unavailable
+                    override val submitSet: Boolean
+                        get() = false
+                }
+            }
         }
 
         // 已勾选的应用包名 Set
@@ -80,7 +81,7 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineS
         // AppInfoHelper 实例
         appInfo = AppInfoHelper(this, checkedList, configMap)
         // 在列表中的条目
-        appInfoFilter =  listOf()
+        appInfoFilter = listOf()
 
         fun searchEvent() {
             val content = binding.searchEditText.text.toString()
@@ -103,14 +104,15 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineS
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     searchEvent()
                 }
+
                 override fun afterTextChanged(s: Editable?) {}
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             })
             searchEvent()
         }
 
-        //返回按钮点击事件
-        binding.titleBackIcon.setOnClickListener { onBackPressed() }
+        // 返回按钮点击事件
+        binding.titleBackIcon.setOnClickListener { finishAfterTransition() }
 
         // 标题名称
         binding.appListTitle.text = getString(instance.titleID)
@@ -133,7 +135,7 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineS
                     showView(false, binding.appListTitle, binding.configDescription, binding.configTitleFilter, binding.overallSettings)
                     // 弹出软键盘
                     imm.showSoftInput(binding.searchEditText, InputMethodManager.SHOW_FORCED)
-                }else {
+                } else {
                     // 隐藏软键盘
                     imm.hideSoftInputFromWindow(this.windowToken, 0)
                 }
@@ -157,9 +159,9 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineS
                     val holder: AdapterConfigBinding
                     if (convertView == null) {
                         holder = AdapterConfigBinding.inflate(LayoutInflater.from(context))
-                        cView =holder.root
+                        cView = holder.root
                         cView.tag = holder
-                    }else {
+                    } else {
                         holder = cView?.tag as AdapterConfigBinding
                     }
                     getItem(position).also { item ->
@@ -178,7 +180,7 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineS
                     }
                     return cView
                 }
-            }.apply{ onRefreshList = { notifyDataSetChanged() } }
+            }.apply { onRefreshList = { notifyDataSetChanged() } }
         }
 
         // 保存按钮点击事件
@@ -197,11 +199,12 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineS
         binding.moreOptions.apply(instance.moreOptions(this))
     }
 
-    override fun onBackPressed() {
+    override fun finishAfterTransition() {
+        super.finishAfterTransition()
         fun isNeedSavePrompt() = (instance.submitSet && prefs().get(instance.checkedListPrefs) notEqualsTo checkedList) ||
                 (instance.submitMap && prefs().get(instance.configMapPrefs) notEqualsTo configMap.toSet())
 
-        if (binding.searchEditText.isFocused){
+        if (binding.searchEditText.isFocused) {
             binding.searchEditText.apply {
                 clearFocus()
                 visibility = View.GONE

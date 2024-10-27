@@ -14,6 +14,7 @@ import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.databinding.AdapterConfigBinding
 import com.gswxxn.restoresplashscreen.ui.ColorSelectActivity
 import com.gswxxn.restoresplashscreen.ui.ConfigAppsActivity
+import com.gswxxn.restoresplashscreen.ui.ConfigAppsActivity.Companion.isDarkMode
 import com.gswxxn.restoresplashscreen.ui.`interface`.IConfigApps
 import com.gswxxn.restoresplashscreen.utils.AppInfoHelper
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toastL
@@ -26,7 +27,7 @@ object BGColorIndividualConfig : IConfigApps {
     override val subSettingHint: Int
         get() = R.string.custom_bg_color_sub_setting_hint
     override val configMapPrefs: PrefsData<MutableSet<String>>
-        get() = if (ConfigAppsActivity.isDarkMode) DataConst.INDIVIDUAL_BG_COLOR_APP_MAP_DARK else DataConst.INDIVIDUAL_BG_COLOR_APP_MAP
+        get() = if (isDarkMode) DataConst.INDIVIDUAL_BG_COLOR_APP_MAP_DARK else DataConst.INDIVIDUAL_BG_COLOR_APP_MAP
     override val submitSet: Boolean
         get() = false
     override val submitMap: Boolean

@@ -3,15 +3,30 @@ package com.gswxxn.restoresplashscreen.ui
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.*
-import android.graphics.drawable.*
+import android.graphics.Bitmap
+import android.graphics.BitmapShader
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Shader
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ClipDrawable
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.LayerDrawable
+import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.Magnifier
+import android.widget.SeekBar
+import android.widget.TextView
 import androidx.palette.graphics.Palette
 import cn.fkj233.ui.activity.data.LayoutPair
 import cn.fkj233.ui.activity.data.Padding
@@ -31,7 +46,7 @@ import com.gswxxn.restoresplashscreen.utils.GraphicUtils.getBgColor
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.factory.prefs
-import java.util.*
+import java.util.Locale
 import java.util.regex.Pattern
 
 /**
@@ -40,9 +55,11 @@ import java.util.regex.Pattern
 class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
     companion object {
         lateinit var huePanel: Drawable
+
         /** 判断 [huePanel] 是否被初始化 */
         fun isHuePanelInitialized() = ::huePanel.isInitialized
     }
+
     private var currentColor: Int? = null
     private var isSettingOverallBgColor = false
     private lateinit var pkgName: String
@@ -77,13 +94,14 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
             binding.colorString.text = "#${Integer.toHexString(value).substring(2).uppercase(Locale.ROOT)}"
             binding.demoImage.background = ColorDrawable(value)
 
-            statusR.text = "${ Color.red(color) } / 255"
-            statusG.text = "${ Color.green(color) } / 255"
-            statusB.text = "${ Color.blue(color) } / 255"
-            statusH.text = "${ hsvColor[0].toInt() } / 360"
+            statusR.text = "${Color.red(color)} / 255"
+            statusG.text = "${Color.green(color)} / 255"
+            statusB.text = "${Color.blue(color)} / 255"
+            statusH.text = "${hsvColor[0].toInt()} / 360"
             statusS.text = "%.2f / 100".format(hsvColor[1] * 100)
             statusV.text = "%.2f / 100".format(hsvColor[2] * 100)
         }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate() {
         isDarkMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
@@ -93,23 +111,31 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
         if (intent.getBooleanExtra(ConstValue.EXTRA_MESSAGE_OVERALL_BG_COLOR, false)) {
             isSettingOverallBgColor = true
             pkgName = packageName
-            currentColor = Color.parseColor( prefs().get(
-                if (isDarkMode)
-                    DataConst.OVERALL_BG_COLOR_NIGHT
-                else
-                    DataConst.OVERALL_BG_COLOR
-            ))
+            currentColor = Color.parseColor(
+                prefs().get(
+                    if (isDarkMode)
+                        DataConst.OVERALL_BG_COLOR_NIGHT
+                    else
+                        DataConst.OVERALL_BG_COLOR
+                )
+            )
         } else {
             pkgName = intent.getStringExtra(ConstValue.EXTRA_MESSAGE_PACKAGE_NAME)!!
             currentColor = intent.getStringExtra(ConstValue.EXTRA_MESSAGE_CURRENT_COLOR)?.let { Color.parseColor(it) }
         }
 
-        seekBarR = createSeekBar(255, 0xFFF36060.toInt()) { Color.valueOf(color).apply { setRGBColor(Color.valueOf(((it - 0.5)/255).toFloat(), green(), blue()).toArgb()) } }
-        seekBarG = createSeekBar(255, 0xFF5FF25F.toInt()) { Color.valueOf(color).apply { setRGBColor(Color.valueOf(red(), ((it - 0.5)/255).toFloat(), blue()).toArgb()) } }
-        seekBarB = createSeekBar(255, 0xFF5F5FF3.toInt()) { Color.valueOf(color).apply { setRGBColor(Color.valueOf(red(), green(),((it - 0.5)/255).toFloat()).toArgb()) } }
+        seekBarR = createSeekBar(255, 0xFFF36060.toInt()) {
+            Color.valueOf(color).apply { setRGBColor(Color.valueOf(((it - 0.5) / 255).toFloat(), green(), blue()).toArgb()) }
+        }
+        seekBarG = createSeekBar(255, 0xFF5FF25F.toInt()) {
+            Color.valueOf(color).apply { setRGBColor(Color.valueOf(red(), ((it - 0.5) / 255).toFloat(), blue()).toArgb()) }
+        }
+        seekBarB = createSeekBar(255, 0xFF5F5FF3.toInt()) {
+            Color.valueOf(color).apply { setRGBColor(Color.valueOf(red(), green(), ((it - 0.5) / 255).toFloat()).toArgb()) }
+        }
         seekBarH = createSeekBar(360, 0) { setHsvColor(0, it.toFloat()) }
         seekBarS = createSeekBar(10000) { setHsvColor(1, it.toFloat() / 10000) }
-        seekBarV = createSeekBar(10000){ setHsvColor(2, it.toFloat() / 10000) }
+        seekBarV = createSeekBar(10000) { setHsvColor(2, it.toFloat() / 10000) }
 
         fun textV() = TextV("", textSize = 13.75f, colorId = cn.fkj233.ui.R.color.author_tips, padding = Padding(0, 0, 0, 0)).create(this, null) as TextView
         statusR = textV()
@@ -123,11 +149,11 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
         val icon = (
                 IconPackManager(this, prefs().get(DataConst.ICON_PACK_PACKAGE_NAME))
                     .getIconByPackageName(pkgName)                      // 优先获取图标包中的图标
-                    ?:packageManager.getApplicationIcon(pkgName)        // 使用默认方式获取图标
+                    ?: packageManager.getApplicationIcon(pkgName)       // 使用默认方式获取图标
                 ).let {
-                    binding.demoIcon.setImageDrawable(it)
-                    drawable2Bitmap(it, 48)
-                }
+                binding.demoIcon.setImageDrawable(it)
+                drawable2Bitmap(it, 48)
+            }
 
         val magnifierSize = dp2px(this@ColorSelectActivity, 100f)
         val magnifier = Magnifier.Builder(binding.demoLayout)
@@ -151,6 +177,7 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
                         setRGBColor(icon.getPixel(iconX.toInt(), iconY.toInt()))
                     }
                 }
+
                 MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> {
                     magnifier.dismiss()
                 }
@@ -166,26 +193,32 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
 
         setRGBColor(currentColor ?: defaultColor)
 
-        //返回按钮点击事件
-        binding.titleBackIcon.setOnClickListener { onBackPressed() }
+        // 返回按钮点击事件
+        binding.titleBackIcon.setOnClickListener { finishAfterTransition() }
         binding.settingItems.addBlockMIUIView(this) {
             TextSummaryArrow(TextSummaryV(textId = R.string.manual_input) {
                 MIUIDialog(this@ColorSelectActivity) {
                     setTitle(R.string.manual_input)
                     setMessage(R.string.manual_input_hint)
-                    setEditText(Integer.toHexString(color).substring(2).uppercase(Locale.ROOT), "")
+                    setEditText(
+                        Integer.toHexString(color).substring(2).uppercase(Locale.ROOT),
+                        "",
+                        config = { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) it.isLocalePreferredLineHeightForMinimumUsed = false }
+                    )
                     this.javaClass.method {
                         emptyParam()
                         returnType = EditText::class.java
                     }.get(this).invoke<EditText>()?.apply {
-                        addTextChangedListener(object : TextWatcher{
+                        addTextChangedListener(object : TextWatcher {
                             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                             override fun afterTextChanged(s: Editable?) {}
                             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                                 val checkedText = Pattern.compile("[^a-fA-F0-9]").matcher(getEditText())
                                     .replaceAll("").trim()
                                     .run { if (this.length > 6) substring(0, 6) else this }
-                                if (checkedText != getEditText()) { setText(checkedText); setSelection(checkedText.length) }
+                                if (checkedText != getEditText()) {
+                                    setText(checkedText); setSelection(checkedText.length)
+                                }
                             }
                         })
                     }
@@ -194,7 +227,7 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
                             setRGBColor(Color.parseColor("#${getEditText()}"))
                             selectedColor = true
                             dismiss()
-                        }catch (_: IllegalArgumentException){
+                        } catch (_: IllegalArgumentException) {
                             toast(getString(R.string.color_input_invalid))
                         }
                     }
@@ -218,8 +251,8 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
             CustomView(createTextWithStatusV(R.string.value, statusV))
             CustomView(seekBarV)
             Line()
-            Text(textId = R.string.undo_modification, colorInt = 0xFF3A7FF7.toInt()) { setRGBColor(currentColor ?: defaultColor); onBackPressed() }
-            Text(textId = R.string.reset, colorInt = 0xFFD73E37.toInt()) { setRGBColor(defaultColor); resetColor = true; onBackPressed()}
+            Text(textId = R.string.undo_modification, colorInt = 0xFF3A7FF7.toInt()) { setRGBColor(currentColor ?: defaultColor); finishAfterTransition() }
+            Text(textId = R.string.reset, colorInt = 0xFFD73E37.toInt()) { setRGBColor(defaultColor); resetColor = true; finishAfterTransition() }
         }
 
         binding.title.text = if (isSettingOverallBgColor) getString(R.string.set_custom_bg_color)
@@ -243,9 +276,10 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
                         background = GradientDrawable().apply { setColor(colors[i]); cornerRadius = dp2px(this@ColorSelectActivity, 15f).toFloat() }
                         layoutParams = LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT,
-                            dp2px(this@ColorSelectActivity, 30f)).apply {
-                            topMargin =  dp2px(this@ColorSelectActivity, 10f)
-                            }
+                            dp2px(this@ColorSelectActivity, 30f)
+                        ).apply {
+                            topMargin = dp2px(this@ColorSelectActivity, 10f)
+                        }
                         setOnClickListener { setRGBColor(colors[i]); selectedColor = true }
                     }
                 )
@@ -288,7 +322,8 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
                 0f,
                 i.toFloat(),
                 bitmap.height.toFloat(),
-                paint)
+                paint
+            )
         }
 
         val roundCornerBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
@@ -304,7 +339,7 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
                 shader = BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
             }
         )
-        huePanel =  BitmapDrawable(resources, roundCornerBitmap)
+        huePanel = BitmapDrawable(resources, roundCornerBitmap)
     }
 
     private fun createSeekBar(max: Int, progressColor: Int = 0xFF0d7AEC.toInt(), callBacks: ((value: Int) -> Unit)?) =
@@ -330,6 +365,7 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
                 override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
                     if (p2) callBacks?.let { it(p1); selectedColor = true }
                 }
+
                 override fun onStartTrackingTouch(p0: SeekBar?) {}
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {}
             })
@@ -349,24 +385,26 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
             ),
             LayoutPair(
                 status,
-                LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).also { it.gravity = Gravity.CENTER_VERTICAL }
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    .also { it.gravity = Gravity.CENTER_VERTICAL }
             )
         ), layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         ).also {
-            it.setMargins(0, dp2px(this, 17.75f),0, dp2px(this, 10f))
+            it.setMargins(0, dp2px(this, 17.75f), 0, dp2px(this, 10f))
         }).create(this, null)
     }
 
-    override fun onBackPressed() {
+    override fun finishAfterTransition() {
+        super.finishAfterTransition()
         if (!isSettingOverallBgColor)
             setResult(
                 when {
                     resetColor -> ConstValue.DEFAULT_COLOR
                     color == currentColor || !selectedColor -> ConstValue.UNDO_MODIFY
                     else -> ConstValue.SELECTED_COLOR
-                     },
+                },
                 Intent().apply {
                     putExtra(ConstValue.EXTRA_MESSAGE_SELECTED_COLOR, binding.colorString.text)
                     putExtra(ConstValue.EXTRA_MESSAGE_PACKAGE_NAME, pkgName)

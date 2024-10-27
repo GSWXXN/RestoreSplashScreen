@@ -2,7 +2,7 @@ package com.gswxxn.restoresplashscreen.ui
 
 import android.content.Intent
 import android.view.View
-import com.gswxxn.restoresplashscreen.R
+import androidx.core.view.WindowInsetsCompat
 import com.gswxxn.restoresplashscreen.data.ConstValue
 import com.gswxxn.restoresplashscreen.databinding.ActivitySubSettingsBinding
 import com.gswxxn.restoresplashscreen.ui.`interface`.ISubSettings
@@ -11,9 +11,9 @@ import com.gswxxn.restoresplashscreen.ui.subsettings.BasicSettings
 import com.gswxxn.restoresplashscreen.ui.subsettings.BottomSettings
 import com.gswxxn.restoresplashscreen.ui.subsettings.CustomScopeSettings
 import com.gswxxn.restoresplashscreen.ui.subsettings.DevSettings
+import com.gswxxn.restoresplashscreen.ui.subsettings.DisplaySettings
 import com.gswxxn.restoresplashscreen.ui.subsettings.HookInfo
 import com.gswxxn.restoresplashscreen.ui.subsettings.IconSettings
-import com.gswxxn.restoresplashscreen.ui.subsettings.DisplaySettings
 import com.gswxxn.restoresplashscreen.utils.BlockMIUIHelper.addBlockMIUIView
 
 /** 子界面 */
@@ -51,8 +51,6 @@ class SubSettings : BaseActivity<ActivitySubSettingsBinding>() {
             demoImageID?.let { binding.demoImage.setImageDrawable(getDrawable(it)) }
                 ?: run {
                     binding.demoImageLayout.visibility = View.GONE
-                    binding.mainStatus.background = null
-                    window.statusBarColor = getColor(R.color.colorThemeBackground)
                 }
             binding.settingItems.addBlockMIUIView(this@SubSettings, itemData = create(this@SubSettings, binding))
         }

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorThemeBackground"
     android:orientation="vertical"
-    tools:ignore="UseCompoundDrawables, ContentDescription, UseAppTint">
+    tools:ignore="ContentDescription, UseCompoundDrawables">
 
     <LinearLayout
         android:id="@+id/main_status"
@@ -13,16 +13,12 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_demo_round"
         android:elevation="0dp"
-        android:orientation="vertical"
-        android:paddingLeft="15dp"
-        android:paddingTop="13dp"
-        android:paddingRight="15dp"
-        android:paddingBottom="5dp">
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="0dp"
             android:gravity="center|start"
             android:orientation="horizontal">
 
@@ -31,10 +27,10 @@
                 style="?android:attr/selectableItemBackgroundBorderless"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="15dp"
+                android:layout_marginHorizontal="10dp"
                 android:src="@drawable/abc_ic_ab_back_material"
-                android:tint="@color/colorTextGray" />
+                android:tint="@color/colorTextGray"
+                android:tooltipText="返回" />
 
             <TextView
                 android:id="@+id/title"
@@ -47,6 +43,7 @@
                 android:textColor="@color/colorTextGray"
                 android:textSize="24sp"
                 android:textStyle="bold" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -62,10 +59,10 @@
 
                 <ImageView
                     android:id="@+id/demo_image"
-                    android:src="@drawable/demo_transparency"
-                    android:layout_gravity="center"
                     android:layout_width="250dp"
-                    android:layout_height="250dp" />
+                    android:layout_height="250dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/demo_transparency" />
 
                 <ImageView
                     android:id="@+id/demo_icon"
@@ -78,31 +75,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="40dp"
-                android:gravity="center"
                 android:fillViewport="true"
+                android:gravity="center"
                 android:requiresFadingEdge="vertical">
+
                 <LinearLayout
                     android:id="@+id/sample_color"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:text="@string/please_select" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:text="@string/please_select"
+                        android:textColor="@color/colorTextGray" />
                 </LinearLayout>
+
             </androidx.core.widget.NestedScrollView>
+
         </LinearLayout>
 
         <TextView
             android:id="@+id/color_string"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:textColor="@color/colorTextGray" />
+
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -121,5 +125,7 @@
             android:layout_marginBottom="5dp"
             android:animateLayoutChanges="true"
             android:orientation="vertical" />
+
     </androidx.core.widget.NestedScrollView>
+
 </LinearLayout>

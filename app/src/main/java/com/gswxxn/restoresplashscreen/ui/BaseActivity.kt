@@ -1,11 +1,12 @@
 package com.gswxxn.restoresplashscreen.ui
 
 import android.app.Activity
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.view.WindowInsetsController
+import androidx.core.view.WindowCompat
 import androidx.viewbinding.ViewBinding
-import com.gswxxn.restoresplashscreen.R
+import com.gswxxn.restoresplashscreen.utils.CommonUtils.isDarkMode
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.type.android.LayoutInflaterClass
 import java.lang.reflect.ParameterizedType
@@ -30,15 +31,15 @@ abstract class BaseActivity<VB : ViewBinding> : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        actionBar?.hide()
-        window.apply {
-            statusBarColor = getColor(R.color.colorDemoBackground)
-            navigationBarColor = getColor(R.color.colorThemeBackground)
-            setDecorFitsSystemWindows(true)
-            insetsController?.setSystemBarsAppearance(
-                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
-                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
-            )
+
+        // 安卓 15 以下仍需要
+        window.statusBarColor = Color.TRANSPARENT
+        window.navigationBarColor = Color.TRANSPARENT
+        window.isNavigationBarContrastEnforced = false
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        WindowCompat.getInsetsController(window, window.decorView).apply {
+            isAppearanceLightStatusBars = !isDarkMode(this@BaseActivity)
+            isAppearanceLightNavigationBars = !isDarkMode(this@BaseActivity)
         }
 
         // 通过反射绑定布局

@@ -1,6 +1,7 @@
 package com.gswxxn.restoresplashscreen.ui.configapps
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.text.method.DigitsKeyListener
 import android.view.View
 import android.widget.ImageView
@@ -8,6 +9,7 @@ import android.widget.TextView
 import cn.fkj233.ui.activity.view.MIUIEditText
 import cn.fkj233.ui.activity.view.TextSummaryV
 import cn.fkj233.ui.dialog.MIUIDialog
+import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.databinding.AdapterConfigBinding
@@ -42,11 +44,10 @@ object MinDuration : IConfigApps {
             MIUIDialog(context) {
                 setTitle(R.string.set_default_min_duration)
                 setMessage(R.string.set_min_duration_unit)
-                setEditText(context.prefs().get(DataConst.MIN_DURATION).toString(), "")
-                current().method {
-                    emptyParam()
-                    returnType = MIUIEditText::class.java
-                }.invoke<MIUIEditText>()?.keyListener = DigitsKeyListener.getInstance("1234567890")
+                setEditText(context.prefs().get(DataConst.MIN_DURATION).toString(), "", config = {
+                    it.keyListener = DigitsKeyListener.getInstance("1234567890")
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) it.isLocalePreferredLineHeightForMinimumUsed = false
+                })
                 setRButton(R.string.button_okay) {
                     context.prefs().edit {
                         if (getEditText().isNotBlank())
@@ -83,11 +84,10 @@ object MinDuration : IConfigApps {
         MIUIDialog(context) {
             setTitle(R.string.set_min_duration)
             setMessage(R.string.set_min_duration_unit)
-            setEditText(item.config ?: "", "")
-            current().method {
-                emptyParam()
-                returnType = MIUIEditText::class.java
-            }.invoke<MIUIEditText>()?.keyListener = DigitsKeyListener.getInstance("1234567890")
+            setEditText(item.config ?: "", "", config = {
+                it.keyListener = DigitsKeyListener.getInstance("1234567890")
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) it.isLocalePreferredLineHeightForMinimumUsed = false
+            })
             setRButton(R.string.button_okay) {
                 if (getEditText().isEmpty() || getEditText() == "0") {
                     context.appInfo.setConfig(item, null)

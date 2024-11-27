@@ -5,6 +5,7 @@ import com.highcapable.yukihookapi.hook.log.YLog
 import com.highcapable.yukihookapi.hook.param.HookParam
 import java.io.Serializable
 import java.lang.reflect.Member
+import java.lang.reflect.Method
 
 /**
  * 用于进行Hook操作的HookManager类。
@@ -51,6 +52,12 @@ class HookManager(val createCondition: Boolean = true, block: () -> Member?): Se
         }
     }
 
+    /**
+     * 获取方法的返回类型（如果 `member` 是方法）
+     *
+     * @return 如果 `member` 是方法，则返回该方法的返回类型；否则返回 `null`。
+     */
+    val returnType get() = (member as? Method)?.returnType
 
     /**
      * 添加一个在Hook前执行的回调函数。

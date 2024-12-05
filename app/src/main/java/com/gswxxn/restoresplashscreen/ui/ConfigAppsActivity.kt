@@ -200,7 +200,6 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineS
     }
 
     override fun finishAfterTransition() {
-        super.finishAfterTransition()
         fun isNeedSavePrompt() = (instance.submitSet && prefs().get(instance.checkedListPrefs) notEqualsTo checkedList) ||
                 (instance.submitMap && prefs().get(instance.configMapPrefs) notEqualsTo configMap.toSet())
 

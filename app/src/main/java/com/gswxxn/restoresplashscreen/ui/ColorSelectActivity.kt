@@ -397,7 +397,6 @@ class ColorSelectActivity : BaseActivity<ActivityColorSelectBinding>() {
     }
 
     override fun finishAfterTransition() {
-        super.finishAfterTransition()
         if (!isSettingOverallBgColor)
             setResult(
                 when {

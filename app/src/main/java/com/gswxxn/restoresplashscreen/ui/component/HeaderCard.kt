@@ -28,7 +28,8 @@ import kotlin.math.max
 @Composable
 fun HeaderCard(
     imageResID: Int,
-    title: String
+    title: String,
+    maxLines: Int = 1
 ) {
     val offset: Offset
     val blurRadius: Float
@@ -70,12 +71,13 @@ fun HeaderCard(
                     textAlign = TextAlign.Center,
                     style = textStyle,
                     onTextLayout = { textLayoutResult ->
-                        if (textLayoutResult.didOverflowWidth && textLayoutResult.lineCount == 1) {
+                        if (textLayoutResult.didOverflowWidth || textLayoutResult.didOverflowHeight) {
                             textStyle = textStyle.copy(fontSize = textStyle.fontSize * 0.9)
                         } else {
                             readyToDraw = true
                         }
-                    }
+                    },
+                    maxLines = maxLines
                 )
             }
         ) { measurables, constraints ->

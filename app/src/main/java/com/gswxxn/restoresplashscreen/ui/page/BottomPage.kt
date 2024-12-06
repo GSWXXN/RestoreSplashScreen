@@ -41,7 +41,8 @@ fun BottomPage(navController: NavController, adjustPadding: PaddingValues) {
         item {
             HeaderCard(
                 imageResID = R.drawable.demo_branding,
-                title = "BRANDING IMAGE"
+                title = "BRANDING\nIMAGE",
+                maxLines = 2
             )
         }
         item {

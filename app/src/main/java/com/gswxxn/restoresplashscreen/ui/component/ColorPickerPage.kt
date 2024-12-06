@@ -542,7 +542,9 @@ fun ColorPickerPage(
                             minWidth = px48dp, maxWidth = px48dp
                         ))
                         val rightWidth = constraints.maxWidth - image.width - px48dp
-                        val text = measurables[2].measure(constraints)
+                        val text = measurables[2].measure(constraints.copy(
+                            maxWidth = rightWidth
+                        ))
                         val colorCount = measurables.size - 3
                         var colorPerRow = 1
                         val colorLines: Int
@@ -571,7 +573,7 @@ fun ColorPickerPage(
                                 px16dp + image.width / 2 - icon.width / 2,
                                 totalHeight / 2 - icon.height / 2
                             )
-                            val rightCenterX = px32dp + image.width + (constraints.maxWidth - px32dp - image.width) / 2
+                            val rightCenterX = px16dp + image.width + (constraints.maxWidth - px16dp - image.width) / 2
                             val textY = (totalHeight - rightHeight) / 2
                             text.place(rightCenterX - text.width / 2, textY)
                             if (colors != null) {

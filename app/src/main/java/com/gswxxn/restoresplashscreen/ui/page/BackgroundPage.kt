@@ -68,7 +68,7 @@ fun BackgroundPage(navController: NavController, adjustPadding: PaddingValues) {
     ) {
         item {
             HeaderCard(
-                imageResID = R.drawable.demo_basic,
+                imageResID = R.drawable.demo_background,
                 title = "BACKGROUND"
             )
         }

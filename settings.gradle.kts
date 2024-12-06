@@ -33,5 +33,4 @@ sweetProperty {
     }
 }
 rootProject.name = "RestoreSplashScreen"
-include(":app", ":blockmiui")
 include(":app", ":hyperx-compose")

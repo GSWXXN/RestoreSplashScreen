@@ -16,10 +16,8 @@ import com.highcapable.yukihookapi.hook.log.YLog
 import com.highcapable.yukihookapi.hook.type.java.StringClass
 import com.highcapable.yukihookapi.hook.xposed.prefs.YukiHookPrefsBridge
 import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.ObjectInputStream
-import java.io.ObjectOutputStream
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 /**
  * YukiHookAPI 工具类 */
@@ -72,12 +70,11 @@ object YukiHelper {
      * @param packageName 宿主包名
      * @param result 结果回调
      */
-    fun Context.getHookInfo(packageName: String, result: (Map<String, HookManager>) -> Unit) {
-        dataChannel(packageName).wait<Map<String, ByteArray>>("${packageName.replace('.', '_')}_hook_info_result") {
-            val hookInfo = mutableMapOf<String, HookManager>()
-            it.forEach { (string, byteArray) ->
-                val objectInputStream = ObjectInputStream(ByteArrayInputStream(byteArray))
-                hookInfo += string to objectInputStream.readObject() as HookManager
+    fun Context.getHookInfo(packageName: String, result: (Map<String, HookManager.HookInfo>) -> Unit) {
+        dataChannel(packageName).wait<Map<String, String>>("${packageName.replace('.', '_')}_hook_info_result") {
+            val hookInfo = mutableMapOf<String, HookManager.HookInfo>()
+            it.forEach { (key, hookInfoJson) ->
+                hookInfo += key to Json.decodeFromString<HookManager.HookInfo>(hookInfoJson)
             }
             result(hookInfo)
         }
@@ -89,15 +86,11 @@ object YukiHelper {
      */
     fun YukiBaseHooker.registerHookInfo(membersObject: Any) {
         dataChannel.wait<String>(key = "${packageName.replace('.', '_')}_hook_info_get") {
-            val hookInfo: Map<String, ByteArray> = membersObject.javaClass.declaredFields
+            val hookInfo: Map<String, String> = membersObject.javaClass.declaredFields
                 .filter { field -> field.apply { isAccessible = true }.get(null) is HookManager }
-                .associateBy({ field -> field.name }, { field ->
-                    val byteArrayOutputStream = ByteArrayOutputStream()
-                    val objectOutputStream = ObjectOutputStream(byteArrayOutputStream)
-                    objectOutputStream.writeObject(field.get(null))
-                    objectOutputStream.flush()
-                    byteArrayOutputStream.toByteArray()
-                })
+                .associateBy(
+                    { field -> field.name },
+                    { field -> Json.encodeToString((field.get(null) as HookManager).getHookInfo()) })
             dataChannel.put(
                 key = "${packageName.replace('.', '_')}_hook_info_result",
                 value = hookInfo

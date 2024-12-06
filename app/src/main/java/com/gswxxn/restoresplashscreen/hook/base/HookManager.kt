@@ -3,7 +3,7 @@ package com.gswxxn.restoresplashscreen.hook.base
 import com.gswxxn.restoresplashscreen.hook.AndroidHooker.hook
 import com.highcapable.yukihookapi.hook.log.YLog
 import com.highcapable.yukihookapi.hook.param.HookParam
-import java.io.Serializable
+import kotlinx.serialization.Serializable
 import java.lang.reflect.Member
 import java.lang.reflect.Method
 
@@ -14,31 +14,43 @@ import java.lang.reflect.Method
  * @param createCondition 创建 HookManager 实例的条件, 如对系统判断。
  * @param block 返回要进行 Hook 的成员对象的 lambda 表达式。
  */
-class HookManager(val createCondition: Boolean = true, block: () -> Member?): Serializable {
+class HookManager(private val createCondition: Boolean = true, block: () -> Member?) {
 
     companion object {
         // 默认不执行 Hook, 后续获取到包名后, 可以将这里替换为只有当前为作用域内的应用, 才执行 Hook
         var defaultExecCondition: (() -> Boolean) = { false }
     }
 
-    @Transient
+    @Serializable
+    data class HookInfo(
+        val createCondition: Boolean,
+        val hasReplaceHook: Boolean,
+        val hasBeforeHooks: Boolean,
+        val hasAfterHooks: Boolean,
+        val isBeforeHookExecuted: Boolean,
+        val isAfterHookExecuted: Boolean,
+        val isReplaceHookExecuted: Boolean,
+        val isMemberFound: Boolean,
+        val isAbnormal: Boolean
+    )
+
     private var member: Member? = null
 
     private val beforeHooks =  mutableListOf<HookParam.() -> Unit>()
     private val afterHooks = mutableListOf<HookParam.() -> Unit>()
     private var replaceHook: (HookParam.() -> Any?)? = null
 
-    val hasReplaceHook get() =  replaceHook != null
-    val hasBeforeHooks get() = beforeHooks.isNotEmpty()
-    val hasAfterHooks get() = afterHooks.isNotEmpty()
+    private val hasReplaceHook get() =  replaceHook != null
+    private val hasBeforeHooks get() = beforeHooks.isNotEmpty()
+    private val hasAfterHooks get() = afterHooks.isNotEmpty()
 
-    var isBeforeHookExecuted = false
-    var isAfterHookExecuted = false
-    var isReplaceHookExecuted = false
+    private var isBeforeHookExecuted = false
+    private var isAfterHookExecuted = false
+    private var isReplaceHookExecuted = false
 
-    var isMemberFound = false
+    private var isMemberFound = false
 
-    val isAbnormal get() = createCondition && (!isMemberFound ||
+    private val isAbnormal get() = createCondition && (!isMemberFound ||
             (hasBeforeHooks && !isBeforeHookExecuted) ||
             (hasAfterHooks && !isAfterHookExecuted) ||
             (hasReplaceHook && !isReplaceHookExecuted))
@@ -112,4 +124,16 @@ class HookManager(val createCondition: Boolean = true, block: () -> Member?): Se
             }
         }
     }
+
+    fun getHookInfo() = HookInfo(
+        createCondition= createCondition,
+        hasReplaceHook= hasReplaceHook,
+        hasBeforeHooks= hasBeforeHooks,
+        hasAfterHooks= hasAfterHooks,
+        isBeforeHookExecuted= isBeforeHookExecuted,
+        isAfterHookExecuted= isAfterHookExecuted,
+        isReplaceHookExecuted= isReplaceHookExecuted,
+        isMemberFound= isMemberFound,
+        isAbnormal= isAbnormal
+    )
 }

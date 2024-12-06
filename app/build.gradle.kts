@@ -3,6 +3,7 @@
 plugins {
     autowire(libs.plugins.com.android.application)
     autowire(libs.plugins.org.jetbrains.kotlin.android)
+    autowire(libs.plugins.org.jetbrains.kotlin.plugin.serialization)
     autowire(libs.plugins.com.google.devtools.ksp)
 }
 
@@ -101,6 +102,7 @@ dependencies {
     implementation(androidx.palette.palette.ktx)
     implementation(androidx.compose.material3.material3)
     implementation(org.jetbrains.kotlinx.kotlinx.coroutines.android)
+    implementation(org.jetbrains.kotlinx.kotlinx.serialization.json)
 }
 
 tasks.register("getVersionCode") {

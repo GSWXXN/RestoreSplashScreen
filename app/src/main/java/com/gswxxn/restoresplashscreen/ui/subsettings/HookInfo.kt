@@ -37,21 +37,21 @@ object HookInfo: ISubSettings {
      * @param linearLayout 要重新绘制的线性布局。
      * @param map 钩子管理器的映射。
      */
-    private fun redrawView(context: SubSettings, linearLayout: LinearLayout, map: Map<String, HookManager>) {
+    private fun redrawView(context: SubSettings, linearLayout: LinearLayout, map: Map<String, HookManager.HookInfo>) {
         linearLayout.removeAllViews()
         linearLayout.addBlockMIUIView(context) {
-            map.entries.sortedWith(compareBy({ !it.value.isAbnormal }, {it.key})).forEach { (key, hookManager) ->
+            map.entries.sortedWith(compareBy({ !it.value.isAbnormal }, {it.key})).forEach { (key, hookInfo) ->
                 TextSummary(
                     text = key,
-                    colorInt = if (hookManager.isAbnormal) Color.Red.toArgb() else null,
-                    tips = "createCondition: ${hookManager.createCondition}\n" +
-                            "isMemberFound: ${hookManager.isMemberFound}\n" +
-                            "hasBeforeHooks: ${hookManager.hasBeforeHooks}\n" +
-                            "isBeforeHookExecuted: ${hookManager.isBeforeHookExecuted}\n" +
-                            "hasAfterHooks: ${hookManager.hasAfterHooks}\n" +
-                            "isAfterHookExecuted: ${hookManager.isAfterHookExecuted}\n" +
-                            "hasReplaceHook: ${hookManager.hasReplaceHook}\n" +
-                            "isReplaceHookExecuted: ${hookManager.isReplaceHookExecuted}"
+                    colorInt = if (hookInfo.isAbnormal) Color.Red.toArgb() else null,
+                    tips = "createCondition: ${hookInfo.createCondition}\n" +
+                            "isMemberFound: ${hookInfo.isMemberFound}\n" +
+                            "hasBeforeHooks: ${hookInfo.hasBeforeHooks}\n" +
+                            "isBeforeHookExecuted: ${hookInfo.isBeforeHookExecuted}\n" +
+                            "hasAfterHooks: ${hookInfo.hasAfterHooks}\n" +
+                            "isAfterHookExecuted: ${hookInfo.isAfterHookExecuted}\n" +
+                            "hasReplaceHook: ${hookInfo.hasReplaceHook}\n" +
+                            "isReplaceHookExecuted: ${hookInfo.isReplaceHookExecuted}"
                 )
             }
         }

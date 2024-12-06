@@ -5,6 +5,7 @@ plugins {
     autowire(libs.plugins.org.jetbrains.kotlin.android)
     autowire(libs.plugins.org.jetbrains.kotlin.plugin.serialization)
     autowire(libs.plugins.com.google.devtools.ksp)
+    autowire(libs.plugins.org.jetbrains.kotlin.plugin.compose)
 }
 
 android {
@@ -85,17 +86,22 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.majorVersion
+        jvmTarget = JavaVersion.VERSION_21.majorVersion
     }
 }
 
 dependencies {
-    implementation(projects.blockmiui)
+    implementation(projects.hyperxCompose)
+    implementation(androidx.activity.activity.compose)
+    implementation(androidx.navigation.navigation.compose)
+    implementation(androidx.compose.foundation.foundation)
+
+    implementation(org.jetbrains.kotlinx.kotlinx.serialization.json)
     compileOnly(de.robv.android.xposed.api)
     implementation(com.highcapable.yukihookapi.api)
     ksp(com.highcapable.yukihookapi.ksp.xposed)

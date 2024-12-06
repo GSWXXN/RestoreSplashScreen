@@ -14,6 +14,7 @@
     <string name="xposed_framework_version">Activated by %s API %d</string>
     <string name="main_activity_hint">做出任何设置前，请确保模块已激活。\n修改设置后立即生效，无需重启。</string>
 
+    <string name="restart">重启</string>
     <string name="restart_title">重启提示</string>
     <string name="restart_message">模块更新后需要重启系统界面才能生效。\n\n如果您 LSPosed 框架中的作用域包含系统框架，则需要重启手机</string>
     <string name="reboot">重启手机</string>
@@ -34,6 +35,7 @@
     <string name="display_settings">显示</string>
     <string name="dev_settings">开发者选项</string>
     <string name="hook_info">Hook 信息</string>
+
     <string name="faq">常见问题</string>
     <string name="faq_url">https://gswxxn.coding.net/public/restoresplashscreen/faq/git</string>
 
@@ -42,6 +44,9 @@
     <string name="enable_log">启用日志</string>
     <string name="enable_log_tips">启用日志 24 小时后自动关闭</string>
     <string name="hide_icon">隐藏桌面图标</string>
+    <string name="blur">模糊效果</string>
+    <string name="split_view">自适应布局</string>
+    <string name="split_view_tips">在大屏幕设备上或横屏时，应用程序将自动切换到双面板布局</string>
     <string name="min_duration">遮罩最小持续时长</string>
     <string name="min_duration_tips">注意：设置此参数会拖慢应用启动时间。如无特殊需求，则不应配置此项。</string>
     <string name="backup_restore_title">备份与恢复</string>
@@ -159,7 +164,10 @@
     <string name="value">明度</string>
     <string name="undo_modification">撤销本次修改</string>
     <string name="reset">恢复默认</string>
-
+    <string name="target_color_mode">颜色生效模式</string>
+    <string name="target_color_mode_tips">当前颜色的生效模式，浅色模式和深色模式需要分别配置</string>
+    <string name="target_color_mode_light">浅色模式</string>
+    <string name="target_color_mode_dark">深色模式</string>
     <!--关于页面-->
     <string name="version">v%s</string>
     <string name="follow_me">点个关注，不迷路</string>
@@ -174,5 +182,9 @@
 
 
     <!--开发者选项-->
+    <string name="dev_blur_tint_alpha_light">浅色模式着色不透明度</string>
+    <string name="dev_blur_tint_alpha_dark">深色模式着色不透明度</string>
+    <string name="dev_blur_tint_alpha_tips">不透明度应该是 0 到 100 之间的整数，值为 0 时最透明。</string>
+    <string name="dev_hook_info_empty">空</string>
     <string name="dev_icon_round_corner_rate">图标圆角率</string>
 </resources>

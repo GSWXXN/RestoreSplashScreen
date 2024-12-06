@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorThemeBackground">#FF000000</color>
-    <color name="colorDemoBackground">#FF2D2D2D</color>
+    <color name="colorDemoBackground">#FF242424</color>
     <color name="colorTextDark">#FFCFCFCF</color>
     <color name="colorTextGray">#FFD3D3D3</color>
 

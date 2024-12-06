@@ -56,4 +56,10 @@ object DataConst {
     // 开发者设置
     val ENABLE_DEV_SETTINGS = PrefsData("enable_dev_settings", false)
     val DEV_ICON_ROUND_CORNER_RATE = PrefsData("dev_icon_round_corner", 25)
+    val HAZE_TINT_ALPHA_LIGHT = PrefsData("module_blur_tint_light", 60)
+    val HAZE_TINT_ALPHA_DARK = PrefsData("module_blur_tint_dark", 50)
+
+    // 模块应用设置
+    val BLUR = PrefsData("module_blur", true)
+    val SPLIT_VIEW = PrefsData("module_split", false)
 }

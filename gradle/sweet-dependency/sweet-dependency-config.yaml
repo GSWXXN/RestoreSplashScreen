@@ -25,10 +25,12 @@ plugins:
     version: 8.7.3
   org.jetbrains.kotlin.android:
     version: 2.1.0
-  org.jetbrains.kotlin.plugin.serialization:
-    version: 2.1.0
   com.google.devtools.ksp:
     version: 2.1.0-1.0.29
+  org.jetbrains.kotlin.plugin.compose:
+    version: 2.1.0
+  org.jetbrains.kotlin.plugin.serialization:
+    version: 2.1.0
 
 libraries:
   de.robv.android.xposed:
@@ -53,3 +55,12 @@ libraries:
   androidx.annotation:
     annotation:
       version: 1.9.1
+  androidx.activity:
+    activity-compose:
+      version: 1.9.3
+  androidx.navigation:
+    navigation-compose:
+      version: 2.8.4
+  androidx.compose.foundation:
+    foundation:
+      version: 1.7.5

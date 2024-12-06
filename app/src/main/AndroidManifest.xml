@@ -19,27 +19,12 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Starting">
-
         <activity
-            android:name=".ui.AboutPageActivity"
-            android:exported="true" />
-        <activity
-            android:name=".ui.ColorSelectActivity"
-            android:exported="true" />
-        <activity
-            android:name=".ui.ConfigAppsActivity"
+            android:name=".ui.MainActivity"
             android:exported="true"
-            android:launchMode="singleTask" />
-        <activity
-            android:name=".ui.SubSettings"
-            android:exported="true"
-            android:parentActivityName=".ui.MainSettingsActivity" />
-        <activity
-            android:name=".ui.MainSettingsActivity"
-            android:exported="true">
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="de.robv.android.xposed.category.MODULE_SETTINGS" />
             </intent-filter>
         </activity>
@@ -49,10 +34,9 @@
             android:enabled="true"
             android:exported="true"
             android:label="@string/app_name"
-            android:targetActivity=".ui.MainSettingsActivity">
+            android:targetActivity=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity-alias>

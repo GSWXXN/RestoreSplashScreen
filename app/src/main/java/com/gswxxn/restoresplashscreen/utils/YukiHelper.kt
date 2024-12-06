@@ -10,6 +10,7 @@ import com.highcapable.yukihookapi.hook.core.finder.members.FieldFinder.Result.I
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.factory.dataChannel
+import com.highcapable.yukihookapi.hook.factory.field
 import com.highcapable.yukihookapi.hook.factory.hasClass
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.log.YLog
@@ -122,6 +123,21 @@ object YukiHelper {
     */
     val isMIUI by lazy { "android.miui.R".hasClass() }
 
+    /**
+     * 当前设备是否是小米平板
+     *
+     * @return [Boolean] 是否符合条件
+     */
+    val isXiaomiPad by lazy {
+        isMIUI && try {
+            "miui.os.Build".toClass().field {
+                name = "IS_TABLET"
+                modifiers { isStatic }
+            }.get().boolean()
+        } catch (_: Exception) {
+            false
+        }
+    }
     /**
      * 检测 MIUI 版本是否至少为 14
      *

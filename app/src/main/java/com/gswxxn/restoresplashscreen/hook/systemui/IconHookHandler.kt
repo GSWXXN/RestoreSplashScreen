@@ -1,6 +1,7 @@
 package com.gswxxn.restoresplashscreen.hook.systemui
 
 import android.content.ComponentName
+import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Outline
@@ -10,12 +11,12 @@ import android.graphics.Shader
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewOutlineProvider
 import android.widget.FrameLayout
 import android.widget.ImageView
-import cn.fkj233.ui.activity.dp2px
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.hook.NewSystemUIHooker
 import com.gswxxn.restoresplashscreen.hook.base.BaseHookHandler
@@ -349,3 +350,5 @@ object IconHookHandler : BaseHookHandler() {
         return null
     }
 }
+
+fun dp2px(context: Context, dpValue: Float): Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.resources.displayMetrics).toInt()

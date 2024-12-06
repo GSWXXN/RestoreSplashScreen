@@ -14,9 +14,9 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
 import androidx.palette.graphics.Palette
-import cn.fkj233.ui.activity.dp2px
 import com.gswxxn.restoresplashscreen.data.RoundDegree
 import android.graphics.Path
+import com.gswxxn.restoresplashscreen.hook.systemui.dp2px
 
 /**
  * 图形工具类

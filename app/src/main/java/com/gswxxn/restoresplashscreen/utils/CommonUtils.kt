@@ -3,6 +3,7 @@ package com.gswxxn.restoresplashscreen.utils
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Build
+import android.util.TypedValue
 import android.widget.Toast
 import java.io.DataOutputStream
 
@@ -20,17 +21,6 @@ object CommonUtils {
      */
     fun Context.toast(message: CharSequence): Toast = Toast
         .makeText(this, message, Toast.LENGTH_SHORT)
-        .apply { show() }
-
-    /**
-     * 显示长时间 Toast
-     *
-     * @receiver [Context] 需要显示 Toast 应用的 Context
-     * @param message 显示文本内容
-     * @return [Toast]
-     */
-    fun Context.toastL(message: CharSequence): Toast = Toast
-        .makeText(this, message, Toast.LENGTH_LONG)
         .apply { show() }
 
     /**
@@ -97,4 +87,14 @@ object CommonUtils {
      * 是否处于深色模式
      */
     fun isDarkMode(context: Context) = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+
+    /**
+     * 将密度无关像素（dp）值转换为像素（px）值。
+     *
+     *
+     * @param context 用于获取显示指标的上下文。
+     * @param dpValue 要转换的 dp 值。
+     * @return 转换后的像素值（整数类型）。
+     */
+    fun dp2px(context: Context, dpValue: Float): Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.resources.displayMetrics).toInt()
 }

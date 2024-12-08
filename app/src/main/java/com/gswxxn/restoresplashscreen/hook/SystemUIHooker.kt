@@ -3,7 +3,6 @@ package com.gswxxn.restoresplashscreen.hook
 import android.content.ComponentName
 import android.content.Context
 import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
@@ -14,6 +13,7 @@ import androidx.compose.ui.graphics.toArgb
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.RoundDegree
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.isAtLeastT
+import com.gswxxn.restoresplashscreen.utils.CommonUtils.isDarkMode
 import com.gswxxn.restoresplashscreen.utils.GraphicUtils
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.getField
@@ -240,8 +240,7 @@ object SystemUIHooker: YukiBaseHooker() {
                         val bgColorType = prefs.get(DataConst.CHANG_BG_COLOR_TYPE)
                         val ignoreDarkMode = prefs.get(DataConst.IGNORE_DARK_MODE)
                         val colorMode = prefs.get(DataConst.BG_COLOR_MODE)
-                        val isDarkMode = (appContext!!.resources
-                            .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES)
+                        val isDarkMode = isDarkMode(appContext!!)
                         val individualBgColorAppMap = getMapPrefs(
                             if (!isDarkMode) DataConst.INDIVIDUAL_BG_COLOR_APP_MAP
                             else DataConst.INDIVIDUAL_BG_COLOR_APP_MAP_DARK)

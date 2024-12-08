@@ -12,11 +12,9 @@ import android.graphics.RectF
 import android.graphics.Shader
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import androidx.annotation.DrawableRes
 import androidx.palette.graphics.Palette
 import com.gswxxn.restoresplashscreen.data.RoundDegree
 import android.graphics.Path
-import com.gswxxn.restoresplashscreen.hook.systemui.dp2px
 
 /**
  * 图形工具类
@@ -89,32 +87,6 @@ object GraphicUtils {
             return shrankBitmap
         }
         return  targetBitmap
-    }
-
-    /**
-     * 缩小图标尺寸的一半
-     *
-     * @param id 图标资源 id
-     * @return [Drawable]
-     */
-    fun Context.shrinkIcon(@DrawableRes id : Int) : Drawable {
-        val px = dp2px(this, 50f)
-
-        val bitmap = drawable2Bitmap(this.getDrawable(id)!!, px / 2)
-        val shrankBitmap = Bitmap.createBitmap(
-            (px * 1.5).toInt(),
-            (px * 1.5).toInt(),
-            Bitmap.Config.ARGB_8888
-        )
-
-        Canvas(shrankBitmap).drawBitmap(
-            bitmap,
-            (shrankBitmap.width * 0.5  - bitmap.width * 0.5).toFloat(),
-            (shrankBitmap.height * 0.5 - bitmap.height * 0.5).toFloat(),
-            null
-        )
-
-        return BitmapDrawable(this.resources, shrankBitmap)
     }
 
     /**

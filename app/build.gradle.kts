@@ -101,7 +101,6 @@ dependencies {
     implementation(androidx.navigation.navigation.compose)
     implementation(androidx.compose.foundation.foundation)
 
-    implementation(org.jetbrains.kotlinx.kotlinx.serialization.json)
     compileOnly(de.robv.android.xposed.api)
     implementation(com.highcapable.yukihookapi.api)
     ksp(com.highcapable.yukihookapi.ksp.xposed)

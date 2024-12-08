@@ -1,6 +1,5 @@
 package com.gswxxn.restoresplashscreen.hook.systemui
 
-import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -10,6 +9,7 @@ import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.hook.NewSystemUIHooker
 import com.gswxxn.restoresplashscreen.hook.base.BaseHookHandler
 import com.gswxxn.restoresplashscreen.hook.systemui.GenerateHookHandler.currentPackageName
+import com.gswxxn.restoresplashscreen.utils.CommonUtils.isDarkMode
 import com.gswxxn.restoresplashscreen.utils.GraphicUtils
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.getMapPrefs
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.isMIUI
@@ -49,8 +49,7 @@ object BgHookHandler: BaseHookHandler() {
      * - 单独配置应用背景颜色
      */
     private fun getColor(): Int? {
-        val isDarkMode = (appContext!!.resources
-            .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES)
+        val isDarkMode = isDarkMode(appContext!!)
         val bgColorMode = prefs.get(DataConst.BG_COLOR_MODE)
         val bgColorType = prefs.get(DataConst.CHANG_BG_COLOR_TYPE)
         val isInBGExceptList = currentPackageName in prefs.get(DataConst.BG_EXCEPT_LIST)

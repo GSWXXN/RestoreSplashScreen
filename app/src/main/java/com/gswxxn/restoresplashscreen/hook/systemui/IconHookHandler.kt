@@ -1,8 +1,6 @@
 package com.gswxxn.restoresplashscreen.hook.systemui
 
 import android.content.ComponentName
-import android.content.Context
-import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Outline
 import android.graphics.RectF
@@ -11,7 +9,6 @@ import android.graphics.Shader
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewOutlineProvider
@@ -22,6 +19,8 @@ import com.gswxxn.restoresplashscreen.hook.NewSystemUIHooker
 import com.gswxxn.restoresplashscreen.hook.base.BaseHookHandler
 import com.gswxxn.restoresplashscreen.hook.systemui.GenerateHookHandler.currentActivity
 import com.gswxxn.restoresplashscreen.hook.systemui.GenerateHookHandler.currentPackageName
+import com.gswxxn.restoresplashscreen.utils.CommonUtils.dp2px
+import com.gswxxn.restoresplashscreen.utils.CommonUtils.isDarkMode
 import com.gswxxn.restoresplashscreen.utils.GraphicUtils
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
 import com.gswxxn.restoresplashscreen.utils.MIUIIconsHelper
@@ -222,8 +221,7 @@ object IconHookHandler : BaseHookHandler() {
     fun processIconDrawable(oriDrawable: Drawable): Drawable {
         val shrinkIconType = prefs.get(DataConst.SHRINK_ICON)
         val colorMode = prefs.get(DataConst.BG_COLOR_MODE)
-        val isDarkMode = (appContext!!.resources
-            .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES)
+        val isDarkMode = isDarkMode(appContext!!)
 
         val isHideSplashScreenIcon = prefs.get(DataConst.ENABLE_HIDE_SPLASH_SCREEN_ICON) &&
                 if (prefs.get(DataConst.IS_HIDE_SPLASH_SCREEN_ICON_EXCEPTION_MODE))
@@ -350,5 +348,3 @@ object IconHookHandler : BaseHookHandler() {
         return null
     }
 }
-
-fun dp2px(context: Context, dpValue: Float): Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.resources.displayMetrics).toInt()

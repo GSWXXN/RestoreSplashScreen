@@ -62,6 +62,8 @@ fun AboutPage(navController: NavController, adjustPadding: PaddingValues) {
         Reference("YukiHookAPI", "fankes", "Apache-2.0", "https://github.com/fankes/YukiHookAPI"),
         Reference("MiuiHomeR", "YuKongA", "GPL-3.0", "https://github.com/qqlittleice/MiuiHome_R"),
         Reference("BlockMIUI", "577fkj", "LGPL-2.1", "https://github.com/Block-Network/blockmiui"),
+        Reference("HyperCompose", "HowieHChen", "Apache-2.0", "https://github.com/HowieHChen/hyperx-compose"),
+        Reference("Miuix", "miuix-kotlin-multiplatform", "Apache-2.0", "https://github.com/miuix-kotlin-multiplatform/miuix"),
     )
 
     BasePage(

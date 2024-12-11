@@ -23,6 +23,7 @@ import com.gswxxn.restoresplashscreen.utils.YukiHelper
 import dev.lackluster.hyperx.compose.activity.HyperXActivity
 import dev.lackluster.hyperx.compose.activity.SafeSP
 import dev.lackluster.hyperx.compose.base.BasePage
+import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.navigation.navigateTo
 import dev.lackluster.hyperx.compose.preference.DropDownEntry
 import dev.lackluster.hyperx.compose.preference.DropDownPreference
@@ -34,7 +35,7 @@ import dev.lackluster.hyperx.compose.preference.TextPreference
  * 图标 界面
  */
 @Composable
-fun IconPage(navController: NavController, adjustPadding: PaddingValues) {
+fun IconPage(navController: NavController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) {
     var shrinkIcon by remember { mutableIntStateOf(SafeSP.getInt(DataConst.SHRINK_ICON.key)) }
     var selectedIconPack by remember { mutableIntStateOf(0) }
     var ignoreAppIcon by remember { mutableStateOf(SafeSP.getBoolean(DataConst.ENABLE_DEFAULT_STYLE.key)) }
@@ -89,6 +90,7 @@ fun IconPage(navController: NavController, adjustPadding: PaddingValues) {
         MainActivity.blurEnabled,
         MainActivity.blurTintAlphaLight,
         MainActivity.blurTintAlphaDark,
+        mode
     ) {
         item {
             HeaderCard(

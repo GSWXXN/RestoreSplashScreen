@@ -18,6 +18,7 @@ import com.gswxxn.restoresplashscreen.ui.component.HeaderCard
 import dev.lackluster.hyperx.compose.activity.HyperXActivity
 import dev.lackluster.hyperx.compose.activity.SafeSP
 import dev.lackluster.hyperx.compose.base.BasePage
+import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.navigation.navigateTo
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
 import dev.lackluster.hyperx.compose.preference.SwitchPreference
@@ -27,7 +28,7 @@ import dev.lackluster.hyperx.compose.preference.TextPreference
  * 底部 界面
  */
 @Composable
-fun BottomPage(navController: NavController, adjustPadding: PaddingValues) {
+fun BottomPage(navController: NavController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) {
     var removeBrandingImage by remember { mutableStateOf(SafeSP.getBoolean(DataConst.REMOVE_BRANDING_IMAGE.key)) }
 
     BasePage(
@@ -37,6 +38,7 @@ fun BottomPage(navController: NavController, adjustPadding: PaddingValues) {
         MainActivity.blurEnabled,
         MainActivity.blurTintAlphaLight,
         MainActivity.blurTintAlphaDark,
+        mode
     ) {
         item {
             HeaderCard(

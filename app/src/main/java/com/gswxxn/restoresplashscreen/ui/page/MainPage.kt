@@ -20,6 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -36,6 +38,7 @@ import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.highcapable.yukihookapi.YukiHookAPI.Status.Executor
 import dev.lackluster.hyperx.compose.activity.HyperXActivity
 import dev.lackluster.hyperx.compose.base.BasePage
+import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.base.ImageIcon
 import dev.lackluster.hyperx.compose.navigation.navigateWithPopup
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
@@ -59,7 +62,7 @@ import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissPopup
 
 @Composable
-fun MainPage(navController: NavController, adjustPadding: PaddingValues) {
+fun MainPage(navController: NavController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) {
     val isTopPopupExpanded = remember { mutableStateOf(false) }
     val showTopPopup = remember { mutableStateOf(false) }
     val dialogRestartVisibility = remember { mutableStateOf(false) }
@@ -101,8 +104,10 @@ fun MainPage(navController: NavController, adjustPadding: PaddingValues) {
         MainActivity.blurEnabled,
         MainActivity.blurTintAlphaLight,
         MainActivity.blurTintAlphaDark,
+        mode,
         navigationIcon = {},
-        actions = {
+        actions = { padding ->
+            val hapticFeedback = LocalHapticFeedback.current
             if (isTopPopupExpanded.value) {
                 ListPopup(
                     show = showTopPopup,
@@ -138,9 +143,10 @@ fun MainPage(navController: NavController, adjustPadding: PaddingValues) {
                 showTopPopup.value = true
             }
             IconButton(
-                modifier = Modifier.padding(end = 21.dp).size(40.dp),
+                modifier = Modifier.padding(padding).padding(end = 21.dp).size(40.dp),
                 onClick = {
                     isTopPopupExpanded.value = true
+                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
                 }
             ) {
                 Icon(

@@ -23,6 +23,7 @@ import com.gswxxn.restoresplashscreen.utils.BackupUtils
 import dev.lackluster.hyperx.compose.activity.HyperXActivity
 import dev.lackluster.hyperx.compose.activity.SafeSP
 import dev.lackluster.hyperx.compose.base.BasePage
+import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
 import dev.lackluster.hyperx.compose.preference.SwitchPreference
 import dev.lackluster.hyperx.compose.preference.TextPreference
@@ -32,7 +33,7 @@ import java.time.LocalDateTime
  * 基础设置 界面
  */
 @Composable
-fun BasicPage(navController: NavController, adjustPadding: PaddingValues) {
+fun BasicPage(navController: NavController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) {
     var enableLog by remember { mutableStateOf(SafeSP.getBoolean(DataConst.ENABLE_LOG.key, DataConst.ENABLE_LOG.value)) }
     LaunchedEffect(Unit) {
         if (enableLog && (System.currentTimeMillis() - SafeSP.getLong(DataConst.ENABLE_LOG_TIMESTAMP.key, DataConst.ENABLE_LOG_TIMESTAMP.value)) > 86400000) {
@@ -67,6 +68,7 @@ fun BasicPage(navController: NavController, adjustPadding: PaddingValues) {
         MainActivity.blurEnabled,
         MainActivity.blurTintAlphaLight,
         MainActivity.blurTintAlphaDark,
+        mode
     ) {
         item {
             HeaderCard(

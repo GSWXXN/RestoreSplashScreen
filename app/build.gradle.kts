@@ -97,9 +97,6 @@ android {
 
 dependencies {
     implementation(projects.hyperxCompose)
-    implementation(androidx.activity.activity.compose)
-    implementation(androidx.navigation.navigation.compose)
-    implementation(androidx.compose.foundation.foundation)
 
     implementation(org.jetbrains.kotlinx.kotlinx.serialization.json)
     compileOnly(de.robv.android.xposed.api)

@@ -97,9 +97,6 @@ android {
 
 dependencies {
     implementation(projects.hyperxCompose)
-    implementation(androidx.activity.activity.compose)
-    implementation(androidx.navigation.navigation.compose)
-    implementation(androidx.compose.foundation.foundation)
 
     compileOnly(de.robv.android.xposed.api)
     implementation(com.highcapable.yukihookapi.api)

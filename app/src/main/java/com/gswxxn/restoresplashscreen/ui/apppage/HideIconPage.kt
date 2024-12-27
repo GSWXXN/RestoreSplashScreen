@@ -12,6 +12,7 @@ import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.ui.component.AppListPage
 import dev.lackluster.hyperx.compose.activity.SafeSP
+import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
 import dev.lackluster.hyperx.compose.preference.SwitchPreference
 
@@ -19,7 +20,7 @@ import dev.lackluster.hyperx.compose.preference.SwitchPreference
  * 图标 - 不显示图标
  */
 @Composable
-fun HideIconPage(navController: NavController, adjustPadding: PaddingValues) {
+fun HideIconPage(navController: NavController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) {
     var exceptionMode by remember { mutableStateOf(SafeSP.getBoolean(DataConst.IS_HIDE_SPLASH_SCREEN_ICON_EXCEPTION_MODE.key)) }
     val exceptionSummary = stringResource(
         R.string.exception_mode_message,
@@ -32,7 +33,8 @@ fun HideIconPage(navController: NavController, adjustPadding: PaddingValues) {
         navController,
         adjustPadding,
         stringResource(R.string.hide_splash_screen_icon_title),
-        DataConst.HIDE_SPLASH_SCREEN_ICON_LIST.key
+        DataConst.HIDE_SPLASH_SCREEN_ICON_LIST.key,
+        mode
     ) {
         item {
             PreferenceGroup {

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
@@ -24,7 +25,7 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -62,6 +63,7 @@ import dev.lackluster.hyperx.compose.activity.HyperXActivity
 import dev.lackluster.hyperx.compose.activity.SafeSP
 import dev.lackluster.hyperx.compose.base.AlertDialog
 import dev.lackluster.hyperx.compose.base.AlertDialogMode
+import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.base.HazeScaffold
 import dev.lackluster.hyperx.compose.base.IconSize
 import dev.lackluster.hyperx.compose.base.ImageIcon
@@ -110,6 +112,7 @@ fun AppListPage(
     adjustPadding: PaddingValues,
     title: String,
     checkedListKey: String?,
+    mode: BasePageDefaults.Mode,
     blurEnabled: MutableState<Boolean> = MainActivity.blurEnabled,
     blurTintAlphaLight: MutableFloatState = MainActivity.blurTintAlphaLight,
     blurTintAlphaDark: MutableFloatState = MainActivity.blurTintAlphaDark,
@@ -226,6 +229,14 @@ fun AppListPage(
             }
         }
     }
+    val layoutDirection = LocalLayoutDirection.current
+    val systemBarInsets = WindowInsets.systemBars.add(WindowInsets.displayCutout).only(WindowInsetsSides.Horizontal).asPaddingValues()
+    val navigationIconPadding = PaddingValues.Absolute(
+        left = if (mode != BasePageDefaults.Mode.SPLIT_RIGHT) systemBarInsets.calculateLeftPadding(layoutDirection) else 0.dp
+    )
+    val actionsPadding = PaddingValues.Absolute(
+        right = if (mode != BasePageDefaults.Mode.SPLIT_LEFT) systemBarInsets.calculateRightPadding(layoutDirection) else 0.dp
+    )
 
     HazeScaffold(
         modifier = Modifier.fillMaxSize(),
@@ -239,6 +250,7 @@ fun AppListPage(
                 navigationIcon = {
                     IconButton(
                         modifier = Modifier
+                            .padding(navigationIconPadding)
                             .padding(start = 21.dp)
                             .size(40.dp),
                         onClick = {
@@ -302,6 +314,7 @@ fun AppListPage(
                     ) {
                         IconButton(
                             modifier = Modifier
+                                .padding(actionsPadding)
                                 .padding(end = 21.dp)
                                 .size(40.dp),
                             onClick = {
@@ -315,6 +328,7 @@ fun AppListPage(
                         }
                     }
                 },
+                defaultWindowInsetsPadding = false,
                 horizontalPadding = 28.dp + contentPadding.calculateLeftPadding(LocalLayoutDirection.current)
             )
         },
@@ -397,9 +411,7 @@ fun AppListPage(
         LazyColumn(
             modifier = Modifier
                 .height(getWindowSize().height.dp)
-                .background(MiuixTheme.colorScheme.background)
-                .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),
+                .background(MiuixTheme.colorScheme.background),
             state = listState,
             contentPadding = paddingValues,
             topAppBarScrollBehavior = scrollBehavior

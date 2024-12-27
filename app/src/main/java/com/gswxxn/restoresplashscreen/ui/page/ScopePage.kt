@@ -19,6 +19,7 @@ import com.gswxxn.restoresplashscreen.ui.component.HeaderCard
 import dev.lackluster.hyperx.compose.activity.HyperXActivity
 import dev.lackluster.hyperx.compose.activity.SafeSP
 import dev.lackluster.hyperx.compose.base.BasePage
+import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.navigation.navigateTo
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
 import dev.lackluster.hyperx.compose.preference.SwitchPreference
@@ -28,7 +29,7 @@ import dev.lackluster.hyperx.compose.preference.TextPreference
  * 作用域 界面
  */
 @Composable
-fun ScopePage(navController: NavController, adjustPadding: PaddingValues) {
+fun ScopePage(navController: NavController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) {
     var customScope by remember { mutableStateOf(SafeSP.getBoolean(DataConst.ENABLE_CUSTOM_SCOPE.key)) }
 
     BasePage(
@@ -38,6 +39,7 @@ fun ScopePage(navController: NavController, adjustPadding: PaddingValues) {
         MainActivity.blurEnabled,
         MainActivity.blurTintAlphaLight,
         MainActivity.blurTintAlphaDark,
+        mode
     ) {
         item {
             HeaderCard(

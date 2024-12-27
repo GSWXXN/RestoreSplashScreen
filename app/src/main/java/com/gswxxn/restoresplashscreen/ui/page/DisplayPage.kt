@@ -19,6 +19,7 @@ import com.gswxxn.restoresplashscreen.ui.component.HeaderCard
 import dev.lackluster.hyperx.compose.activity.HyperXActivity
 import dev.lackluster.hyperx.compose.activity.SafeSP
 import dev.lackluster.hyperx.compose.base.BasePage
+import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.navigation.navigateTo
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
 import dev.lackluster.hyperx.compose.preference.SwitchPreference
@@ -28,7 +29,7 @@ import dev.lackluster.hyperx.compose.preference.TextPreference
  * 显示设置 界面
  */
 @Composable
-fun DisplayPage(navController: NavController, adjustPadding: PaddingValues) {
+fun DisplayPage(navController: NavController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) {
     var forceShowSplash by remember { mutableStateOf(SafeSP.getBoolean(DataConst.FORCE_SHOW_SPLASH_SCREEN.key)) }
     var forceEnableSplash by remember { mutableStateOf(SafeSP.getBoolean(DataConst.FORCE_ENABLE_SPLASH_SCREEN.key)) }
     val hotStartCompatible = remember { mutableStateOf(SafeSP.getBoolean(DataConst.ENABLE_HOT_START_COMPATIBLE.key)) }
@@ -40,6 +41,7 @@ fun DisplayPage(navController: NavController, adjustPadding: PaddingValues) {
         MainActivity.blurEnabled,
         MainActivity.blurTintAlphaLight,
         MainActivity.blurTintAlphaDark,
+        mode
     ) {
         item {
             HeaderCard(

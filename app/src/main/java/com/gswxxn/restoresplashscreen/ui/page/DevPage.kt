@@ -19,6 +19,7 @@ import com.gswxxn.restoresplashscreen.ui.MainActivity
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.getHookInfo
 import dev.lackluster.hyperx.compose.activity.HyperXActivity
 import dev.lackluster.hyperx.compose.base.BasePage
+import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.preference.EditTextDataType
 import dev.lackluster.hyperx.compose.preference.EditTextPreference
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
@@ -32,7 +33,7 @@ import kotlin.math.roundToInt
  * 开发者选项
  */
 @Composable
-fun DevPage(navController: NavController, adjustPadding: PaddingValues) {
+fun DevPage(navController: NavController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) {
     val hookInfos = remember { mutableStateListOf<HookInfo>() }
 
     LaunchedEffect(Unit) {
@@ -66,6 +67,7 @@ fun DevPage(navController: NavController, adjustPadding: PaddingValues) {
         MainActivity.blurEnabled,
         MainActivity.blurTintAlphaLight,
         MainActivity.blurTintAlphaDark,
+        mode
     ) {
         item {
             PreferenceGroup(

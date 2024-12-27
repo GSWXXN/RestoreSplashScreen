@@ -55,12 +55,3 @@ libraries:
   androidx.annotation:
     annotation:
       version: 1.9.1
-  androidx.activity:
-    activity-compose:
-      version: 1.9.3
-  androidx.navigation:
-    navigation-compose:
-      version: 2.8.4
-  androidx.compose.foundation:
-    foundation:
-      version: 1.7.5

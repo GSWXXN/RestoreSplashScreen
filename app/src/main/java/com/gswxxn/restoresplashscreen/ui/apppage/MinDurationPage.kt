@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
@@ -21,7 +22,8 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
@@ -44,6 +46,8 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
 import androidx.core.graphics.drawable.toBitmap
@@ -61,6 +65,7 @@ import dev.lackluster.hyperx.compose.activity.HyperXActivity
 import dev.lackluster.hyperx.compose.activity.SafeSP
 import dev.lackluster.hyperx.compose.base.AlertDialog
 import dev.lackluster.hyperx.compose.base.AlertDialogMode
+import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.base.DrawableResIcon
 import dev.lackluster.hyperx.compose.base.HazeScaffold
 import dev.lackluster.hyperx.compose.base.IconSize
@@ -86,10 +91,11 @@ import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.SearchBar
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Surface
+import top.yukonga.miuix.kmp.basic.Switch
+import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
-import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.Info
 import top.yukonga.miuix.kmp.icon.icons.Search
@@ -106,6 +112,7 @@ import top.yukonga.miuix.kmp.utils.getWindowSize
 fun MinDurationPage(
     navController: NavController,
     adjustPadding: PaddingValues,
+    mode: BasePageDefaults.Mode,
     blurEnabled: MutableState<Boolean> = MainActivity.blurEnabled,
     blurTintAlphaLight: MutableFloatState = MainActivity.blurTintAlphaLight,
     blurTintAlphaDark: MutableFloatState = MainActivity.blurTintAlphaDark,
@@ -196,7 +203,7 @@ fun MinDurationPage(
                 delay(100)
                 appInfoFilter = appInfoList.toMutableList().apply {
                     sortBy { it.appName }
-                    sortBy { it.config.value != null }
+                    sortByDescending { it.config.value != null}
                     sortByDescending { it.isChecked.value }
                 }
             } else {
@@ -205,12 +212,17 @@ fun MinDurationPage(
                     it.appName.contains(queryString, true) or it.packageName.contains(queryString, true)
                 }.toMutableList().apply {
                     sortBy { it.appName }
-                    sortBy { it.config.value != null }
+                    sortByDescending { it.config.value != null }
                     sortByDescending { it.isChecked.value }
                 }
             }
         }
     }
+    val layoutDirection = LocalLayoutDirection.current
+    val systemBarInsets = WindowInsets.systemBars.add(WindowInsets.displayCutout).only(WindowInsetsSides.Horizontal).asPaddingValues()
+    val navigationIconPadding = PaddingValues.Absolute(
+        left = if (mode != BasePageDefaults.Mode.SPLIT_RIGHT) systemBarInsets.calculateLeftPadding(layoutDirection) else 0.dp
+    )
 
     HazeScaffold(
         modifier = Modifier.fillMaxSize(),
@@ -224,6 +236,7 @@ fun MinDurationPage(
                 navigationIcon = {
                     IconButton(
                         modifier = Modifier
+                            .padding(navigationIconPadding)
                             .padding(start = 21.dp)
                             .size(40.dp),
                         onClick = {
@@ -250,6 +263,7 @@ fun MinDurationPage(
                         )
                     }
                 },
+                defaultWindowInsetsPadding = false,
                 horizontalPadding = 28.dp + contentPadding.calculateLeftPadding(LocalLayoutDirection.current)
             )
         },
@@ -340,9 +354,7 @@ fun MinDurationPage(
         LazyColumn(
             modifier = Modifier
                 .height(getWindowSize().height.dp)
-                .background(MiuixTheme.colorScheme.background)
-                .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),
+                .background(MiuixTheme.colorScheme.background),
             state = listState,
             contentPadding = paddingValues,
             topAppBarScrollBehavior = scrollBehavior
@@ -435,14 +447,13 @@ fun MinDurationPage(
                             ),
                             title = item.appName,
                             summary = item.packageName,
+                            checked = item.isChecked,
                             defValue = item.config.value?.toIntOrNull() ?: 0,
                             dialogMessage = dialogMessage
                         ) { text, value ->
                             if (value == 0) {
-                                item.isChecked.value = false
                                 item.config.value = null
                             } else {
-                                item.isChecked.value = true
                                 item.config.value = text
                             }
                         }
@@ -476,6 +487,7 @@ fun MinDurationPreference(
     icon: ImageIcon? = null,
     title: String,
     summary: String? = null,
+    checked: MutableState<Boolean>,
     defValue: Int = 0,
     dialogMessage: String? = null,
     onValueChange: ((String, Int) -> Unit)? = null,
@@ -492,7 +504,7 @@ fun MinDurationPreference(
             onValueChange?.let { it(newString, newValue) }
         }
     }
-    SuperArrow(
+    BasicComponent(
         title = title,
         summary = summary,
         leftAction = {
@@ -500,7 +512,23 @@ fun MinDurationPreference(
                 DrawableResIcon(it)
             }
         },
-        rightText = stringValue,
+        rightActions = {
+            Text(
+                modifier = Modifier.widthIn(max = 130.dp).padding(end = 12.dp),
+                text = stringValue,
+                fontSize = MiuixTheme.textStyles.body2.fontSize,
+                color = MiuixTheme.colorScheme.onSurfaceVariantActions,
+                textAlign = TextAlign.End,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2
+            )
+            Switch(
+                checked = checked.value,
+                onCheckedChange = { newValue ->
+                    checked.value = newValue
+                }
+            )
+        },
         insideMargin = PaddingValues((icon?.getHorizontalPadding() ?: 16.dp), 16.dp, 16.dp, 16.dp),
         onClick = {
             dialogVisibility.value = true

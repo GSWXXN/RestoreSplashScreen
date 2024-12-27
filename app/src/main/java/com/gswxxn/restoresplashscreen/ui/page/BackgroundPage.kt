@@ -21,6 +21,7 @@ import com.gswxxn.restoresplashscreen.utils.YukiHelper.isMIUI
 import com.highcapable.yukihookapi.hook.factory.hasClass
 import dev.lackluster.hyperx.compose.activity.SafeSP
 import dev.lackluster.hyperx.compose.base.BasePage
+import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.navigation.navigateTo
 import dev.lackluster.hyperx.compose.preference.DropDownEntry
 import dev.lackluster.hyperx.compose.preference.DropDownPreference
@@ -32,7 +33,7 @@ import dev.lackluster.hyperx.compose.preference.TextPreference
  * 背景 界面
  */
 @Composable
-fun BackgroundPage(navController: NavController, adjustPadding: PaddingValues) {
+fun BackgroundPage(navController: NavController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) {
     var changeColorType by remember { mutableIntStateOf(SafeSP.getInt(DataConst.CHANG_BG_COLOR_TYPE.key)) }
     var colorMode by remember { mutableIntStateOf(SafeSP.getInt(DataConst.BG_COLOR_MODE.key)) }
     val ignoreDarkMode = remember { mutableStateOf(SafeSP.getBoolean(DataConst.IGNORE_DARK_MODE.key)) }
@@ -65,6 +66,7 @@ fun BackgroundPage(navController: NavController, adjustPadding: PaddingValues) {
         MainActivity.blurEnabled,
         MainActivity.blurTintAlphaLight,
         MainActivity.blurTintAlphaDark,
+        mode
     ) {
         item {
             HeaderCard(

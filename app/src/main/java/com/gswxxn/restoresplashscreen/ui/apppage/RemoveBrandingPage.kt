@@ -12,6 +12,7 @@ import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.ui.component.AppListPage
 import dev.lackluster.hyperx.compose.activity.SafeSP
+import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
 import dev.lackluster.hyperx.compose.preference.SwitchPreference
 
@@ -19,7 +20,7 @@ import dev.lackluster.hyperx.compose.preference.SwitchPreference
  * 底部 - 移除底部图片 - 配置移除列表
  */
 @Composable
-fun RemoveBrandingPage(navController: NavController, adjustPadding: PaddingValues) {
+fun RemoveBrandingPage(navController: NavController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) {
     var exceptionMode by remember { mutableStateOf(SafeSP.getBoolean(DataConst.IS_REMOVE_BRANDING_IMAGE_EXCEPTION_MODE.key)) }
     val exceptionSummary = stringResource(
         R.string.exception_mode_message,
@@ -32,7 +33,8 @@ fun RemoveBrandingPage(navController: NavController, adjustPadding: PaddingValue
         navController,
         adjustPadding,
         stringResource(R.string.background_image_title),
-        DataConst.REMOVE_BRANDING_IMAGE_LIST.key
+        DataConst.REMOVE_BRANDING_IMAGE_LIST.key,
+        mode
     ) {
         item {
             PreferenceGroup {

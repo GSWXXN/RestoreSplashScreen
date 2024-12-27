@@ -41,6 +41,7 @@ import com.gswxxn.restoresplashscreen.ui.MainActivity
 import dev.lackluster.hyperx.compose.activity.HyperXActivity
 import dev.lackluster.hyperx.compose.activity.SafeSP
 import dev.lackluster.hyperx.compose.base.BasePage
+import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.base.IconSize
 import dev.lackluster.hyperx.compose.base.ImageIcon
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
@@ -55,7 +56,7 @@ import kotlin.math.min
  * 关于页面
  */
 @Composable
-fun AboutPage(navController: NavController, adjustPadding: PaddingValues) {
+fun AboutPage(navController: NavController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) {
     val referencesList = listOf(
         Reference("MIUINativeNotifyIcon", "fankes","AGPL-3.0","https://github.com/fankes/MIUINativeNotifyIcon"),
         Reference("Hide-My-Applist", "Dr-TSNG", "AGPL-3.0", "https://github.com/Dr-TSNG/Hide-My-Applist"),
@@ -73,6 +74,7 @@ fun AboutPage(navController: NavController, adjustPadding: PaddingValues) {
         MainActivity.blurEnabled,
         MainActivity.blurTintAlphaLight,
         MainActivity.blurTintAlphaDark,
+        mode
     ) {
         item {
             var count = 0

@@ -98,8 +98,8 @@ class MainActivity : HyperXActivity() {
     override fun AppContent() {
         HyperXApp(
             autoSplitView = splitEnabled,
-            mainPageContent = { navController, adjustPadding ->
-                MainPage(navController, adjustPadding)
+            mainPageContent = { navController, adjustPadding, mode ->
+                MainPage(navController, adjustPadding, mode)
             },
             emptyPageContent = {
                 Box(
@@ -114,25 +114,24 @@ class MainActivity : HyperXActivity() {
                     )
                 }
             },
-            otherPageBuilder = { navController, adjustPadding ->
-//                composable(Pages.MODULE_SETTINGS) { ModuleSettingsPage(navController, adjustPadding) }
-                composable(Pages.ABOUT) { AboutPage(navController, adjustPadding) }
-                composable(Pages.BASIC_SETTINGS) { BasicPage(navController, adjustPadding) }
-                composable(Pages.SCOPE_SETTINGS) { ScopePage(navController, adjustPadding) }
-                composable(Pages.ICON_SETTINGS) { IconPage(navController, adjustPadding) }
-                composable(Pages.BOTTOM_SETTINGS) { BottomPage(navController, adjustPadding) }
-                composable(Pages.BACKGROUND_SETTINGS) { BackgroundPage(navController, adjustPadding) }
-                composable(Pages.DISPLAY_SETTINGS) { DisplayPage(navController, adjustPadding) }
-                composable(Pages.DEVELOPER_SETTINGS) { DevPage(navController, adjustPadding) }
+            otherPageBuilder = { navController, adjustPadding, mode ->
+                composable(Pages.ABOUT) { AboutPage(navController, adjustPadding, mode) }
+                composable(Pages.BASIC_SETTINGS) { BasicPage(navController, adjustPadding, mode) }
+                composable(Pages.SCOPE_SETTINGS) { ScopePage(navController, adjustPadding, mode) }
+                composable(Pages.ICON_SETTINGS) { IconPage(navController, adjustPadding, mode) }
+                composable(Pages.BOTTOM_SETTINGS) { BottomPage(navController, adjustPadding, mode) }
+                composable(Pages.BACKGROUND_SETTINGS) { BackgroundPage(navController, adjustPadding, mode) }
+                composable(Pages.DISPLAY_SETTINGS) { DisplayPage(navController, adjustPadding, mode) }
+                composable(Pages.DEVELOPER_SETTINGS) { DevPage(navController, adjustPadding, mode) }
 
-                composable(Pages.CONFIG_CUSTOM_SCOPE) { CustomScopePage(navController, adjustPadding) }
-                composable(Pages.CONFIG_IGNORE_APP_ICON) { IgnoreAppIconPage(navController, adjustPadding) }
-                composable(Pages.CONFIG_HIDE_SPLASH_ICON) { HideIconPage(navController, adjustPadding) }
-                composable(Pages.CONFIG_REMOVE_BRANDING) { RemoveBrandingPage(navController, adjustPadding) }
-                composable(Pages.CONFIG_BACKGROUND_EXCEPT) { BackgroundExceptPage(navController, adjustPadding) }
-                composable(Pages.CONFIG_BACKGROUND_INDIVIDUALLY) { BgIndividualPage(navController, adjustPadding) }
-                composable(Pages.CONFIG_MIN_DURATION) { MinDurationPage(navController, adjustPadding) }
-                composable(Pages.CONFIG_FORCE_SHOW_SPLASH) { ForceSplashPage(navController, adjustPadding) }
+                composable(Pages.CONFIG_CUSTOM_SCOPE) { CustomScopePage(navController, adjustPadding, mode) }
+                composable(Pages.CONFIG_IGNORE_APP_ICON) { IgnoreAppIconPage(navController, adjustPadding, mode) }
+                composable(Pages.CONFIG_HIDE_SPLASH_ICON) { HideIconPage(navController, adjustPadding, mode) }
+                composable(Pages.CONFIG_REMOVE_BRANDING) { RemoveBrandingPage(navController, adjustPadding, mode) }
+                composable(Pages.CONFIG_BACKGROUND_EXCEPT) { BackgroundExceptPage(navController, adjustPadding, mode) }
+                composable(Pages.CONFIG_BACKGROUND_INDIVIDUALLY) { BgIndividualPage(navController, adjustPadding, mode) }
+                composable(Pages.CONFIG_MIN_DURATION) { MinDurationPage(navController, adjustPadding, mode) }
+                composable(Pages.CONFIG_FORCE_SHOW_SPLASH) { ForceSplashPage(navController, adjustPadding, mode) }
 
                 composable(
                     "${Pages.CONFIG_COLOR_PICKER}?" +
@@ -143,9 +142,8 @@ class MainActivity : HyperXActivity() {
                     val pkgName = it.arguments?.getString(ColorPickerPageArgs.PACKAGE_NAME) ?: ""
                     val keyLight = it.arguments?.getString(ColorPickerPageArgs.KEY_LIGHT) ?: DataConst.OVERALL_BG_COLOR.key
                     val keyDark = it.arguments?.getString(ColorPickerPageArgs.KEY_DARK) ?: DataConst.OVERALL_BG_COLOR_NIGHT.key
-                    ColorPickerPage(navController, adjustPadding, pkgName, keyLight, keyDark)
+                    ColorPickerPage(navController, adjustPadding, pkgName, keyLight, keyDark, mode)
                 }
-//                composable(Pages.DEV_UI_TEST) { UITestPage(navController, adjustPadding) }
             }
         )
     }

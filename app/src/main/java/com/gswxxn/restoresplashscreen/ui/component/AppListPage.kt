@@ -47,20 +47,20 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.core.content.edit
 import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavController
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.ui.MainActivity
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.notEqualsTo
+import com.highcapable.yukihookapi.hook.factory.prefs
+import com.highcapable.yukihookapi.hook.xposed.prefs.data.PrefsData
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
-import dev.lackluster.hyperx.compose.activity.HyperXActivity
-import dev.lackluster.hyperx.compose.activity.SafeSP
 import dev.lackluster.hyperx.compose.base.AlertDialog
 import dev.lackluster.hyperx.compose.base.AlertDialogMode
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
@@ -70,8 +70,6 @@ import dev.lackluster.hyperx.compose.base.ImageIcon
 import dev.lackluster.hyperx.compose.icon.Back
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
 import dev.lackluster.hyperx.compose.preference.SwitchPreference
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -111,13 +109,16 @@ fun AppListPage(
     navController: NavController,
     adjustPadding: PaddingValues,
     title: String,
-    checkedListKey: String?,
+    checkedListKey: PrefsData<MutableSet<String>>,
     mode: BasePageDefaults.Mode,
     blurEnabled: MutableState<Boolean> = MainActivity.blurEnabled,
     blurTintAlphaLight: MutableFloatState = MainActivity.blurTintAlphaLight,
     blurTintAlphaDark: MutableFloatState = MainActivity.blurTintAlphaDark,
     extraContent: (LazyListScope.() -> Unit)? = null
 ) {
+    val context = LocalContext.current
+    val prefs = context.prefs()
+
     val topAppBarBackground = MiuixTheme.colorScheme.background
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val listState = rememberLazyListState()
@@ -149,7 +150,7 @@ fun AppListPage(
     // 保存前的配置
     val tmpCheckedList = mutableSetOf<String>().apply {
         clear()
-        addAll(checkedListKey?.let { SafeSP.mSP?.getStringSet(it, emptySet()) } ?: emptySet())
+        addAll(prefs.get(checkedListKey))
     }
 
     val coroutineScope = rememberCoroutineScope()
@@ -171,7 +172,7 @@ fun AppListPage(
         launch {
             isLoading = true
             delay(500)
-            val pm = HyperXActivity.context.packageManager
+            val pm = context.packageManager
             appInfoList = pm.getInstalledApplications(0).map {
                 MyAppInfo(
                     it.loadLabel(pm).toString(),
@@ -366,30 +367,17 @@ fun AppListPage(
                         colors = ButtonDefaults.textButtonColorsPrimary(),
                         minHeight = 50.dp,
                         onClick = {
-                            CoroutineScope(Dispatchers.Default).launch {
-                                SafeSP.mSP?.let { sp ->
-                                    val currentCheckedList = appInfoList.filter { it.isChecked.value }.map {
-                                        it.packageName
-                                    }.toSet()
-                                    sp.edit {
-                                        checkedListKey?.let { key ->
-                                            putStringSet(key, currentCheckedList)
-                                        }
-                                        commit()
-                                    }
-                                    tmpCheckedList.apply {
-                                        clear()
-                                        addAll(checkedListKey?.let { SafeSP.mSP?.getStringSet(it, emptySet()) } ?: emptySet())
-                                    }
-                                    coroutineScope.launch {
-                                        HyperXActivity.context.let {
-                                            Toast.makeText(it, it.getString(R.string.save_successful), Toast.LENGTH_SHORT).show()
-                                        }
-                                    }
-                                } ?: coroutineScope.launch {
-                                    HyperXActivity.context.let {
-                                        Toast.makeText(it, it.getString(R.string.save_failed), Toast.LENGTH_SHORT).show()
-                                    }
+                            val currentCheckedList = appInfoList.filter { it.isChecked.value }.map {
+                                it.packageName
+                            }.toMutableSet()
+                            prefs.edit { put(checkedListKey, currentCheckedList) }
+                            tmpCheckedList.apply {
+                                clear()
+                                addAll(prefs.get(checkedListKey))
+                            }
+                            coroutineScope.launch {
+                                context.let {
+                                    Toast.makeText(it, it.getString(R.string.save_successful), Toast.LENGTH_SHORT).show()
                                 }
                             }
                         }

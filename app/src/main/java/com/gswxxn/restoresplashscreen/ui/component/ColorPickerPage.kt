@@ -66,6 +66,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Placeable
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -76,7 +77,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.core.content.edit
 import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavController
 import androidx.palette.graphics.Palette
@@ -87,10 +87,9 @@ import com.gswxxn.restoresplashscreen.utils.CommonUtils.toMap
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toSet
 import com.gswxxn.restoresplashscreen.utils.GraphicUtils.getBgColor
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
+import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
-import dev.lackluster.hyperx.compose.activity.HyperXActivity
-import dev.lackluster.hyperx.compose.activity.SafeSP
 import dev.lackluster.hyperx.compose.base.AlertDialog
 import dev.lackluster.hyperx.compose.base.AlertDialogMode
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
@@ -99,8 +98,6 @@ import dev.lackluster.hyperx.compose.icon.Back
 import dev.lackluster.hyperx.compose.preference.DropDownEntry
 import dev.lackluster.hyperx.compose.preference.EditTextDialog
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.BasicComponent
@@ -138,13 +135,14 @@ fun ColorPickerPage(
     navController: NavController,
     adjustPadding: PaddingValues,
     pkgName: String,
-    keyLight: String,
-    keyDark: String,
     mode: BasePageDefaults.Mode,
     blurEnabled: MutableState<Boolean> = MainActivity.blurEnabled,
     blurTintAlphaLight: MutableFloatState = MainActivity.blurTintAlphaLight,
     blurTintAlphaDark: MutableFloatState = MainActivity.blurTintAlphaDark
 ) {
+    val context = LocalContext.current
+    val prefs = context.prefs()
+
     val topAppBarBackground = MiuixTheme.colorScheme.background
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val listState = rememberLazyListState()
@@ -171,7 +169,7 @@ fun ColorPickerPage(
 
     val appName: String
     val appIcon: Bitmap
-    with(HyperXActivity.context) {
+    with(context) {
         val pm = this.packageManager
         val realPkgName: String
         if (pkgName.isNotBlank()) {
@@ -181,19 +179,19 @@ fun ColorPickerPage(
             realPkgName = packageName
             appName = stringResource(R.string.set_custom_bg_color)
         }
-        val iconPackPkg = SafeSP.getString(DataConst.ICON_PACK_PACKAGE_NAME.key, DataConst.ICON_PACK_PACKAGE_NAME.value)
+        val iconPackPkg = prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)
         appIcon = (IconPackManager(this, iconPackPkg).getIconByPackageName(realPkgName) ?: pm.getApplicationIcon(realPkgName)).toBitmap()
     }
 
     var defaultColorLight = pkgName.let {
         if (it.isNotBlank()) {
-            val value = (SafeSP.mSP?.getStringSet(keyLight, emptySet()) ?: emptySet()).toMap()[pkgName]
+            val value = prefs.get(DataConst.INDIVIDUAL_BG_COLOR_APP_MAP).toMap()[pkgName]
             if (value.isNullOrBlank())
                 Color(getBgColor(appIcon, true))
             else
                 Color(android.graphics.Color.parseColor(value))
         } else {
-            val value = SafeSP.getString(keyLight, "")
+            val value = prefs.get(DataConst.OVERALL_BG_COLOR)
             if (value.isBlank())
                 Color.White
             else
@@ -202,13 +200,13 @@ fun ColorPickerPage(
     }
     var defaultColorDark = pkgName.let {
         if (it.isNotBlank()) {
-            val value = (SafeSP.mSP?.getStringSet(keyDark, emptySet()) ?: emptySet()).toMap()[pkgName]
+            val value = prefs.get(DataConst.INDIVIDUAL_BG_COLOR_APP_MAP_DARK).toMap()[pkgName]
             if (value.isNullOrBlank())
                 Color(getBgColor(appIcon, false))
             else
                 Color(android.graphics.Color.parseColor(value))
         } else {
-            val value = SafeSP.getString(keyDark, "")
+            val value = prefs.get(DataConst.OVERALL_BG_COLOR_NIGHT)
             if (value.isBlank())
                 Color.Black
             else
@@ -359,65 +357,55 @@ fun ColorPickerPage(
                             },
                             minHeight = 50.dp,
                             onClick = {
-                                CoroutineScope(Dispatchers.Default).launch {
-                                    SafeSP.mSP?.let { sp ->
-                                        val targetKey = if (currentDarkMode.value) {
-                                            keyDark
-                                        } else {
-                                            keyLight
-                                        }
-                                        val colorHexString = "#" + "%08X".format(selectedColor.value.toArgb()).substring(2)
-                                        if (pkgName.isNotBlank()) {
-                                            val tmpConfigMap = (SafeSP.mSP?.getStringSet(targetKey, emptySet()) ?: emptySet()).toMap()
-                                            tmpConfigMap[pkgName] = colorHexString
-                                            sp.edit {
-                                                putStringSet(targetKey, tmpConfigMap.toSet())
-                                                commit()
-                                            }
-                                        } else {
-                                            sp.edit {
-                                                putString(targetKey, colorHexString)
-                                            }
-                                        }
-                                        defaultColorLight = pkgName.let {
-                                            if (it.isNotBlank()) {
-                                                val value = (SafeSP.mSP?.getStringSet(keyLight, emptySet()) ?: emptySet()).toMap()[pkgName]
-                                                if (value.isNullOrBlank())
-                                                    Color(getBgColor(appIcon, true))
-                                                else
-                                                    Color(android.graphics.Color.parseColor(value))
-                                            } else {
-                                                val value = SafeSP.getString(keyLight, "")
-                                                if (value.isBlank())
-                                                    Color.White
-                                                else
-                                                    Color(android.graphics.Color.parseColor(value))
-                                            }
-                                        }
-                                        defaultColorDark = pkgName.let {
-                                            if (it.isNotBlank()) {
-                                                val value = (SafeSP.mSP?.getStringSet(keyDark, emptySet()) ?: emptySet()).toMap()[pkgName]
-                                                if (value.isNullOrBlank())
-                                                    Color(getBgColor(appIcon, false))
-                                                else
-                                                    Color(android.graphics.Color.parseColor(value))
-                                            } else {
-                                                val value = SafeSP.getString(keyDark, "")
-                                                if (value.isBlank())
-                                                    Color.Black
-                                                else
-                                                    Color(android.graphics.Color.parseColor(value))
-                                            }
-                                        }
-                                        coroutineScope.launch {
-                                            HyperXActivity.context.let {
-                                                Toast.makeText(it, it.getString(R.string.save_successful), Toast.LENGTH_SHORT).show()
-                                            }
-                                        }
-                                    } ?: coroutineScope.launch {
-                                        HyperXActivity.context.let {
-                                            Toast.makeText(it, it.getString(R.string.save_failed), Toast.LENGTH_SHORT).show()
-                                        }
+                                val colorHexString = "#" + "%08X".format(selectedColor.value.toArgb()).substring(2)
+                                if (pkgName.isNotBlank()) {
+                                    val targetKey = if (currentDarkMode.value)
+                                        DataConst.INDIVIDUAL_BG_COLOR_APP_MAP_DARK
+                                    else
+                                        DataConst.INDIVIDUAL_BG_COLOR_APP_MAP
+                                    val tmpConfigMap = prefs.get(targetKey).toMap()
+                                    tmpConfigMap[pkgName] = colorHexString
+                                    prefs.edit { put(targetKey, tmpConfigMap.toSet()) }
+                                } else {
+                                    val targetKey = if (currentDarkMode.value)
+                                        DataConst.OVERALL_BG_COLOR_NIGHT
+                                    else
+                                        DataConst.OVERALL_BG_COLOR
+                                    prefs.edit { put(targetKey, colorHexString) }
+                                }
+                                defaultColorLight = pkgName.let {
+                                    if (it.isNotBlank()) {
+                                        val value = prefs.get(DataConst.INDIVIDUAL_BG_COLOR_APP_MAP).toMap()[pkgName]
+                                        if (value.isNullOrBlank())
+                                            Color(getBgColor(appIcon, true))
+                                        else
+                                            Color(android.graphics.Color.parseColor(value))
+                                    } else {
+                                        val value = prefs.get(DataConst.OVERALL_BG_COLOR)
+                                        if (value.isBlank())
+                                            Color.White
+                                        else
+                                            Color(android.graphics.Color.parseColor(value))
+                                    }
+                                }
+                                defaultColorDark = pkgName.let {
+                                    if (it.isNotBlank()) {
+                                        val value = prefs.get(DataConst.INDIVIDUAL_BG_COLOR_APP_MAP_DARK).toMap()[pkgName]
+                                        if (value.isNullOrBlank())
+                                            Color(getBgColor(appIcon, false))
+                                        else
+                                            Color(android.graphics.Color.parseColor(value))
+                                    } else {
+                                        val value = prefs.get(DataConst.OVERALL_BG_COLOR_NIGHT)
+                                        if (value.isBlank())
+                                            Color.Black
+                                        else
+                                            Color(android.graphics.Color.parseColor(value))
+                                    }
+                                }
+                                coroutineScope.launch {
+                                    context.let {
+                                        Toast.makeText(it, it.getString(R.string.save_successful), Toast.LENGTH_SHORT).show()
                                     }
                                 }
                             }
@@ -738,52 +726,39 @@ fun ColorPickerPage(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                CoroutineScope(Dispatchers.Default).launch {
-                                    SafeSP.mSP?.let { sp ->
-                                        val targetKey = if (currentDarkMode.value) {
-                                            keyDark
-                                        } else {
-                                            keyLight
-                                        }
-                                        if (pkgName.isNotBlank()) {
-                                            val tmpConfigMap =
-                                                (SafeSP.mSP?.getStringSet(targetKey, emptySet())
-                                                    ?: emptySet()).toMap()
-                                            tmpConfigMap.remove(pkgName)
-                                            sp.edit {
-                                                putStringSet(targetKey, tmpConfigMap.toSet())
-                                                commit()
-                                            }
-                                            defaultColorLight = Color(getBgColor(appIcon, true))
-                                            defaultColorDark = Color(getBgColor(appIcon, false))
-                                        } else {
-                                            sp.edit {
-                                                remove(targetKey)
-                                                commit()
-                                            }
-                                            defaultColorLight = Color.White
-                                            defaultColorDark = Color.Black
-                                        }
-                                        coroutineScope.launch {
-                                            selectedColor.value =
-                                                if (currentDarkMode.value) defaultColorDark
-                                                else defaultColorLight
-                                            HyperXActivity.context.let {
-                                                Toast.makeText(
-                                                    it,
-                                                    it.getString(R.string.save_successful),
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                            }
-                                        }
-                                    } ?: coroutineScope.launch {
-                                        HyperXActivity.context.let {
-                                            Toast.makeText(
-                                                it,
-                                                it.getString(R.string.save_failed),
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                        }
+                                if (pkgName.isNotBlank()) {
+                                    val targetKey = if (currentDarkMode.value) {
+                                        DataConst.INDIVIDUAL_BG_COLOR_APP_MAP_DARK
+                                    } else {
+                                        DataConst.INDIVIDUAL_BG_COLOR_APP_MAP
+                                    }
+
+                                    val tmpConfigMap = prefs.get(targetKey).toMap()
+                                    tmpConfigMap.remove(pkgName)
+
+                                    prefs.edit { put(targetKey, tmpConfigMap.toSet()) }
+                                    defaultColorLight = Color(getBgColor(appIcon, true))
+                                    defaultColorDark = Color(getBgColor(appIcon, false))
+                                } else {
+                                    val targetKey = if (currentDarkMode.value) {
+                                        DataConst.OVERALL_BG_COLOR_NIGHT
+                                    } else {
+                                        DataConst.OVERALL_BG_COLOR
+                                    }
+                                    prefs.edit { remove(targetKey) }
+                                    defaultColorLight = Color.White
+                                    defaultColorDark = Color.Black
+                                }
+                                coroutineScope.launch {
+                                    selectedColor.value =
+                                        if (currentDarkMode.value) defaultColorDark
+                                        else defaultColorLight
+                                    context.let {
+                                        Toast.makeText(
+                                            it,
+                                            it.getString(R.string.save_successful),
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                     }
                                 }
                             }

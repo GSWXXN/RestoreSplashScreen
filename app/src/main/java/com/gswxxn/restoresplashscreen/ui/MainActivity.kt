@@ -2,6 +2,9 @@ package com.gswxxn.restoresplashscreen.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
@@ -41,13 +44,13 @@ import com.gswxxn.restoresplashscreen.ui.page.ScopePage
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.isXiaomiPad
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.factory.dataChannel
-import dev.lackluster.hyperx.compose.activity.HyperXActivity
+import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.lackluster.hyperx.compose.activity.SafeSP
 import dev.lackluster.hyperx.compose.base.HyperXApp
 import top.yukonga.miuix.kmp.basic.Box
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
-class MainActivity : HyperXActivity() {
+class MainActivity : ComponentActivity() {
     companion object {
         val moduleActive: MutableState<Boolean> = mutableStateOf(false)
         val devMode: MutableState<Boolean> = mutableStateOf(false)
@@ -55,6 +58,7 @@ class MainActivity : HyperXActivity() {
         val blurTintAlphaLight: MutableFloatState = mutableFloatStateOf(0.6f)
         val blurTintAlphaDark: MutableFloatState = mutableFloatStateOf(0.5f)
         val splitEnabled: MutableState<Boolean> = mutableStateOf(true)
+
         val systemUIRestartNeeded = mutableStateOf(true)
         val androidRestartNeeded = mutableStateOf<Boolean?>(null)
     }
@@ -63,23 +67,30 @@ class MainActivity : HyperXActivity() {
     @SuppressWarnings("deprecation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         try {
             SafeSP.setSP(
-                getSharedPreferences("${context.packageName ?: "unknown"}_preferences", MODE_WORLD_READABLE)
+                getSharedPreferences("${packageName ?: "unknown"}_preferences", MODE_WORLD_READABLE)
             )
-            devMode.value = SafeSP.getBoolean(DataConst.ENABLE_DEV_SETTINGS.key, DataConst.ENABLE_DEV_SETTINGS.value)
-            blurEnabled.value = SafeSP.getBoolean(DataConst.BLUR.key, DataConst.BLUR.value)
-            blurTintAlphaLight.floatValue =
-                SafeSP.getInt(DataConst.HAZE_TINT_ALPHA_LIGHT.key, DataConst.HAZE_TINT_ALPHA_LIGHT.value) / 100f
-            blurTintAlphaDark.floatValue =
-                SafeSP.getInt(DataConst.HAZE_TINT_ALPHA_DARK.key, DataConst.HAZE_TINT_ALPHA_DARK.value) / 100f
-            splitEnabled.value = SafeSP.getBoolean(DataConst.SPLIT_VIEW.key, isXiaomiPad)
         } catch (exception: SecurityException) {
             devMode.value = false
             blurEnabled.value = true
             blurTintAlphaLight.floatValue = 0.6f
             blurTintAlphaDark.floatValue = 0.5f
             splitEnabled.value = isXiaomiPad
+        }
+
+        devMode.value = prefs().get(DataConst.ENABLE_DEV_SETTINGS)
+        devMode.value = prefs().get(DataConst.ENABLE_DEV_SETTINGS)
+        blurEnabled.value = prefs().get(DataConst.BLUR)
+        blurTintAlphaLight.floatValue = prefs().get(DataConst.HAZE_TINT_ALPHA_LIGHT) / 100f
+        blurTintAlphaDark.floatValue = prefs().get(DataConst.HAZE_TINT_ALPHA_DARK) / 100f
+        splitEnabled.value = prefs().get(DataConst.SPLIT_VIEW)
+
+        enableEdgeToEdge()
+        window.isNavigationBarContrastEnforced = false
+        setContent {
+            AppContent()
         }
     }
 
@@ -95,7 +106,7 @@ class MainActivity : HyperXActivity() {
     }
 
     @Composable
-    override fun AppContent() {
+    fun AppContent() {
         HyperXApp(
             autoSplitView = splitEnabled,
             mainPageContent = { navController, adjustPadding, mode ->
@@ -135,14 +146,13 @@ class MainActivity : HyperXActivity() {
 
                 composable(
                     "${Pages.CONFIG_COLOR_PICKER}?" +
-                            "${ColorPickerPageArgs.PACKAGE_NAME}={${ColorPickerPageArgs.PACKAGE_NAME}}," +
-                            "${ColorPickerPageArgs.KEY_LIGHT}={${ColorPickerPageArgs.KEY_LIGHT}}," +
-                            "${ColorPickerPageArgs.KEY_DARK}={${ColorPickerPageArgs.KEY_DARK}}"
+                            "${ColorPickerPageArgs.PACKAGE_NAME}={${ColorPickerPageArgs.PACKAGE_NAME}}"
                 ) {
                     val pkgName = it.arguments?.getString(ColorPickerPageArgs.PACKAGE_NAME) ?: ""
+                    /* Todo: 传入 是否为 OVERALL_BG 设置, 不应为现在的依据包名为 “” 来判断*/
                     val keyLight = it.arguments?.getString(ColorPickerPageArgs.KEY_LIGHT) ?: DataConst.OVERALL_BG_COLOR.key
                     val keyDark = it.arguments?.getString(ColorPickerPageArgs.KEY_DARK) ?: DataConst.OVERALL_BG_COLOR_NIGHT.key
-                    ColorPickerPage(navController, adjustPadding, pkgName, keyLight, keyDark, mode)
+                    ColorPickerPage(navController, adjustPadding, pkgName, mode)
                 }
             }
         )

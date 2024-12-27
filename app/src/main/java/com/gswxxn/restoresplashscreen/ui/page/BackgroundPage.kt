@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.gswxxn.restoresplashscreen.R
@@ -19,7 +20,7 @@ import com.gswxxn.restoresplashscreen.ui.component.ColorPickerPageArgs
 import com.gswxxn.restoresplashscreen.ui.component.HeaderCard
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.isMIUI
 import com.highcapable.yukihookapi.hook.factory.hasClass
-import dev.lackluster.hyperx.compose.activity.SafeSP
+import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.lackluster.hyperx.compose.base.BasePage
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.navigation.navigateTo
@@ -34,9 +35,10 @@ import dev.lackluster.hyperx.compose.preference.TextPreference
  */
 @Composable
 fun BackgroundPage(navController: NavController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) {
-    var changeColorType by remember { mutableIntStateOf(SafeSP.getInt(DataConst.CHANG_BG_COLOR_TYPE.key)) }
-    var colorMode by remember { mutableIntStateOf(SafeSP.getInt(DataConst.BG_COLOR_MODE.key)) }
-    val ignoreDarkMode = remember { mutableStateOf(SafeSP.getBoolean(DataConst.IGNORE_DARK_MODE.key)) }
+    val prefs = LocalContext.current.prefs()
+    var changeColorType by remember { mutableIntStateOf(prefs.get(DataConst.CHANG_BG_COLOR_TYPE)) }
+    var colorMode by remember { mutableIntStateOf(prefs.get(DataConst.BG_COLOR_MODE)) }
+    val ignoreDarkMode = remember { mutableStateOf(prefs.get(DataConst.IGNORE_DARK_MODE)) }
     var ignoreDarkModeEnabled by remember { mutableStateOf(true) }
 
     val changeColorTypeItems = listOf(
@@ -52,7 +54,7 @@ fun BackgroundPage(navController: NavController, adjustPadding: PaddingValues, m
     )
 
     if (isMIUI && colorMode == 2 && (changeColorType == 1 || changeColorType == 2)) {
-        SafeSP.putAny(DataConst.IGNORE_DARK_MODE.key, true)
+        prefs.edit { put(DataConst.IGNORE_DARK_MODE, true) }
         ignoreDarkMode.value = true
         ignoreDarkModeEnabled = false
     } else {
@@ -109,9 +111,7 @@ fun BackgroundPage(navController: NavController, adjustPadding: PaddingValues, m
                     ) {
                         navController.navigateTo(
                             "${Pages.CONFIG_COLOR_PICKER}?" +
-                                    "${ColorPickerPageArgs.PACKAGE_NAME}=${""}," +
-                                    "${ColorPickerPageArgs.KEY_LIGHT}=${DataConst.OVERALL_BG_COLOR.key}," +
-                                    "${ColorPickerPageArgs.KEY_DARK}=${DataConst.OVERALL_BG_COLOR_NIGHT.key}"
+                                    "${ColorPickerPageArgs.PACKAGE_NAME}=${""}"
                         )
                     }
                 }

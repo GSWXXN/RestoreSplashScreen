@@ -18,7 +18,7 @@ fun ForceSplashPage(navController: NavController, adjustPadding: PaddingValues, 
         navController,
         adjustPadding,
         stringResource(R.string.force_show_splash_screen_title),
-        DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST.key,
+        DataConst.FORCE_SHOW_SPLASH_SCREEN_LIST,
         mode
     )
 }

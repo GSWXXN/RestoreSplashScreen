@@ -44,12 +44,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.core.content.edit
 import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavController
 import com.gswxxn.restoresplashscreen.R
@@ -59,10 +59,9 @@ import com.gswxxn.restoresplashscreen.ui.component.SpliceCard
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.notEqualsTo
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toMap
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toSet
+import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
-import dev.lackluster.hyperx.compose.activity.HyperXActivity
-import dev.lackluster.hyperx.compose.activity.SafeSP
 import dev.lackluster.hyperx.compose.base.AlertDialog
 import dev.lackluster.hyperx.compose.base.AlertDialogMode
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
@@ -117,8 +116,9 @@ fun MinDurationPage(
     blurTintAlphaLight: MutableFloatState = MainActivity.blurTintAlphaLight,
     blurTintAlphaDark: MutableFloatState = MainActivity.blurTintAlphaDark,
 ) {
-    val checkedListKey = DataConst.MIN_DURATION_LIST.key
-    val configMapKey = DataConst.MIN_DURATION_CONFIG_MAP.key
+    val context = LocalContext.current
+//    val checkedListKey = DataConst.MIN_DURATION_LIST.key
+//    val configMapKey = DataConst.MIN_DURATION_CONFIG_MAP.key
     val topAppBarBackground = MiuixTheme.colorScheme.background
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val listState = rememberLazyListState()
@@ -149,11 +149,11 @@ fun MinDurationPage(
     // 保存前的配置
     val tmpCheckedList = mutableSetOf<String>().apply {
         clear()
-        addAll(checkedListKey.let { SafeSP.mSP?.getStringSet(it, emptySet()) } ?: emptySet())
+        addAll(context.prefs().get(DataConst.MIN_DURATION_LIST))
     }
     val tmpConfigMap = mutableMapOf<String, String>().apply {
         clear()
-        putAll((SafeSP.mSP?.getStringSet(checkedListKey, emptySet())?: emptySet()).toMap())
+        putAll(context.prefs().get(DataConst.MIN_DURATION_CONFIG_MAP).toMap())
     }
 
     val coroutineScope = rememberCoroutineScope()
@@ -180,7 +180,7 @@ fun MinDurationPage(
         launch {
             isLoading = true
             delay(500)
-            val pm = HyperXActivity.context.packageManager
+            val pm = context.packageManager
             appInfoList = pm.getInstalledApplications(0).map {
                 DurationAppInfo(
                     it.loadLabel(pm).toString(),
@@ -302,36 +302,30 @@ fun MinDurationPage(
                         minHeight = 50.dp,
                         onClick = {
                             CoroutineScope(Dispatchers.Default).launch {
-                                SafeSP.mSP?.let { sp ->
-                                    val currentCheckedList = appInfoList.filter { it.isChecked.value }.map {
-                                        it.packageName
-                                    }.toSet()
-                                    val currentConfigMap = appInfoList.filter {
-                                        it.config.value != null && it.config.value != emptyMapString
-                                    }.map {
-                                        "${it.packageName}_${it.config.value}"
-                                    }.toSet()
-                                    sp.edit {
-                                        putStringSet(checkedListKey, currentCheckedList)
-                                        putStringSet(configMapKey, currentConfigMap)
-                                        commit()
-                                    }
-                                    tmpCheckedList.apply {
-                                        clear()
-                                        addAll(checkedListKey.let { SafeSP.mSP?.getStringSet(it, emptySet()) } ?: emptySet())
-                                    }
-                                    tmpConfigMap.apply {
-                                        clear()
-                                        putAll((SafeSP.mSP?.getStringSet(checkedListKey, emptySet())?: emptySet()).toMap())
-                                    }
-                                    coroutineScope.launch {
-                                        HyperXActivity.context.let {
-                                            Toast.makeText(it, it.getString(R.string.save_successful), Toast.LENGTH_SHORT).show()
-                                        }
-                                    }
-                                } ?: coroutineScope.launch {
-                                    HyperXActivity.context.let {
-                                        Toast.makeText(it, it.getString(R.string.save_failed), Toast.LENGTH_SHORT).show()
+                                val currentCheckedList = appInfoList.filter { it.isChecked.value }.map {
+                                    it.packageName
+                                }.toMutableSet()
+                                val currentConfigMap = appInfoList.filter {
+                                    it.config.value != null && it.config.value != emptyMapString
+                                }.map {
+                                    "${it.packageName}_${it.config.value}"
+                                }.toMutableSet()
+
+                                context.prefs().edit {
+                                    put(DataConst.MIN_DURATION_LIST, currentCheckedList)
+                                    put(DataConst.MIN_DURATION_CONFIG_MAP, currentConfigMap)
+                                }
+                                tmpCheckedList.apply {
+                                    clear()
+                                    addAll(context.prefs().get(DataConst.MIN_DURATION_LIST))
+                                }
+                                tmpConfigMap.apply {
+                                    clear()
+                                    putAll(context.prefs().get(DataConst.MIN_DURATION_CONFIG_MAP).toMap())
+                                }
+                                coroutineScope.launch {
+                                    context.let {
+                                        Toast.makeText(it, it.getString(R.string.save_successful), Toast.LENGTH_SHORT).show()
                                     }
                                 }
                             }

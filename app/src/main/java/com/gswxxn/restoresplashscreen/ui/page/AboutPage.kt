@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -38,8 +39,7 @@ import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.ui.MainActivity
-import dev.lackluster.hyperx.compose.activity.HyperXActivity
-import dev.lackluster.hyperx.compose.activity.SafeSP
+import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.lackluster.hyperx.compose.base.BasePage
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.base.IconSize
@@ -66,6 +66,8 @@ fun AboutPage(navController: NavController, adjustPadding: PaddingValues, mode: 
         Reference("HyperCompose", "HowieHChen", "Apache-2.0", "https://github.com/HowieHChen/hyperx-compose"),
         Reference("Miuix", "miuix-kotlin-multiplatform", "Apache-2.0", "https://github.com/miuix-kotlin-multiplatform/miuix"),
     )
+    val context = LocalContext.current
+    val prefs = context.prefs()
 
     BasePage(
         navController,
@@ -91,10 +93,10 @@ fun AboutPage(navController: NavController, adjustPadding: PaddingValues, mode: 
                             lastClickTime = now
                             if (count != 5) return@clickable
                             count = 0
-                            if (!SafeSP.getBoolean(DataConst.ENABLE_DEV_SETTINGS.key)) {
+                            if (!prefs.get(DataConst.ENABLE_DEV_SETTINGS)) {
                                 MainActivity.devMode.value = true
-                                SafeSP.putAny(DataConst.ENABLE_DEV_SETTINGS.key, true)
-                                HyperXActivity.context.let {
+                                prefs.edit { put(DataConst.ENABLE_DEV_SETTINGS, true) }
+                                context.let {
                                     Toast.makeText(
                                         it,
                                         it.getString(R.string.enable_dev_settings),
@@ -102,7 +104,7 @@ fun AboutPage(navController: NavController, adjustPadding: PaddingValues, mode: 
                                     ).show()
                                 }
                             } else {
-                                HyperXActivity.context.let {
+                                context.let {
                                     Toast.makeText(
                                         it,
                                         it.getString(R.string.enable_dev_settings),
@@ -165,7 +167,7 @@ fun AboutPage(navController: NavController, adjustPadding: PaddingValues, mode: 
                         title = stringResource(R.string.developer_milu),
                         summary = stringResource(R.string.developer)
                     ) {
-                        HyperXActivity.context.let {
+                        context.let {
                             Toast.makeText(it, it.getString(R.string.follow_me), Toast.LENGTH_SHORT).show()
                             try {
                                 it.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("coolmarket://u/1189245")))
@@ -182,7 +184,7 @@ fun AboutPage(navController: NavController, adjustPadding: PaddingValues, mode: 
                         title = "GitHub",
                         summary = stringResource(R.string.open_source_repo)
                     ) {
-                        HyperXActivity.context.openUrl("https://github.com/GSWXXN/RestoreSplashScreen")
+                        context.openUrl("https://github.com/GSWXXN/RestoreSplashScreen")
                     }
                     SuperArrow(
                         title = "",
@@ -197,7 +199,7 @@ fun AboutPage(navController: NavController, adjustPadding: PaddingValues, mode: 
                         },
                         insideMargin = PaddingValues(16.dp),
                         onClick = {
-                            HyperXActivity.context.openUrl("https://www.iconfont.cn")
+                            context.openUrl("https://www.iconfont.cn")
                         }
                     )
                 }
@@ -213,7 +215,7 @@ fun AboutPage(navController: NavController, adjustPadding: PaddingValues, mode: 
                         title = "${project.author}/${project.name}",
                         summary = project.license
                     ) {
-                        HyperXActivity.context.let {
+                        context.let {
                             Toast.makeText(it, it.getString(R.string.thanks_to, project.author), Toast.LENGTH_SHORT).show()
                             it.openUrl(project.link)
                         }

@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -36,7 +37,6 @@ import com.gswxxn.restoresplashscreen.ui.MainActivity.Companion.systemUIRestartN
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.execShell
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.highcapable.yukihookapi.YukiHookAPI.Status.Executor
-import dev.lackluster.hyperx.compose.activity.HyperXActivity
 import dev.lackluster.hyperx.compose.base.BasePage
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.base.ImageIcon
@@ -66,8 +66,9 @@ fun MainPage(navController: NavController, adjustPadding: PaddingValues, mode: B
     val isTopPopupExpanded = remember { mutableStateOf(false) }
     val showTopPopup = remember { mutableStateOf(false) }
     val dialogRestartVisibility = remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
-    val cardBackground = Color(HyperXActivity.context.getColor(
+    val cardBackground = Color(context.getColor(
         when {
             moduleActive.value && (androidRestartNeeded.value == true || systemUIRestartNeeded.value) ->
                 R.color.yellow
@@ -169,7 +170,7 @@ fun MainPage(navController: NavController, adjustPadding: PaddingValues, mode: B
                         try {
                             execShell("am broadcast -a android.telephony.action.SECRET_CODE -d android_secret_code://5776733 android")
                         } catch (_: Exception) {
-                            HyperXActivity.context.let {
+                            context.let {
                                 it.toast(it.getString(R.string.no_root))
                             }
                         }
@@ -280,7 +281,7 @@ fun MainPage(navController: NavController, adjustPadding: PaddingValues, mode: B
                     icon = ImageIcon(iconRes = R.drawable.ic_help),
                     title = stringResource(R.string.faq)
                 ) {
-                    HyperXActivity.context.let {
+                    context.let {
                         it.startActivity(
                             Intent(Intent.ACTION_VIEW, Uri.parse(it.getString(R.string.faq_url)))
                         )
@@ -313,7 +314,7 @@ fun MainPage(navController: NavController, adjustPadding: PaddingValues, mode: B
                 onClick = {
                     execShell("reboot")
                     Thread.sleep(300)
-                    HyperXActivity.context.let {
+                    context.let {
                         it.toast(it.getString(R.string.no_root))
                     }
                 }
@@ -325,7 +326,7 @@ fun MainPage(navController: NavController, adjustPadding: PaddingValues, mode: B
                 onClick = {
                     execShell("pkill -f com.android.systemui && pkill -f com.gswxxn.restoresplashscreen")
                     Thread.sleep(300)
-                    HyperXActivity.context.let {
+                    context.let {
                         it.toast(it.getString(R.string.no_root))
                     }
                 }

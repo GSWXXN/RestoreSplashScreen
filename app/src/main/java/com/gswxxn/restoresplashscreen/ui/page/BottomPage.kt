@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.gswxxn.restoresplashscreen.R
@@ -15,8 +16,7 @@ import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.Pages
 import com.gswxxn.restoresplashscreen.ui.MainActivity
 import com.gswxxn.restoresplashscreen.ui.component.HeaderCard
-import dev.lackluster.hyperx.compose.activity.HyperXActivity
-import dev.lackluster.hyperx.compose.activity.SafeSP
+import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.lackluster.hyperx.compose.base.BasePage
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.navigation.navigateTo
@@ -29,7 +29,9 @@ import dev.lackluster.hyperx.compose.preference.TextPreference
  */
 @Composable
 fun BottomPage(navController: NavController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) {
-    var removeBrandingImage by remember { mutableStateOf(SafeSP.getBoolean(DataConst.REMOVE_BRANDING_IMAGE.key)) }
+    val prefs = LocalContext.current.prefs()
+    var removeBrandingImage by remember { mutableStateOf(prefs.get(DataConst.REMOVE_BRANDING_IMAGE)) }
+    val context = LocalContext.current
 
     BasePage(
         navController,
@@ -59,7 +61,7 @@ fun BottomPage(navController: NavController, adjustPadding: PaddingValues, mode:
                 ) { newValue ->
                     removeBrandingImage = newValue
                     if (newValue) {
-                        HyperXActivity.context.let {
+                        context.let {
                             Toast.makeText(it, it.getString(R.string.custom_scope_message), Toast.LENGTH_SHORT).show()
                         }
                     }

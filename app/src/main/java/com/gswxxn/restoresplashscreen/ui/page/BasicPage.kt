@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.gswxxn.restoresplashscreen.BuildConfig
@@ -20,8 +21,7 @@ import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.ui.MainActivity
 import com.gswxxn.restoresplashscreen.ui.component.HeaderCard
 import com.gswxxn.restoresplashscreen.utils.BackupUtils
-import dev.lackluster.hyperx.compose.activity.HyperXActivity
-import dev.lackluster.hyperx.compose.activity.SafeSP
+import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.lackluster.hyperx.compose.base.BasePage
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
@@ -34,10 +34,13 @@ import java.time.LocalDateTime
  */
 @Composable
 fun BasicPage(navController: NavController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) {
-    var enableLog by remember { mutableStateOf(SafeSP.getBoolean(DataConst.ENABLE_LOG.key, DataConst.ENABLE_LOG.value)) }
+    val prefs = LocalContext.current.prefs()
+
+    var enableLog by remember { mutableStateOf(prefs.get(DataConst.ENABLE_LOG)) }
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
-        if (enableLog && (System.currentTimeMillis() - SafeSP.getLong(DataConst.ENABLE_LOG_TIMESTAMP.key, DataConst.ENABLE_LOG_TIMESTAMP.value)) > 86400000) {
-            SafeSP.putAny(DataConst.ENABLE_LOG.key, false)
+        if (enableLog && (System.currentTimeMillis() - prefs.get(DataConst.ENABLE_LOG_TIMESTAMP)) > 86400000) {
+            prefs.edit { put(DataConst.ENABLE_LOG, false) }
             enableLog = false
         }
     }
@@ -49,7 +52,7 @@ fun BasicPage(navController: NavController, adjustPadding: PaddingValues, mode: 
         backupUri.value = it
     }
     backupUri.value?.let {
-        BackupUtils.handleCreateDocument(HyperXActivity.context, it)
+        BackupUtils.handleCreateDocument(context, it)
     }
     val restoreUri = remember { mutableStateOf<Uri?>(null) }
     val restoreLauncher = rememberLauncherForActivityResult(
@@ -58,7 +61,7 @@ fun BasicPage(navController: NavController, adjustPadding: PaddingValues, mode: 
         restoreUri.value = it
     }
     restoreUri.value?.let { uri ->
-        BackupUtils.handleReadDocument(HyperXActivity.context, uri)
+        BackupUtils.handleReadDocument(context, uri)
     }
 
     BasePage(
@@ -87,7 +90,7 @@ fun BasicPage(navController: NavController, adjustPadding: PaddingValues, mode: 
                 ) {
                     enableLog = it
                     if (it) {
-                        SafeSP.putAny(DataConst.ENABLE_LOG_TIMESTAMP.key, System.currentTimeMillis())
+                        prefs.edit { put(DataConst.ENABLE_LOG_TIMESTAMP, System.currentTimeMillis()) }
                     }
                 }
                 // 隐藏桌面图标
@@ -95,7 +98,7 @@ fun BasicPage(navController: NavController, adjustPadding: PaddingValues, mode: 
                     title = stringResource(R.string.hide_icon),
                     key = DataConst.ENABLE_HIDE_ICON.key
                 ) {
-                    HyperXActivity.context.let { context ->
+                    context.let { context ->
                         context.packageManager.setComponentEnabledSetting(
                             ComponentName(context, "${BuildConfig.APPLICATION_ID}.Home"),
                             if (it)

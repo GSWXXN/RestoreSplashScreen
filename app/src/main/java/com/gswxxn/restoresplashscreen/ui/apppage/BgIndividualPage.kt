@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -46,10 +47,9 @@ import com.gswxxn.restoresplashscreen.ui.component.ColorPickerPageArgs
 import com.gswxxn.restoresplashscreen.ui.component.MyAppInfo
 import com.gswxxn.restoresplashscreen.ui.component.SpliceCard
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toMap
+import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
-import dev.lackluster.hyperx.compose.activity.HyperXActivity
-import dev.lackluster.hyperx.compose.activity.SafeSP
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.base.HazeScaffold
 import dev.lackluster.hyperx.compose.base.IconSize
@@ -90,6 +90,7 @@ fun BgIndividualPage(
     blurTintAlphaLight: MutableFloatState = MainActivity.blurTintAlphaLight,
     blurTintAlphaDark: MutableFloatState = MainActivity.blurTintAlphaDark
 ) {
+    val context = LocalContext.current
     val topAppBarBackground = MiuixTheme.colorScheme.background
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val listState = rememberLazyListState()
@@ -121,12 +122,12 @@ fun BgIndividualPage(
         launch {
             isLoading = true
             delay(500)
-            val key = if (deviceDarkMode) DataConst.INDIVIDUAL_BG_COLOR_APP_MAP_DARK.key else DataConst.INDIVIDUAL_BG_COLOR_APP_MAP.key
+            val configMapPrefs = if (deviceDarkMode) DataConst.INDIVIDUAL_BG_COLOR_APP_MAP_DARK else DataConst.INDIVIDUAL_BG_COLOR_APP_MAP
             val tmpCheckedList = mutableMapOf<String, String>().apply {
                 clear()
-                putAll((SafeSP.mSP?.getStringSet(key, emptySet())?: emptySet()).toMap())
+                putAll(context.prefs().get(configMapPrefs).toMap())
             }
-            val pm = HyperXActivity.context.packageManager
+            val pm = context.packageManager
             appInfoList = pm.getInstalledApplications(0).map {
                 MyAppInfo(
                     it.loadLabel(pm).toString(),
@@ -291,9 +292,7 @@ fun BgIndividualPage(
                         ) {
                             navController.navigateTo(
                                 "${Pages.CONFIG_COLOR_PICKER}?" +
-                                        "${ColorPickerPageArgs.PACKAGE_NAME}=${item.packageName}," +
-                                        "${ColorPickerPageArgs.KEY_LIGHT}=${DataConst.INDIVIDUAL_BG_COLOR_APP_MAP.key}," +
-                                        "${ColorPickerPageArgs.KEY_DARK}=${DataConst.INDIVIDUAL_BG_COLOR_APP_MAP_DARK.key}"
+                                        "${ColorPickerPageArgs.PACKAGE_NAME}=${item.packageName}"
                             )
                         }
                     }

@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -17,7 +18,6 @@ import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.ui.MainActivity
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.getHookInfo
-import dev.lackluster.hyperx.compose.activity.HyperXActivity
 import dev.lackluster.hyperx.compose.base.BasePage
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.preference.EditTextDataType
@@ -35,10 +35,12 @@ import kotlin.math.roundToInt
 @Composable
 fun DevPage(navController: NavController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) {
     val hookInfos = remember { mutableStateListOf<HookInfo>() }
+    val context = LocalContext.current
+
 
     LaunchedEffect(Unit) {
         hookInfos.clear()
-        HyperXActivity.context.getHookInfo("com.android.systemui") { hookInfo ->
+        context.getHookInfo("com.android.systemui") { hookInfo ->
             hookInfo.entries.sortedWith(
                 compareBy({ !it.value.isAbnormal }, {it.key})
             ).forEach { (key, hookManager) ->

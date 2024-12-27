@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.gswxxn.restoresplashscreen.R
@@ -16,8 +17,7 @@ import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.Pages
 import com.gswxxn.restoresplashscreen.ui.MainActivity
 import com.gswxxn.restoresplashscreen.ui.component.HeaderCard
-import dev.lackluster.hyperx.compose.activity.HyperXActivity
-import dev.lackluster.hyperx.compose.activity.SafeSP
+import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.lackluster.hyperx.compose.base.BasePage
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.navigation.navigateTo
@@ -30,9 +30,12 @@ import dev.lackluster.hyperx.compose.preference.TextPreference
  */
 @Composable
 fun DisplayPage(navController: NavController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) {
-    var forceShowSplash by remember { mutableStateOf(SafeSP.getBoolean(DataConst.FORCE_SHOW_SPLASH_SCREEN.key)) }
-    var forceEnableSplash by remember { mutableStateOf(SafeSP.getBoolean(DataConst.FORCE_ENABLE_SPLASH_SCREEN.key)) }
-    val hotStartCompatible = remember { mutableStateOf(SafeSP.getBoolean(DataConst.ENABLE_HOT_START_COMPATIBLE.key)) }
+    val prefs = LocalContext.current.prefs()
+
+    var forceShowSplash by remember { mutableStateOf(prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN)) }
+    var forceEnableSplash by remember { mutableStateOf(prefs.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)) }
+    val hotStartCompatible = remember { mutableStateOf(prefs.get(DataConst.ENABLE_HOT_START_COMPATIBLE)) }
+    val context = LocalContext.current
 
     BasePage(
         navController,
@@ -70,7 +73,7 @@ fun DisplayPage(navController: NavController, adjustPadding: PaddingValues, mode
                 ) { newValue ->
                     forceShowSplash = newValue
                     if (newValue) {
-                        HyperXActivity.context.let {
+                        context.let {
                             Toast.makeText(it, it.getString(R.string.custom_scope_message), Toast.LENGTH_SHORT).show()
                         }
                     }
@@ -108,7 +111,7 @@ fun DisplayPage(navController: NavController, adjustPadding: PaddingValues, mode
                     forceEnableSplash = it
                     if (!it) {
                         hotStartCompatible.value = false
-                        SafeSP.putAny(DataConst.ENABLE_HOT_START_COMPATIBLE.key, false)
+                        prefs.edit { put(DataConst.ENABLE_HOT_START_COMPATIBLE, false) }
                     }
                 }
                 // 将启动遮罩适用于热启动

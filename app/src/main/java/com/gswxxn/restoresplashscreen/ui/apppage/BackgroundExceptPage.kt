@@ -18,7 +18,7 @@ fun BackgroundExceptPage(navController: NavController, adjustPadding: PaddingVal
         navController,
         adjustPadding,
         stringResource(R.string.background_except_title),
-        DataConst.BG_EXCEPT_LIST.key,
+        DataConst.BG_EXCEPT_LIST,
         mode
     )
 }

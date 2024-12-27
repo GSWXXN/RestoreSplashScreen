@@ -11,6 +11,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.gswxxn.restoresplashscreen.R
@@ -20,8 +21,7 @@ import com.gswxxn.restoresplashscreen.ui.MainActivity
 import com.gswxxn.restoresplashscreen.ui.component.HeaderCard
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
 import com.gswxxn.restoresplashscreen.utils.YukiHelper
-import dev.lackluster.hyperx.compose.activity.HyperXActivity
-import dev.lackluster.hyperx.compose.activity.SafeSP
+import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.lackluster.hyperx.compose.base.BasePage
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.navigation.navigateTo
@@ -36,10 +36,13 @@ import dev.lackluster.hyperx.compose.preference.TextPreference
  */
 @Composable
 fun IconPage(navController: NavController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) {
-    var shrinkIcon by remember { mutableIntStateOf(SafeSP.getInt(DataConst.SHRINK_ICON.key)) }
+    val context = LocalContext.current
+    val prefs = context.prefs()
+
+    var shrinkIcon by remember { mutableIntStateOf(prefs.get(DataConst.SHRINK_ICON)) }
     var selectedIconPack by remember { mutableIntStateOf(0) }
-    var ignoreAppIcon by remember { mutableStateOf(SafeSP.getBoolean(DataConst.ENABLE_DEFAULT_STYLE.key)) }
-    var hideSplashIcon by remember { mutableStateOf(SafeSP.getBoolean(DataConst.ENABLE_HIDE_SPLASH_SCREEN_ICON.key)) }
+    var ignoreAppIcon by remember { mutableStateOf(prefs.get(DataConst.ENABLE_DEFAULT_STYLE)) }
+    var hideSplashIcon by remember { mutableStateOf(prefs.get(DataConst.ENABLE_HIDE_SPLASH_SCREEN_ICON)) }
 
     val shrinkIconItems = listOf(
         DropDownEntry(stringResource(R.string.not_shrink_icon)),
@@ -51,7 +54,7 @@ fun IconPage(navController: NavController, adjustPadding: PaddingValues, mode: B
     ) }
 
     LaunchedEffect(Unit) {
-        val availableIconPacks = IconPackManager(HyperXActivity.context).getAvailableIconPacks()
+        val availableIconPacks = IconPackManager(context).getAvailableIconPacks()
         val tempIconPackItems = mutableListOf<DropDownEntry>()
         for (iconPack in availableIconPacks) {
             if (iconPack.key == "None") continue
@@ -63,7 +66,7 @@ fun IconPage(navController: NavController, adjustPadding: PaddingValues, mode: B
             )
         }
         availableIconPackItems.addAll(tempIconPackItems)
-        val selectedPkgName = SafeSP.getString(DataConst.ICON_PACK_PACKAGE_NAME.key, DataConst.ICON_PACK_PACKAGE_NAME.value)
+        val selectedPkgName =prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)
         availableIconPackItems.indexOfFirst {
             it.summary == selectedPkgName
         }.let {
@@ -71,8 +74,8 @@ fun IconPage(navController: NavController, adjustPadding: PaddingValues, mode: B
                 selectedIconPack = it
             } else {
                 selectedIconPack = 0
-                SafeSP.putAny(DataConst.ICON_PACK_PACKAGE_NAME.key, "None")
-                HyperXActivity.context.let { context ->
+                prefs.edit { put(DataConst.ICON_PACK_PACKAGE_NAME, "None") }
+                context.let { context ->
                     Toast.makeText(
                         context,
                         context.getString(R.string.icon_pack_is_removed),
@@ -141,7 +144,7 @@ fun IconPage(navController: NavController, adjustPadding: PaddingValues, mode: B
                     entries = availableIconPackItems,
                     defValue = selectedIconPack
                 ) {
-                    SafeSP.putAny(DataConst.ICON_PACK_PACKAGE_NAME.key, availableIconPackItems[it].summary ?: "None")
+                    prefs.edit { put(DataConst.ICON_PACK_PACKAGE_NAME, availableIconPackItems[it].summary ?: "None") }
                     selectedIconPack = it
                 }
             }
@@ -156,7 +159,7 @@ fun IconPage(navController: NavController, adjustPadding: PaddingValues, mode: B
                 ) { newValue ->
                     ignoreAppIcon = newValue
                     if (newValue) {
-                        HyperXActivity.context.let {
+                        context.let {
                             Toast.makeText(it, it.getString(R.string.custom_scope_message), Toast.LENGTH_SHORT).show()
                         }
                     }
@@ -184,7 +187,7 @@ fun IconPage(navController: NavController, adjustPadding: PaddingValues, mode: B
                 ) { newValue ->
                     hideSplashIcon = newValue
                     if (newValue) {
-                        HyperXActivity.context.let {
+                        context.let {
                             Toast.makeText(it, it.getString(R.string.custom_scope_message), Toast.LENGTH_SHORT).show()
                         }
                     }

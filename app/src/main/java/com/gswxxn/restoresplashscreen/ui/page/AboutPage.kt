@@ -3,7 +3,6 @@ package com.gswxxn.restoresplashscreen.ui.page
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,9 +12,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +36,7 @@ import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.ui.MainActivity
+import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.lackluster.hyperx.compose.base.BasePage
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
@@ -48,7 +46,6 @@ import dev.lackluster.hyperx.compose.preference.PreferenceGroup
 import dev.lackluster.hyperx.compose.preference.TextPreference
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Text
-import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import kotlin.math.min
 
@@ -56,168 +53,39 @@ import kotlin.math.min
  * 关于页面
  */
 @Composable
-fun AboutPage(navController: NavController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) {
-    val referencesList = listOf(
-        Reference("MIUINativeNotifyIcon", "fankes","AGPL-3.0","https://github.com/fankes/MIUINativeNotifyIcon"),
-        Reference("Hide-My-Applist", "Dr-TSNG", "AGPL-3.0", "https://github.com/Dr-TSNG/Hide-My-Applist"),
-        Reference("YukiHookAPI", "fankes", "Apache-2.0", "https://github.com/fankes/YukiHookAPI"),
-        Reference("MiuiHomeR", "YuKongA", "GPL-3.0", "https://github.com/qqlittleice/MiuiHome_R"),
-        Reference("BlockMIUI", "577fkj", "LGPL-2.1", "https://github.com/Block-Network/blockmiui"),
-        Reference("HyperCompose", "HowieHChen", "Apache-2.0", "https://github.com/HowieHChen/hyperx-compose"),
-        Reference("Miuix", "miuix-kotlin-multiplatform", "Apache-2.0", "https://github.com/miuix-kotlin-multiplatform/miuix"),
-    )
-    val context = LocalContext.current
-    val prefs = context.prefs()
-
+fun AboutPage(
+    navController: NavController,
+    adjustPadding: PaddingValues,
+    mode: BasePageDefaults.Mode
+) {
     BasePage(
-        navController,
-        adjustPadding,
-        stringResource(R.string.about),
-        MainActivity.blurEnabled,
-        MainActivity.blurTintAlphaLight,
-        MainActivity.blurTintAlphaDark,
-        mode
+        navController = navController,
+        adjustPadding = adjustPadding,
+        title = stringResource(R.string.about),
+        blurEnabled = MainActivity.blurEnabled,
+        blurTintAlphaLight = MainActivity.blurTintAlphaLight,
+        blurTintAlphaDark = MainActivity.blurTintAlphaDark,
+        mode = mode
     ) {
         item {
-            var count = 0
-            var lastClickTime: Long = 0
-            AdaptiveHeaderCard(
-                colorCardContent = {
-                    Box(
-                        modifier = Modifier.clickable {
-                            val now = System.currentTimeMillis()
-                            if (now - lastClickTime < 500)
-                                count++
-                            else
-                                count = 1
-                            lastClickTime = now
-                            if (count != 5) return@clickable
-                            count = 0
-                            if (!prefs.get(DataConst.ENABLE_DEV_SETTINGS)) {
-                                MainActivity.devMode.value = true
-                                prefs.edit { put(DataConst.ENABLE_DEV_SETTINGS, true) }
-                                context.let {
-                                    Toast.makeText(
-                                        it,
-                                        it.getString(R.string.enable_dev_settings),
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            } else {
-                                context.let {
-                                    Toast.makeText(
-                                        it,
-                                        it.getString(R.string.enable_dev_settings),
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            }
-                        }
-                    ) {
-                        val offset: Offset
-                        val blurRadius: Float
-                        with(LocalDensity.current) {
-                            offset = Offset(0f, 3.dp.toPx())
-                            blurRadius = 6.dp.toPx()
-                        }
-                        Image(
-                            modifier = Modifier.fillMaxSize(),
-                            painter = painterResource(R.drawable.ic_launcher_foreground),
-                            contentDescription = null,
-                            colorFilter = ColorFilter.tint(Color.Black.copy(alpha = 0.08f)),
-                            alignment = Alignment.CenterStart,
-                            contentScale = ContentScale.Fit,
-                        )
-                        Column(
-                            modifier = Modifier.fillMaxWidth().align(Alignment.Center),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
+            val context = LocalContext.current
 
-                            Text(
-                                text = stringResource(R.string.app_name),
-                                color = Color.White.copy(alpha = 0.7f),
-                                style = TextStyle(
-                                    color = Color.White.copy(alpha = 0.7f),
-                                    fontSize = 30.sp,
-                                    fontWeight = FontWeight.SemiBold,
-                                    shadow = Shadow(
-                                        color = Color.Black.copy(alpha = 0.1f),
-                                        offset = offset,
-                                        blurRadius = blurRadius
-                                    )
-                                )
-                            )
-                            Spacer(modifier = Modifier.heightIn(min = 12.dp))
-                            Text(
-                                text = stringResource(R.string.version, BuildConfig.VERSION_NAME),
-                                fontSize = MiuixTheme.textStyles.body2.fontSize,
-                                color = Color.White.copy(alpha = 0.7f),
-                            )
-                        }
-                    }
-                },
-                infoCardContent = {
-                    TextPreference(
-                        icon = ImageIcon(
-                            iconRes = R.mipmap.img_developer,
-                            iconSize = IconSize.App,
-                            cornerRadius = 40.dp
-                        ),
-                        title = stringResource(R.string.developer_milu),
-                        summary = stringResource(R.string.developer)
-                    ) {
-                        context.let {
-                            Toast.makeText(it, it.getString(R.string.follow_me), Toast.LENGTH_SHORT).show()
-                            try {
-                                it.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("coolmarket://u/1189245")))
-                            } catch (e: Exception) {
-                                it.openUrl("https://www.coolapk.com/u/1189245")
-                            }
-                        }
-                    }
-                    TextPreference(
-                        icon = ImageIcon(
-                            iconRes = R.drawable.img_github,
-                            iconSize = IconSize.App
-                        ),
-                        title = "GitHub",
-                        summary = stringResource(R.string.open_source_repo)
-                    ) {
-                        context.openUrl("https://github.com/GSWXXN/RestoreSplashScreen")
-                    }
-                    SuperArrow(
-                        title = "",
-                        leftAction = {
-                            Image(
-                                modifier = Modifier
-                                    .padding(end = 16.dp)
-                                    .height(40.dp),
-                                painter = painterResource(R.drawable.img_iconfont),
-                                contentDescription = null
-                            )
-                        },
-                        insideMargin = PaddingValues(16.dp),
-                        onClick = {
-                            context.openUrl("https://www.iconfont.cn")
-                        }
-                    )
-                }
+            // 模块信息
+            AdaptiveHeaderCard(
+                colorCardContent = { HeaderBrandCard() },
+                infoCardContent = { AppInfoCard() }
             )
-        }
-        item {
-            PreferenceGroup(
-                title = stringResource(R.string.open_source_license),
-                last = true
-            ) {
-                for (project in referencesList) {
+
+            // 开源许可信息
+            PreferenceGroup(title = stringResource(R.string.open_source_license), last = true) {
+                for (project in OpenSourceReference.entries) {
                     TextPreference(
                         title = "${project.author}/${project.name}",
                         summary = project.license
                     ) {
-                        context.let {
-                            Toast.makeText(it, it.getString(R.string.thanks_to, project.author), Toast.LENGTH_SHORT).show()
-                            it.openUrl(project.link)
+                        with(context) {
+                            toast(getString(R.string.thanks_to, project.author))
+                            openExternalUrl(project.link)
                         }
                     }
                 }
@@ -226,14 +94,123 @@ fun AboutPage(navController: NavController, adjustPadding: PaddingValues, mode: 
     }
 }
 
-fun Context.openUrl(url: String) {
-    try {
-        val uri = Uri.parse(url)
-        val intent = Intent(Intent.ACTION_VIEW, uri)
-        this.startActivity(intent)
-    } catch (_: Exception) { }
+/**
+ * 关于页面的头部卡片
+ */
+@Composable
+fun HeaderBrandCard() {
+    val context = LocalContext.current
+    val prefs = context.prefs()
+    var count = 0
+    var lastClickTime: Long = 0
+
+    Box(
+        modifier = Modifier.clickable {
+            val now = System.currentTimeMillis()
+            if (now - lastClickTime < 500)
+                count++
+            else
+                count = 1
+            lastClickTime = now
+            if (count != 5) return@clickable
+            count = 0
+            if (!prefs.get(DataConst.ENABLE_DEV_SETTINGS)) {
+                MainActivity.devMode.value = true
+                prefs.edit { put(DataConst.ENABLE_DEV_SETTINGS, true) }
+                context.toast(R.string.enable_dev_settings)
+            } else {
+                context.toast(R.string.enable_dev_settings)
+            }
+        }
+    ) {
+        Image(
+            modifier = Modifier.fillMaxSize(),
+            painter = painterResource(R.drawable.ic_launcher_foreground),
+            contentDescription = null,
+            colorFilter = ColorFilter.tint(Color.Black.copy(alpha = 0.08f)),
+            alignment = Alignment.CenterStart,
+            contentScale = ContentScale.Fit,
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.Center),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            val titleTextShadowOffset: Offset
+            val titleTextShadowBlurRadius: Float
+            with(LocalDensity.current) {
+                titleTextShadowOffset = Offset(0f, 3.dp.toPx())
+                titleTextShadowBlurRadius = 6.dp.toPx()
+            }
+            Text(
+                text = stringResource(R.string.app_name),
+                color = Color.White.copy(alpha = 0.7f),
+                style = TextStyle(
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    shadow = Shadow(
+                        color = Color.Black.copy(alpha = 0.1f),
+                        offset = titleTextShadowOffset,
+                        blurRadius = titleTextShadowBlurRadius
+                    )
+                )
+            )
+            Spacer(modifier = Modifier.heightIn(min = 12.dp))
+            Text(
+                text = stringResource(R.string.version, BuildConfig.VERSION_NAME),
+                fontSize = MiuixTheme.textStyles.body2.fontSize,
+                color = Color.White.copy(alpha = 0.7f),
+            )
+        }
+    }
 }
 
+/**
+ * 模块信息组 (作者信息及仓库)
+ */
+@Composable
+fun AppInfoCard() {
+    val context = LocalContext.current
+    TextPreference(
+        icon = ImageIcon(
+            iconRes = R.mipmap.img_developer,
+            iconSize = IconSize.App,
+            cornerRadius = 40.dp
+        ),
+        title = stringResource(R.string.developer_milu),
+        summary = stringResource(R.string.developer)
+    ) {
+        with(context) {
+            toast(R.string.follow_me)
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("coolmarket://u/1189245")))
+            } catch (e: Exception) {
+                openExternalUrl("https://www.coolapk.com/u/1189245")
+            }
+        }
+    }
+    TextPreference(
+        icon = ImageIcon(
+            iconRes = R.drawable.img_github,
+            iconSize = IconSize.App
+        ),
+        title = "GitHub",
+        summary = stringResource(R.string.open_source_repo)
+    ) {
+        context.openExternalUrl("https://github.com/GSWXXN/RestoreSplashScreen")
+    }
+}
+
+/**
+ * 根据屏幕宽度动态调整两个卡片的排列方式：
+ * - 当屏幕宽度大于等于 768dp 时，两张卡片横向并排显示
+ * - 当屏幕宽度小于 768dp 时，两张卡片纵向堆叠显示
+ *
+ * @param colorCardContent 用于定义颜色卡片（`colorCard`）内容的可组合项。
+ * @param infoCardContent 用于定义信息卡片（`infoCard`）内容的可组合项。
+ */
 @Composable
 private fun AdaptiveHeaderCard(
     colorCardContent: @Composable () -> Unit,
@@ -241,9 +218,7 @@ private fun AdaptiveHeaderCard(
 ) {
     Layout(
         content = {
-            Card(
-                color = Color("#21A2EE".toColorInt())
-            ) {
+            Card(color = Color("#21A2EE".toColorInt())) {
                 colorCardContent()
             }
             Card {
@@ -287,9 +262,29 @@ private fun AdaptiveHeaderCard(
     }
 }
 
-data class Reference(
-    val name: String,
-    val author:String,
+/**
+ * 定义项目中所引用的第三方开源库的相关信息
+ */
+enum class OpenSourceReference(
+    val author: String,
     val license: String,
     val link: String
-)
+) {
+    MIUINativeNotifyIcon("fankes", "AGPL-3.0", "https://github.com/fankes/MIUINativeNotifyIcon"),
+    `Hide-My-Applist`("Dr-TSNG", "AGPL-3.0", "https://github.com/Dr-TSNG/Hide-My-Applist"),
+    YukiHookAPI("fankes", "Apache-2.0", "https://github.com/fankes/YukiHookAPI"),
+    MiuiHomeR("YuKongA", "GPL-3.0", "https://github.com/qqlittleice/MiuiHome_R"),
+    BlockMIUI("577fkj", "LGPL-2.1", "https://github.com/Block-Network/blockmiui"),
+    HyperCompose("HowieHChen", "Apache-2.0", "https://github.com/HowieHChen/hyperx-compose"),
+    Miuix("miuix-kotlin-multiplatform", "Apache-2.0", "https://github.com/miuix-kotlin-multiplatform/miuix")
+}
+
+/**
+ * 通过系统浏览器打开指定 URL
+ */
+private fun Context.openExternalUrl(url: String) {
+    try {
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+    } catch (_: Exception) {
+    }
+}

@@ -41,7 +41,6 @@ import com.gswxxn.restoresplashscreen.ui.page.DisplayPage
 import com.gswxxn.restoresplashscreen.ui.page.IconPage
 import com.gswxxn.restoresplashscreen.ui.page.MainPage
 import com.gswxxn.restoresplashscreen.ui.page.ScopePage
-import com.gswxxn.restoresplashscreen.utils.YukiHelper.isXiaomiPad
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.factory.dataChannel
 import com.highcapable.yukihookapi.hook.factory.prefs
@@ -72,15 +71,8 @@ class MainActivity : ComponentActivity() {
             SafeSP.setSP(
                 getSharedPreferences("${packageName ?: "unknown"}_preferences", MODE_WORLD_READABLE)
             )
-        } catch (exception: SecurityException) {
-            devMode.value = false
-            blurEnabled.value = true
-            blurTintAlphaLight.floatValue = 0.6f
-            blurTintAlphaDark.floatValue = 0.5f
-            splitEnabled.value = isXiaomiPad
-        }
+        } catch (_: SecurityException) { }
 
-        devMode.value = prefs().get(DataConst.ENABLE_DEV_SETTINGS)
         devMode.value = prefs().get(DataConst.ENABLE_DEV_SETTINGS)
         blurEnabled.value = prefs().get(DataConst.BLUR)
         blurTintAlphaLight.floatValue = prefs().get(DataConst.HAZE_TINT_ALPHA_LIGHT) / 100f

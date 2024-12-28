@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import android.os.Build
 import android.util.TypedValue
 import android.widget.Toast
+import androidx.annotation.StringRes
 import java.io.DataOutputStream
 
 /**
@@ -22,6 +23,15 @@ object CommonUtils {
     fun Context.toast(message: CharSequence): Toast = Toast
         .makeText(this, message, Toast.LENGTH_SHORT)
         .apply { show() }
+
+    /**
+     * 显示 Toast, 内容来自字符串资源 ID
+     *
+     * @receiver 需要显示 Toast 应用的 Context
+     * @param stringID 字符串资源的 ID
+     * @return [Toast]
+     */
+    fun Context.toast(@StringRes stringID: Int) = toast(getString(stringID))
 
     /**
      * 执行 Shell 命令

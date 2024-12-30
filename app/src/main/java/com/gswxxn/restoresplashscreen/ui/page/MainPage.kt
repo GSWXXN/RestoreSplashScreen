@@ -102,7 +102,7 @@ fun MainPage(navController: NavController, adjustPadding: PaddingValues, mode: B
  * 首页顶部状态卡片
  */
 @Composable
-fun TopCard() {
+private fun TopCard() {
     val moduleStatusTypeRes = getModuleStatusType(
         moduleActive = moduleActive.value,
         androidRestartNeeded = androidRestartNeeded.value,
@@ -174,7 +174,7 @@ fun TopCard() {
  * 全部设置项
  */
 @Composable
-fun SettingItems(
+private fun SettingItems(
     navController: NavController
 ) {
     PreferenceGroup {
@@ -208,7 +208,7 @@ fun SettingItems(
  * 右上角的弹出菜单
  */
 @Composable
-fun PopUpMenu(
+private fun PopUpMenu(
     padding: PaddingValues,
     navController: NavController,
     dialogRestartVisibility: MutableState<Boolean>
@@ -269,7 +269,7 @@ fun PopUpMenu(
  * 重启提示的 Dialog
  */
 @Composable
-fun RestartDialog(
+private fun RestartDialog(
     show: MutableState<Boolean>
 ) {
     val context = LocalContext.current

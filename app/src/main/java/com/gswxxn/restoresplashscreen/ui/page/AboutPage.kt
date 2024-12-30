@@ -70,7 +70,7 @@ fun AboutPage(
         item {
             val context = LocalContext.current
 
-            // 模块信息
+            // 模块头部信息
             AdaptiveHeaderCard(
                 colorCardContent = { HeaderBrandCard() },
                 infoCardContent = { AppInfoCard() }
@@ -98,7 +98,7 @@ fun AboutPage(
  * 关于页面的头部卡片
  */
 @Composable
-fun HeaderBrandCard() {
+private fun HeaderBrandCard() {
     val context = LocalContext.current
     val prefs = context.prefs()
     var count = 0
@@ -106,6 +106,7 @@ fun HeaderBrandCard() {
 
     Box(
         modifier = Modifier.clickable {
+            // 连点 5 次, 开启开发者设置
             val now = System.currentTimeMillis()
             if (now - lastClickTime < 500)
                 count++
@@ -171,7 +172,7 @@ fun HeaderBrandCard() {
  * 模块信息组 (作者信息及仓库)
  */
 @Composable
-fun AppInfoCard() {
+private fun AppInfoCard() {
     val context = LocalContext.current
     TextPreference(
         icon = ImageIcon(
@@ -265,11 +266,7 @@ private fun AdaptiveHeaderCard(
 /**
  * 定义项目中所引用的第三方开源库的相关信息
  */
-enum class OpenSourceReference(
-    val author: String,
-    val license: String,
-    val link: String
-) {
+enum class OpenSourceReference(val author: String, val license: String, val link: String) {
     MIUINativeNotifyIcon("fankes", "AGPL-3.0", "https://github.com/fankes/MIUINativeNotifyIcon"),
     `Hide-My-Applist`("Dr-TSNG", "AGPL-3.0", "https://github.com/Dr-TSNG/Hide-My-Applist"),
     YukiHookAPI("fankes", "Apache-2.0", "https://github.com/fankes/YukiHookAPI"),

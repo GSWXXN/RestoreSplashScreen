@@ -1,6 +1,5 @@
 package com.gswxxn.restoresplashscreen.ui.page
 
-import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,6 +16,7 @@ import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.Pages
 import com.gswxxn.restoresplashscreen.ui.MainActivity
 import com.gswxxn.restoresplashscreen.ui.component.HeaderCard
+import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.lackluster.hyperx.compose.base.BasePage
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
@@ -30,60 +30,56 @@ import dev.lackluster.hyperx.compose.preference.TextPreference
  */
 @Composable
 fun ScopePage(navController: NavController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) {
-    val prefs = LocalContext.current.prefs()
+    BasePage(
+        navController = navController,
+        adjustPadding = adjustPadding,
+        title = stringResource(R.string.custom_scope_settings),
+        blurEnabled = MainActivity.blurEnabled,
+        blurTintAlphaLight = MainActivity.blurTintAlphaLight,
+        blurTintAlphaDark = MainActivity.blurTintAlphaDark,
+        mode = mode
+    ) {
+        item {
+            HeaderCard(imageResID = R.drawable.demo_scope, title = "SCOPE")
+
+            PreferenceGroup(last = true) {
+                SettingItems(navController)
+            }
+        }
+    }
+}
+
+/**
+ * 作用阈设置项
+ */
+@Composable
+private fun SettingItems(navController: NavController) {
+    val context = LocalContext.current
+    val prefs = context.prefs()
 
     var customScope by remember { mutableStateOf(prefs.get(DataConst.ENABLE_CUSTOM_SCOPE)) }
 
-    BasePage(
-        navController,
-        adjustPadding,
-        stringResource(R.string.custom_scope_settings),
-        MainActivity.blurEnabled,
-        MainActivity.blurTintAlphaLight,
-        MainActivity.blurTintAlphaDark,
-        mode
-    ) {
-        item {
-            HeaderCard(
-                imageResID = R.drawable.demo_scope,
-                title = "SCOPE"
-            )
+    // 自定义模块作用域
+    SwitchPreference(
+        title = stringResource(R.string.custom_scope),
+        key = DataConst.ENABLE_CUSTOM_SCOPE.key
+    ) { newValue ->
+        customScope = newValue
+        if (newValue) {
+            context.toast(R.string.custom_scope_message)
         }
-        item {
-            PreferenceGroup(
-                last = true
-            ) {
-                val context = LocalContext.current
-                // 自定义模块作用域
-                SwitchPreference(
-                    title = stringResource(R.string.custom_scope),
-                    key = DataConst.ENABLE_CUSTOM_SCOPE.key
-                ) { newValue ->
-                    customScope = newValue
-                    if (newValue) {
-                        context.let {
-                            Toast.makeText(it, it.getString(R.string.custom_scope_message), Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-                AnimatedVisibility(
-                    customScope
-                ) {
-                    Column {
-                        // 将作用域外的应用替换位空白启动遮罩
-                        SwitchPreference(
-                            title = stringResource(R.string.replace_to_empty_splash_screen),
-                            summary = stringResource(R.string.replace_to_empty_splash_screen_tips),
-                            key = DataConst.REPLACE_TO_EMPTY_SPLASH_SCREEN.key
-                        )
-                        // 配置应用列表
-                        TextPreference(
-                            title = stringResource(R.string.exception_mode_list)
-                        ) {
-                            navController.navigateTo(Pages.CONFIG_CUSTOM_SCOPE)
-                        }
-                    }
-                }
+    }
+    AnimatedVisibility(customScope) {
+        Column {
+            // 将作用域外的应用替换位空白启动遮罩
+            SwitchPreference(
+                title = stringResource(R.string.replace_to_empty_splash_screen),
+                summary = stringResource(R.string.replace_to_empty_splash_screen_tips),
+                key = DataConst.REPLACE_TO_EMPTY_SPLASH_SCREEN.key
+            )
+            // 配置应用列表
+            TextPreference(title = stringResource(R.string.exception_mode_list)) {
+                navController.navigateTo(Pages.CONFIG_CUSTOM_SCOPE)
             }
         }
     }

@@ -1,6 +1,5 @@
 package com.gswxxn.restoresplashscreen.ui.page
 
-import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
@@ -16,6 +15,7 @@ import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.Pages
 import com.gswxxn.restoresplashscreen.ui.MainActivity
 import com.gswxxn.restoresplashscreen.ui.component.HeaderCard
+import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.lackluster.hyperx.compose.base.BasePage
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
@@ -29,18 +29,14 @@ import dev.lackluster.hyperx.compose.preference.TextPreference
  */
 @Composable
 fun BottomPage(navController: NavController, adjustPadding: PaddingValues, mode: BasePageDefaults.Mode) {
-    val prefs = LocalContext.current.prefs()
-    var removeBrandingImage by remember { mutableStateOf(prefs.get(DataConst.REMOVE_BRANDING_IMAGE)) }
-    val context = LocalContext.current
-
     BasePage(
-        navController,
-        adjustPadding,
-        stringResource(R.string.bottom_settings),
-        MainActivity.blurEnabled,
-        MainActivity.blurTintAlphaLight,
-        MainActivity.blurTintAlphaDark,
-        mode
+        navController = navController,
+        adjustPadding = adjustPadding,
+        title = stringResource(R.string.bottom_settings),
+        blurEnabled = MainActivity.blurEnabled,
+        blurTintAlphaLight = MainActivity.blurTintAlphaLight,
+        blurTintAlphaDark = MainActivity.blurTintAlphaDark,
+        mode = mode
     ) {
         item {
             HeaderCard(
@@ -48,35 +44,35 @@ fun BottomPage(navController: NavController, adjustPadding: PaddingValues, mode:
                 title = "BRANDING\nIMAGE",
                 maxLines = 2
             )
+            PreferenceGroup(last = true) { RemoveBrandingImageSettingsGroup(navController) }
         }
-        item {
-            PreferenceGroup(
-                last = true
-            ) {
-                // 移除底部图片
-                SwitchPreference(
-                    title = stringResource(R.string.remove_branding_image),
-                    summary = stringResource(R.string.remove_branding_image_tips),
-                    key = DataConst.REMOVE_BRANDING_IMAGE.key
-                ) { newValue ->
-                    removeBrandingImage = newValue
-                    if (newValue) {
-                        context.let {
-                            Toast.makeText(it, it.getString(R.string.custom_scope_message), Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-                AnimatedVisibility(
-                    removeBrandingImage
-                ) {
-                    // 配置移除列表
-                    TextPreference(
-                        title = stringResource(R.string.remove_branding_image_list)
-                    ) {
-                        navController.navigateTo(Pages.CONFIG_REMOVE_BRANDING)
-                    }
-                }
-            }
+    }
+}
+
+/**
+ * 移除底部图片
+ */
+@Composable
+private fun RemoveBrandingImageSettingsGroup(navController: NavController) {
+    val context = LocalContext.current
+    val prefs = context.prefs()
+    var removeBrandingImage by remember { mutableStateOf(prefs.get(DataConst.REMOVE_BRANDING_IMAGE)) }
+
+    // 移除底部图片
+    SwitchPreference(
+        title = stringResource(R.string.remove_branding_image),
+        summary = stringResource(R.string.remove_branding_image_tips),
+        key = DataConst.REMOVE_BRANDING_IMAGE.key
+    ) { newValue ->
+        removeBrandingImage = newValue
+        if (newValue) {
+            context.toast(R.string.custom_scope_message)
+        }
+    }
+    AnimatedVisibility(removeBrandingImage) {
+        // 配置移除列表
+        TextPreference(title = stringResource(R.string.remove_branding_image_list)) {
+            navController.navigateTo(Pages.CONFIG_REMOVE_BRANDING)
         }
     }
 }

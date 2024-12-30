@@ -66,7 +66,9 @@ object AndroidHooker : YukiBaseHooker() {
             paramCount(if (isAtLeastT) 7 else  6)
         }.hook {
             before {
-                val isHotStartCompatible = prefs.get(DataConst.ENABLE_HOT_START_COMPATIBLE) && args(1).boolean()
+                val isHotStartCompatible = prefs.get(DataConst.ENABLE_HOT_START_COMPATIBLE)
+                        && prefs.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)
+                        && args(1).boolean()
                 if (isHotStartCompatible) result = 2
                 printLog("[Android] getStartingWindowType():${if (isHotStartCompatible) "" else "Not"} set result to 2")
             }

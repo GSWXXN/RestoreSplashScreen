@@ -9,6 +9,7 @@ import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.hook.NewSystemUIHooker
 import com.gswxxn.restoresplashscreen.hook.base.BaseHookHandler
 import com.gswxxn.restoresplashscreen.hook.systemui.GenerateHookHandler.currentPackageName
+import com.gswxxn.restoresplashscreen.ui.page.data.ChangeBGColorTypes
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.isDarkMode
 import com.gswxxn.restoresplashscreen.utils.GraphicUtils
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.getMapPrefs
@@ -72,9 +73,8 @@ object BgHookHandler: BaseHookHandler() {
             Color.parseColor(individualBgColorAppMap[currentPackageName])
         } else if (!isInBGExceptList && (!isDarkMode || ignoreDarkMode))
             when (bgColorType) {
-
                 // 从图标取色
-                1 -> {
+                ChangeBGColorTypes.FromIcon.ordinal -> {
                     printLog("SplashScreenViewBuilder(): get adaptive background color")
                     IconHookHandler.currentIconDominantColor ?:
                     mTmpAttrsInstance!!.current().field { name = "mSplashScreenIcon" }.cast<Drawable>()?.let { drawable ->
@@ -90,9 +90,8 @@ object BgHookHandler: BaseHookHandler() {
                         )
                     }
                 }
-
                 // 从壁纸取色
-                2 -> {
+                ChangeBGColorTypes.FromMonet.ordinal -> {
                     printLog("SplashScreenViewBuilder(): get monet background color")
                     when (bgColorMode) {
                         0 -> dynamicLightColorScheme(appContext!!).primaryContainer.toArgb()
@@ -103,9 +102,8 @@ object BgHookHandler: BaseHookHandler() {
                             dynamicDarkColorScheme(appContext!!).surface.toArgb()
                     }
                 }
-
                 // 自定义颜色
-                3 -> {
+                ChangeBGColorTypes.FromCustom.ordinal -> {
                     printLog("SplashScreenViewBuilder(): set overall background color")
                     Color.parseColor(prefs.get(if (isDarkMode) DataConst.OVERALL_BG_COLOR_NIGHT else DataConst.OVERALL_BG_COLOR))
                 }

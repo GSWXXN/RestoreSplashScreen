@@ -19,6 +19,7 @@ import com.gswxxn.restoresplashscreen.hook.NewSystemUIHooker
 import com.gswxxn.restoresplashscreen.hook.base.BaseHookHandler
 import com.gswxxn.restoresplashscreen.hook.systemui.GenerateHookHandler.currentActivity
 import com.gswxxn.restoresplashscreen.hook.systemui.GenerateHookHandler.currentPackageName
+import com.gswxxn.restoresplashscreen.ui.page.data.ShrinkIconType
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.dp2px
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.isDarkMode
 import com.gswxxn.restoresplashscreen.utils.GraphicUtils
@@ -101,7 +102,7 @@ object IconHookHandler : BaseHookHandler() {
 
         // 创建模糊背景 View
         NewSystemUIHooker.Members.build_SplashScreenViewBuilder.addAfterHook {
-            if (prefs.get(DataConst.SHRINK_ICON) == 0 || !prefs.get(DataConst.ENABLE_ADD_ICON_BLUR_BG)) {
+            if (prefs.get(DataConst.SHRINK_ICON) == ShrinkIconType.NotShrinkIcon.ordinal || !prefs.get(DataConst.ENABLE_ADD_ICON_BLUR_BG)) {
                 printLog("build_SplashScreenViewBuilder(): not enable add icon blur bg")
                 return@addAfterHook
             } else if (!currentIsNeedShrinkIcon || currentUseBigMIUILagerIcon == true) {
@@ -243,11 +244,10 @@ object IconHookHandler : BaseHookHandler() {
 
         // 判断是否需要缩小图标
         when (shrinkIconType) {
-            0 -> currentIsNeedShrinkIcon = false                                         // 不缩小图标
-            1 -> currentIsNeedShrinkIcon =                                               // 仅缩小分辨率较低的图标
+            ShrinkIconType.NotShrinkIcon.ordinal -> currentIsNeedShrinkIcon = false
+            ShrinkIconType.ShrinkLowResolutionIcon.ordinal -> currentIsNeedShrinkIcon =
                 if (iconDrawable !is AdaptiveIconDrawable) iconDrawable.intrinsicWidth < iconSize / 1.5 else false
-
-            2 -> currentIsNeedShrinkIcon = true                                          // 缩小全部图标
+            ShrinkIconType.ShrinkAllIcon.ordinal -> currentIsNeedShrinkIcon = true
         }
         printLog("getIcon(): currentIsNeedShrinkIcon: $currentIsNeedShrinkIcon")
 

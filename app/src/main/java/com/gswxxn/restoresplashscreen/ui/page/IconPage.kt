@@ -18,6 +18,7 @@ import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.Pages
 import com.gswxxn.restoresplashscreen.ui.MainActivity
 import com.gswxxn.restoresplashscreen.ui.component.HeaderCard
+import com.gswxxn.restoresplashscreen.ui.page.data.ShrinkIconType
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
 import com.gswxxn.restoresplashscreen.utils.YukiHelper
@@ -107,16 +108,11 @@ private fun CommonSettingsGroup() {
     var shrinkIcon by remember { mutableIntStateOf(prefs.get(DataConst.SHRINK_ICON)) }
     DropDownPreference(
         title = stringResource(R.string.shrink_icon),
-        entries = listOf(
-            DropDownEntry(stringResource(R.string.not_shrink_icon)),
-            DropDownEntry(stringResource(R.string.shrink_low_resolution_icon)),
-            DropDownEntry(stringResource(R.string.shrink_all_icon))
-        ),
-        key = DataConst.SHRINK_ICON.key
-    ) {
-        shrinkIcon = it
-    }
-    AnimatedVisibility(shrinkIcon != 0) {
+        entries = ShrinkIconType.entries.map { DropDownEntry(stringResource(it.stringID)) },
+        key = DataConst.SHRINK_ICON.key,
+        onSelectedIndexChange = { shrinkIcon = it }
+    )
+    AnimatedVisibility(shrinkIcon != ShrinkIconType.NotShrinkIcon.ordinal) {
         // 为缩小的图标添加模糊背景
         SwitchPreference(
             title = stringResource(R.string.add_icon_blur_bg),

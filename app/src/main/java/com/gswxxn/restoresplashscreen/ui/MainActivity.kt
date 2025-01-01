@@ -74,7 +74,7 @@ class MainActivity : ComponentActivity() {
         } catch (_: SecurityException) { }
 
         devMode.value = prefs().get(DataConst.ENABLE_DEV_SETTINGS)
-        blurEnabled.value = prefs().get(DataConst.BLUR)
+        blurEnabled.value = prefs().get(DataConst.MODULE_APP_BLUR)
         blurTintAlphaLight.floatValue = prefs().get(DataConst.HAZE_TINT_ALPHA_LIGHT) / 100f
         blurTintAlphaDark.floatValue = prefs().get(DataConst.HAZE_TINT_ALPHA_DARK) / 100f
         splitEnabled.value = prefs().get(DataConst.SPLIT_VIEW)

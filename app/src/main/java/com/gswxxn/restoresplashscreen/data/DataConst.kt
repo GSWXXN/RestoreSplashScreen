@@ -41,7 +41,6 @@ object DataConst {
     val CHANG_BG_COLOR_TYPE = PrefsData("change_bg_color_type", 0)
     val MIN_DURATION = PrefsData("min_duration", 0)
 
-    val UNDEFINED_LIST = PrefsData("undefined_list", mutableSetOf<String>())
     val CUSTOM_SCOPE_LIST = PrefsData("custom_scope_list", mutableSetOf<String>())
     val DEFAULT_STYLE_LIST = PrefsData("default_style_list", mutableSetOf<String>()) // 忽略应用主动设置的图标 应用列表
     val HIDE_SPLASH_SCREEN_ICON_LIST = PrefsData("hide_splash_screen_icon_list", mutableSetOf<String>())
@@ -60,6 +59,6 @@ object DataConst {
     val HAZE_TINT_ALPHA_DARK = PrefsData("module_blur_tint_dark", 50)
 
     // 模块应用设置
-    val BLUR = PrefsData("module_blur", true)
+    val MODULE_APP_BLUR = PrefsData("module_blur", true)
     val SPLIT_VIEW = PrefsData("module_split", false)
 }

@@ -1,12 +1,9 @@
 package com.gswxxn.restoresplashscreen.utils
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import com.gswxxn.restoresplashscreen.R
-import com.gswxxn.restoresplashscreen.data.ConstValue.CREATE_DOCUMENT_CODE
-import com.gswxxn.restoresplashscreen.data.ConstValue.OPEN_DOCUMENT_CODE
 import com.gswxxn.restoresplashscreen.ui.MainActivity
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.highcapable.yukihookapi.hook.factory.prefs
@@ -15,7 +12,6 @@ import java.io.BufferedReader
 import java.io.BufferedWriter
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
-import java.time.LocalDateTime
 import kotlin.system.exitProcess
 
 /**
@@ -64,7 +60,7 @@ object BackupUtils {
                     }
                 }
             }
-            context.toast(context.getString(R.string.restore_successful))
+            context.toast(R.string.restore_successful)
             Thread {
                 Thread.sleep(500)
                 val intent =
@@ -74,7 +70,7 @@ object BackupUtils {
                 context.startActivity(intent)
                 exitProcess(0)
             }.start()
-        } catch (e: Throwable) { context.toast(context.getString(R.string.restore_failed)) }
+        } catch (e: Throwable) { context.toast(R.string.restore_failed) }
     }
 
     /**
@@ -97,7 +93,7 @@ object BackupUtils {
                 }
             }
             context.toast(context.getString(R.string.save_successful))
-        } catch (_: Throwable) { context.toast(context.getString(R.string.save_failed)) }
+        } catch (_: Throwable) { context.toast(R.string.save_failed) }
     }
 
     /**

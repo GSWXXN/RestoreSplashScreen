@@ -32,19 +32,20 @@ import com.gswxxn.restoresplashscreen.BuildConfig
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.ui.page.data.ModulePreferenceRes
 import com.gswxxn.restoresplashscreen.data.Pages
-import com.gswxxn.restoresplashscreen.ui.page.data.ModuleSettingPreference
-import com.gswxxn.restoresplashscreen.ui.page.data.getModuleStatusType
 import com.gswxxn.restoresplashscreen.ui.MainActivity
 import com.gswxxn.restoresplashscreen.ui.MainActivity.Companion.androidRestartNeeded
 import com.gswxxn.restoresplashscreen.ui.MainActivity.Companion.moduleActive
 import com.gswxxn.restoresplashscreen.ui.MainActivity.Companion.systemUIRestartNeeded
+import com.gswxxn.restoresplashscreen.ui.page.data.ModuleStatusType
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.execShell
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.highcapable.yukihookapi.YukiHookAPI.Status.Executor
 import dev.lackluster.hyperx.compose.base.BasePage
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
+import dev.lackluster.hyperx.compose.base.ImageIcon
 import dev.lackluster.hyperx.compose.navigation.navigateWithPopup
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
+import dev.lackluster.hyperx.compose.preference.TextPreference
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Icon
@@ -315,4 +316,45 @@ private fun RestartDialog(
             )
         }
     }
+}
+
+/**
+ * 根据 [ModulePreferenceRes] 提供的资源来创建模块首页设置项
+ *
+ * @param modulePreferenceRes 模块偏好配置资源，包含图标资源、标题资源和导航目标
+ * @param navController 导航控制器，用于执行页面跳转。如果为 null，则不会触发导航
+ * @param onClick 点击事件的回调函数。如果不为 null，则会在点击时执行此回调
+ */
+@Composable
+fun ModuleSettingPreference(
+    modulePreferenceRes: ModulePreferenceRes,
+    navController: NavController? = null,
+    onClick: (() -> Unit)? = null
+) {
+    TextPreference(
+        icon = ImageIcon(iconRes = modulePreferenceRes.iconRes),
+        title = stringResource(modulePreferenceRes.stringRes)
+    ) {
+        onClick?.invoke()
+        modulePreferenceRes.navigateTo?.let { navController?.navigateWithPopup(it) }
+    }
+}
+
+/**
+ * 根据提供的条件确定模块现实的激活状态
+ *
+ * @param moduleActive 一个布尔值，表示模块是否处于激活状态
+ * @param androidRestartNeeded 一个可空的布尔值，表示是否需要 Android 重启, 空为未获取到数据
+ * @param systemUIRestartNeeded 一个可空的布尔值，表示是否需要系统 UI 重启, 空为未获取到数据
+ * @return 返回表示当前模块状态的 [ModuleStatusType]
+ */
+private fun getModuleStatusType(
+    moduleActive: Boolean,
+    androidRestartNeeded: Boolean?,
+    systemUIRestartNeeded: Boolean?
+): ModuleStatusType = when {
+    moduleActive && androidRestartNeeded == true -> ModuleStatusType.ACTIVE_ANDROID_RESTART
+    moduleActive && systemUIRestartNeeded == true -> ModuleStatusType.ACTIVE_SYSTEM_UI_RESTART
+    moduleActive -> ModuleStatusType.ACTIVE_NO_NEED_RESTART
+    else -> ModuleStatusType.INACTIVE
 }

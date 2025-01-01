@@ -25,35 +25,35 @@ import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Text
 import kotlin.math.max
 
+/**
+ * 子设置页面顶部的展示卡片
+ */
 @Composable
 fun HeaderCard(
     imageResID: Int,
     title: String,
     maxLines: Int = 1
 ) {
-    val offset: Offset
-    val blurRadius: Float
-    with(LocalDensity.current) {
-        offset = Offset(0f, 3.dp.toPx())
-        blurRadius = 6.dp.toPx()
-    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp)
             .padding(bottom = 6.dp, top = 12.dp)
     ) {
-        var textStyle by remember { mutableStateOf(
-            TextStyle(
-                fontSize = 30.sp,
-                fontWeight = FontWeight.SemiBold,
-                shadow = Shadow(
-                    color = Color.Black.copy(alpha = 0.1f),
-                    offset = offset,
-                    blurRadius = blurRadius
+        val density = LocalDensity.current
+        var textStyle by remember {
+            mutableStateOf(
+                TextStyle(
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    shadow = Shadow(
+                        color = Color.Black.copy(alpha = 0.1f),
+                        offset = with(density) { Offset(0f, 3.dp.toPx())},
+                        blurRadius = with(density) { 6.dp.toPx() }
+                    )
                 )
             )
-        ) }
+        }
         var readyToDraw by remember { mutableStateOf(false) }
         Layout(
             content = {
@@ -71,6 +71,7 @@ fun HeaderCard(
                     textAlign = TextAlign.Center,
                     style = textStyle,
                     onTextLayout = { textLayoutResult ->
+                        // 如果文本溢出宽度或高度，则缩小字体
                         if (textLayoutResult.didOverflowWidth || textLayoutResult.didOverflowHeight) {
                             textStyle = textStyle.copy(fontSize = textStyle.fontSize * 0.9)
                         } else {

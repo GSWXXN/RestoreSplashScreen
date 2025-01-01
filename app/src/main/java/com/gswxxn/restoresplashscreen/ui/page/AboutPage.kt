@@ -139,12 +139,7 @@ private fun HeaderBrandCard() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val titleTextShadowOffset: Offset
-            val titleTextShadowBlurRadius: Float
-            with(LocalDensity.current) {
-                titleTextShadowOffset = Offset(0f, 3.dp.toPx())
-                titleTextShadowBlurRadius = 6.dp.toPx()
-            }
+            val density = LocalDensity.current
             Text(
                 text = stringResource(R.string.app_name),
                 color = Color.White.copy(alpha = 0.7f),
@@ -153,8 +148,8 @@ private fun HeaderBrandCard() {
                     fontWeight = FontWeight.SemiBold,
                     shadow = Shadow(
                         color = Color.Black.copy(alpha = 0.1f),
-                        offset = titleTextShadowOffset,
-                        blurRadius = titleTextShadowBlurRadius
+                        offset = with(density) { Offset(0f, 3.dp.toPx()) },
+                        blurRadius = with(density) { 6.dp.toPx() }
                     )
                 )
             )

@@ -19,6 +19,7 @@ import com.gswxxn.restoresplashscreen.hook.NewSystemUIHooker
 import com.gswxxn.restoresplashscreen.hook.base.BaseHookHandler
 import com.gswxxn.restoresplashscreen.hook.systemui.GenerateHookHandler.currentActivity
 import com.gswxxn.restoresplashscreen.hook.systemui.GenerateHookHandler.currentPackageName
+import com.gswxxn.restoresplashscreen.ui.page.data.BGColorModes
 import com.gswxxn.restoresplashscreen.ui.page.data.ShrinkIconType
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.dp2px
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.isDarkMode
@@ -255,8 +256,8 @@ object IconHookHandler : BaseHookHandler() {
         currentIconDominantColor = GraphicUtils.getBgColor(
             bitmap,
             when (colorMode) {
-                1 -> false
-                2 -> !isDarkMode
+                BGColorModes.DarkColor.ordinal -> false
+                BGColorModes.FollowSystem.ordinal -> !isDarkMode
                 else -> true
             }
         )

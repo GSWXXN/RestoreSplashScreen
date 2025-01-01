@@ -9,6 +9,7 @@ import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.hook.NewSystemUIHooker
 import com.gswxxn.restoresplashscreen.hook.base.BaseHookHandler
 import com.gswxxn.restoresplashscreen.hook.systemui.GenerateHookHandler.currentPackageName
+import com.gswxxn.restoresplashscreen.ui.page.data.BGColorModes
 import com.gswxxn.restoresplashscreen.ui.page.data.ChangeBGColorTypes
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.isDarkMode
 import com.gswxxn.restoresplashscreen.utils.GraphicUtils
@@ -79,12 +80,11 @@ object BgHookHandler: BaseHookHandler() {
                     IconHookHandler.currentIconDominantColor ?:
                     mTmpAttrsInstance!!.current().field { name = "mSplashScreenIcon" }.cast<Drawable>()?.let { drawable ->
                         val bitmap = GraphicUtils.drawable2Bitmap(drawable, 100)
-                        val colorMode = prefs.get(DataConst.BG_COLOR_MODE)
                         GraphicUtils.getBgColor(
                             bitmap,
-                            when (colorMode) {
-                                1 -> false
-                                2 -> !isDarkMode
+                            when (bgColorMode) {
+                                BGColorModes.DarkColor.ordinal -> false
+                                BGColorModes.FollowSystem.ordinal -> !isDarkMode
                                 else -> true
                             }
                         )
@@ -94,8 +94,8 @@ object BgHookHandler: BaseHookHandler() {
                 ChangeBGColorTypes.FromMonet.ordinal -> {
                     printLog("SplashScreenViewBuilder(): get monet background color")
                     when (bgColorMode) {
-                        0 -> dynamicLightColorScheme(appContext!!).primaryContainer.toArgb()
-                        1 -> dynamicDarkColorScheme(appContext!!).surface.toArgb()
+                        BGColorModes.LightColor.ordinal -> dynamicLightColorScheme(appContext!!).primaryContainer.toArgb()
+                        BGColorModes.DarkColor.ordinal -> dynamicDarkColorScheme(appContext!!).surface.toArgb()
                         else -> if (!isDarkMode)
                             dynamicLightColorScheme(appContext!!).primaryContainer.toArgb()
                         else

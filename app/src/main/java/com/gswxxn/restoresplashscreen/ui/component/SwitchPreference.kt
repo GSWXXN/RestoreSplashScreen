@@ -43,11 +43,11 @@ fun SwitchPreference(
         onCheckedChange = { newValue ->
             if (!YukiHookAPI.Status.isXposedModuleActive) {
                 context.toast(R.string.make_sure_active)
-            } else {
-                prefsData?.let { prefs.edit { put(it, newValue) } }
-                _checked.value = newValue
-                onCheckedChange?.invoke(newValue)
+                return@SuperSwitch
             }
+            prefsData?.let { prefs.edit { put(it, newValue) } }
+            _checked.value = newValue
+            onCheckedChange?.invoke(newValue)
         },
         insideMargin = PaddingValues((icon?.getHorizontalPadding() ?: 16.dp), 16.dp, 16.dp, 16.dp),
         enabled = enabled

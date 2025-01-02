@@ -46,6 +46,7 @@ import com.gswxxn.restoresplashscreen.ui.MainActivity
 import com.gswxxn.restoresplashscreen.ui.component.ColorPickerPageArgs
 import com.gswxxn.restoresplashscreen.ui.component.MyAppInfo
 import com.gswxxn.restoresplashscreen.ui.component.SpliceCard
+import com.gswxxn.restoresplashscreen.ui.component.TextPreference
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toMap
 import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.chrisbanes.haze.HazeStyle
@@ -57,7 +58,6 @@ import dev.lackluster.hyperx.compose.base.ImageIcon
 import dev.lackluster.hyperx.compose.icon.Back
 import dev.lackluster.hyperx.compose.navigation.navigateTo
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
-import dev.lackluster.hyperx.compose.preference.TextPreference
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

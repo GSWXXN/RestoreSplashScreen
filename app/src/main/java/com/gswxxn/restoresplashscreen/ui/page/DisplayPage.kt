@@ -17,13 +17,13 @@ import com.gswxxn.restoresplashscreen.data.Pages
 import com.gswxxn.restoresplashscreen.ui.MainActivity
 import com.gswxxn.restoresplashscreen.ui.component.HeaderCard
 import com.gswxxn.restoresplashscreen.ui.component.SwitchPreference
+import com.gswxxn.restoresplashscreen.ui.component.TextPreference
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.lackluster.hyperx.compose.base.BasePage
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.navigation.navigateTo
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
-import dev.lackluster.hyperx.compose.preference.TextPreference
 
 /**
  * 显示设置 界面
@@ -56,10 +56,9 @@ private fun SettingItems(navController: NavController) {
         // 遮罩最小持续时间
         TextPreference(
             title = stringResource(R.string.min_duration),
-            summary = stringResource(R.string.min_duration_tips)
-        ) {
-            navController.navigateTo(Pages.CONFIG_MIN_DURATION)
-        }
+            summary = stringResource(R.string.min_duration_tips),
+            onClick = { navController.navigateTo(Pages.CONFIG_MIN_DURATION) }
+        )
     }
     PreferenceGroup {
         ForceShowSplashScreenSettingsGroup(navController)

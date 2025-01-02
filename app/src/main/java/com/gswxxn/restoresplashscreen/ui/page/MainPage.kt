@@ -36,6 +36,7 @@ import com.gswxxn.restoresplashscreen.ui.MainActivity
 import com.gswxxn.restoresplashscreen.ui.MainActivity.Companion.androidRestartNeeded
 import com.gswxxn.restoresplashscreen.ui.MainActivity.Companion.moduleActive
 import com.gswxxn.restoresplashscreen.ui.MainActivity.Companion.systemUIRestartNeeded
+import com.gswxxn.restoresplashscreen.ui.component.TextPreference
 import com.gswxxn.restoresplashscreen.ui.page.data.ModuleStatusType
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.execShell
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
@@ -45,7 +46,6 @@ import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.base.ImageIcon
 import dev.lackluster.hyperx.compose.navigation.navigateWithPopup
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
-import dev.lackluster.hyperx.compose.preference.TextPreference
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Icon
@@ -333,7 +333,8 @@ fun ModuleSettingPreference(
 ) {
     TextPreference(
         icon = ImageIcon(iconRes = modulePreferenceRes.iconRes),
-        title = stringResource(modulePreferenceRes.stringRes)
+        title = stringResource(modulePreferenceRes.stringRes),
+        ignoreModuleActiveStatus = true
     ) {
         onClick?.invoke()
         modulePreferenceRes.navigateTo?.let { navController?.navigateWithPopup(it) }

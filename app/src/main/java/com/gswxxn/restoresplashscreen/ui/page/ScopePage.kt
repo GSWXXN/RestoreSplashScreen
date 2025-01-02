@@ -16,13 +16,13 @@ import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.Pages
 import com.gswxxn.restoresplashscreen.ui.MainActivity
 import com.gswxxn.restoresplashscreen.ui.component.HeaderCard
+import com.gswxxn.restoresplashscreen.ui.component.SwitchPreference
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.lackluster.hyperx.compose.base.BasePage
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.navigation.navigateTo
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
-import dev.lackluster.hyperx.compose.preference.SwitchPreference
 import dev.lackluster.hyperx.compose.preference.TextPreference
 
 /**
@@ -62,7 +62,7 @@ private fun SettingItems(navController: NavController) {
     // 自定义模块作用域
     SwitchPreference(
         title = stringResource(R.string.custom_scope),
-        key = DataConst.ENABLE_CUSTOM_SCOPE.key
+        prefsData = DataConst.ENABLE_CUSTOM_SCOPE
     ) { newValue ->
         customScope = newValue
         if (newValue) {
@@ -75,7 +75,7 @@ private fun SettingItems(navController: NavController) {
             SwitchPreference(
                 title = stringResource(R.string.replace_to_empty_splash_screen),
                 summary = stringResource(R.string.replace_to_empty_splash_screen_tips),
-                key = DataConst.REPLACE_TO_EMPTY_SPLASH_SCREEN.key
+                prefsData = DataConst.REPLACE_TO_EMPTY_SPLASH_SCREEN
             )
             // 配置应用列表
             TextPreference(title = stringResource(R.string.exception_mode_list)) {

@@ -12,10 +12,10 @@ import androidx.navigation.NavController
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.ui.component.AppListPage
+import com.gswxxn.restoresplashscreen.ui.component.SwitchPreference
 import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
-import dev.lackluster.hyperx.compose.preference.SwitchPreference
 
 /**
  * 图标 - 忽略应用主动谁知的图标 - 配置应用列表
@@ -45,10 +45,9 @@ fun IgnoreAppIconPage(navController: NavController, adjustPadding: PaddingValues
                 SwitchPreference(
                     title = stringResource(R.string.exception_mode),
                     summary = exceptionSummary,
-                    key = DataConst.IS_DEFAULT_STYLE_LIST_EXCEPTION_MODE.key
-                ) {
-                    exceptionMode = it
-                }
+                    prefsData = DataConst.IS_DEFAULT_STYLE_LIST_EXCEPTION_MODE,
+                    onCheckedChange = { exceptionMode = it }
+                )
             }
         }
     }

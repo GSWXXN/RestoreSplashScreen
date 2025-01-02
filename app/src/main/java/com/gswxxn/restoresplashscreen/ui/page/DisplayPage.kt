@@ -16,13 +16,13 @@ import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.Pages
 import com.gswxxn.restoresplashscreen.ui.MainActivity
 import com.gswxxn.restoresplashscreen.ui.component.HeaderCard
+import com.gswxxn.restoresplashscreen.ui.component.SwitchPreference
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.lackluster.hyperx.compose.base.BasePage
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.navigation.navigateTo
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
-import dev.lackluster.hyperx.compose.preference.SwitchPreference
 import dev.lackluster.hyperx.compose.preference.TextPreference
 
 /**
@@ -81,7 +81,7 @@ private fun ForceShowSplashScreenSettingsGroup(navController: NavController) {
     SwitchPreference(
         title = stringResource(R.string.force_show_splash_screen),
         summary = stringResource(R.string.force_show_splash_screen_tips),
-        key = DataConst.FORCE_SHOW_SPLASH_SCREEN.key
+        prefsData = DataConst.FORCE_SHOW_SPLASH_SCREEN
     ) { newValue ->
         forceShowSplash = newValue
         if (newValue) {
@@ -98,7 +98,7 @@ private fun ForceShowSplashScreenSettingsGroup(navController: NavController) {
             SwitchPreference(
                 title = stringResource(R.string.reduce_splash_screen),
                 summary = stringResource(R.string.reduce_splash_screen_tips),
-                key = DataConst.REDUCE_SPLASH_SCREEN.key
+                prefsData = DataConst.REDUCE_SPLASH_SCREEN
             )
         }
     }
@@ -117,7 +117,7 @@ private fun OtherDisplaySettingsGroup() {
     SwitchPreference(
         title = stringResource(R.string.force_enable_splash_screen),
         summary = stringResource(R.string.force_enable_splash_screen_tips),
-        key = DataConst.FORCE_ENABLE_SPLASH_SCREEN.key,
+        prefsData = DataConst.FORCE_ENABLE_SPLASH_SCREEN,
     ) {
         forceEnableSplash = it
     }
@@ -125,13 +125,13 @@ private fun OtherDisplaySettingsGroup() {
     SwitchPreference(
         title = stringResource(R.string.hot_start_compatible),
         summary = stringResource(R.string.hot_start_compatible_tips),
-        key = DataConst.ENABLE_HOT_START_COMPATIBLE.key,
+        prefsData = DataConst.ENABLE_HOT_START_COMPATIBLE,
         enabled = forceEnableSplash
     )
     // 彻底关闭 Splash Screen
     SwitchPreference(
         title = stringResource(R.string.disable_splash_screen),
         summary = stringResource(R.string.disable_splash_screen_tips),
-        key = DataConst.DISABLE_SPLASH_SCREEN.key
+        prefsData = DataConst.DISABLE_SPLASH_SCREEN
     )
 }

@@ -12,10 +12,10 @@ import androidx.navigation.NavController
 import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.ui.component.AppListPage
+import com.gswxxn.restoresplashscreen.ui.component.SwitchPreference
 import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
-import dev.lackluster.hyperx.compose.preference.SwitchPreference
 
 /**
  * 图标 - 不显示图标
@@ -45,10 +45,9 @@ fun HideIconPage(navController: NavController, adjustPadding: PaddingValues, mod
                 SwitchPreference(
                     title = stringResource(R.string.exception_mode),
                     summary = exceptionSummary,
-                    key = DataConst.IS_HIDE_SPLASH_SCREEN_ICON_EXCEPTION_MODE.key
-                ) {
-                    exceptionMode = it
-                }
+                    prefsData = DataConst.IS_HIDE_SPLASH_SCREEN_ICON_EXCEPTION_MODE,
+                    onCheckedChange = { exceptionMode = it }
+                )
             }
         }
     }

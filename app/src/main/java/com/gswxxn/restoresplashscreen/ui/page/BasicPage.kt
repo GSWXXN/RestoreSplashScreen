@@ -19,12 +19,12 @@ import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.ui.MainActivity
 import com.gswxxn.restoresplashscreen.ui.component.HeaderCard
+import com.gswxxn.restoresplashscreen.ui.component.SwitchPreference
 import com.gswxxn.restoresplashscreen.utils.BackupUtils
 import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.lackluster.hyperx.compose.base.BasePage
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
-import dev.lackluster.hyperx.compose.preference.SwitchPreference
 import dev.lackluster.hyperx.compose.preference.TextPreference
 import java.time.LocalDateTime
 
@@ -83,8 +83,7 @@ private fun ModuleAppSettings() {
     SwitchPreference(
         title = stringResource(R.string.enable_log),
         summary = stringResource(R.string.enable_log_tips),
-        key = DataConst.ENABLE_LOG.key,
-        defValue = enableLog
+        prefsData = DataConst.ENABLE_LOG
     ) {
         enableLog = it
         if (it) {
@@ -94,7 +93,7 @@ private fun ModuleAppSettings() {
     // 隐藏桌面图标
     SwitchPreference(
         title = stringResource(R.string.hide_icon),
-        key = DataConst.ENABLE_HIDE_ICON.key
+        prefsData = DataConst.ENABLE_HIDE_ICON
     ) {
         val newState = if (it) {
             PackageManager.COMPONENT_ENABLED_STATE_DISABLED
@@ -110,16 +109,14 @@ private fun ModuleAppSettings() {
     // 模糊效果
     SwitchPreference(
         title = stringResource(R.string.blur),
-        key = DataConst.MODULE_APP_BLUR.key,
-        defValue = MainActivity.blurEnabled.value,
+        prefsData = DataConst.MODULE_APP_BLUR,
         onCheckedChange = { MainActivity.blurEnabled.value = it }
     )
     // 自适应布局
     SwitchPreference(
         title = stringResource(R.string.split_view),
         summary = stringResource(R.string.split_view_tips),
-        key = DataConst.SPLIT_VIEW.key,
-        defValue = MainActivity.splitEnabled.value,
+        prefsData = DataConst.SPLIT_VIEW,
         onCheckedChange = { MainActivity.splitEnabled.value = it }
     )
 }

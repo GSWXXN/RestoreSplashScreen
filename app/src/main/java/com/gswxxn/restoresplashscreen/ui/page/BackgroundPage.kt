@@ -17,6 +17,7 @@ import com.gswxxn.restoresplashscreen.data.Pages
 import com.gswxxn.restoresplashscreen.ui.MainActivity
 import com.gswxxn.restoresplashscreen.ui.component.ColorPickerPageArgs
 import com.gswxxn.restoresplashscreen.ui.component.HeaderCard
+import com.gswxxn.restoresplashscreen.ui.component.SwitchPreference
 import com.gswxxn.restoresplashscreen.ui.page.data.ChangeBGColorTypes
 import com.gswxxn.restoresplashscreen.ui.page.data.BGColorModes
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.isMIUI
@@ -28,7 +29,6 @@ import dev.lackluster.hyperx.compose.navigation.navigateTo
 import dev.lackluster.hyperx.compose.preference.DropDownEntry
 import dev.lackluster.hyperx.compose.preference.DropDownPreference
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
-import dev.lackluster.hyperx.compose.preference.SwitchPreference
 import dev.lackluster.hyperx.compose.preference.TextPreference
 
 /**
@@ -129,8 +129,7 @@ private fun GeneralSettingItems(
             // 跳过已主动设置背景颜色的应用
             SwitchPreference(
                 title = stringResource(R.string.skip_app_with_bg_color),
-                key = DataConst.SKIP_APP_WITH_BG_COLOR.key,
-                defValue = DataConst.SKIP_APP_WITH_BG_COLOR.value
+                prefsData = DataConst.SKIP_APP_WITH_BG_COLOR
             )
             // 配置应用列表
             TextPreference(title = stringResource(R.string.change_bg_color_list)) {
@@ -153,7 +152,7 @@ private fun MIUISettingsGroup(ignoreDarkMode: MutableState<Boolean>) {
     SwitchPreference(
         title = stringResource(R.string.ignore_dark_mode),
         summary = stringResource(R.string.ignore_dark_mode_tips),
-        key = DataConst.IGNORE_DARK_MODE.key,
+        prefsData = DataConst.IGNORE_DARK_MODE,
         checked = ignoreDarkMode
     )
 
@@ -162,7 +161,7 @@ private fun MIUISettingsGroup(ignoreDarkMode: MutableState<Boolean>) {
         SwitchPreference(
             title = stringResource(R.string.remove_bg_drawable),
             summary = stringResource(R.string.remove_bg_drawable_tips),
-            key = DataConst.REMOVE_BG_DRAWABLE.key
+            prefsData = DataConst.REMOVE_BG_DRAWABLE
         )
     }
 }

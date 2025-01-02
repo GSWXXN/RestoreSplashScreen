@@ -18,6 +18,7 @@ import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.hook.base.HookManager
 import com.gswxxn.restoresplashscreen.ui.MainActivity
+import com.gswxxn.restoresplashscreen.ui.component.SwitchPreference
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.getHookInfo
 import dev.lackluster.hyperx.compose.base.BasePage
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
@@ -25,7 +26,6 @@ import dev.lackluster.hyperx.compose.preference.EditTextDataType
 import dev.lackluster.hyperx.compose.preference.EditTextPreference
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
 import dev.lackluster.hyperx.compose.preference.SeekBarPreference
-import dev.lackluster.hyperx.compose.preference.SwitchPreference
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import kotlin.math.roundToInt
@@ -67,11 +67,9 @@ private fun SettingItems() {
 private fun GeneralSettingItems() {
     SwitchPreference(
         title = stringResource(R.string.dev_settings),
-        key = DataConst.ENABLE_DEV_SETTINGS.key,
-        defValue = MainActivity.devMode.value
-    ) {
-        MainActivity.devMode.value = it
-    }
+        prefsData = DataConst.ENABLE_DEV_SETTINGS,
+        onCheckedChange = { MainActivity.devMode.value = it }
+    )
     EditTextPreference(
         title = stringResource(R.string.dev_blur_tint_alpha_light),
         key = DataConst.HAZE_TINT_ALPHA_LIGHT.key,

@@ -15,13 +15,13 @@ import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.Pages
 import com.gswxxn.restoresplashscreen.ui.MainActivity
 import com.gswxxn.restoresplashscreen.ui.component.HeaderCard
+import com.gswxxn.restoresplashscreen.ui.component.SwitchPreference
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.lackluster.hyperx.compose.base.BasePage
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.navigation.navigateTo
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
-import dev.lackluster.hyperx.compose.preference.SwitchPreference
 import dev.lackluster.hyperx.compose.preference.TextPreference
 
 /**
@@ -62,7 +62,7 @@ private fun RemoveBrandingImageSettingsGroup(navController: NavController) {
     SwitchPreference(
         title = stringResource(R.string.remove_branding_image),
         summary = stringResource(R.string.remove_branding_image_tips),
-        key = DataConst.REMOVE_BRANDING_IMAGE.key
+        prefsData = DataConst.REMOVE_BRANDING_IMAGE
     ) { newValue ->
         removeBrandingImage = newValue
         if (newValue) {

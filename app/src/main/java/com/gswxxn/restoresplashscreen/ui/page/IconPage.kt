@@ -18,6 +18,7 @@ import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.Pages
 import com.gswxxn.restoresplashscreen.ui.MainActivity
 import com.gswxxn.restoresplashscreen.ui.component.HeaderCard
+import com.gswxxn.restoresplashscreen.ui.component.SwitchPreference
 import com.gswxxn.restoresplashscreen.ui.page.data.ShrinkIconType
 import com.gswxxn.restoresplashscreen.utils.CommonUtils.toast
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
@@ -29,7 +30,6 @@ import dev.lackluster.hyperx.compose.navigation.navigateTo
 import dev.lackluster.hyperx.compose.preference.DropDownEntry
 import dev.lackluster.hyperx.compose.preference.DropDownPreference
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
-import dev.lackluster.hyperx.compose.preference.SwitchPreference
 import dev.lackluster.hyperx.compose.preference.TextPreference
 
 /**
@@ -102,7 +102,7 @@ private fun CommonSettingsGroup() {
     // 绘制图标圆角
     SwitchPreference(
         title = stringResource(R.string.draw_round_corner),
-        key = DataConst.ENABLE_DRAW_ROUND_CORNER.key
+        prefsData = DataConst.ENABLE_DRAW_ROUND_CORNER
     )
     // 缩小图标
     var shrinkIcon by remember { mutableIntStateOf(prefs.get(DataConst.SHRINK_ICON)) }
@@ -116,21 +116,21 @@ private fun CommonSettingsGroup() {
         // 为缩小的图标添加模糊背景
         SwitchPreference(
             title = stringResource(R.string.add_icon_blur_bg),
-            key = DataConst.ENABLE_ADD_ICON_BLUR_BG.key
+            prefsData = DataConst.ENABLE_ADD_ICON_BLUR_BG
         )
     }
     // 替换图标获取方式
     SwitchPreference(
         title = stringResource(R.string.replace_icon),
         summary = stringResource(R.string.replace_icon_tips),
-        key = DataConst.ENABLE_REPLACE_ICON.key
+        prefsData = DataConst.ENABLE_REPLACE_ICON
     )
 
     // 使用 MIUI 大图标
     if (YukiHelper.atLeastMIUI14) {
         SwitchPreference(
             title = stringResource(R.string.use_miui_large_icon),
-            key = DataConst.ENABLE_USE_MIUI_LARGE_ICON.key
+            prefsData = DataConst.ENABLE_USE_MIUI_LARGE_ICON
         )
     }
 
@@ -158,7 +158,7 @@ private fun DefaultIconSettingsGroup(navController: NavController) {
     SwitchPreference(
         title = stringResource(R.string.default_style),
         summary = stringResource(R.string.default_style_tips),
-        key = DataConst.ENABLE_DEFAULT_STYLE.key
+        prefsData = DataConst.ENABLE_DEFAULT_STYLE
     ) { newValue ->
         ignoreAppIcon = newValue
         if (newValue) { context.toast(R.string.custom_scope_message) }
@@ -183,7 +183,7 @@ private fun HideSplashIconSettingsGroup(navController: NavController) {
     // 不显示图标
     SwitchPreference(
         title = stringResource(R.string.hide_splash_screen_icon),
-        key = DataConst.ENABLE_HIDE_SPLASH_SCREEN_ICON.key
+        prefsData = DataConst.ENABLE_HIDE_SPLASH_SCREEN_ICON
     ) { newValue ->
         hideSplashIcon = newValue
         if (newValue) { context.toast(R.string.custom_scope_message) }
@@ -191,9 +191,8 @@ private fun HideSplashIconSettingsGroup(navController: NavController) {
     AnimatedVisibility(hideSplashIcon) {
         // 配置应用列表
         TextPreference(
-            title = stringResource(R.string.default_style_list)
-        ) {
-            navController.navigateTo(Pages.CONFIG_HIDE_SPLASH_ICON)
-        }
+            title = stringResource(R.string.default_style_list),
+            onClick = { navController.navigateTo(Pages.CONFIG_HIDE_SPLASH_ICON) }
+        )
     }
 }

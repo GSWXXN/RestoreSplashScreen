@@ -16,6 +16,9 @@ import dev.lackluster.hyperx.compose.base.DrawableResIcon
 import dev.lackluster.hyperx.compose.base.ImageIcon
 import top.yukonga.miuix.kmp.extra.SuperSwitch
 
+/**
+ * 开关可组合函数, 使用 YukiHookAPI 管理 SharedPreferences, 并在模块未激活时提示用户
+ */
 @Composable
 fun SwitchPreference(
     icon: ImageIcon? = null,
@@ -39,7 +42,6 @@ fun SwitchPreference(
         checked = _checked.value,
         onCheckedChange = { newValue ->
             if (!YukiHookAPI.Status.isXposedModuleActive) {
-                _checked.value = !newValue
                 context.toast(R.string.make_sure_active)
             } else {
                 prefsData?.let { prefs.edit { put(it, newValue) } }

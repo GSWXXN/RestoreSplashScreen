@@ -7,10 +7,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
@@ -71,11 +69,11 @@ private fun ModuleAppSettings() {
     val context = LocalContext.current
     val prefs = context.prefs()
 
-    var enableLog by remember { mutableStateOf(prefs.get(DataConst.ENABLE_LOG)) }
+    val enableLog = remember { mutableStateOf(prefs.get(DataConst.ENABLE_LOG)) }
     LaunchedEffect(Unit) {
-        if (enableLog && (System.currentTimeMillis() - prefs.get(DataConst.ENABLE_LOG_TIMESTAMP)) > 86400000) {
+        if (enableLog.value && (System.currentTimeMillis() - prefs.get(DataConst.ENABLE_LOG_TIMESTAMP)) > 86400000) {
             prefs.edit { put(DataConst.ENABLE_LOG, false) }
-            enableLog = false
+            enableLog.value = false
         }
     }
 
@@ -83,9 +81,9 @@ private fun ModuleAppSettings() {
     SwitchPreference(
         title = stringResource(R.string.enable_log),
         summary = stringResource(R.string.enable_log_tips),
-        prefsData = DataConst.ENABLE_LOG
+        prefsData = DataConst.ENABLE_LOG,
+        checked = enableLog
     ) {
-        enableLog = it
         if (it) {
             prefs.edit { put(DataConst.ENABLE_LOG_TIMESTAMP, System.currentTimeMillis()) }
         }

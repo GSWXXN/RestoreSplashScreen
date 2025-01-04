@@ -3,10 +3,8 @@ package com.gswxxn.restoresplashscreen.ui.page
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
@@ -56,20 +54,20 @@ fun BottomPage(navController: NavController, adjustPadding: PaddingValues, mode:
 private fun RemoveBrandingImageSettingsGroup(navController: NavController) {
     val context = LocalContext.current
     val prefs = context.prefs()
-    var removeBrandingImage by remember { mutableStateOf(prefs.get(DataConst.REMOVE_BRANDING_IMAGE)) }
+    val removeBrandingImage = remember { mutableStateOf(prefs.get(DataConst.REMOVE_BRANDING_IMAGE)) }
 
     // 移除底部图片
     SwitchPreference(
         title = stringResource(R.string.remove_branding_image),
         summary = stringResource(R.string.remove_branding_image_tips),
-        prefsData = DataConst.REMOVE_BRANDING_IMAGE
+        prefsData = DataConst.REMOVE_BRANDING_IMAGE,
+        checked = removeBrandingImage
     ) { newValue ->
-        removeBrandingImage = newValue
         if (newValue) {
             context.toast(R.string.custom_scope_message)
         }
     }
-    AnimatedVisibility(removeBrandingImage) {
+    AnimatedVisibility(removeBrandingImage.value) {
         // 配置移除列表
         TextPreference(title = stringResource(R.string.remove_branding_image_list)) {
             navController.navigateTo(Pages.CONFIG_REMOVE_BRANDING)

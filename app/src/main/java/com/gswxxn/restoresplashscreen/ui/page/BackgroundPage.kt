@@ -16,6 +16,7 @@ import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.Pages
 import com.gswxxn.restoresplashscreen.ui.MainActivity
 import com.gswxxn.restoresplashscreen.ui.component.ColorPickerPageArgs
+import com.gswxxn.restoresplashscreen.ui.component.DropDownPreference
 import com.gswxxn.restoresplashscreen.ui.component.HeaderCard
 import com.gswxxn.restoresplashscreen.ui.component.SwitchPreference
 import com.gswxxn.restoresplashscreen.ui.component.TextPreference
@@ -27,9 +28,8 @@ import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.lackluster.hyperx.compose.base.BasePage
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.navigation.navigateTo
-import dev.lackluster.hyperx.compose.preference.DropDownEntry
-import dev.lackluster.hyperx.compose.preference.DropDownPreference
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
+import top.yukonga.miuix.kmp.extra.SpinnerEntry
 
 /**
  * 背景 界面
@@ -91,8 +91,8 @@ private fun GeneralSettingItems(
     // 替换背景颜色
     DropDownPreference(
         title = stringResource(R.string.change_bg_color),
-        entries = ChangeBGColorTypes.entries.map { DropDownEntry(stringResource(it.stringID)) },
-        key = DataConst.CHANG_BG_COLOR_TYPE.key,
+        entries = ChangeBGColorTypes.entries.map { SpinnerEntry(title = stringResource(it.stringID)) },
+        prefsData = DataConst.CHANG_BG_COLOR_TYPE,
         onSelectedIndexChange = { changeBGColorType.intValue = it }
     )
 
@@ -101,11 +101,10 @@ private fun GeneralSettingItems(
         DropDownPreference(
             title = stringResource(R.string.color_mode),
             summary = if (isMIUI) stringResource(R.string.color_mode_tips) else null,
-            entries = BGColorModes.entries.map { DropDownEntry(stringResource(it.stringID)) },
-            key = DataConst.BG_COLOR_MODE.key
+            entries = BGColorModes.entries.map { SpinnerEntry(title = stringResource(it.stringID)) },
+            prefsData = DataConst.BG_COLOR_MODE,
+            selectedIndex = colorMode
         ) {
-            colorMode.intValue = it
-
             if (isMIUI && colorMode.intValue == BGColorModes.FollowSystem.ordinal) {
                 prefs.edit { put(DataConst.IGNORE_DARK_MODE, true) }
                 ignoreDarkMode.value = true

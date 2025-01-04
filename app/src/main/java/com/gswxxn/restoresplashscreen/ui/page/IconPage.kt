@@ -17,6 +17,7 @@ import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.Pages
 import com.gswxxn.restoresplashscreen.ui.MainActivity
+import com.gswxxn.restoresplashscreen.ui.component.DropDownPreference
 import com.gswxxn.restoresplashscreen.ui.component.HeaderCard
 import com.gswxxn.restoresplashscreen.ui.component.SwitchPreference
 import com.gswxxn.restoresplashscreen.ui.component.TextPreference
@@ -28,9 +29,8 @@ import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.lackluster.hyperx.compose.base.BasePage
 import dev.lackluster.hyperx.compose.base.BasePageDefaults
 import dev.lackluster.hyperx.compose.navigation.navigateTo
-import dev.lackluster.hyperx.compose.preference.DropDownEntry
-import dev.lackluster.hyperx.compose.preference.DropDownPreference
 import dev.lackluster.hyperx.compose.preference.PreferenceGroup
+import top.yukonga.miuix.kmp.extra.SpinnerEntry
 
 /**
  * 图标 界面
@@ -79,19 +79,19 @@ private fun CommonSettingsGroup() {
     val prefs = context.prefs()
 
     // 图标包列表预处理
-    var selectedIconPackIndex by remember { mutableIntStateOf(0) }
+    val selectedIconPackIndex = remember { mutableIntStateOf(0) }
     val availableIconPackItems = remember { mutableStateListOf(
-        DropDownEntry(title = "None", summary = "None")
+        SpinnerEntry(title = "None", summary = "None")
     ) }
     LaunchedEffect(Unit) {
         availableIconPackItems.addAll(
             IconPackManager(context).getAvailableIconPacks()
                 .filter { it.key != "None" }
                 .map { (packageName, iconPackName) ->
-                    DropDownEntry(title = iconPackName, summary = packageName)
+                    SpinnerEntry(title = iconPackName, summary = packageName)
                 }
         )
-        selectedIconPackIndex = availableIconPackItems.indexOfFirst {
+        selectedIconPackIndex.intValue = availableIconPackItems.indexOfFirst {
             it.summary == prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)
         }.takeIf { it != -1 } ?: run {
             prefs.edit { put(DataConst.ICON_PACK_PACKAGE_NAME, "None") }
@@ -108,8 +108,8 @@ private fun CommonSettingsGroup() {
     var shrinkIcon by remember { mutableIntStateOf(prefs.get(DataConst.SHRINK_ICON)) }
     DropDownPreference(
         title = stringResource(R.string.shrink_icon),
-        entries = ShrinkIconType.entries.map { DropDownEntry(stringResource(it.stringID)) },
-        key = DataConst.SHRINK_ICON.key,
+        entries = ShrinkIconType.entries.map { SpinnerEntry(title = stringResource(it.stringID)) },
+        prefsData = DataConst.SHRINK_ICON,
         onSelectedIndexChange = { shrinkIcon = it }
     )
     AnimatedVisibility(shrinkIcon != ShrinkIconType.NotShrinkIcon.ordinal) {
@@ -138,10 +138,11 @@ private fun CommonSettingsGroup() {
     DropDownPreference(
         title = stringResource(R.string.use_icon_pack),
         entries = availableIconPackItems,
-        defValue = selectedIconPackIndex
+        selectedIndex = selectedIconPackIndex
     ) {
-        prefs.edit { put(DataConst.ICON_PACK_PACKAGE_NAME, availableIconPackItems[it].summary ?: "None") }
-        selectedIconPackIndex = it
+        prefs.edit {
+            put(DataConst.ICON_PACK_PACKAGE_NAME, availableIconPackItems[it].summary ?: "None")
+        }
     }
 }
 
@@ -154,16 +155,15 @@ private fun DefaultIconSettingsGroup(navController: NavController) {
     val prefs = context.prefs()
 
     // 忽略应用主动设置的图标
-    var ignoreAppIcon by remember { mutableStateOf(prefs.get(DataConst.ENABLE_DEFAULT_STYLE)) }
+    val ignoreAppIcon = remember { mutableStateOf(prefs.get(DataConst.ENABLE_DEFAULT_STYLE)) }
     SwitchPreference(
         title = stringResource(R.string.default_style),
         summary = stringResource(R.string.default_style_tips),
         prefsData = DataConst.ENABLE_DEFAULT_STYLE
     ) { newValue ->
-        ignoreAppIcon = newValue
         if (newValue) { context.toast(R.string.custom_scope_message) }
     }
-    AnimatedVisibility(ignoreAppIcon) {
+    AnimatedVisibility(ignoreAppIcon.value) {
         // 配置应用列表
         TextPreference(title = stringResource(R.string.default_style_list)) {
             navController.navigateTo(Pages.CONFIG_IGNORE_APP_ICON)
@@ -179,16 +179,15 @@ private fun HideSplashIconSettingsGroup(navController: NavController) {
     val context = LocalContext.current
     val prefs = context.prefs()
 
-    var hideSplashIcon by remember { mutableStateOf(prefs.get(DataConst.ENABLE_HIDE_SPLASH_SCREEN_ICON)) }
+    val hideSplashIcon = remember { mutableStateOf(prefs.get(DataConst.ENABLE_HIDE_SPLASH_SCREEN_ICON)) }
     // 不显示图标
     SwitchPreference(
         title = stringResource(R.string.hide_splash_screen_icon),
         prefsData = DataConst.ENABLE_HIDE_SPLASH_SCREEN_ICON
     ) { newValue ->
-        hideSplashIcon = newValue
         if (newValue) { context.toast(R.string.custom_scope_message) }
     }
-    AnimatedVisibility(hideSplashIcon) {
+    AnimatedVisibility(hideSplashIcon.value) {
         // 配置应用列表
         TextPreference(
             title = stringResource(R.string.default_style_list),

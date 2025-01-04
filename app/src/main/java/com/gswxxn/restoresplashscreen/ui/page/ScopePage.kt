@@ -4,10 +4,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
@@ -57,19 +55,18 @@ private fun SettingItems(navController: NavController) {
     val context = LocalContext.current
     val prefs = context.prefs()
 
-    var customScope by remember { mutableStateOf(prefs.get(DataConst.ENABLE_CUSTOM_SCOPE)) }
+    val customScope = remember { mutableStateOf(prefs.get(DataConst.ENABLE_CUSTOM_SCOPE)) }
 
     // 自定义模块作用域
     SwitchPreference(
         title = stringResource(R.string.custom_scope),
         prefsData = DataConst.ENABLE_CUSTOM_SCOPE
     ) { newValue ->
-        customScope = newValue
         if (newValue) {
             context.toast(R.string.custom_scope_message)
         }
     }
-    AnimatedVisibility(customScope) {
+    AnimatedVisibility(customScope.value) {
         Column {
             // 将作用域外的应用替换位空白启动遮罩
             SwitchPreference(

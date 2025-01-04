@@ -11,6 +11,9 @@ import dev.lackluster.hyperx.compose.base.DrawableResIcon
 import dev.lackluster.hyperx.compose.base.ImageIcon
 import top.yukonga.miuix.kmp.extra.SuperArrow
 
+/**
+ * TextPreference 在用户点击后先判断模块是否激活, 如未激活则发出 toast
+ */
 @Composable
 fun TextPreference(
     icon: ImageIcon? = null,

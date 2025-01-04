@@ -31,7 +31,7 @@ fun SwitchPreference(
 ) {
     val context = LocalContext.current
     val prefs = context.prefs()
-    val _checked = checked
+    val currentChecked = checked
         ?: prefsData?.let { remember { mutableStateOf(prefs.get(it)) } }
         ?: remember { mutableStateOf(false) }
 
@@ -39,14 +39,14 @@ fun SwitchPreference(
         title = title,
         summary = summary,
         leftAction = { icon?.let { DrawableResIcon(it) } },
-        checked = _checked.value,
+        checked = currentChecked.value,
         onCheckedChange = { newValue ->
             if (!YukiHookAPI.Status.isXposedModuleActive) {
                 context.toast(R.string.make_sure_active)
                 return@SuperSwitch
             }
             prefsData?.let { prefs.edit { put(it, newValue) } }
-            _checked.value = newValue
+            currentChecked.value = newValue
             onCheckedChange?.invoke(newValue)
         },
         insideMargin = PaddingValues((icon?.getHorizontalPadding() ?: 16.dp), 16.dp, 16.dp, 16.dp),

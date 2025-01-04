@@ -4,10 +4,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
@@ -75,19 +73,18 @@ private fun SettingItems(navController: NavController) {
 private fun ForceShowSplashScreenSettingsGroup(navController: NavController) {
     val context = LocalContext.current
     val prefs = context.prefs()
-    var forceShowSplash by remember { mutableStateOf(prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN)) }
+    val forceShowSplash = remember { mutableStateOf(prefs.get(DataConst.FORCE_SHOW_SPLASH_SCREEN)) }
     // 强制显示遮罩
     SwitchPreference(
         title = stringResource(R.string.force_show_splash_screen),
         summary = stringResource(R.string.force_show_splash_screen_tips),
         prefsData = DataConst.FORCE_SHOW_SPLASH_SCREEN
     ) { newValue ->
-        forceShowSplash = newValue
         if (newValue) {
             context.toast(R.string.custom_scope_message)
         }
     }
-    AnimatedVisibility(forceShowSplash) {
+    AnimatedVisibility(forceShowSplash.value) {
         Column {
             // 配置应用列表
             TextPreference(title = stringResource(R.string.force_show_splash_screen_list)) {
@@ -110,22 +107,21 @@ private fun ForceShowSplashScreenSettingsGroup(navController: NavController) {
 private fun OtherDisplaySettingsGroup() {
     val prefs = LocalContext.current.prefs()
 
-    var forceEnableSplash by remember { mutableStateOf(prefs.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)) }
+    val forceEnableSplash = remember { mutableStateOf(prefs.get(DataConst.FORCE_ENABLE_SPLASH_SCREEN)) }
 
     // 强制开启启动遮罩
     SwitchPreference(
         title = stringResource(R.string.force_enable_splash_screen),
         summary = stringResource(R.string.force_enable_splash_screen_tips),
         prefsData = DataConst.FORCE_ENABLE_SPLASH_SCREEN,
-    ) {
-        forceEnableSplash = it
-    }
+        checked = forceEnableSplash
+    )
     // 将启动遮罩适用于热启动
     SwitchPreference(
         title = stringResource(R.string.hot_start_compatible),
         summary = stringResource(R.string.hot_start_compatible_tips),
         prefsData = DataConst.ENABLE_HOT_START_COMPATIBLE,
-        enabled = forceEnableSplash
+        enabled = forceEnableSplash.value
     )
     // 彻底关闭 Splash Screen
     SwitchPreference(

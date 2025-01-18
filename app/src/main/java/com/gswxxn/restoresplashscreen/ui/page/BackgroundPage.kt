@@ -15,7 +15,6 @@ import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.Pages
 import com.gswxxn.restoresplashscreen.ui.MainActivity
-import com.gswxxn.restoresplashscreen.ui.component.ColorPickerPageArgs
 import com.gswxxn.restoresplashscreen.ui.component.DropDownPreference
 import com.gswxxn.restoresplashscreen.ui.component.HeaderCard
 import com.gswxxn.restoresplashscreen.ui.component.SwitchPreference
@@ -117,10 +116,7 @@ private fun GeneralSettingItems(
             title = stringResource(R.string.set_custom_bg_color),
             summary = stringResource(R.string.set_custom_bg_color_tips)
         ) {
-            navController.navigateTo(
-                "${Pages.CONFIG_COLOR_PICKER}?" +
-                        "${ColorPickerPageArgs.PACKAGE_NAME}=${""}"
-            )
+            navController.navigateTo("${Pages.CONFIG_COLOR_PICKER}?PkgName=${""}")
         }
     }
     AnimatedVisibility(changeBGColorType.intValue != ChangeBGColorTypes.NotChangeBGColor.ordinal) {

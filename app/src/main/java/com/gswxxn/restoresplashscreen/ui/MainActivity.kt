@@ -35,7 +35,6 @@ import com.gswxxn.restoresplashscreen.ui.apppage.IgnoreAppIconPage
 import com.gswxxn.restoresplashscreen.ui.apppage.MinDurationPage
 import com.gswxxn.restoresplashscreen.ui.apppage.RemoveBrandingPage
 import com.gswxxn.restoresplashscreen.ui.component.ColorPickerPage
-import com.gswxxn.restoresplashscreen.ui.component.ColorPickerPageArgs
 import com.gswxxn.restoresplashscreen.ui.page.DevPage
 import com.gswxxn.restoresplashscreen.ui.page.DisplayPage
 import com.gswxxn.restoresplashscreen.ui.page.IconPage
@@ -136,14 +135,9 @@ class MainActivity : ComponentActivity() {
                 composable(Pages.CONFIG_MIN_DURATION) { MinDurationPage(navController, adjustPadding, mode) }
                 composable(Pages.CONFIG_FORCE_SHOW_SPLASH) { ForceSplashPage(navController, adjustPadding, mode) }
 
-                composable(
-                    "${Pages.CONFIG_COLOR_PICKER}?" +
-                            "${ColorPickerPageArgs.PACKAGE_NAME}={${ColorPickerPageArgs.PACKAGE_NAME}}"
-                ) {
-                    val pkgName = it.arguments?.getString(ColorPickerPageArgs.PACKAGE_NAME) ?: ""
+                composable("${Pages.CONFIG_COLOR_PICKER}?PkgName={PkgName}") {
+                    val pkgName = it.arguments?.getString("PkgName") ?: ""
                     /* Todo: 传入 是否为 OVERALL_BG 设置, 不应为现在的依据包名为 “” 来判断*/
-                    val keyLight = it.arguments?.getString(ColorPickerPageArgs.KEY_LIGHT) ?: DataConst.OVERALL_BG_COLOR.key
-                    val keyDark = it.arguments?.getString(ColorPickerPageArgs.KEY_DARK) ?: DataConst.OVERALL_BG_COLOR_NIGHT.key
                     ColorPickerPage(navController, adjustPadding, pkgName, mode)
                 }
             }

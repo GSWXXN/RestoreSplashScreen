@@ -43,7 +43,6 @@ import com.gswxxn.restoresplashscreen.R
 import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.data.Pages
 import com.gswxxn.restoresplashscreen.ui.MainActivity
-import com.gswxxn.restoresplashscreen.ui.component.ColorPickerPageArgs
 import com.gswxxn.restoresplashscreen.ui.component.MyAppInfo
 import com.gswxxn.restoresplashscreen.ui.component.SpliceCard
 import com.gswxxn.restoresplashscreen.ui.component.TextPreference
@@ -291,8 +290,7 @@ fun BgIndividualPage(
                             summary = item.packageName
                         ) {
                             navController.navigateTo(
-                                "${Pages.CONFIG_COLOR_PICKER}?" +
-                                        "${ColorPickerPageArgs.PACKAGE_NAME}=${item.packageName}"
+                                "${Pages.CONFIG_COLOR_PICKER}?PkgName=${item.packageName}"
                             )
                         }
                     }

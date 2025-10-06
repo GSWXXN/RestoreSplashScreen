@@ -20,6 +20,7 @@ import com.gswxxn.restoresplashscreen.data.DataConst
 import com.gswxxn.restoresplashscreen.hook.NewSystemUIHooker
 import com.gswxxn.restoresplashscreen.hook.base.BaseHookHandler
 import com.gswxxn.restoresplashscreen.hook.systemui.GenerateHookHandler.currentActivity
+import com.gswxxn.restoresplashscreen.hook.systemui.GenerateHookHandler.currentApplicationInfo
 import com.gswxxn.restoresplashscreen.hook.systemui.GenerateHookHandler.currentPackageName
 import com.gswxxn.restoresplashscreen.utils.GraphicUtils
 import com.gswxxn.restoresplashscreen.utils.IconPackManager
@@ -27,6 +28,7 @@ import com.gswxxn.restoresplashscreen.utils.MIUIIconsHelper
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.atLeastMIUI14
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.getDevPrefs
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.isColorOS
+import com.gswxxn.restoresplashscreen.utils.YukiHelper.isMIUI
 import com.gswxxn.restoresplashscreen.utils.YukiHelper.printLog
 import com.gswxxn.restoresplashscreen.wrapper.TransparentAdaptiveIconDrawable
 import com.highcapable.yukihookapi.hook.factory.current
@@ -53,7 +55,7 @@ object IconHookHandler : BaseHookHandler() {
     private var currentUseBigMIUILagerIcon: Boolean? = null
     private var currentIconDrawable: Drawable? = null
     private val iconPackManager by lazy { IconPackManager(appContext!!, prefs.get(DataConst.ICON_PACK_PACKAGE_NAME)) }
-    private val miuiIcons by lazy { MIUIIconsHelper(appContext!!) }
+    private val miuiIcons by lazy { MIUIIconsHelper(appContext!!, appClassLoader!!) }
 
     /**
      * 重置当前应用的属性
@@ -343,10 +345,14 @@ object IconHookHandler : BaseHookHandler() {
                 currentPackageName == "com.android.settings" && currentActivity == "com.android.settings.BackgroundApplicationsManager" ->
                     appContext!!.packageManager.getApplicationIcon("com.android.settings")
 
-//                isMIUI && miuiIcons.isSupportMIUIModeIcon && currentPackageName != "com.android.fileexplorer" -> { // 在 MIUI 上优先获取完美图标
-//                    miuiIcons.getFancyIconDrawable(currentPackageName) ?:
-//                    appContext!!.packageManager.getApplicationIcon(currentPackageName)
-//                }
+                isMIUI && miuiIcons.isSupportMIUIModeIcon && currentPackageName != "com.android.fileexplorer" -> { // 在 MIUI 上优先获取完美图标
+                    miuiIcons.getFancyIconDrawable(
+                        currentPackageName,
+                        appUserId,
+                        currentApplicationInfo,
+                        appContext!!.packageManager
+                    ) ?: appContext!!.packageManager.getApplicationIcon(currentPackageName)
+                }
 
                 else -> appContext!!.packageManager.getApplicationIcon(currentPackageName)
             }

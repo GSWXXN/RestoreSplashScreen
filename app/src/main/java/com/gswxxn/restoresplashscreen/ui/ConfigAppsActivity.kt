@@ -1,6 +1,5 @@
 package com.gswxxn.restoresplashscreen.ui
 
-import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.text.Editable
@@ -130,11 +129,11 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineS
         binding.searchEditText.apply {
             // 焦点事件
             setOnFocusChangeListener { v, hasFocus ->
-                val imm = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val imm = v.context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                 if (hasFocus) {
                     showView(false, binding.appListTitle, binding.configDescription, binding.configTitleFilter, binding.overallSettings)
                     // 弹出软键盘
-                    imm.showSoftInput(binding.searchEditText, InputMethodManager.SHOW_FORCED)
+                    imm.showSoftInput(binding.searchEditText, 0)
                 } else {
                     // 隐藏软键盘
                     imm.hideSoftInputFromWindow(this.windowToken, 0)
@@ -162,7 +161,7 @@ class ConfigAppsActivity : BaseActivity<ActivityConfigAppsBinding>(), CoroutineS
                         cView = holder.root
                         cView.tag = holder
                     } else {
-                        holder = cView?.tag as AdapterConfigBinding
+                        holder = cView.tag as AdapterConfigBinding
                     }
                     getItem(position).also { item ->
                         // 设置图标

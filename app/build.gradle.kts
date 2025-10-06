@@ -54,7 +54,7 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             vcsInfo.include = false
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 
@@ -127,7 +127,7 @@ fun getGitHeadRefsSuffix(project: Project): String {
             // 示例："90312cd9157587d11779ed7be776e3220050b308\n"
             refFile.readText(Charsets.UTF_8).replace(Regex("""\s"""), "").subSequence(0, 7)
         } else {
-            string.substring(0, 7)
+            string.take(7)
         }
         println("commit_id: $result")
         return result.toString()

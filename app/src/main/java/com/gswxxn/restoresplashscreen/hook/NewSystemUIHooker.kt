@@ -12,6 +12,7 @@ import com.highcapable.yukihookapi.hook.factory.constructor
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.log.YLog
 import com.highcapable.yukihookapi.hook.type.android.ActivityInfoClass
+import com.highcapable.yukihookapi.hook.type.android.ComponentInfoClass
 import com.highcapable.yukihookapi.hook.type.android.DrawableClass
 import com.highcapable.yukihookapi.hook.type.java.FloatType
 import com.highcapable.yukihookapi.hook.type.java.IntType
@@ -54,7 +55,7 @@ object NewSystemUIHooker: YukiBaseHooker() {
             "com.android.launcher3.icons.IconProvider".toClass().method {
                 name = "getIcon"
                 paramCount(2)
-                param { IntType in it && ActivityInfoClass in it }
+                param { IntType in it && (ActivityInfoClass in it || ComponentInfoClass in it) }
             }.give()!!
         }
         val normalizeAndWrapToAdaptiveIcon = HookManager {

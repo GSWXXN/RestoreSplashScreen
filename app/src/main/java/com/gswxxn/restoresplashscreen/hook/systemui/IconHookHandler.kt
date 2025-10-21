@@ -173,25 +173,30 @@ object IconHookHandler : BaseHookHandler() {
 
         // 不使用自带的图标缩放, 防止在 MIUI 上出现图标白边及图标错位
         NewSystemUIHooker.Members.normalizeAndWrapToAdaptiveIcon.addBeforeHook {
-            val scale = instance.current()
-                .method { name = "getNormalizer"; superClass() }.call()!!.current()
-                .method { name = "getScale"; paramCount(4); superClass() }
-                .invoke<Float>(
-                    args.first { it is Drawable },
-                    args.first { it is RectF },
-                    null,
-                    null
-                )!!
-            args(args.indexOfFirst { it is FloatArray }).cast<FloatArray>()!![0] = scale
-
-            val oriDrawable = args.first { it is Drawable } as Drawable
-            val returnType = NewSystemUIHooker.Members.normalizeAndWrapToAdaptiveIcon.returnType
-
-            printLog("normalizeAndWrapToAdaptiveIcon(): avoid shrink icon by system ui")
-            result = if (returnType == AdaptiveIconDrawable::class.java)
-                TransparentAdaptiveIconDrawable(oriDrawable)
-            else
-                oriDrawable
+            if (Thread.currentThread().stackTrace.any { it.methodName == "makeSplashScreenContentView" }) {
+                printLog("normalizeAndWrapToAdaptiveIcon(): avoid shrink icon by system ui")
+                val boolShrinkNonAdaptiveIconsIndex = args.indexOfFirst { it is Boolean }
+                if (boolShrinkNonAdaptiveIconsIndex != -1) {
+                    args(boolShrinkNonAdaptiveIconsIndex).setFalse()
+                } else {
+                    val scale = instance.current(ignored = true)
+                        .method { name = "getNormalizer"; superClass() }.call()?.current()
+                        ?.method { name = "getScale"; paramCount(4); superClass() }
+                        ?.invoke<Float>(
+                            args.first { it is Drawable },
+                            args.first { it is RectF },
+                            null,
+                            null
+                        ) ?: 0.92f
+                    args(args.indexOfFirst { it is FloatArray }).cast<FloatArray>()!![0] = scale
+                    val oriDrawable = args.first { it is Drawable } as Drawable
+                    val returnType = NewSystemUIHooker.Members.normalizeAndWrapToAdaptiveIcon.returnType
+                    result = if (returnType == AdaptiveIconDrawable::class.java)
+                        TransparentAdaptiveIconDrawable(oriDrawable)
+                    else
+                        oriDrawable
+                }
+            }
         }
         NewSystemUIHooker.Members.createIconBitmap_BaseIconFactory.addBeforeHook {
             args(0).cast<Drawable>()?.let { drawable ->

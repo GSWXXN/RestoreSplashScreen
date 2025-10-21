@@ -2,28 +2,30 @@ package com.gswxxn.restoresplashscreen.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.AdaptiveIconDrawable
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.LayerDrawable
 import android.provider.Settings
 import com.gswxxn.restoresplashscreen.hook.NewSystemUIHooker.hook
-import com.gswxxn.restoresplashscreen.utils.GraphicUtils.getCenterDrawable
 import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.factory.field
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.factory.toClass
+import com.highcapable.yukihookapi.hook.factory.toClassOrNull
 import com.highcapable.yukihookapi.hook.log.YLog
+import com.highcapable.yukihookapi.hook.type.android.ApplicationInfoClass
 import com.highcapable.yukihookapi.hook.type.android.ContextClass
 import com.highcapable.yukihookapi.hook.type.android.UserHandleClass
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
 import com.highcapable.yukihookapi.hook.type.java.LongType
 import com.highcapable.yukihookapi.hook.type.java.StringClass
+import com.highcapable.yukihookapi.hook.type.java.JavaClass
 
 /**
  * 用于从 MIUI 桌面检索大图标的辅助类
  */
 @SuppressLint("DiscouragedApi")
-class MIUIIconsHelper(private val context: Context) {
+class MIUIIconsHelper(private val context: Context, private val classLoader: ClassLoader) {
     private val miuiHomeContext = context.createPackageContext(
         "com.miui.home",
         Context.CONTEXT_INCLUDE_CODE or Context.CONTEXT_IGNORE_SECURITY
@@ -32,10 +34,53 @@ class MIUIIconsHelper(private val context: Context) {
         if (YukiHelper.atLeastMIUI14)
             "com.miui.maml.util.LargeIconsHelper".toClass(miuiHomeContext.classLoader)
         else null
-    private val appIconsHelper = "com.miui.maml.util.AppIconsHelper".toClass(miuiHomeContext.classLoader)
+    private val dependencyClazz by lazy {
+        "com.miui.systemui.MiuiDependency".toClassOrNull(classLoader)
+            ?: "com.android.systemui.Dependency".toClassOrNull(classLoader)
+    }
+    private val mDependencyGet by lazy {
+        dependencyClazz?.method {
+            name = "get"
+            paramCount(1)
+            param(JavaClass)
+        }?.ignored()?.give()
+    }
+    private val interfacesImplManagerClazz by lazy {
+        "com.miui.systemui.interfacesmanager.InterfacesImplManager".toClassOrNull(classLoader)
+    }
+    private val mImplManagerGet by lazy {
+        interfacesImplManagerClazz?.method {
+            name = "getImpl"
+            paramCount(1)
+            param(JavaClass)
+        }?.give()
+    }
+    private val appIconsManagerClazz by lazy {
+        "com.miui.systemui.graphics.AppIconsManager".toClass(classLoader)
+    }
+    private val loadAppIcon by lazy {
+        appIconsManagerClazz.getDeclaredMethod("loadAppIcon",
+            StringClass, Int::class.java, ApplicationInfoClass, PackageManager::class.java
+        )
+    }
+    private val appIconsManager by lazy {
+        mDependencyGet?.invoke(null, appIconsManagerClazz)
+            ?: mImplManagerGet?.invoke(null, appIconsManagerClazz)
+    }
+    private val drawableUtilsClazz by lazy {
+        "com.miui.utils.DrawableUtils".toClass(classLoader)
+    }
+    private val getFancyChildOrSelf by lazy {
+        drawableUtilsClazz.method {
+            name = "getFancyChildOrSelf"
+            paramCount(2)
+            param(Drawable::class.java, BooleanType)
+        }.ignored().give()
+    }
+
     /** 当前是否启用 MIUI 完美图标 */
     val isSupportMIUIModeIcon by lazy {
-        Settings.System.getInt(context.contentResolver, "key_miui_mod_icon_enable", 0) == 1
+        Settings.System.getInt(context.contentResolver, "key_miui_mod_icon_enable", 0) == 1 || getFancyChildOrSelf != null
     }
 
     init {
@@ -151,33 +196,18 @@ class MIUIIconsHelper(private val context: Context) {
      * 从指定的应用程序包中获取完美的图标 Drawable
      *
      * @param packageName 要获取图标的应用程序包的包名。
+     * @param userId 应用程序的用户 ID。
+     * @param applicationInfo 应用程序的 ApplicationInfo 对象。
+     * @param packageManager 用于获取应用程序信息的 PackageManager 实例。
      * @return 如果成功获取到完美图标，则返回一个 BitmapDrawable；如果发生错误，则返回 null。
      */
-    fun getFancyIconDrawable(packageName: String) = try {
-        val drawable = appIconsHelper.method {
-            name = "getIconDrawable"
-            param(ContextClass, StringClass, StringClass, LongType)
-        }.get().call(
-            context,
+    fun getFancyIconDrawable(packageName: String, userId: Int, applicationInfo: ApplicationInfo?, packageManager: PackageManager?) = try {
+        loadAppIcon.invoke(appIconsManager,
             packageName,
-            null,
-            getCacheTime(packageName),
+            userId,
+            applicationInfo,
+            packageManager
         )
-
-        if (drawable is AdaptiveIconDrawable && drawable.javaClass.name == "com.miui.maml.MamlAdaptiveIconDrawable"){
-            val layer0QuietDrawable = drawable.background.current().method { name = "getQuietDrawable" }.invoke<Drawable>()!!
-            val layerFancyDrawables = drawable.current().method { name = "getLayerFancyDrawables" }.invoke<ArrayList<Drawable>>()!!
-
-            layerFancyDrawables.add(0, layer0QuietDrawable)
-
-            getCenterDrawable(
-                LayerDrawable(layerFancyDrawables.toTypedArray()),
-                0.65f,
-                context.resources
-            )
-        } else if (drawable?.javaClass?.name == "com.miui.maml.FancyDrawable") {
-            drawable
-        } else null
     } catch (e: Throwable) {
         YLog.error(msg = "Failed to get FancyIconDrawable with package: $packageName", e = e)
         null
